@@ -5,35 +5,66 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "./GlassCard";
 import { GlowButton } from "./GlowButton";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 interface WaitlistModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const roles = ["Artist", "PR / Promoter", "Venue"];
+const roleMap: Record<string, string> = {
+    "Artist": "artist",
+    "PR / Promoter": "pr",
+    "Venue": "venue"
+};
+
+const roles = Object.keys(roleMap);
 
 export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
     const [step, setStep] = useState(1);
     const [role, setRole] = useState<string | null>(null);
     const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setError(null);
+
         try {
-            const response = await fetch('/api/waitlist', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, role }),
+            // 1. Sign up the user
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email,
+                password,
             });
-            if (!response.ok) throw new Error('Failed to join waitlist');
-            setDone(true);
-        } catch (error) {
-            console.error(error);
-            alert('Something went wrong. Please try again.');
+
+            if (authError) throw authError;
+
+            if (authData.user) {
+                // 2. Create the profile record
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .upsert({
+                        id: authData.user.id,
+                        email: email,
+                        category: role ? roleMap[role] : null,
+                        full_name: email.split('@')[0], // Default name from email
+                    });
+
+                if (profileError) {
+                    console.error('Profile creation error:', profileError);
+                    // We don't necessarily want to fail the whole thing if the profile fails 
+                    // (e.g. if the user already exists) but let's be safe.
+                }
+
+                setDone(true);
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || 'Something went wrong. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -91,18 +122,37 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                         </div>
                                     ) : (
                                         <form onSubmit={handleSubmit} className="space-y-8">
-                                            <div className="space-y-4">
-                                                <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 ml-1">Email Terminal</label>
-                                                <input
-                                                    autoFocus
-                                                    type="email"
-                                                    required
-                                                    value={email}
-                                                    onChange={(e) => setEmail(e.target.value)}
-                                                    placeholder="YOU@DOMAIN.EXT"
-                                                    className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-tora-orange text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
-                                                />
+                                            <div className="space-y-6">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 ml-1">Email Terminal</label>
+                                                    <input
+                                                        autoFocus
+                                                        type="email"
+                                                        required
+                                                        value={email}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                        placeholder="YOU@DOMAIN.EXT"
+                                                        className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-tora-orange text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 ml-1">Access Key</label>
+                                                    <input
+                                                        type="password"
+                                                        required
+                                                        value={password}
+                                                        onChange={(e) => setPassword(e.target.value)}
+                                                        placeholder="••••••••"
+                                                        className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-tora-orange text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
+                                                    />
+                                                </div>
+                                                
+                                                {error && (
+                                                    <p className="text-[10px] text-tora-crimson uppercase tracking-widest font-bold">{error}</p>
+                                                )}
                                             </div>
+
                                             <div className="flex space-x-4">
                                                 <button
                                                     type="button"
@@ -126,7 +176,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                     <div className="space-y-4">
                                         <h3 className="text-2xl font-black uppercase tracking-tighter italic">Registration Successful</h3>
                                         <p className="text-[10px] text-white/40 leading-relaxed uppercase tracking-widest">
-                                            Your ID has been added to the queue at <span className="text-white">{email}</span>. Operation pending launch.
+                                            Your ID has been added to the queue at <span className="text-white">{email}</span>. Please verify your email to activate your profile.
                                         </p>
                                     </div>
                                     <GlowButton onClick={onClose} variant="secondary" className="w-full">
