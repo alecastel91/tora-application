@@ -67,7 +67,7 @@ export function FeatureCarousel() {
                         className={cn(
                             "px-6 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 skew-btn",
                             activeTab === cat.id
-                                ? "bg-tora-orange text-white shadow-glow"
+                                ? "bg-infrared text-white shadow-glow"
                                 : "bg-white/5 text-white/30 border border-white/5 hover:border-white/20"
                         )}
                     >
@@ -85,7 +85,7 @@ export function FeatureCarousel() {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 10 }}
-                            className="border-l border-tora-orange/40 pl-8"
+                            className="border-l border-infrared/40 pl-8"
                         >
                             <h3 className="text-2xl font-black uppercase tracking-widest mb-4 italic">{activeCategory.title}</h3>
                             <p className="text-sm text-white/40 leading-relaxed uppercase tracking-wider">
@@ -104,13 +104,13 @@ export function FeatureCarousel() {
                             exit={{ opacity: 0, scale: 1.02 }}
                         >
                             <GlassCard className="border-white/5 relative bg-white/[0.02]">
-                                <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-tora-orange/20 to-transparent" />
+                                <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-infrared/20 to-transparent" />
 
                                 <div className="flex justify-between items-start mb-8">
-                                    <div className="w-12 h-12 border border-tora-orange/20 flex items-center justify-center">
-                                        <div className="w-4 h-4 bg-tora-orange/40" />
+                                    <div className="w-12 h-12 border border-infrared/20 flex items-center justify-center">
+                                        <div className="w-4 h-4 bg-infrared/40" />
                                     </div>
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-tora-orange bg-tora-orange/5 px-3 py-1 border border-tora-orange/10">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-infrared bg-infrared/5 px-3 py-1 border border-infrared/10">
                                         Verified ID
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@ export function FeatureCarousel() {
                                 <div className="pt-6 border-t border-white/5 flex justify-between items-center">
                                     <span className="text-[9px] text-white/20 uppercase font-black">{activeCategory.preview.meta}</span>
                                     <div className="flex space-x-1">
-                                        <div className="w-4 h-1 bg-tora-orange" />
+                                        <div className="w-4 h-1 bg-infrared" />
                                         <div className="w-1 h-1 bg-white/10" />
                                         <div className="w-1 h-1 bg-white/10" />
                                     </div>

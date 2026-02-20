@@ -19,36 +19,12 @@ export function GlassPanel({ children, className, delay = 0, ...props }: GlassPa
             className={cn(
                 "relative overflow-hidden rounded-2xl",
                 "bg-[rgba(15,15,15,0.65)] backdrop-blur-xl",
-                "border border-[rgba(255,120,60,0.18)]",
+                "border border-white/10",
                 "shadow-[0_10px_40px_rgba(0,0,0,0.9)]",
                 className
             )}
             {...props}
         >
-            {/* === INTERNAL REFLECTION BAND === */}
-            <div
-                className="
-          pointer-events-none absolute inset-0
-          bg-[linear-gradient(135deg,rgba(255,120,60,0.18)_0%,transparent_40%,transparent_60%,rgba(255,120,60,0.08)_100%)]
-          opacity-40
-        "
-            />
-
-            {/* === EDGE HIGHLIGHT === */}
-            <div
-                className="
-          pointer-events-none absolute inset-0 rounded-2xl
-          ring-1 ring-inset ring-[rgba(255,140,70,0.22)]
-        "
-            />
-
-            {/* === INNER SHADOW (DEPTH) === */}
-            <div
-                className="
-          pointer-events-none absolute inset-0 rounded-2xl
-          shadow-[inset_0_0_40px_rgba(0,0,0,0.85)]
-        "
-            />
 
             <div className="relative z-10">{children}</div>
         </motion.div>

@@ -28,7 +28,7 @@ export function BenefitsSection() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {groups.map((group, idx) => (
                     <div key={idx} className="space-y-6">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-tora-orange pl-4 border-l-2 border-tora-orange">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-infrared pl-4 border-l-2 border-infrared">
                             {group.role}
                         </h3>
                         <div className="space-y-1">

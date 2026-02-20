@@ -90,8 +90,8 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                     >
                         <GlassCard className="p-10 border-white/5 bg-near-black">
                             {/* Corner decor */}
-                            <div className="absolute top-0 right-0 w-8 h-px bg-tora-orange/40" />
-                            <div className="absolute top-0 right-0 w-px h-8 bg-tora-orange/40" />
+                            <div className="absolute top-0 right-0 w-8 h-px bg-infrared/40" />
+                            <div className="absolute top-0 right-0 w-px h-8 bg-infrared/40" />
 
                             {!done ? (
                                 <div className="space-y-10">
@@ -111,7 +111,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                                         className={cn(
                                                             "w-full px-6 py-4 border text-left transition-all uppercase text-[10px] font-black tracking-widest skew-btn",
                                                             role === r
-                                                                ? "bg-tora-orange text-white"
+                                                                ? "bg-infrared text-white"
                                                                 : "bg-white/5 border-white/5 hover:border-white/20 text-white/40"
                                                         )}
                                                     >
@@ -132,7 +132,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                                         value={email}
                                                         onChange={(e) => setEmail(e.target.value)}
                                                         placeholder="YOU@DOMAIN.EXT"
-                                                        className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-tora-orange text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
+                                                        className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-infrared text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
                                                     />
                                                 </div>
 
@@ -144,7 +144,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                                         value={password}
                                                         onChange={(e) => setPassword(e.target.value)}
                                                         placeholder="••••••••"
-                                                        className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-tora-orange text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
+                                                        className="w-full px-6 py-4 bg-white/5 border border-white/5 focus:outline-none focus:border-infrared text-xs uppercase tracking-widest font-bold placeholder:text-white/10"
                                                     />
                                                 </div>
                                                 
@@ -170,8 +170,8 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                 </div>
                             ) : (
                                 <div className="text-left py-8 space-y-8">
-                                    <div className="w-12 h-12 border border-tora-orange flex items-center justify-center">
-                                        <div className="w-4 h-4 bg-tora-orange animate-pulse" />
+                                    <div className="w-12 h-12 border border-infrared flex items-center justify-center">
+                                        <div className="w-4 h-4 bg-infrared animate-pulse" />
                                     </div>
                                     <div className="space-y-4">
                                         <h3 className="text-2xl font-black uppercase tracking-tighter italic">Registration Successful</h3>

@@ -27,8 +27,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
         <div className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4">
             <GlassPanel className="p-8 md:p-12 max-w-xl w-full">
                 <div className="mb-8 text-center">
-                    <h2 className="text-xl font-orbitron text-white mb-2">ACCESS REQUEST</h2>
-                    <div className="h-px w-24 bg-infrared/50 mx-auto" />
+                    <h2 className="text-xl font-orbitron tracking-[0.1em] text-white">ACCESS REQUEST</h2>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">

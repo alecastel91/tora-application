@@ -23,7 +23,7 @@ export default function WhatsComing() {
                         { tag: 'Q2 2025', title: 'Token Integration', desc: 'On-chain payments and governance for tour circuits.' },
                     ].map((item) => (
                         <GlassCard key={item.tag} className="border-white/5">
-                            <span className="text-tora-orange text-xs font-bold uppercase tracking-widest">{item.tag}</span>
+                            <span className="text-infrared text-xs font-bold uppercase tracking-widest">{item.tag}</span>
                             <h3 className="text-xl font-bold mt-2 mb-4">{item.title}</h3>
                             <p className="text-white/50 text-sm leading-relaxed">{item.desc}</p>
                         </GlassCard>

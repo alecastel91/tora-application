@@ -17,7 +17,7 @@ export function GlowButton({
     const [isHovered, setIsHovered] = React.useState(false);
 
     const colors = {
-        primary: "text-tora-orange border-tora-orange",
+        primary: "text-infrared border-infrared",
         secondary: "text-white border-white",
         outline: "text-white/60 border-white/20"
     };
@@ -40,8 +40,8 @@ export function GlowButton({
             <div className="absolute bottom-0 left-0 w-full h-[2px] bg-current opacity-60 group-hover:opacity-100 transition-opacity" />
 
             {/* Lateral Open Light (Ambient Glow) - Non-italic, straight pulse */}
-            <div className="absolute inset-y-0 -left-8 w-16 bg-gradient-to-r from-tora-orange/0 via-tora-orange/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-2xl pointer-events-none" />
-            <div className="absolute inset-y-0 -right-8 w-16 bg-gradient-to-l from-tora-orange/0 via-tora-orange/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-2xl pointer-events-none" />
+            <div className="absolute inset-y-0 -left-8 w-16 bg-gradient-to-r from-infrared/0 via-infrared/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-2xl pointer-events-none" />
+            <div className="absolute inset-y-0 -right-8 w-16 bg-gradient-to-l from-infrared/0 via-infrared/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-2xl pointer-events-none" />
 
             {/* Content Glow Reflection */}
             <AnimatePresence>
@@ -65,7 +65,7 @@ export function GlowButton({
             </span>
 
             {/* Proximity Core Intensity (Bottom line) */}
-            <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-12 h-[3px] bg-tora-orange group-hover:w-32 group-hover:shadow-[0_0_20px_#bd2c0f] transition-all duration-500 opacity-40 group-hover:opacity-100" />
+            <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-12 h-[3px] bg-infrared group-hover:w-32 group-hover:shadow-[0_0_20px_#bd2c0f] transition-all duration-500 opacity-40 group-hover:opacity-100" />
         </motion.button>
     );
 }

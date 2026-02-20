@@ -16,7 +16,7 @@ export function Footer() {
                 <div className="flex space-x-12">
                     {["Network", "Social", "Terms"].map((group) => (
                         <div key={group} className="space-y-4">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-tora-orange">{group}</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-infrared">{group}</h4>
                             <ul className="space-y-2">
                                 {[1, 2].map((i) => (
                                     <li key={i} className="text-[9px] text-white/30 uppercase tracking-widest hover:text-white cursor-pointer transition-colors">
@@ -32,7 +32,7 @@ export function Footer() {
                 <span>© 2024 TORA OPS</span>
                 <div className="flex space-x-4">
                     <span>TX_READY</span>
-                    <div className="w-2 h-2 bg-tora-orange/20" />
+                    <div className="w-2 h-2 bg-infrared/20" />
                 </div>
             </div>
         </footer>

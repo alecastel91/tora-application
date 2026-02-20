@@ -15,7 +15,7 @@ export function TourSection() {
                     </p>
 
                     <div className="space-y-4">
-                        <div className="flex justify-between text-[10px] uppercase font-black tracking-widest text-tora-orange">
+                        <div className="flex justify-between text-[10px] uppercase font-black tracking-widest text-infrared">
                             <span>Funding Queue: ID-442</span>
                             <span>85% Committed</span>
                         </div>
@@ -24,7 +24,7 @@ export function TourSection() {
                                 initial={{ width: 0 }}
                                 whileInView={{ width: "85%" }}
                                 viewport={{ once: true }}
-                                className="absolute inset-y-0 bg-tora-orange"
+                                className="absolute inset-y-0 bg-infrared"
                             />
                         </div>
                     </div>

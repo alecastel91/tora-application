@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --color-charcoal: #050505;
   --color-glass: rgba(10, 10, 10, 0.6);
-  --color-infrared: #ff3300;
-  --color-infrared-dim: #cc2900;
-  --color-infrared-glow: rgba(255, 51, 0, 0.15);
+  --color-infrared: #ffffff;
+  --color-infrared-dim: #aaaaaa;
+  --color-infrared-glow: rgba(255, 255, 255, 0.15);
 
-  --font-orbitron: "Orbitron", sans-serif;
+  /* --font-orbitron is now defined in layout.tsx via next/font/google variables */
+  /* We can reference it directly via var(--font-orbitron) which matches the variable name */
 
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
@@ -16,7 +16,7 @@
   --pulse-bpm: 0.5s;
   /* 120 BPM = 0.5s per beat */
 
-  --shadow-infrared: 0 0 20px rgba(255, 51, 0, 0.1);
+  --shadow-infrared: 0 0 20px rgba(255, 255, 255, 0.1);
   --shadow-glass-inset: inset 0 0 20px rgba(255, 255, 255, 0.02);
 }
 
@@ -35,12 +35,12 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-glass-white backdrop-blur-xl border border-glass-border;
+    @apply bg-glass backdrop-blur-xl border border-white/10;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 
   .glow-orange {
-    text-shadow: 0 0 12px rgba(255, 77, 0, 0.4);
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
   }
 
   .bg-grid {
@@ -51,7 +51,7 @@
   }
 
   .laser-line {
-    @apply absolute h-px bg-gradient-to-r from-transparent via-tora-orange/20 to-transparent w-full;
+    @apply absolute h-px bg-gradient-to-r from-transparent via-infrared/20 to-transparent w-full;
   }
 
   .skew-btn {
@@ -90,9 +90,9 @@
   border-radius: 9999px;
 
   background: radial-gradient(circle,
-      rgba(255, 90, 0, 0.6) 0%,
-      rgba(255, 80, 0, 0.25) 30%,
-      rgba(255, 60, 0, 0.1) 50%,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.25) 30%,
+      rgba(255, 255, 255, 0.1) 50%,
       transparent 70%);
 
   animation: waveExpand 3s linear infinite;
@@ -129,16 +129,16 @@
 
 /* ===== INFRARED TYPOGRAPHY ===== */
 .infrared-text {
-  color: #ff7a3a;
+  color: #ffffff;
   text-shadow:
-    0 0 6px rgba(255, 120, 60, 0.6),
-    0 0 12px rgba(255, 80, 0, 0.35),
-    0 0 24px rgba(255, 60, 0, 0.18);
+    0 0 6px rgba(255, 255, 255, 0.6),
+    0 0 12px rgba(255, 255, 255, 0.35),
+    0 0 24px rgba(255, 255, 255, 0.18);
 }
 
 .infrared-embedded {
-  color: #ff8a4a;
+  color: #ffffff;
   text-shadow:
-    0 0 2px rgba(255, 140, 80, 0.8),
-    0 0 8px rgba(255, 100, 40, 0.35);
+    0 0 2px rgba(255, 255, 255, 0.8),
+    0 0 8px rgba(255, 255, 255, 0.35);
 }

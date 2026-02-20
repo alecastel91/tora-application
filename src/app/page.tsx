@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { InfraredPulseField } from "@/components/ui/InfraredPulseField";
+import { ThreeDBackground } from "@/components/ui/ThreeDBackground";
 import { LogoEmergence } from "@/components/sections/infrared/LogoEmergence";
 import { AboutApply } from "@/components/sections/infrared/AboutApply";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-charcoal overflow-hidden font-sans selection:bg-infrared/30 selection:text-white">
-      <InfraredPulseField />
+      <ThreeDBackground />
 
       <AnimatePresence mode="wait">
         {view === "logo" && (

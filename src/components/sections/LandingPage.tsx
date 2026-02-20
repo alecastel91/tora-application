@@ -37,14 +37,14 @@ export function LandingPage({ onJoinWaitlist }: LandingPageProps) {
                     <div className="space-y-4">
                         {['Direct connections', 'Transparent booking', 'Community driven'].map((item) => (
                             <div key={item} className="flex items-center space-x-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-tora-orange shadow-glow" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-infrared shadow-glow" />
                                 <span className="text-white/80">{item}</span>
                             </div>
                         ))}
                     </div>
                 </div>
-                <GlassCard className="h-80 flex items-center justify-center border-tora-orange/20 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-tora-orange/10 to-transparent" />
+                <GlassCard className="h-80 flex items-center justify-center border-infrared/20 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-infrared/10 to-transparent" />
                     <span className="text-white/20 italic z-10">Visual Representation of Ecosystem</span>
                 </GlassCard>
             </section>

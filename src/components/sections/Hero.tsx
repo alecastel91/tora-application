@@ -27,7 +27,7 @@ export function Hero({ onJoinWaitlist }: HeroProps) {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="max-w-4xl relative z-10"
             >
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-tora-orange mb-6 block">
+                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-infrared mb-6 block">
                     Establishing Connection
                 </span>
                 <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/30 uppercase font-[var(--font-orbitron)]">
