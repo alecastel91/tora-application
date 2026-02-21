@@ -12,16 +12,16 @@ export function Confirmation() {
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                    className="mb-6 text-infrared"
+                    className="mb-8 text-white"
                 >
-                    <CheckCircle2 size={64} strokeWidth={1} style={{ filter: "drop-shadow(0 0 10px rgba(255, 51, 0, 0.4))" }} />
+                    <CheckCircle2 size={72} strokeWidth={1} />
                 </motion.div>
 
-                <h2 className="text-2xl font-orbitron text-white mb-4 tracking-wider">
+                <h2 className="text-3xl font-orbitron text-white mb-6 tracking-wider text-center">
                     TRANSMISSION RECEIVED
                 </h2>
 
-                <p className="text-white/60 text-lg mb-8 font-light">
+                <p className="text-white/70 text-xl md:text-2xl mb-12 font-light text-center">
                     We will review your application and establish contact shortly.
                 </p>
 
