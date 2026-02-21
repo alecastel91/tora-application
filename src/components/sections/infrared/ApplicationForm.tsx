@@ -66,7 +66,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
                     <div className="pt-4 flex justify-center">
                         <InfraredButton type="submit" disabled={loading} className="w-full">
-                            {loading ? "TRANSMITTING..." : "INITIATE SEQUENCE"}
+                            {loading ? "TRANSMITTING..." : "SUBMIT APPLICATION"}
                         </InfraredButton>
                     </div>
                 </form>
