@@ -17,7 +17,7 @@ export function Confirmation() {
                     <CheckCircle2 size={72} strokeWidth={1} />
                 </motion.div>
 
-                <h2 className="text-3xl font-michroma text-white mb-6 tracking-wider text-center">
+                <h2 className="text-3xl font-[var(--font-geist-sans)] text-white mb-6 tracking-wider text-center">
                     TRANSMISSION RECEIVED
                 </h2>
 
@@ -25,7 +25,7 @@ export function Confirmation() {
                     We will review your application and establish contact shortly.
                 </p>
 
-                <div className="text-xs font-michroma text-infrared/60 uppercase tracking-[0.2em] animate-pulse">
+                <div className="text-xs font-[var(--font-geist-sans)] text-infrared/60 uppercase tracking-[0.2em] animate-pulse">
                     System Standby
                 </div>
             </GlassPanel>

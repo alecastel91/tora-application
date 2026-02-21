@@ -30,14 +30,15 @@ export function LogoEmergence({ onComplete }: LogoEmergenceProps) {
                 </div>
             </motion.div>
 
-            <motion.p
+            <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1, ease: "easeOut" }}
-                className="text-base md:text-lg font-michroma tracking-[0.2em] text-white/60 uppercase text-center"
+                className="flex flex-col items-center text-center w-full max-w-[90vw]"
             >
-                Where the music industry connects.
-            </motion.p>
+                <span className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-widest leading-none font-[var(--font-geist-sans)] text-white">WHERE MUSIC</span>
+                <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] mt-2 text-white/60 font-[var(--font-geist-sans)]">connects to the media and professional world</span>
+            </motion.div>
         </div>
     );
 }

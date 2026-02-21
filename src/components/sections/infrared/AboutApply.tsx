@@ -16,7 +16,7 @@ export function AboutApply({ onApply }: AboutApplyProps) {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="text-3xl md:text-5xl font-michroma font-bold text-white mb-8 tracking-wide text-center"
+                    className="text-3xl md:text-5xl font-[var(--font-geist-sans)] font-bold text-white mb-8 tracking-wide text-center"
                 >
                     <span className="text-infrared">TORA</span> is the professional network for the electronic music industry.
                 </motion.h1>

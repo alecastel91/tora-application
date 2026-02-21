@@ -30,7 +30,7 @@ export function Hero({ onJoinWaitlist }: HeroProps) {
                 <span className="text-[10px] font-black uppercase tracking-[0.5em] text-infrared mb-6 block">
                     Establishing Connection
                 </span>
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/30 uppercase font-[var(--font-michroma)]">
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/30 uppercase font-[var(--font-geist-sans)]">
                     Match. <br className="md:hidden" /> Tour. Grow.
                 </h1>
                 <p className="text-sm md:text-base text-white/40 mb-12 max-w-xl mx-auto leading-relaxed tracking-wider uppercase font-light">

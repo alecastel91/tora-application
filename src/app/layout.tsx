@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Rajdhani, Michroma } from "next/font/google";
+import { Space_Grotesk, Geist } from "next/font/google";
 import "./globals.css";
 
-const rajdhani = Rajdhani({
-  variable: "--font-rajdhani",
-  weight: ["300", "400", "500", "600", "700"],
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
 
-const michroma = Michroma({
-  variable: "--font-michroma",
-  weight: ["400"],
+const geist = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
@@ -27,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${rajdhani.variable} ${michroma.variable} font-sans antialiased`}
+        className={`${spaceGrotesk.variable} ${geist.variable} font-sans antialiased`}
       >
         {children}
       </body>
