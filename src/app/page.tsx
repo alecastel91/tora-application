@@ -22,7 +22,7 @@ export default function Home() {
           <motion.div
             key="logo"
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.5 }}
             className="absolute inset-0"
           >
             <LogoEmergence onComplete={() => setView("about")} />
@@ -35,7 +35,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, x: -50, filter: "blur(5px)" }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.4 }}
             className="absolute inset-0"
           >
             <AboutApply onApply={() => setView("form")} />
@@ -48,7 +48,7 @@ export default function Home() {
             initial={{ opacity: 0, x: 50, filter: "blur(5px)" }}
             animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.4 }}
             className="absolute inset-0"
           >
             <ApplicationForm onSubmit={() => setView("confirmation")} />
@@ -60,7 +60,7 @@ export default function Home() {
             key="confirmation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.5 }}
             className="absolute inset-0"
           >
             <Confirmation />

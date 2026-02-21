@@ -13,7 +13,7 @@ const TORA_LOGO_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAY
 
 export function LogoEmergence({ onComplete }: LogoEmergenceProps) {
     useEffect(() => {
-        const timer = setTimeout(onComplete, 3500);
+        const timer = setTimeout(onComplete, 1500);
         return () => clearTimeout(timer);
     }, [onComplete]);
 

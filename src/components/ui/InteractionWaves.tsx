@@ -66,7 +66,7 @@ export function InteractionWaves() {
                 const pulse = Math.sin(Date.now() / 150) * 8;
                 ctx.beginPath();
                 ctx.arc(mouse.current.x, mouse.current.y, 20 + pulse, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(189, 44, 15, ${0.15 + pulse * 0.005})`;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 + pulse * 0.005})`;
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
             }
@@ -83,14 +83,14 @@ export function InteractionWaves() {
 
                 ctx.beginPath();
                 ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(189, 44, 15, ${w.opacity * w.life})`;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${w.opacity * w.life})`;
                 ctx.lineWidth = 2 * w.life;
                 ctx.stroke();
 
                 // Secondary subtle wave
                 ctx.beginPath();
                 ctx.arc(w.x, w.y, w.radius * 0.8, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(189, 44, 15, ${w.opacity * 0.5 * w.life})`;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${w.opacity * 0.5 * w.life})`;
                 ctx.lineWidth = 1 * w.life;
                 ctx.stroke();
             });
