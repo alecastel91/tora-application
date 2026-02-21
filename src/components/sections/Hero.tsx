@@ -30,9 +30,10 @@ export function Hero({ onJoinWaitlist }: HeroProps) {
                 <span className="text-[10px] font-black uppercase tracking-[0.5em] text-infrared mb-6 block">
                     Establishing Connection
                 </span>
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/30 uppercase font-[var(--font-geist-sans)]">
-                    Match. <br className="md:hidden" /> Tour. Grow.
-                </h1>
+                <div className="flex flex-col items-center text-center w-full max-w-[90vw] mb-8">
+                    <span className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-widest leading-none font-[var(--font-geist-sans)] text-white">WHERE MUSIC</span>
+                    <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] mt-2 text-white/60 font-[var(--font-geist-sans)]">connects to the media and professional world</span>
+                </div>
                 <p className="text-sm md:text-base text-white/40 mb-12 max-w-xl mx-auto leading-relaxed tracking-wider uppercase font-light">
                     Redefining the music industry ecosystem through decentralized match-making and collective tour funding.
                 </p>

@@ -13,7 +13,7 @@ const TORA_LOGO_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAY
 
 export function LogoEmergence({ onComplete }: LogoEmergenceProps) {
     useEffect(() => {
-        const timer = setTimeout(onComplete, 1500);
+        const timer = setTimeout(onComplete, 3000);
         return () => clearTimeout(timer);
     }, [onComplete]);
 
@@ -30,15 +30,14 @@ export function LogoEmergence({ onComplete }: LogoEmergenceProps) {
                 </div>
             </motion.div>
 
-            <motion.div
+            <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1, ease: "easeOut" }}
-                className="flex flex-col items-center text-center w-full max-w-[90vw]"
+                className="text-base md:text-lg font-[var(--font-geist-sans)] tracking-[0.2em] text-white/60 uppercase text-center"
             >
-                <span className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-widest leading-none font-[var(--font-geist-sans)] text-white">WHERE MUSIC</span>
-                <span className="text-[10px] md:text-xs uppercase tracking-[0.3em] mt-2 text-white/60 font-[var(--font-geist-sans)]">connects to the media and professional world</span>
-            </motion.div>
+                Where the music industry connects.
+            </motion.p>
         </div>
     );
 }
