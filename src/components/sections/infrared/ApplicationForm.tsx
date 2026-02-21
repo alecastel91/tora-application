@@ -34,7 +34,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
         <div className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4 overflow-hidden">
             <GlassPanel className="p-8 md:p-16 max-w-2xl w-full flex flex-col items-center">
                 <div className="mb-12 text-center">
-                    <h2 className="text-2xl md:text-3xl font-orbitron tracking-[0.2em] text-white">ACCESS REQUEST</h2>
+                    <h2 className="text-2xl md:text-3xl font-michroma tracking-[0.2em] text-white">ACCESS REQUEST</h2>
                 </div>
 
                 <div className="relative min-h-[400px] w-full flex flex-col items-center justify-center">

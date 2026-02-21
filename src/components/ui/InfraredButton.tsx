@@ -15,7 +15,7 @@ export function InfraredButton({ children, className, variant = "primary", ...pr
             whileHover={{ scale: 1.02, textShadow: "0 0 8px rgb(255 255 255 / 0.5)" }}
             whileTap={{ scale: 0.98 }}
             className={cn(
-                "relative px-8 py-4 rounded-sm font-orbitron uppercase tracking-widest text-sm font-bold transition-all duration-300",
+                "relative px-8 py-4 rounded-sm font-michroma uppercase tracking-widest text-sm font-bold transition-all duration-300",
                 "border border-white/15 overflow-hidden group",
                 variant === "primary"
                     ? "text-white bg-charcoal shadow-lg hover:border-white/30"

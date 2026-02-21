@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Orbitron } from "next/font/google";
+import { Rajdhani, Michroma } from "next/font/google";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
-const orbitron = Orbitron({
-  variable: "--font-orbitron",
+const michroma = Michroma({
+  variable: "--font-michroma",
+  weight: ["400"],
   subsets: ["latin"],
-  weight: ["400", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceGrotesk.variable} ${orbitron.variable} font-sans antialiased`}
+        className={`${rajdhani.variable} ${michroma.variable} font-sans antialiased`}
       >
         {children}
       </body>

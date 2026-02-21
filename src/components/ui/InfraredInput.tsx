@@ -12,7 +12,7 @@ export const InfraredInput = forwardRef<HTMLInputElement, InfraredInputProps>(
         return (
             <div className="space-y-2 w-full">
                 {label && (
-                    <label className="text-xs uppercase tracking-widest text-white/50 font-orbitron ml-1">
+                    <label className="text-xs uppercase tracking-widest text-white/50 font-michroma ml-1">
                         {label}
                     </label>
                 )}

@@ -7,8 +7,8 @@
   --color-infrared-dim: #aaaaaa;
   --color-infrared-glow: rgba(255, 255, 255, 0.15);
 
-  /* --font-orbitron is now defined in layout.tsx via next/font/google variables */
-  /* We can reference it directly via var(--font-orbitron) which matches the variable name */
+  /* --font-rajdhani and --font-michroma are now defined in layout.tsx via next/font/google variables */
+  /* We can reference them directly via their matching tailwind class names if set up, or as vars */
 
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
@@ -29,7 +29,7 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-space-grotesk), sans-serif;
+    font-family: var(--font-rajdhani), sans-serif;
     @apply antialiased overflow-x-hidden;
   }
 }
