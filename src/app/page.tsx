@@ -4,31 +4,19 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ThreeDBackground } from "@/components/ui/ThreeDBackground";
 import { LogoEmergence } from "@/components/sections/infrared/LogoEmergence";
-import { AboutApply } from "@/components/sections/infrared/AboutApply";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
 import { Confirmation } from "@/components/sections/infrared/Confirmation";
 
-type FlowState = "logo" | "about" | "form" | "confirmation";
+type FlowState = "about" | "form" | "confirmation";
 
 export default function Home() {
-  const [view, setView] = useState<FlowState>("logo");
+  const [view, setView] = useState<FlowState>("about");
 
   return (
     <main className="relative min-h-screen bg-charcoal overflow-hidden font-sans selection:bg-infrared/30 selection:text-white">
       <ThreeDBackground />
 
       <AnimatePresence mode="wait">
-        {view === "logo" && (
-          <motion.div
-            key="logo"
-            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0"
-          >
-            <LogoEmergence onComplete={() => setView("about")} />
-          </motion.div>
-        )}
-
         {view === "about" && (
           <motion.div
             key="about"
@@ -38,7 +26,7 @@ export default function Home() {
             transition={{ duration: 0.4 }}
             className="absolute inset-0"
           >
-            <AboutApply onApply={() => setView("form")} />
+            <LogoEmergence onApply={() => setView("form")} />
           </motion.div>
         )}
 
