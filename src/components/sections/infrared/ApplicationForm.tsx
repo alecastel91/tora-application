@@ -4,7 +4,13 @@ import { GlassPanel } from "@/components/ui/GlassPanel";
 import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface ApplicationFormProps {
     onSubmit: () => void;
@@ -12,81 +18,69 @@ interface ApplicationFormProps {
 
 export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [step, setStep] = useState(1);
-    const [role, setRole] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
     const [direction, setDirection] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Form field state
+    const [role, setRole] = useState<string | null>(null);
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [city, setCity] = useState("");
+    const [portfolio, setPortfolio] = useState("");
+
+    const nextStep = () => { setDirection(1); setStep((s) => s + 1); };
+    const prevStep = () => { setDirection(-1); setStep((s) => s - 1); };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            onSubmit();
-        }, 2000);
-    };
+        setError(null);
 
-    const nextStep = () => {
-        setDirection(1);
-        setStep((s) => s + 1);
-    };
-    
-    const prevStep = () => {
-        setDirection(-1);
-        setStep((s) => s - 1);
+        const { error: dbError } = await supabase.from("waitlist").insert([
+            {
+                role,
+                full_name: fullName,
+                email,
+                city,
+                portfolio,
+            },
+        ]);
+
+        setLoading(false);
+
+        if (dbError) {
+            setError("Something went wrong. Please try again.");
+            return;
+        }
+
+        onSubmit();
     };
 
     const roles = ["Artist", "PR / Promoter", "Venue", "Agent"];
 
     const slideVariants = {
-        enter: (direction: number) => ({
-            x: direction > 0 ? 100 : -100,
-            opacity: 0,
-            scale: 0.95,
-            filter: "blur(10px)",
-        }),
-        center: {
-            x: 0,
-            opacity: 1,
-            scale: 1,
-            filter: "blur(0px)",
-        },
-        exit: (direction: number) => ({
-            x: direction > 0 ? -100 : 100,
-            opacity: 0,
-            scale: 0.95,
-            filter: "blur(10px)",
-        }),
+        enter: (dir: number) => ({ x: dir > 0 ? 100 : -100, opacity: 0, scale: 0.95, filter: "blur(10px)" }),
+        center: { x: 0, opacity: 1, scale: 1, filter: "blur(0px)" },
+        exit: (dir: number) => ({ x: dir > 0 ? -100 : 100, opacity: 0, scale: 0.95, filter: "blur(10px)" }),
     };
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2,
-            },
-        },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
     };
 
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.5,
-                ease: [0.16, 1, 0.3, 1],
-            },
-        },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4 overflow-hidden">
             <GlassPanel className="p-8 md:p-16 max-w-2xl w-full flex flex-col items-center">
-                {/* Header with progress */}
+                {/* Header */}
                 <div className="mb-12 text-center w-full">
-                    <motion.h2 
+                    <motion.h2
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -94,18 +88,19 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                     >
                         ACCESS REQUEST
                     </motion.h2>
-                    
-                    {/* Progress bar */}
+
+                    {/* Progress bar with faint fuchsia active tint */}
                     <div className="flex justify-center space-x-2">
                         {[1, 2, 3, 4, 5].map((s) => (
                             <motion.div
                                 key={s}
                                 className="h-1 rounded-full overflow-hidden"
                                 style={{ width: "40px" }}
-                                initial={{ opacity: 0.3, backgroundColor: "rgba(255,255,255,0.2)" }}
                                 animate={{
                                     opacity: s <= step ? 1 : 0.3,
-                                    backgroundColor: s <= step ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.2)",
+                                    backgroundColor: s <= step
+                                        ? s === step ? "rgba(217,70,239,0.55)" : "rgba(255,255,255,0.55)"
+                                        : "rgba(255,255,255,0.15)",
                                 }}
                                 transition={{ duration: 0.3 }}
                             />
@@ -115,6 +110,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
                 <div className="relative min-h-[400px] w-full flex flex-col items-center justify-center">
                     <AnimatePresence mode="wait" custom={direction}>
+
+                        {/* Step 1 — Role */}
                         {step === 1 && (
                             <motion.div
                                 key="step1"
@@ -126,14 +123,14 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                 className="space-y-8 w-full max-w-md mx-auto flex flex-col items-center"
                             >
-                                <motion.p 
+                                <motion.p
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     className="text-base md:text-lg uppercase tracking-[0.25em] text-white/60 text-center mb-4 font-tech"
                                 >
                                     Select Actor Role
                                 </motion.p>
-                                <motion.div 
+                                <motion.div
                                     className="grid grid-cols-1 gap-4 w-full"
                                     variants={containerVariants}
                                     initial="hidden"
@@ -143,11 +140,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <motion.button
                                             key={r}
                                             variants={itemVariants}
-                                            whileHover={{ 
-                                                scale: 1.02, 
-                                                backgroundColor: "rgba(255,255,255,0.1)",
-                                                borderColor: "rgba(255,255,255,0.4)",
-                                            }}
+                                            whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => { setRole(r); nextStep(); }}
                                             className={`w-full px-8 py-5 border text-center transition-all uppercase text-sm md:text-base font-bold tracking-widest font-tech ${role === r
@@ -156,9 +149,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 }`}
                                         >
                                             <motion.span
+                                                className="flex items-center justify-center gap-3"
                                                 initial={{ opacity: 0.5 }}
                                                 animate={{ opacity: role === r ? 1 : 0.5 }}
-                                                className="flex items-center justify-center gap-3"
                                             >
                                                 <span className="text-xs opacity-50">0{i + 1}</span>
                                                 {r}
@@ -169,6 +162,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             </motion.div>
                         )}
 
+                        {/* Step 2 — Name */}
                         {step === 2 && (
                             <motion.div
                                 key="step2"
@@ -180,41 +174,33 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                 className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
-                                <form onSubmit={(e) => { e.preventDefault(); nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
+                                <form onSubmit={(e) => { e.preventDefault(); if (fullName.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center">
-                                        <motion.p 
+                                        <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-base md:text-lg uppercase tracking-[0.25em] text-white/60 mb-6 font-tech"
                                         >
                                             Identification
                                         </motion.p>
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.1 }}
-                                        >
-                                            <InfraredInput
-                                                label=""
-                                                placeholder="FULL NAME"
-                                                required
-                                                className="text-center text-lg md:text-xl py-6 font-tech"
-                                            />
-                                        </motion.div>
+                                        <InfraredInput
+                                            label=""
+                                            placeholder="FULL NAME"
+                                            required
+                                            value={fullName}
+                                            onChange={(e) => setFullName(e.target.value)}
+                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                        />
                                     </div>
-                                    <motion.div 
-                                        className="flex space-x-4 w-full justify-center"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2 }}
-                                    >
+                                    <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
                                         <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
-                                    </motion.div>
+                                    </div>
                                 </form>
                             </motion.div>
                         )}
 
+                        {/* Step 3 — Email */}
                         {step === 3 && (
                             <motion.div
                                 key="step3"
@@ -226,42 +212,34 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                 className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
-                                <form onSubmit={(e) => { e.preventDefault(); nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
+                                <form onSubmit={(e) => { e.preventDefault(); if (email.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center">
-                                        <motion.p 
+                                        <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-base md:text-lg uppercase tracking-[0.25em] text-white/60 mb-6 font-tech"
                                         >
                                             Contact Vector
                                         </motion.p>
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.1 }}
-                                        >
-                                            <InfraredInput
-                                                label=""
-                                                type="email"
-                                                placeholder="EMAIL ADDRESS"
-                                                required
-                                                className="text-center text-lg md:text-xl py-6 font-tech"
-                                            />
-                                        </motion.div>
+                                        <InfraredInput
+                                            label=""
+                                            type="email"
+                                            placeholder="EMAIL ADDRESS"
+                                            required
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                        />
                                     </div>
-                                    <motion.div 
-                                        className="flex space-x-4 w-full justify-center"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2 }}
-                                    >
+                                    <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
                                         <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
-                                    </motion.div>
+                                    </div>
                                 </form>
                             </motion.div>
                         )}
 
+                        {/* Step 4 — City */}
                         {step === 4 && (
                             <motion.div
                                 key="step4"
@@ -273,41 +251,33 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                 className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
-                                <form onSubmit={(e) => { e.preventDefault(); nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
+                                <form onSubmit={(e) => { e.preventDefault(); if (city.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center">
-                                        <motion.p 
+                                        <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-base md:text-lg uppercase tracking-[0.25em] text-white/60 mb-6 font-tech"
                                         >
-                                            Operations Hub
+                                            City
                                         </motion.p>
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.1 }}
-                                        >
-                                            <InfraredInput
-                                                label=""
-                                                placeholder="LOCATION / CITY"
-                                                required
-                                                className="text-center text-lg md:text-xl py-6 font-tech"
-                                            />
-                                        </motion.div>
+                                        <InfraredInput
+                                            label=""
+                                            placeholder="YOUR CITY"
+                                            required
+                                            value={city}
+                                            onChange={(e) => setCity(e.target.value)}
+                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                        />
                                     </div>
-                                    <motion.div 
-                                        className="flex space-x-4 w-full justify-center"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2 }}
-                                    >
+                                    <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
                                         <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
-                                    </motion.div>
+                                    </div>
                                 </form>
                             </motion.div>
                         )}
 
+                        {/* Step 5 — Portfolio / submit */}
                         {step === 5 && (
                             <motion.div
                                 key="step5"
@@ -321,31 +291,31 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             >
                                 <form onSubmit={handleSubmit} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center">
-                                        <motion.p 
+                                        <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-base md:text-lg uppercase tracking-[0.25em] text-white/60 mb-6 font-tech"
                                         >
                                             Credentials
                                         </motion.p>
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.1 }}
-                                        >
-                                            <InfraredInput
-                                                label=""
-                                                placeholder="PORTFOLIO / SOCIAL LINK"
-                                                className="text-center text-lg md:text-xl py-6 font-tech"
-                                            />
-                                        </motion.div>
+                                        <InfraredInput
+                                            label=""
+                                            placeholder="PORTFOLIO / SOCIAL LINK"
+                                            value={portfolio}
+                                            onChange={(e) => setPortfolio(e.target.value)}
+                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                        />
+                                        {error && (
+                                            <motion.p
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                className="mt-4 text-xs text-red-400 tracking-widest uppercase"
+                                            >
+                                                {error}
+                                            </motion.p>
+                                        )}
                                     </div>
-                                    <motion.div 
-                                        className="flex space-x-4 w-full justify-center"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2 }}
-                                    >
+                                    <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4" disabled={loading}>BACK</InfraredButton>
                                         <InfraredButton type="submit" disabled={loading} className="flex-1 py-4 text-base relative overflow-hidden">
                                             {loading ? (
@@ -365,10 +335,11 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 "SUBMIT APPLICATION"
                                             )}
                                         </InfraredButton>
-                                    </motion.div>
+                                    </div>
                                 </form>
                             </motion.div>
                         )}
+
                     </AnimatePresence>
                 </div>
             </GlassPanel>

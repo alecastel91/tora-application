@@ -7,6 +7,8 @@
   --color-infrared-dim: #aaaaaa;
   --color-infrared-glow: rgba(255, 255, 255, 0.15);
   --color-near-black: #080808;
+  --color-fuchsia-accent: rgba(217, 70, 239, 0.12);
+  --color-fuchsia-glow: rgba(217, 70, 239, 0.06);
 
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
@@ -93,6 +95,10 @@
     text-shadow: 
       0 0 5px rgba(255, 255, 255, 0.3),
       0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  .fuchsia-hairline {
+    background: linear-gradient(90deg, transparent, rgba(217, 70, 239, 0.18), transparent);
   }
 }
 
@@ -240,10 +246,10 @@
 /* ===== PULSE GLOW ===== */
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(255,255,255,0.2), 0 0 10px rgba(255,255,255,0.1);
+    box-shadow: 0 0 5px rgba(255,255,255,0.2), 0 0 10px rgba(255,255,255,0.1), 0 0 20px rgba(217,70,239,0.04);
   }
   50% {
-    box-shadow: 0 0 15px rgba(255,255,255,0.4), 0 0 30px rgba(255,255,255,0.2);
+    box-shadow: 0 0 15px rgba(255,255,255,0.4), 0 0 30px rgba(255,255,255,0.2), 0 0 40px rgba(217,70,239,0.07);
   }
 }
 

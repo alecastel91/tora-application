@@ -25,6 +25,9 @@ export function GlassPanel({ children, className, delay = 0, ...props }: GlassPa
             )}
             {...props}
         >
+            {/* Faint fuchsia corner shimmer */}
+            <div className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-[radial-gradient(circle,rgba(217,70,239,0.08)_0%,transparent_70%)] blur-2xl z-0" />
+            <div className="pointer-events-none absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[rgba(217,70,239,0.12)] to-transparent z-0" />
 
             <div className="relative z-10">{children}</div>
         </motion.div>
