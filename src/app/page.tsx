@@ -3,20 +3,34 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ThreeDBackground } from "@/components/ui/ThreeDBackground";
+import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
 import { LogoEmergence } from "@/components/sections/infrared/LogoEmergence";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
 import { Confirmation } from "@/components/sections/infrared/Confirmation";
 
-type FlowState = "about" | "form" | "confirmation";
+type FlowState = "intro" | "about" | "form" | "confirmation";
 
 export default function Home() {
-  const [view, setView] = useState<FlowState>("about");
+  const [view, setView] = useState<FlowState>("intro");
 
   return (
-    <main className="relative min-h-screen bg-charcoal overflow-hidden font-sans selection:bg-infrared/30 selection:text-white">
-      <ThreeDBackground />
+    <main className="relative min-h-screen bg-black overflow-hidden font-sans selection:bg-infrared/30 selection:text-white">
+      {view !== "intro" && <ThreeDBackground />}
 
       <AnimatePresence mode="wait">
+        {view === "intro" && (
+          <motion.div
+            key="intro"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0"
+          >
+            <IntroSplash onComplete={() => setView("about")} />
+          </motion.div>
+        )}
+
         {view === "about" && (
           <motion.div
             key="about"
