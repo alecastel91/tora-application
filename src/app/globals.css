@@ -3,9 +3,9 @@
 @theme {
   --color-charcoal: #050505;
   --color-glass: rgba(10, 10, 10, 0.6);
-  --color-infrared: #ffffff;
-  --color-infrared-dim: #aaaaaa;
-  --color-infrared-glow: rgba(255, 255, 255, 0.15);
+  --color-infrared: #FF3366;
+  --color-infrared-dim: #cc2952;
+  --color-infrared-glow: rgba(255, 51, 102, 0.15);
   --color-near-black: #080808;
   --color-fuchsia-accent: rgba(217, 70, 239, 0.12);
   --color-fuchsia-glow: rgba(217, 70, 239, 0.06);
