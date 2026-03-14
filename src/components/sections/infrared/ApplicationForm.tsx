@@ -7,10 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+// Create a dummy Supabase client with placeholder values for build time
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key';
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Country codes (alphabetical by country name)
 const countryCodes = [
