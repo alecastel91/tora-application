@@ -29,8 +29,8 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
             setSlideUp(true);
             onComplete(); // Notify parent that intro is done
         }, 2600);
-        // Content appears at 2.61 seconds (10ms after slide)
-        const contentTimer = setTimeout(() => setShowContent(true), 2610);
+        // Content appears at 2.601 seconds (1ms after slide starts)
+        const contentTimer = setTimeout(() => setShowContent(true), 2601);
 
         return () => {
             clearTimeout(logoTimer);
@@ -51,9 +51,9 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                         showLogo
                             ? {
                                   opacity: 1,
-                                  scale: slideUp ? 0.625 : 1, // 320px -> 200px (0.625x)
+                                  scale: slideUp ? 0.7 : 1, // 320px -> 224px (0.7x)
                                   filter: "blur(0px)",
-                                  y: slideUp ? -120 : 0 // Slide up 120px
+                                  y: slideUp ? -80 : 0 // Slide up 80px (reduced from 120px)
                               }
                             : {}
                     }
@@ -81,24 +81,71 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                     transition={{ duration: 0.3, ease: "easeOut" }}
                     className="text-center mt-2 md:mt-1"
                 >
-                    <span className="text-white text-[10px] md:text-[12px] font-medium tracking-[0.22em] uppercase whitespace-nowrap">
-                        WHERE THE MUSIC INDUSTRY CONNECTS.
+                    <span
+                        className="text-white text-[12px] md:text-[14px] tracking-[0.22em] uppercase whitespace-nowrap"
+                        style={{
+                            fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
+                            fontWeight: 400,
+                            letterSpacing: '0.22em'
+                        }}
+                    >
+                        WHERE MUSIC MEETS
                     </span>
                 </motion.div>
 
                 {/* Content appears after slide */}
                 {slideUp && (
-                    <div className="w-full flex flex-col items-center -mt-32 md:-mt-36">
+                    <div className="w-full flex flex-col items-center -mt-24 md:-mt-28">
+                        {/* Rotating Globe Icon */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={showContent ? { opacity: 1, scale: 1, rotate: 360 } : {}}
+                            transition={{
+                                opacity: { duration: 0.5 },
+                                scale: { duration: 0.5 },
+                                rotate: { duration: 30, repeat: Infinity, ease: "linear" }
+                            }}
+                            className="mb-6"
+                        >
+                            <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                {/* Outer circle */}
+                                <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth="3" fill="none" opacity="0.8"/>
+
+                                {/* Vertical center line */}
+                                <line x1="120" y1="20" x2="120" y2="220" stroke="#FF3366" strokeWidth="3" opacity="0.8"/>
+
+                                {/* Horizontal center line (equator) */}
+                                <line x1="20" y1="120" x2="220" y2="120" stroke="#FF3366" strokeWidth="3" opacity="0.8"/>
+
+                                {/* Latitude lines (horizontal ellipses) */}
+                                <ellipse cx="120" cy="120" rx="100" ry="50" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+                                <ellipse cx="120" cy="120" rx="100" ry="25" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+
+                                {/* Longitude lines (vertical curves) */}
+                                <path d="M 120 20 Q 80 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+                                <path d="M 120 20 Q 160 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+                                <path d="M 120 20 Q 60 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+                                <path d="M 120 20 Q 180 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+                            </svg>
+                        </motion.div>
+
                         {/* Main tagline - all white text, bigger font */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={showContent ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.7, ease: "easeOut" }}
-                            className="flex flex-col items-center text-center w-full mb-10"
+                            className="flex flex-col items-center text-center w-full mb-6"
                         >
-                            <p className="text-base md:text-lg font-light uppercase tracking-wide text-white leading-relaxed">
-                                IS THE PROFESSIONAL NETWORK FOR THE<br />
-                                ELECTRONIC MUSIC INDUSTRY.
+                            <p
+                                className="text-base md:text-lg uppercase tracking-[0.15em] text-white leading-relaxed"
+                                style={{
+                                    fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
+                                    fontWeight: 500,
+                                    letterSpacing: '0.15em'
+                                }}
+                            >
+                                THE PROFESSIONAL NETWORK FOR<br />
+                                THE ELECTRONIC MUSIC INDUSTRY
                             </p>
                         </motion.div>
 
@@ -107,10 +154,10 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                             initial={{ opacity: 0 }}
                             animate={showContent ? { opacity: 1 } : {}}
                             transition={{ delay: 0.3, duration: 0.7, ease: "easeOut" }}
-                            className="flex flex-col items-center text-center w-full mb-12"
+                            className="flex flex-col items-center text-center w-full mb-8"
                         >
-                            <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-sm">
-                                Connect with artists, agents, venues, and promoters worldwide. Discover opportunities, manage bookings, and grow your network in one seamless platform.
+                            <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-sm">
+                                Connect with artists, agents, venues, and promoters worldwide. Discover opportunities, manage bookings, and grow your network in one seamless platform
                             </p>
                         </motion.div>
 

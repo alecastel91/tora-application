@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Orbitron, Rajdhani, Inter } from "next/font/google";
+import { Orbitron, Rajdhani, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -20,6 +20,12 @@ const inter = Inter({
   weight: ["300", "400", "500", "600"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Tora - Where the Music Industry Connects",
   description: "The professional network for the electronic music industry. Connect with artists, agents, venues, and promoters.",
@@ -33,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${orbitron.variable} ${rajdhani.variable} ${inter.variable} font-sans antialiased`}
+        className={`${orbitron.variable} ${rajdhani.variable} ${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
       >
         {children}
       </body>

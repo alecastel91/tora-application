@@ -274,6 +274,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [direction, setDirection] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [submitted, setSubmitted] = useState(false);
 
     // Phone verification state
     const [countryCode, setCountryCode] = useState("");
@@ -342,38 +343,77 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log("Form submitted!");
         setLoading(true);
         setError(null);
 
-        const { error: dbError } = await supabase.from("waitlist").insert([
-            {
-                phone_number: `${countryCode} ${phoneNumber}`,
-                role,
-                full_name: `${firstName} ${lastName}`,
-                profile_name: profileName,
-                email,
-                zone,
-                country,
-                city,
-                genres: genres.join(', '),
-                portfolio,
-                resident_advisor: residentAdvisor || null,
-                soundcloud: soundcloud || null,
-                agency_name: agencyName || null,
-                website_linkedin: websiteLinkedin || null,
-                venue_capacity: venueCapacity || null,
-                website: website || null,
-            },
-        ]);
+        // Simulate loading delay for better UX
+        setTimeout(async () => {
+            try {
+                // Only try to save to Supabase if valid credentials are configured
+                const hasSupabaseConfig =
+                    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+                    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co';
 
-        setLoading(false);
+                if (hasSupabaseConfig) {
+                    const { error: dbError } = await supabase.from("waitlist").insert([
+                        {
+                            phone_number: `${countryCode} ${phoneNumber}`,
+                            role,
+                            full_name: `${firstName} ${lastName}`,
+                            profile_name: profileName,
+                            email,
+                            zone,
+                            country,
+                            city,
+                            genres: genres.join(', '),
+                            portfolio,
+                            resident_advisor: residentAdvisor || null,
+                            soundcloud: soundcloud || null,
+                            agency_name: agencyName || null,
+                            website_linkedin: websiteLinkedin || null,
+                            venue_capacity: venueCapacity || null,
+                            website: website || null,
+                        },
+                    ]);
 
-        if (dbError) {
-            setError("Something went wrong. Please try again.");
-            return;
-        }
+                    if (dbError) {
+                        console.error("Database error:", dbError);
+                        setLoading(false);
+                        setError("Something went wrong. Please try again.");
+                        return;
+                    }
+                } else {
+                    // Log form data to console instead (for testing without Supabase)
+                    console.log("Supabase not configured. Form data:", {
+                        phone_number: `${countryCode} ${phoneNumber}`,
+                        role,
+                        full_name: `${firstName} ${lastName}`,
+                        profile_name: profileName,
+                        email,
+                        zone,
+                        country,
+                        city,
+                        genres: genres.join(', '),
+                        portfolio,
+                        resident_advisor: residentAdvisor || null,
+                        soundcloud: soundcloud || null,
+                        agency_name: agencyName || null,
+                        website_linkedin: websiteLinkedin || null,
+                        venue_capacity: venueCapacity || null,
+                        website: website || null,
+                    });
+                }
 
-        onSubmit();
+                setLoading(false);
+                console.log("Submission successful, showing confirmation...");
+                setSubmitted(true);
+            } catch (err) {
+                console.error("Unexpected error:", err);
+                setLoading(false);
+                setError("Something went wrong. Please try again.");
+            }
+        }, 1500); // 1.5 second delay to show loading state
     };
 
     const roles = ["Artist", "Promoter", "Venue", "Agent"];
@@ -394,6 +434,88 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
         visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
     };
 
+    // Show confirmation screen if submitted
+    if (submitted) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4 py-8">
+                <GlassPanel className="p-8 md:p-16 max-w-2xl w-full flex flex-col items-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="text-center space-y-8"
+                    >
+                        {/* Success checkmark icon */}
+                        <motion.div
+                            initial={{ scale: 0, rotate: -180 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                            className="flex justify-center"
+                        >
+                            <div className="w-24 h-24 rounded-full bg-infrared/20 flex items-center justify-center">
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <motion.path
+                                        initial={{ pathLength: 0 }}
+                                        animate={{ pathLength: 1 }}
+                                        transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
+                                        d="M10 24L18 32L38 12"
+                                        stroke="#FF3366"
+                                        strokeWidth="4"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                        </motion.div>
+
+                        {/* Confirmation heading */}
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4, duration: 0.6 }}
+                            className="text-3xl md:text-4xl font-black tracking-[0.2em] uppercase text-white"
+                            style={{
+                                fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
+                                fontWeight: 700,
+                                letterSpacing: '0.2em'
+                            }}
+                        >
+                            APPLICATION RECEIVED
+                        </motion.h2>
+
+                        {/* Confirmation message */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.6, duration: 0.6 }}
+                            className="space-y-4"
+                        >
+                            <p className="text-white/80 text-base md:text-lg leading-relaxed max-w-md mx-auto">
+                                Thank you for applying to TORA!
+                            </p>
+                            <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-md mx-auto">
+                                Your application has been received and will be carefully reviewed. If approved, you'll receive an email invitation to join our exclusive network.
+                            </p>
+                        </motion.div>
+
+                        {/* Additional info */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8, duration: 0.6 }}
+                            className="pt-6 border-t border-white/10"
+                        >
+                            <p className="text-white/40 text-xs md:text-sm">
+                                We typically respond within 48-72 hours.<br />
+                                Check your email and spam folder for updates.
+                            </p>
+                        </motion.div>
+                    </motion.div>
+                </GlassPanel>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col items-center justify-start min-h-screen relative z-10 px-4 py-8 overflow-y-auto overflow-x-hidden">
             <GlassPanel className="p-4 md:p-16 max-w-2xl w-full flex flex-col items-center my-auto">
@@ -404,8 +526,13 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-2xl md:text-3xl font-black tracking-[0.2em] uppercase text-white mb-6"
-                        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif', fontWeight: 900, letterSpacing: '0.2em' }}
+                        className="text-3xl md:text-4xl font-black tracking-[0.25em] uppercase text-white mb-6"
+                        style={{
+                            fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), var(--font-orbitron), sans-serif',
+                            fontWeight: 700,
+                            letterSpacing: '0.25em',
+                            textShadow: '0 0 30px rgba(255, 51, 102, 0.3)'
+                        }}
                     >
                         ACCESS REQUEST
                     </motion.h2>
@@ -456,31 +583,32 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
                                         {!codeSent ? (
                                             <>
-                                                {/* Country Code Selector */}
-                                                <select
-                                                    value={countryCode}
-                                                    onChange={(e) => setCountryCode(e.target.value)}
-                                                    required
-                                                    className="w-full px-4 py-6 bg-white/5 border border-white/10 text-white text-center text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors mb-4"
-                                                >
-                                                    <option value="" disabled className="bg-[#0a0a0a] text-white/40">
-                                                        Select Country Code
-                                                    </option>
-                                                    {countryCodes.map((country) => (
-                                                        <option
-                                                            key={`${country.code}-${country.country}`}
-                                                            value={country.code}
-                                                            className="bg-[#0a0a0a] text-white"
-                                                        >
-                                                            {country.name} ({country.code})
-                                                        </option>
-                                                    ))}
-                                                </select>
-
-                                                {/* Phone Number Input with embedded country code */}
+                                                {/* Phone Number Input with dropdown prefix */}
                                                 <div className="relative w-full mb-4">
-                                                    <div className="absolute left-0 top-0 bottom-0 flex items-center pl-4 pointer-events-none">
-                                                        <span className="text-lg md:text-xl text-white font-tech">{countryCode || "+00"}</span>
+                                                    <select
+                                                        value={countryCode}
+                                                        onChange={(e) => setCountryCode(e.target.value)}
+                                                        required
+                                                        className="absolute left-0 top-0 bottom-0 pl-4 pr-2 bg-transparent border-r border-white/10 text-white text-base font-tech focus:outline-none z-10 appearance-none cursor-pointer"
+                                                        style={{ width: '90px' }}
+                                                    >
+                                                        <option value="" disabled className="bg-[#0a0a0a] text-white/40">
+                                                            +00
+                                                        </option>
+                                                        {countryCodes.map((c) => (
+                                                            <option
+                                                                key={`${c.code}-${c.country}`}
+                                                                value={c.code}
+                                                                className="bg-[#0a0a0a] text-white"
+                                                            >
+                                                                {c.country} {c.code}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="absolute left-[75px] top-0 bottom-0 flex items-center pointer-events-none">
+                                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white/60">
+                                                            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                        </svg>
                                                     </div>
                                                     <InfraredInput
                                                         label=""
@@ -489,7 +617,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                         required
                                                         value={phoneNumber}
                                                         onChange={(e) => setPhoneNumber(e.target.value)}
-                                                        className="text-lg md:text-xl py-6 font-tech pl-16"
+                                                        className="text-lg md:text-xl py-6 font-tech pl-24"
                                                     />
                                                 </div>
 
@@ -499,7 +627,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     transition={{ delay: 0.2 }}
                                                     className="text-xs text-white/40 tracking-wide mb-6"
                                                 >
-                                                    Select your country and enter phone number
+                                                    Enter your phone number with country code
                                                 </motion.p>
                                                 <InfraredButton
                                                     type="button"

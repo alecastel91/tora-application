@@ -15,7 +15,6 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-black overflow-x-hidden overflow-y-auto font-sans selection:bg-infrared/30 selection:text-white">
-      {view !== "intro" && <ThreeDBackground />}
 
       <AnimatePresence mode="wait">
         {view === "intro" && (
