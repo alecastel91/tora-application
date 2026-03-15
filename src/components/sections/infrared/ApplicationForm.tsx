@@ -494,17 +494,40 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             <p className="text-white/80 text-base md:text-lg leading-relaxed max-w-md mx-auto">
                                 Thank you for applying to TORA!
                             </p>
-                            <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-md mx-auto">
-                                Your application has been received and will be carefully reviewed. If approved, you'll receive an email invitation to join our exclusive network.
+                            <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-lg mx-auto">
+                                Your application has been received and will be carefully reviewed. TORA is currently in pre-launch phase – we're building an exclusive community of verified professionals before opening the platform.
                             </p>
                         </motion.div>
 
-                        {/* Additional info */}
+                        {/* What happens next */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.8, duration: 0.6 }}
-                            className="pt-6 border-t border-white/10"
+                            className="pt-6 border-t border-white/10 space-y-4"
+                        >
+                            <p className="text-white/70 text-sm md:text-base font-medium uppercase tracking-wider">
+                                What Happens Next
+                            </p>
+                            <div className="text-white/50 text-xs md:text-sm leading-relaxed space-y-2 max-w-lg mx-auto">
+                                <p>
+                                    <span className="text-infrared font-medium">1. Review:</span> Our team will carefully review your application
+                                </p>
+                                <p>
+                                    <span className="text-infrared font-medium">2. Approval:</span> If approved, you'll receive an invitation code via email
+                                </p>
+                                <p>
+                                    <span className="text-infrared font-medium">3. Launch Access:</span> Use your code to create your account when TORA launches
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        {/* Timeline */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1.0, duration: 0.6 }}
+                            className="pt-4"
                         >
                             <p className="text-white/40 text-xs md:text-sm">
                                 We typically respond within 48-72 hours.<br />
