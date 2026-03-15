@@ -312,6 +312,18 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     };
 
     const handleSendCode = async () => {
+        // Validate country code is selected
+        if (!countryCode) {
+            alert("Please select a country code prefix");
+            return;
+        }
+
+        // Validate phone number is entered
+        if (!phoneNumber.trim()) {
+            alert("Please enter your phone number");
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
@@ -320,7 +332,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
         setTimeout(() => {
             setCodeSent(true);
             setLoading(false);
-            console.log("SMS code sent to:", phoneNumber);
+            console.log("SMS code sent to:", countryCode + phoneNumber);
         }, 1000);
     };
 
@@ -522,7 +534,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             </div>
                         </motion.div>
 
-                        {/* Timeline */}
+                        {/* Final message */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -530,7 +542,6 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             className="pt-4"
                         >
                             <p className="text-white/40 text-xs md:text-sm">
-                                We typically respond within 48-72 hours.<br />
                                 Check your email and spam folder for updates.
                             </p>
                         </motion.div>
@@ -625,7 +636,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                                 value={c.code}
                                                                 className="bg-[#0a0a0a] text-white"
                                                             >
-                                                                {c.country} {c.code}
+                                                                {c.code} {c.name}
                                                             </option>
                                                         ))}
                                                     </select>
@@ -640,7 +651,11 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                         placeholder="234 567 8900"
                                                         required
                                                         value={phoneNumber}
-                                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                                        onChange={(e) => {
+                                                            // Only allow numbers and spaces
+                                                            const value = e.target.value.replace(/[^0-9\s]/g, '');
+                                                            setPhoneNumber(value);
+                                                        }}
                                                         className="text-lg md:text-xl py-6 font-tech pl-24"
                                                     />
                                                 </div>
@@ -656,7 +671,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 <InfraredButton
                                                     type="button"
                                                     onClick={handleSendCode}
-                                                    disabled={!countryCode || !phoneNumber || loading}
+                                                    disabled={loading}
                                                     className="w-full py-4 text-base"
                                                 >
                                                     {loading ? "SENDING..." : "SEND VERIFICATION CODE"}
