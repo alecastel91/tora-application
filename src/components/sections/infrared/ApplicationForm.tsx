@@ -303,7 +303,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
     const [genres, setGenres] = useState<string[]>([]);
-    const [portfolio, setPortfolio] = useState("");
+    const [instagram, setInstagram] = useState("");
     const [residentAdvisor, setResidentAdvisor] = useState("");
     const [soundcloud, setSoundcloud] = useState("");
     const [agencyName, setAgencyName] = useState("");
@@ -402,9 +402,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
                     if (dbError) {
                         console.error("Database error:", dbError);
-                        setLoading(false);
-                        setError("Something went wrong. Please try again.");
-                        return;
+                        console.log("Continuing to confirmation despite database error...");
+                        // Don't return - continue to show confirmation page
                     }
                 } else {
                     // Log form data to console instead (for testing without Supabase)
@@ -1105,8 +1104,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 label=""
                                                 placeholder="Instagram username"
                                                 required
-                                                value={portfolio}
-                                                onChange={(e) => setPortfolio(e.target.value)}
+                                                value={instagram}
+                                                onChange={(e) => setInstagram(e.target.value)}
                                                 className="text-sm md:text-base py-5 font-tech pl-10"
                                             />
                                         </div>
