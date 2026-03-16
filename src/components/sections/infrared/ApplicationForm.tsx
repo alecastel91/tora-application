@@ -168,10 +168,13 @@ const countryCodes = [
 
 // Genres data (matching main TORA app)
 const genresList = [
-    "Acid House",
+    "Acid",
+    "Afro House",
     "Afrobeat",
+    "Amapiano",
     "Ambient",
     "Bass",
+    "Dancehall",
     "Deep House",
     "Disco",
     "Downtempo",
@@ -184,15 +187,20 @@ const genresList = [
     "Funk/Soul",
     "Garage",
     "Hardcore",
+    "Hip Hop",
     "House",
     "IDM",
     "Industrial",
     "Italo Disco",
+    "Jazz",
     "Jungle",
     "Melodic Techno",
     "Minimal",
+    "Noise",
     "Progressive House",
     "Psytrance",
+    "R&B",
+    "Reggaeton",
     "Tech House",
     "Techno",
     "Trance"
@@ -290,6 +298,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [lastName, setLastName] = useState("");
     const [profileName, setProfileName] = useState("");
     const [email, setEmail] = useState("");
+    const [confirmEmail, setConfirmEmail] = useState("");
     const [zone, setZone] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
@@ -299,6 +308,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [soundcloud, setSoundcloud] = useState("");
     const [agencyName, setAgencyName] = useState("");
     const [websiteLinkedin, setWebsiteLinkedin] = useState("");
+    const [linkedin, setLinkedin] = useState("");
     const [venueCapacity, setVenueCapacity] = useState("");
     const [website, setWebsite] = useState("");
 
@@ -384,9 +394,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             resident_advisor: residentAdvisor || null,
                             soundcloud: soundcloud || null,
                             agency_name: agencyName || null,
-                            website_linkedin: websiteLinkedin || null,
-                            venue_capacity: venueCapacity || null,
                             website: website || null,
+                            linkedin: linkedin || null,
+                            venue_capacity: venueCapacity || null,
                         },
                     ]);
 
@@ -412,9 +422,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                         resident_advisor: residentAdvisor || null,
                         soundcloud: soundcloud || null,
                         agency_name: agencyName || null,
-                        website_linkedin: websiteLinkedin || null,
-                        venue_capacity: venueCapacity || null,
                         website: website || null,
+                        linkedin: linkedin || null,
+                        venue_capacity: venueCapacity || null,
                     });
                 }
 
@@ -552,21 +562,20 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-start min-h-screen relative z-10 px-4 py-8 overflow-y-auto overflow-x-hidden">
-            <GlassPanel className="p-4 md:p-16 max-w-2xl w-full flex flex-col items-center my-auto">
-                <div className="w-full scale-[0.80] md:scale-100">
+        <div className="flex flex-col items-center justify-start min-h-screen relative z-10 px-2 py-8 overflow-y-auto overflow-x-hidden">
+            <GlassPanel className="p-6 md:p-16 max-w-4xl w-full flex flex-col items-center my-auto">
+                <div className="w-full">
                 {/* Header */}
                 <div className="mb-12 text-center w-full">
                     <motion.h2
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-3xl md:text-4xl font-black tracking-[0.25em] uppercase text-white mb-6"
+                        className="text-xl md:text-2xl font-semibold tracking-[0.15em] uppercase text-white mb-5 whitespace-nowrap"
                         style={{
-                            fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), var(--font-orbitron), sans-serif',
-                            fontWeight: 700,
-                            letterSpacing: '0.25em',
-                            textShadow: '0 0 30px rgba(255, 51, 102, 0.3)'
+                            fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
+                            fontWeight: 500,
+                            letterSpacing: '0.15em'
                         }}
                     >
                         ACCESS REQUEST
@@ -574,7 +583,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
                     {/* Progress bar with pink active tint */}
                     <div className="flex justify-center space-x-2">
-                        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                        {[0, 1, 2, 3, 4, 5, 6].map((s) => (
                             <motion.div
                                 key={s}
                                 className="h-1 rounded-full overflow-hidden"
@@ -611,7 +620,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
+                                            className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
                                             Phone Verification
                                         </motion.p>
@@ -656,7 +665,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                             const value = e.target.value.replace(/[^0-9\s]/g, '');
                                                             setPhoneNumber(value);
                                                         }}
-                                                        className="text-lg md:text-xl py-6 font-tech pl-24"
+                                                        className="text-sm md:text-base py-5 font-tech pl-24"
                                                     />
                                                 </div>
 
@@ -664,7 +673,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
                                                     transition={{ delay: 0.2 }}
-                                                    className="text-xs text-white/40 tracking-wide mb-6"
+                                                    className="text-[10px] text-white/40 tracking-wide mb-6"
                                                 >
                                                     Enter your phone number with country code
                                                 </motion.p>
@@ -672,7 +681,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     type="button"
                                                     onClick={handleSendCode}
                                                     disabled={loading}
-                                                    className="w-full py-4 text-base"
+                                                    className="w-full py-3 text-xs"
                                                 >
                                                     {loading ? "SENDING..." : "SEND VERIFICATION CODE"}
                                                 </InfraredButton>
@@ -693,7 +702,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     required
                                                     value={verificationCode}
                                                     onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech mb-4 tracking-[0.5em]"
+                                                    className="text-center text-sm md:text-base py-5 font-tech mb-4 tracking-[0.5em]"
                                                     maxLength={6}
                                                 />
                                                 {error && (
@@ -714,7 +723,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                             setVerificationCode("");
                                                             setError(null);
                                                         }}
-                                                        className="px-8 py-4"
+                                                        className="px-6 py-3"
                                                     >
                                                         CHANGE NUMBER
                                                     </InfraredButton>
@@ -722,7 +731,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                         type="button"
                                                         onClick={handleVerifyCode}
                                                         disabled={verificationCode.length !== 6 || loading}
-                                                        className="flex-1 py-4 text-base"
+                                                        className="flex-1 py-3 text-sm"
                                                     >
                                                         {loading ? "VERIFYING..." : "VERIFY"}
                                                     </InfraredButton>
@@ -749,7 +758,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 <motion.p
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 text-center mb-4 font-tech"
+                                    className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 text-center mb-4 font-tech"
                                 >
                                     Select Actor Role
                                 </motion.p>
@@ -766,9 +775,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => { setRole(r); nextStep(); }}
-                                            className={`w-full px-8 py-5 border text-center transition-all uppercase text-sm md:text-base font-bold tracking-widest font-tech ${role === r
+                                            className={`w-full px-6 py-4 border text-center transition-all uppercase text-xs md:text-sm font-semibold tracking-wide font-tech ${role === r
                                                 ? "bg-infrared text-white border-infrared"
-                                                : "bg-white/5 border-white/10 hover:border-white/30 text-white/50 hover:text-white"
+                                                : "bg-white/5 border-white/30 hover:border-infrared text-white hover:text-white"
                                                 }`}
                                         >
                                             <motion.span
@@ -785,7 +794,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             </motion.div>
                         )}
 
-                        {/* Step 2 — Name */}
+                                                {/* Step 2 — Identification & Profile Name (Combined) */}
                         {step === 2 && (
                             <motion.div
                                 key="step2"
@@ -797,12 +806,12 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                 className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
-                                <form onSubmit={(e) => { e.preventDefault(); if (firstName.trim() && lastName.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
+                                <form onSubmit={(e) => { e.preventDefault(); if (firstName.trim() && lastName.trim() && profileName.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center space-y-6">
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
+                                            className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
                                             Identification
                                         </motion.p>
@@ -812,7 +821,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             required
                                             value={firstName}
                                             onChange={(e) => setFirstName(e.target.value)}
-                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                            className="text-center text-sm md:text-base py-5 font-tech"
                                         />
                                         <InfraredInput
                                             label=""
@@ -820,41 +829,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             required
                                             value={lastName}
                                             onChange={(e) => setLastName(e.target.value)}
-                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                            className="text-center text-sm md:text-base py-5 font-tech"
                                         />
-                                    </div>
-                                    <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
-                                    </div>
-                                </form>
-                            </motion.div>
-                        )}
-
-                        {/* Step 3 — Profile Name */}
-                        {step === 3 && (
-                            <motion.div
-                                key="step3"
-                                custom={direction}
-                                variants={slideVariants}
-                                initial="enter"
-                                animate="center"
-                                exit="exit"
-                                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full max-w-md mx-auto flex flex-col items-center"
-                            >
-                                <form onSubmit={(e) => { e.preventDefault(); if (profileName.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
-                                    <div className="w-full text-center">
-                                        <motion.p
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
-                                        >
-                                            {role === 'Artist' && 'Artist Name'}
-                                            {role === 'Promoter' && 'Promoter / Event Name'}
-                                            {role === 'Venue' && 'Venue Name'}
-                                            {role === 'Agent' && 'Agent Name'}
-                                        </motion.p>
                                         <InfraredInput
                                             label=""
                                             placeholder={
@@ -866,19 +842,19 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             required
                                             value={profileName}
                                             onChange={(e) => setProfileName(e.target.value)}
-                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                            className="text-center text-sm md:text-base py-5 font-tech"
                                         />
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
                         )}
 
-                        {/* Step 4 — Email */}
-                        {step === 4 && (
+                        {/* Step 3 — Email */}
+                        {step === 3 && (
                             <motion.div
                                 key="step4"
                                 custom={direction}
@@ -891,18 +867,20 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             >
                                 <form onSubmit={(e) => {
                                     e.preventDefault();
-                                    if (email.trim() && validateEmail(email.trim())) {
+                                    if (!email.trim() || !validateEmail(email.trim())) {
+                                        setError("Please enter a valid email address (e.g., name@example.com)");
+                                    } else if (email.trim() !== confirmEmail.trim()) {
+                                        setError("Email addresses do not match");
+                                    } else {
                                         setError(null);
                                         nextStep();
-                                    } else {
-                                        setError("Please enter a valid email address (e.g., name@example.com)");
                                     }
                                 }} className="space-y-10 w-full flex flex-col items-center">
-                                    <div className="w-full text-center">
+                                    <div className="w-full text-center space-y-6">
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
+                                            className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
                                             Email
                                         </motion.p>
@@ -916,7 +894,19 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 setEmail(e.target.value);
                                                 if (error) setError(null);
                                             }}
-                                            className="text-center text-lg md:text-xl py-6 font-tech"
+                                            className="text-center text-sm md:text-base py-5 font-tech"
+                                        />
+                                        <InfraredInput
+                                            label=""
+                                            type="text"
+                                            placeholder="Confirm email address"
+                                            required
+                                            value={confirmEmail}
+                                            onChange={(e) => {
+                                                setConfirmEmail(e.target.value);
+                                                if (error) setError(null);
+                                            }}
+                                            className="text-center text-sm md:text-base py-5 font-tech"
                                         />
                                         {error && (
                                             <motion.p
@@ -929,17 +919,17 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         )}
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
                         )}
 
-                        {/* Step 5 — Location (Zone, Country, City) */}
-                        {step === 5 && (
+                        {/* Step 4 — Location (Zone, Country, City) */}
+                        {step === 4 && (
                             <motion.div
-                                key="step5"
+                                key="step4"
                                 custom={direction}
                                 variants={slideVariants}
                                 initial="enter"
@@ -953,7 +943,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
+                                            className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
                                             Location
                                         </motion.p>
@@ -967,7 +957,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 setCity("");
                                             }}
                                             required
-                                            className="w-full px-4 py-6 bg-white/5 border border-white/10 text-white text-center text-lg md:text-xl font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
+                                            className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                         >
                                             <option value="" disabled>Select zone</option>
                                             {zones.map((z) => (
@@ -987,7 +977,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     setCity("");
                                                 }}
                                                 required
-                                                className="w-full px-4 py-6 bg-white/5 border border-white/10 text-white text-center text-lg md:text-xl font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
+                                                className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                             >
                                                 <option value="" disabled>Select country</option>
                                                 {countriesByZone[zone]?.map((c) => (
@@ -1005,7 +995,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 value={city}
                                                 onChange={(e) => setCity(e.target.value)}
                                                 required
-                                                className="w-full px-4 py-6 bg-white/5 border border-white/10 text-white text-center text-lg md:text-xl font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
+                                                className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                             >
                                                 <option value="" disabled>Select city</option>
                                                 {citiesByCountry[country]?.map((c) => (
@@ -1016,17 +1006,17 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         )}
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
                         )}
 
-                        {/* Step 6 — Genres */}
-                        {step === 6 && (
+                        {/* Step 5 — Genres */}
+                        {step === 5 && (
                             <motion.div
-                                key="step6"
+                                key="step5"
                                 custom={direction}
                                 variants={slideVariants}
                                 initial="enter"
@@ -1040,7 +1030,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
+                                            className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
                                             Genres
                                         </motion.p>
@@ -1076,68 +1066,17 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         </p>
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
                         )}
 
-                        {/* Step 7 — Instagram Verification */}
-                        {step === 7 && (
+                        {/* Step 6 — Social Profiles */}
+                        {step === 6 && (
                             <motion.div
-                                key="step7"
-                                custom={direction}
-                                variants={slideVariants}
-                                initial="enter"
-                                animate="center"
-                                exit="exit"
-                                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full max-w-md mx-auto flex flex-col items-center"
-                            >
-                                <form onSubmit={(e) => { e.preventDefault(); if (portfolio.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
-                                    <div className="w-full text-center">
-                                        <motion.p
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
-                                        >
-                                            Instagram
-                                        </motion.p>
-                                        <div className="relative w-full">
-                                            <div className="absolute left-0 top-0 bottom-0 flex items-center pl-4 pointer-events-none z-10">
-                                                <span className="text-lg md:text-xl text-white font-tech" style={{ color: '#ffffff', opacity: 1 }}>@</span>
-                                            </div>
-                                            <InfraredInput
-                                                label=""
-                                                placeholder="username"
-                                                required
-                                                value={portfolio}
-                                                onChange={(e) => setPortfolio(e.target.value)}
-                                                className="text-lg md:text-xl py-6 font-tech pl-10"
-                                            />
-                                        </div>
-                                        <motion.p
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            transition={{ delay: 0.2 }}
-                                            className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
-                                        >
-                                            Please use an Instagram account that is most representative of your online identity as it will be used for verification purposes.
-                                        </motion.p>
-                                    </div>
-                                    <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-4 text-base">NEXT</InfraredButton>
-                                    </div>
-                                </form>
-                            </motion.div>
-                        )}
-
-                        {/* Step 8 — Role-specific additional fields */}
-                        {step === 8 && (
-                            <motion.div
-                                key={`step8-${role}`}
+                                key="step6"
                                 custom={direction}
                                 variants={slideVariants}
                                 initial="enter"
@@ -1151,12 +1090,33 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="text-base md:text-lg uppercase tracking-wide md:tracking-[0.25em] text-white/60 mb-6 font-tech"
+                                            className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
-                                            {role === 'Artist' && 'Music Profiles'}
-                                            {role === 'Agent' && 'Agency Details'}
-                                            {role === 'Venue' && 'Venue Details'}
-                                            {role === 'Promoter' && 'Additional Info'}
+                                            {role === 'Artist' && 'Social & Music Profiles'}
+                                            {role === 'Agent' && 'Instagram & Agency Details'}
+                                            {role === 'Venue' && 'Instagram & Venue Details'}
+                                            {role === 'Promoter' && 'Instagram & Additional Info'}
+                                        </motion.p>
+                                        <div className="relative w-full">
+                                            <div className="absolute left-0 top-0 bottom-0 flex items-center pl-4 pointer-events-none z-10">
+                                                <span className="text-lg md:text-xl text-white font-tech" style={{ color: '#ffffff', opacity: 1 }}>@</span>
+                                            </div>
+                                            <InfraredInput
+                                                label=""
+                                                placeholder="Instagram username"
+                                                required
+                                                value={portfolio}
+                                                onChange={(e) => setPortfolio(e.target.value)}
+                                                className="text-sm md:text-base py-5 font-tech pl-10"
+                                            />
+                                        </div>
+                                        <motion.p
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: 0.2 }}
+                                            className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
+                                        >
+                                            Please use an Instagram account that is most representative of your online identity as it will be used for verification purposes.
                                         </motion.p>
 
                                         {/* Artist: RA + SoundCloud */}
@@ -1164,30 +1124,22 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             <>
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Resident Advisor URL (optional)"
+                                                    placeholder="Resident Advisor username (optional)"
                                                     value={residentAdvisor}
                                                     onChange={(e) => setResidentAdvisor(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="SoundCloud URL (optional)"
+                                                    placeholder="SoundCloud username (optional)"
                                                     value={soundcloud}
                                                     onChange={(e) => setSoundcloud(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
-                                                <motion.p
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ delay: 0.2 }}
-                                                    className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
-                                                >
-                                                    Add your music profiles to strengthen your application (optional).
-                                                </motion.p>
                                             </>
                                         )}
 
-                                        {/* Agent: Agency Name + Website/LinkedIn */}
+                                        {/* Agent: Agency Name + Website + LinkedIn */}
                                         {role === 'Agent' && (
                                             <>
                                                 <InfraredInput
@@ -1196,23 +1148,22 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     required
                                                     value={agencyName}
                                                     onChange={(e) => setAgencyName(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Website or LinkedIn (optional)"
-                                                    value={websiteLinkedin}
-                                                    onChange={(e) => setWebsiteLinkedin(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    placeholder="Website (optional)"
+                                                    value={website}
+                                                    onChange={(e) => setWebsite(e.target.value)}
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
-                                                <motion.p
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ delay: 0.2 }}
-                                                    className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
-                                                >
-                                                    Provide your agency information.
-                                                </motion.p>
+                                                <InfraredInput
+                                                    label=""
+                                                    placeholder="LinkedIn name (optional)"
+                                                    value={linkedin}
+                                                    onChange={(e) => setLinkedin(e.target.value)}
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
+                                                />
                                             </>
                                         )}
 
@@ -1226,23 +1177,15 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     required
                                                     value={venueCapacity}
                                                     onChange={(e) => setVenueCapacity(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
                                                 <InfraredInput
                                                     label=""
                                                     placeholder="Website (optional)"
                                                     value={website}
                                                     onChange={(e) => setWebsite(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
-                                                <motion.p
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ delay: 0.2 }}
-                                                    className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
-                                                >
-                                                    Provide your venue information.
-                                                </motion.p>
                                             </>
                                         )}
 
@@ -1254,22 +1197,14 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     placeholder="Website (optional)"
                                                     value={website}
                                                     onChange={(e) => setWebsite(e.target.value)}
-                                                    className="text-center text-lg md:text-xl py-6 font-tech"
+                                                    className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
-                                                <motion.p
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    transition={{ delay: 0.2 }}
-                                                    className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
-                                                >
-                                                    Add your website if available (optional).
-                                                </motion.p>
                                             </>
                                         )}
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-8 py-4" disabled={loading}>BACK</InfraredButton>
-                                        <InfraredButton type="submit" disabled={loading} className="flex-1 py-4 text-base relative overflow-hidden">
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
+                                        <InfraredButton type="submit" disabled={loading} className="flex-1 py-3 text-sm relative overflow-hidden">
                                             {loading ? (
                                                 <motion.span
                                                     initial={{ opacity: 0 }}
@@ -1279,12 +1214,13 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     <motion.span
                                                         animate={{ rotate: 360 }}
                                                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                                        className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
-                                                    />
-                                                    TRANSMITTING...
+                                                    >
+                                                        ⟳
+                                                    </motion.span>
+                                                    SUBMITTING...
                                                 </motion.span>
                                             ) : (
-                                                "SUBMIT"
+                                                'SUBMIT APPLICATION'
                                             )}
                                         </InfraredButton>
                                     </div>
