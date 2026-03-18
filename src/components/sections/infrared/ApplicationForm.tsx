@@ -312,6 +312,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [venueCapacity, setVenueCapacity] = useState("");
     const [website, setWebsite] = useState("");
     const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+    const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
     const nextStep = () => { setDirection(1); setStep((s) => s + 1); };
     const prevStep = () => { setDirection(-1); setStep((s) => s - 1); };
@@ -1215,20 +1216,19 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         />
                                         <label
                                             htmlFor="privacy-consent"
-                                            className="text-white/60 text-xs md:text-sm text-left leading-relaxed cursor-pointer"
+                                            className="text-white/60 text-xs md:text-sm text-left leading-relaxed"
                                             style={{
                                                 fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
                                             }}
                                         >
                                             I agree to the{' '}
-                                            <a
-                                                href="/policy"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-infrared hover:text-infrared/80 underline"
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPrivacyModal(true)}
+                                                className="text-infrared hover:text-infrared/80 underline cursor-pointer"
                                             >
                                                 Privacy Policy and Terms of Service
-                                            </a>
+                                            </button>
                                             {' '}and understand that my data will be used to review my application for membership.
                                         </label>
                                     </div>
@@ -1263,6 +1263,112 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                 </div>
                 </div>
             </GlassPanel>
+
+            {/* Privacy Policy Modal */}
+            <AnimatePresence>
+                {showPrivacyModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowPrivacyModal(false)}
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-[#1a1a1a] border border-white/10 rounded-lg max-w-4xl max-h-[80vh] overflow-y-auto p-8 relative"
+                        >
+                            {/* Close button */}
+                            <button
+                                onClick={() => setShowPrivacyModal(false)}
+                                className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl"
+                            >
+                                ×
+                            </button>
+
+                            {/* Privacy Policy Content - Simplified without emails */}
+                            <div className="prose prose-invert max-w-none text-white/70 space-y-8 leading-relaxed">
+                                <h2 className="text-white font-bold text-2xl mb-6 tracking-wide">Privacy Policy & Terms</h2>
+
+                                <p className="text-sm text-white/50">Last updated: March 2026</p>
+
+                                <section className="space-y-4">
+                                    <h3 className="text-white font-semibold text-lg">Information We Collect</h3>
+                                    <p className="text-sm">
+                                        When you submit an application to join TORA, we collect: contact information (name, email, phone),
+                                        professional information (role, profile name, agency/venue details), location (zone, country, city),
+                                        music preferences (genres), and social media profiles (Instagram, Resident Advisor, SoundCloud, website, LinkedIn).
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h3 className="text-white font-semibold text-lg">How We Use Your Information</h3>
+                                    <p className="text-sm">
+                                        We use your information to review and process your application, verify your professional identity,
+                                        create your account if approved, communicate about your application status, and send invitations when we launch.
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h3 className="text-white font-semibold text-lg">Data Storage and Security</h3>
+                                    <p className="text-sm">
+                                        Your application data is securely stored using Supabase with enterprise-grade security.
+                                        We implement industry-standard measures to protect your information from unauthorized access.
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h3 className="text-white font-semibold text-lg">Your Rights</h3>
+                                    <p className="text-sm">
+                                        You have the right to access, correct, or delete your application data at any time.
+                                        You can also withdraw your application before it is processed.
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h3 className="text-white font-semibold text-lg">Data Sharing</h3>
+                                    <p className="text-sm">
+                                        We do not sell, trade, or rent your personal information. Your data is only accessible to
+                                        authorized TORA team members for application review purposes.
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h3 className="text-white font-semibold text-lg">GDPR Compliance</h3>
+                                    <p className="text-sm">
+                                        For EU users, we comply with GDPR. Your data is processed based on consent and legitimate interest
+                                        in reviewing professional applications for our membership platform.
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4 pt-6 border-t border-white/10">
+                                    <h3 className="text-white font-semibold text-lg">Terms of Service</h3>
+                                    <p className="text-sm">
+                                        By submitting an application, you agree that all information provided is accurate and truthful.
+                                        You are a professional in the electronic music industry. Submission does not guarantee acceptance.
+                                        TORA reserves the right to approve or decline applications at our sole discretion.
+                                    </p>
+                                    <p className="text-sm">
+                                        TORA is an invitation-only, membership-based platform. Access is granted exclusively through
+                                        the application and approval process.
+                                    </p>
+                                </section>
+
+                                <section className="space-y-4 pt-4">
+                                    <h3 className="text-white font-semibold text-lg">Pre-Launch Notice</h3>
+                                    <p className="text-sm">
+                                        TORA is currently in pre-launch phase. Early applicants may receive priority consideration
+                                        and special membership benefits when we launch.
+                                    </p>
+                                </section>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

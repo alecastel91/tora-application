@@ -70,7 +70,7 @@ export default function Policy() {
                                 <li><strong className="text-white">Portability:</strong> Request your data in a machine-readable format</li>
                             </ul>
                             <p className="mt-4">
-                                To exercise any of these rights, please contact us at <a href="mailto:privacy@tora.app" className="text-infrared hover:text-infrared/80">privacy@tora.app</a>
+                                To exercise any of these rights, you may contact us via the contact information provided on our platform.
                             </p>
 
                             <h3 className="text-white font-semibold text-lg mt-6">6. Data Sharing</h3>
@@ -92,10 +92,7 @@ export default function Policy() {
 
                             <h3 className="text-white font-semibold text-lg mt-6">8. Contact Information</h3>
                             <p>
-                                For any privacy-related questions or concerns, please contact us at:
-                            </p>
-                            <p className="mt-2">
-                                Email: <a href="mailto:privacy@tora.app" className="text-infrared hover:text-infrared/80">privacy@tora.app</a>
+                                For any privacy-related questions or concerns, you may contact us via the contact information provided on our platform once it launches.
                             </p>
                         </div>
                     </section>
@@ -167,10 +164,7 @@ export default function Policy() {
 
                             <h3 className="text-white font-semibold text-lg mt-6">7. Contact</h3>
                             <p>
-                                For questions about these terms or the application process, contact us at:
-                            </p>
-                            <p className="mt-2">
-                                Email: <a href="mailto:support@tora.app" className="text-infrared hover:text-infrared/80">support@tora.app</a>
+                                For questions about these terms or the application process, you may contact us via the contact information provided on our platform once it launches.
                             </p>
                         </div>
                     </section>
