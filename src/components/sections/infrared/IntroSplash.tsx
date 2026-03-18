@@ -140,7 +140,7 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                                 className="text-base md:text-lg uppercase tracking-[0.15em] text-white leading-relaxed"
                                 style={{
                                     fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
-                                    fontWeight: 500,
+                                    fontWeight: 400,
                                     letterSpacing: '0.15em'
                                 }}
                             >
