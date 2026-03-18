@@ -311,6 +311,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [linkedin, setLinkedin] = useState("");
     const [venueCapacity, setVenueCapacity] = useState("");
     const [website, setWebsite] = useState("");
+    const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
 
     const nextStep = () => { setDirection(1); setStep((s) => s + 1); };
     const prevStep = () => { setDirection(-1); setStep((s) => s - 1); };
@@ -1201,6 +1202,37 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             </>
                                         )}
                                     </div>
+
+                                    {/* Privacy Policy Consent */}
+                                    <div className="w-full flex items-start justify-center gap-3 mt-6 mb-4">
+                                        <input
+                                            type="checkbox"
+                                            id="privacy-consent"
+                                            checked={acceptedPrivacy}
+                                            onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                                            className="mt-1 w-4 h-4 accent-infrared cursor-pointer"
+                                            required
+                                        />
+                                        <label
+                                            htmlFor="privacy-consent"
+                                            className="text-white/60 text-xs md:text-sm text-left leading-relaxed cursor-pointer"
+                                            style={{
+                                                fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
+                                            }}
+                                        >
+                                            I agree to the{' '}
+                                            <a
+                                                href="/policy"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-infrared hover:text-infrared/80 underline"
+                                            >
+                                                Privacy Policy and Terms of Service
+                                            </a>
+                                            {' '}and understand that my data will be used to review my application for membership.
+                                        </label>
+                                    </div>
+
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
                                         <InfraredButton type="submit" disabled={loading} className="flex-1 py-3 text-sm relative overflow-hidden">
