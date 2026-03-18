@@ -1291,9 +1291,15 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
 
                             {/* Privacy Policy Content - Simplified without emails */}
                             <div className="prose prose-invert max-w-none text-white/70 space-y-8 leading-relaxed">
-                                <h2 className="text-white font-bold text-2xl mb-6 tracking-wide">Privacy Policy & Terms</h2>
-
-                                <p className="text-sm text-white/50">Last updated: March 2026</p>
+                                <h2
+                                    className="text-white font-bold text-2xl mb-8 tracking-wide uppercase"
+                                    style={{
+                                        fontFamily: 'var(--font-rajdhani), sans-serif',
+                                        letterSpacing: '0.1em'
+                                    }}
+                                >
+                                    Privacy Policy & Terms
+                                </h2>
 
                                 <section className="space-y-4">
                                     <h3 className="text-white font-semibold text-lg">Information We Collect</h3>
