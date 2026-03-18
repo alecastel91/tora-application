@@ -1302,7 +1302,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </h2>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white font-semibold text-lg">Information We Collect</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>Information We Collect</h3>
                                     <p className="text-sm">
                                         When you submit an application to join TORA, we collect: contact information (name, email, phone),
                                         professional information (role, profile name, agency/venue details), location (zone, country, city),
@@ -1311,7 +1311,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white font-semibold text-lg">How We Use Your Information</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>How We Use Your Information</h3>
                                     <p className="text-sm">
                                         We use your information to review and process your application, verify your professional identity,
                                         create your account if approved, communicate about your application status, and send invitations when we launch.
@@ -1319,7 +1319,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white font-semibold text-lg">Data Storage and Security</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>Data Storage and Security</h3>
                                     <p className="text-sm">
                                         Your application data is securely stored using Supabase with enterprise-grade security.
                                         We implement industry-standard measures to protect your information from unauthorized access.
@@ -1327,7 +1327,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white font-semibold text-lg">Your Rights</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>Your Rights</h3>
                                     <p className="text-sm">
                                         You have the right to access, correct, or delete your application data at any time.
                                         You can also withdraw your application before it is processed.
@@ -1335,7 +1335,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white font-semibold text-lg">Data Sharing</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>Data Sharing</h3>
                                     <p className="text-sm">
                                         We do not sell, trade, or rent your personal information. Your data is only accessible to
                                         authorized TORA team members for application review purposes.
@@ -1343,7 +1343,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white font-semibold text-lg">GDPR Compliance</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>GDPR Compliance</h3>
                                     <p className="text-sm">
                                         For EU users, we comply with GDPR. Your data is processed based on consent and legitimate interest
                                         in reviewing professional applications for our membership platform.
@@ -1351,7 +1351,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4 pt-6 border-t border-white/10">
-                                    <h3 className="text-white font-semibold text-lg">Terms of Service</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>Terms of Service</h3>
                                     <p className="text-sm">
                                         By submitting an application, you agree that all information provided is accurate and truthful.
                                         You are a professional in the electronic music industry. Submission does not guarantee acceptance.
@@ -1364,7 +1364,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 </section>
 
                                 <section className="space-y-4 pt-4">
-                                    <h3 className="text-white font-semibold text-lg">Pre-Launch Notice</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 400 }}>Pre-Launch Notice</h3>
                                     <p className="text-sm">
                                         TORA is currently in pre-launch phase. Early applicants may receive priority consideration
                                         and special membership benefits when we launch.
