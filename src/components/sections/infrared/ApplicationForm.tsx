@@ -1292,7 +1292,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             {/* Privacy Policy Content - Simplified without emails */}
                             <div className="prose prose-invert max-w-none text-white/70 space-y-8 leading-relaxed">
                                 <h2
-                                    className="text-white text-2xl mb-8 tracking-wide uppercase"
+                                    className="text-white text-xl mb-8 tracking-wide uppercase whitespace-nowrap"
                                     style={{
                                         fontFamily: 'var(--font-rajdhani), sans-serif',
                                         letterSpacing: '0.1em',
