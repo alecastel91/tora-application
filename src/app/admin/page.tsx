@@ -391,7 +391,10 @@ export default function AdminDashboard() {
                                             )}
                                             {app.resident_advisor && (
                                                 <a
-                                                    href={app.resident_advisor.startsWith('http') ? app.resident_advisor : `https://ra.co/dj/${app.resident_advisor}`}
+                                                    href={app.resident_advisor.startsWith('http')
+                                                        ? app.resident_advisor
+                                                        : `https://ra.co/dj/${(app.profile_name || app.resident_advisor).toLowerCase().replace(/\s+/g, '')}`
+                                                    }
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="flex items-center gap-1.5 hover:text-white/60 transition-colors"
