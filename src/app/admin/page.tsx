@@ -91,7 +91,8 @@ export default function AdminDashboard() {
     };
 
     const handleApprove = async (application: Application) => {
-        if (!confirm(`Approve ${application.full_name}?`)) return;
+        const displayName = application.profile_name || application.full_name;
+        if (!confirm(`Approve ${displayName}?`)) return;
 
         try {
             // Update status to APPROVED
@@ -102,7 +103,7 @@ export default function AdminDashboard() {
 
             if (error) throw error;
 
-            alert(`✅ ${application.full_name} has been approved!`);
+            alert(`✅ ${displayName} has been approved!`);
             loadApplications(); // Reload list
         } catch (err) {
             console.error('Error approving:', err);
@@ -111,7 +112,8 @@ export default function AdminDashboard() {
     };
 
     const handleDecline = async (application: Application) => {
-        if (!confirm(`Decline ${application.full_name}?`)) return;
+        const displayName = application.profile_name || application.full_name;
+        if (!confirm(`Decline ${displayName}?`)) return;
 
         try {
             const { error } = await supabase
@@ -121,7 +123,7 @@ export default function AdminDashboard() {
 
             if (error) throw error;
 
-            alert(`❌ ${application.full_name} has been declined.`);
+            alert(`❌ ${displayName} has been declined.`);
             loadApplications();
         } catch (err) {
             console.error('Error declining:', err);
@@ -140,6 +142,16 @@ export default function AdminDashboard() {
         }
     };
 
+    const getRoleColor = (role: string) => {
+        switch (role?.toUpperCase()) {
+            case 'ARTIST': return '#6B5FFF';
+            case 'VENUE': return '#FF5757';
+            case 'PROMOTER': return '#00D4FF';
+            case 'AGENT': return '#FFB800';
+            default: return '#999999';
+        }
+    };
+
     const filteredApplications = applications.filter(app => {
         // Filter by status
         if (filter !== 'all' && app.status?.toLowerCase() !== filter) return false;
@@ -148,6 +160,7 @@ export default function AdminDashboard() {
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             return (
+                app.profile_name?.toLowerCase().includes(query) ||
                 app.full_name?.toLowerCase().includes(query) ||
                 app.email?.toLowerCase().includes(query) ||
                 app.role?.toLowerCase().includes(query) ||
@@ -305,14 +318,27 @@ export default function AdminDashboard() {
                                     <div className="flex-1 space-y-2">
                                         <div className="flex items-center gap-3">
                                             <h3 className="text-white text-lg font-semibold">
-                                                {app.full_name}
+                                                {app.profile_name || app.full_name}
                                             </h3>
+                                            <span
+                                                className="px-2 py-1 rounded text-xs uppercase font-semibold"
+                                                style={{
+                                                    backgroundColor: `${getRoleColor(app.role)}20`,
+                                                    color: getRoleColor(app.role),
+                                                    border: `1px solid ${getRoleColor(app.role)}40`
+                                                }}
+                                            >
+                                                {app.role}
+                                            </span>
                                             <span className={`px-2 py-1 rounded text-xs uppercase ${getStatusColor(app.status || 'PENDING')}`}>
                                                 {app.status || 'PENDING'}
                                             </span>
                                         </div>
                                         <div className="text-white/60 text-sm">
-                                            <span className="font-semibold text-white">{app.role}</span> • {app.city}, {app.country}
+                                            <span className="text-white/40">Legal name:</span> <span className="text-white/60">{app.full_name}</span>
+                                        </div>
+                                        <div className="text-white/60 text-sm">
+                                            {app.city}, {app.country}
                                         </div>
                                         <div className="text-white/40 text-sm">
                                             {app.genres}
@@ -320,7 +346,16 @@ export default function AdminDashboard() {
                                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-white/40 text-xs">
                                             <span>📧 {app.email}</span>
                                             <span>📱 {app.phone_number}</span>
-                                            {app.instagram && <span>📸 @{app.instagram}</span>}
+                                            {app.instagram && (
+                                                <a
+                                                    href={`https://instagram.com/${app.instagram.replace('@', '')}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:text-white/60 transition-colors"
+                                                >
+                                                    📸 @{app.instagram.replace('@', '')}
+                                                </a>
+                                            )}
                                         </div>
                                         <div className="text-white/30 text-xs">
                                             Applied: {new Date(app.created_at).toLocaleString()}
