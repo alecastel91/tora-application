@@ -1138,7 +1138,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
                                                     style={{ marginTop: '-16px' }}
                                                 >
-                                                    Enter your artist name as it appears on Resident Advisor
+                                                    Enter your artist name as it appears on your Resident Advisor artist page
                                                 </motion.p>
                                                 <InfraredInput
                                                     label=""
