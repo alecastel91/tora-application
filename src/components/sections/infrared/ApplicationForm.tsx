@@ -1131,6 +1131,15 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     onChange={(e) => setResidentAdvisor(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
+                                                <motion.p
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ delay: 0.2 }}
+                                                    className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
+                                                    style={{ marginTop: '-16px' }}
+                                                >
+                                                    Enter your artist name as it appears on Resident Advisor
+                                                </motion.p>
                                                 <InfraredInput
                                                     label=""
                                                     placeholder="SoundCloud login username (optional)"
