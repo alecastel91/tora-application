@@ -1224,7 +1224,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                     </div>
 
                                     {/* Privacy Policy Consent */}
-                                    <div className="w-full flex items-start justify-center gap-3 mt-6 mb-4">
+                                    <div className="w-full flex items-start justify-center gap-3 mt-3 mb-4">
                                         <input
                                             type="checkbox"
                                             id="privacy-consent"
