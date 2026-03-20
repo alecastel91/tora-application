@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
@@ -170,12 +171,21 @@ export default function AdminDashboard() {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center p-4">
                 <GlassPanel className="p-8 max-w-md w-full">
-                    <h1
-                        className="text-2xl font-bold text-white text-center mb-6 uppercase tracking-wide"
-                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
-                    >
-                        TORA Admin Login
-                    </h1>
+                    <div className="flex flex-col items-center mb-6">
+                        <Image
+                            src="/tora_logo_v2.png"
+                            alt="TORA"
+                            width={160}
+                            height={53}
+                            className="mb-4"
+                        />
+                        <h1
+                            className="text-xl font-bold text-white text-center uppercase tracking-wide"
+                            style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                        >
+                            Admin Login
+                        </h1>
+                    </div>
                     <form onSubmit={handleLogin} className="space-y-6">
                         <InfraredInput
                             type="password"
@@ -202,15 +212,25 @@ export default function AdminDashboard() {
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
-                    <h1
-                        className="text-3xl font-bold text-white uppercase tracking-wide"
-                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
-                    >
-                        🎛️ TORA Waitlist Manager
-                    </h1>
+                    <div className="flex items-center gap-4">
+                        <Image
+                            src="/tora_logo_v2.png"
+                            alt="TORA"
+                            width={120}
+                            height={40}
+                            className="h-10 w-auto"
+                        />
+                        <h1
+                            className="text-2xl font-bold text-white uppercase tracking-wide"
+                            style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                        >
+                            Waitlist Manager
+                        </h1>
+                    </div>
                     <button
                         onClick={handleLogout}
-                        className="text-white/60 hover:text-white text-sm"
+                        className="text-white/60 hover:text-white text-sm uppercase tracking-wide"
+                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                     >
                         Logout
                     </button>
