@@ -333,21 +333,31 @@ export default function AdminDashboard() {
                                             <>
                                                 <button
                                                     onClick={() => handleApprove(app)}
-                                                    className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/30 rounded text-sm font-semibold transition-colors"
+                                                    className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/30 rounded text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                                                 >
-                                                    ✅ APPROVE
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                                    </svg>
+                                                    APPROVE
                                                 </button>
                                                 <button
                                                     onClick={() => handleDecline(app)}
-                                                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 rounded text-sm font-semibold transition-colors"
+                                                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 rounded text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                                                 >
-                                                    ❌ DECLINE
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                    DECLINE
                                                 </button>
                                             </>
                                         )}
                                         {app.status === 'APPROVED' && (
-                                            <div className="text-green-300 text-sm text-center py-2">
-                                                ✓ Approved - Ready for invitation
+                                            <div className="text-green-300 text-sm text-center py-2 flex items-center justify-center gap-2">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                                Approved - Ready for invitation
                                             </div>
                                         )}
                                         {app.status === 'INVITED' && app.coupon_code && (
@@ -359,8 +369,11 @@ export default function AdminDashboard() {
                                             </div>
                                         )}
                                         {app.status === 'SIGNED_UP' && (
-                                            <div className="text-purple-300 text-sm text-center py-2">
-                                                ✓ Active User
+                                            <div className="text-purple-300 text-sm text-center py-2 flex items-center justify-center gap-2">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                                Active User
                                             </div>
                                         )}
                                     </div>
