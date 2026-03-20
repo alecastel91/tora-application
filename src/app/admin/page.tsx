@@ -211,17 +211,17 @@ export default function AdminDashboard() {
         <div className="min-h-screen bg-black p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-8">
-                    <div className="flex items-center gap-4">
+                <div className="flex justify-between items-start mb-8">
+                    <div className="flex flex-col items-start">
                         <Image
                             src="/tora_logo_v2.png"
                             alt="TORA"
-                            width={120}
-                            height={40}
-                            className="h-10 w-auto"
+                            width={160}
+                            height={53}
+                            className="mb-2"
                         />
                         <h1
-                            className="text-2xl font-bold text-white uppercase tracking-wide"
+                            className="text-xl font-bold text-white uppercase tracking-wide"
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
                             Waitlist Manager
