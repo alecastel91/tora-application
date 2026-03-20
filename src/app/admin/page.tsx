@@ -317,7 +317,10 @@ export default function AdminDashboard() {
                                     {/* Left: Application Details */}
                                     <div className="flex-1 space-y-2">
                                         <div className="flex items-center gap-3">
-                                            <h3 className="text-white text-lg font-semibold">
+                                            <h3
+                                                className="text-white text-lg font-bold uppercase tracking-wide"
+                                                style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                                            >
                                                 {app.profile_name || app.full_name}
                                             </h3>
                                             <span
