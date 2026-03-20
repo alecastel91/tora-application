@@ -1116,7 +1116,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 0.2 }}
                                             className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
-                                            style={{ marginTop: '0px' }}
+                                            style={{ marginTop: '-16px' }}
                                         >
                                             Please use an Instagram account that is most representative of your online identity as it will be used for verification purposes.
                                         </motion.p>
@@ -1143,7 +1143,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     animate={{ opacity: 1 }}
                                                     transition={{ delay: 0.2 }}
                                                     className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
-                                                    style={{ marginTop: '0px' }}
+                                                    style={{ marginTop: '-16px' }}
                                                 >
                                                     Enter your SoundCloud username (e.g., if your profile is soundcloud.com/username, enter "username")
                                                 </motion.p>
