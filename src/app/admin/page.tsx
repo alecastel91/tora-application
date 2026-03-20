@@ -193,7 +193,7 @@ export default function AdminDashboard() {
                             className="mb-4"
                         />
                         <h1
-                            className="text-xl font-bold text-white text-center uppercase tracking-wide"
+                            className="text-xl text-white text-center uppercase tracking-wide"
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
                             Admin Login
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
                             className="mb-2"
                         />
                         <h1
-                            className="text-xl font-bold text-white uppercase tracking-wide"
+                            className="text-xl text-white uppercase tracking-wide"
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
                             Waitlist Manager
