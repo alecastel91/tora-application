@@ -404,7 +404,7 @@ export default function AdminDashboard() {
                                                         <path d="M12 16v-4"></path>
                                                         <path d="M12 8h.01"></path>
                                                     </svg>
-                                                    RA
+                                                    Resident Advisor
                                                 </a>
                                             )}
                                         </div>
