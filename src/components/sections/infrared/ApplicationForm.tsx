@@ -1115,7 +1115,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             transition={{ delay: 0.2 }}
-                                            className="mt-4 px-4 text-xs text-white/40 tracking-wide leading-relaxed"
+                                            className="text-left text-[10px] text-white/40 tracking-wide leading-relaxed"
+                                            style={{ marginTop: '0px' }}
                                         >
                                             Please use an Instagram account that is most representative of your online identity as it will be used for verification purposes.
                                         </motion.p>
@@ -1125,14 +1126,14 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             <>
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Resident Advisor username (optional)"
+                                                    placeholder="Resident Advisor artist name (optional)"
                                                     value={residentAdvisor}
                                                     onChange={(e) => setResidentAdvisor(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="SoundCloud username (optional)"
+                                                    placeholder="SoundCloud login username (optional)"
                                                     value={soundcloud}
                                                     onChange={(e) => setSoundcloud(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
@@ -1141,9 +1142,10 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
                                                     transition={{ delay: 0.2 }}
-                                                    className="mt-2 px-4 text-[10px] text-white/40 tracking-wide leading-relaxed"
+                                                    className="text-left text-[10px] text-white/40 tracking-wide leading-relaxed"
+                                                    style={{ marginTop: '0px' }}
                                                 >
-                                                    Enter your SoundCloud username (e.g., if your profile is soundcloud.com/aljonesgroove, enter "aljonesgroove")
+                                                    Enter your SoundCloud username (e.g., if your profile is soundcloud.com/username, enter "username")
                                                 </motion.p>
                                             </>
                                         )}
