@@ -304,7 +304,6 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [residentAdvisor, setResidentAdvisor] = useState("");
     const [soundcloud, setSoundcloud] = useState("");
     const [agencyName, setAgencyName] = useState("");
-    const [websiteLinkedin, setWebsiteLinkedin] = useState("");
     const [linkedin, setLinkedin] = useState("");
     const [venueCapacity, setVenueCapacity] = useState("");
     const [website, setWebsite] = useState("");
@@ -318,49 +317,6 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
         // Regex that requires: username@domain.extension
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
-    };
-
-    const handleSendCode = async () => {
-        // Validate country code is selected
-        if (!countryCode) {
-            alert("Please select a country code prefix");
-            return;
-        }
-
-        // Validate phone number is entered
-        if (!phoneNumber.trim()) {
-            alert("Please enter your phone number");
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        // TODO: Integrate with SMS service (Twilio, etc.)
-        // For now, simulate sending code
-        setTimeout(() => {
-            setCodeSent(true);
-            setLoading(false);
-            console.log("SMS code sent to:", countryCode + phoneNumber);
-        }, 1000);
-    };
-
-    const handleVerifyCode = async () => {
-        setLoading(true);
-        setError(null);
-
-        // TODO: Integrate with SMS service to verify code
-        // For now, accept any 6-digit code
-        if (verificationCode.length === 6) {
-            setTimeout(() => {
-                setPhoneVerified(true);
-                setLoading(false);
-                nextStep();
-            }, 1000);
-        } else {
-            setError("Please enter a valid 6-digit code");
-            setLoading(false);
-        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
