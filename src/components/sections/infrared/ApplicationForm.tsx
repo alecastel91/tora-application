@@ -568,7 +568,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="space-y-8 w-full mx-auto flex flex-col items-center"
+                                className="space-y-8 w-full max-w-md mx-auto flex flex-col items-center"
                             >
                                 <motion.p
                                     initial={{ opacity: 0 }}
@@ -619,7 +619,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full mx-auto flex flex-col items-center"
+                                className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
                                 <form onSubmit={(e) => { e.preventDefault(); if (firstName.trim() && lastName.trim() && profileName.trim()) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center space-y-6">
@@ -678,7 +678,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full mx-auto flex flex-col items-center"
+                                className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
                                 <form onSubmit={(e) => {
                                     e.preventDefault();
@@ -783,7 +783,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full mx-auto flex flex-col items-center"
+                                className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
                                 <form onSubmit={(e) => { e.preventDefault(); if (zone && country && city) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center space-y-6">
@@ -870,7 +870,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full mx-auto flex flex-col items-center"
+                                className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
                                 <form onSubmit={(e) => { e.preventDefault(); if (genres.length > 0) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center">
@@ -930,7 +930,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 animate="center"
                                 exit="exit"
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                                className="w-full mx-auto flex flex-col items-center"
+                                className="w-full max-w-md mx-auto flex flex-col items-center"
                             >
                                 <form onSubmit={handleSubmit} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center space-y-6">
