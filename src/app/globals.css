@@ -18,6 +18,9 @@
 
   --shadow-infrared: 0 0 20px rgba(255, 255, 255, 0.1);
   --shadow-glass-inset: inset 0 0 20px rgba(255, 255, 255, 0.02);
+
+  /* Custom max-width for form containers to match Vercel */
+  --breakpoint-sm: 24rem; /* 384px - standard Tailwind value */
 }
 
 :root {

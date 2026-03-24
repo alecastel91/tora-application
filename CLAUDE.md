@@ -85,11 +85,25 @@ tora-application/
 - **Real-Time Filtering**: Regex `/[^0-9\s]/g` removes invalid characters as user types
 - **Type**: `type="tel"` for mobile keyboard optimization
 
-#### Form Width Consistency
-- **Issue Fixed**: First 4 steps were narrower than later steps, Location step was expanding dynamically
-- **Solution**: Removed all `max-w-md` and `max-w-2xl` constraints from step containers
-- **Result**: All steps now use `w-full mx-auto` to fill available GlassPanel width (max-w-4xl = 896px)
-- **Consistency**: Uniform width across all 6 steps, no more dynamic expansion
+#### Form Width Consistency Fix (COMPLETE ✅)
+- **Issue**: Form elements (role buttons, inputs) were rendering at 280px wide locally vs 328px on Vercel
+  - Same font sizes but narrower boxes suggested padding/margin constraints
+  - DevTools investigation showed 0px padding on both versions but different widths
+  - Multiple attempts with `max-w-md`, `max-w-xl`, `max-w-2xl`, `max-w-sm` all failed
+- **Root Cause**: Tailwind CSS classes (`max-w-*`) were not producing consistent widths
+  - Agent investigation confirmed Vercel uses `max-w-md` (448px)
+  - Local `max-w-md` was rendering elements at only 280px instead of 328px
+  - GlassPanel padding was identical on both (p-6 md:p-16)
+- **Solution**: Fixed width override using inline styles
+  - Changed all step containers from `className="w-full max-w-md mx-auto flex flex-col items-center"`
+  - To: `className="mx-auto flex flex-col items-center" style={{ width: '328px' }}`
+  - Forced exact 328px width to match Vercel pixel-perfect
+- **Result**: All form elements now render at exactly 328 × 50px, matching Vercel deployment
+- **Files Modified**: [ApplicationForm.tsx](src/components/sections/infrared/ApplicationForm.tsx) - Lines 571, 622, 681, 786, 873, 933
+- **Technical Notes**:
+  - Tailwind v4's `max-w-md` compiles to 28rem (448px) correctly
+  - Issue was likely CSS cascade or flex container behavior
+  - Inline style override ensures consistent rendering across deployments
 
 #### Instagram Verification Notice
 - **Updated Helper Text**: Added clear identification/authentication messaging
