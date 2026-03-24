@@ -35,6 +35,77 @@ tora-application/
 └── package.json
 ```
 
+## Recent Updates (March 25, 2026)
+
+### Application Form Refinements (COMPLETE ✅)
+
+#### Landing Page Tagline Update
+- **Updated Branding**: Changed tagline from "THE PROFESSIONAL NETWORK FOR THE ELECTRONIC MUSIC INDUSTRY" to:
+  ```
+  THE PROFESSIONAL NETWORK
+  FOR CLUB MUSIC INDUSTRY
+  ```
+- **Design Decision**: Removed second "THE" for cleaner, more modern branding
+- **Line Break**: Second line starts with "FOR" for better visual balance
+- **Files Modified**: [IntroSplash.tsx](src/components/sections/infrared/IntroSplash.tsx)
+
+#### Phone Verification Removal
+- **Simplified Flow**: Removed phone verification steps entirely (was Step 0 and verification code)
+- **New Flow**: Application now starts directly at Role selection (Step 0)
+- **Phone Number Field**: Moved to CONTACTS screen (Step 2) alongside email
+  - Country code dropdown with all 150 international codes
+  - Format: "+XX Country Name" (e.g., "+39 Italy", "+1 United States")
+  - Number-only input validation (letters blocked)
+- **Clean Codebase**: Deleted 139 lines of hidden phone verification UI code
+- **Progress Bar**: Updated from 7 steps to 6 steps
+- **Files Modified**:
+  - [ApplicationForm.tsx](src/components/sections/infrared/ApplicationForm.tsx) - Removed phone verification, renumbered steps
+
+#### Form Step Renumbering
+- **Step 0**: Role Selection (previously Step 1)
+  - Updated heading: "What's Your Role?" (was "SELECT ACTOR ROLE")
+- **Step 1**: Identification (previously Step 2)
+- **Step 2**: CONTACTS (previously Step 3 "Email")
+  - Renamed from "Email" to "CONTACTS"
+  - Added phone number field with country code dropdown
+  - Email + Confirm Email + Phone Number
+- **Step 3**: Location (previously Step 4)
+- **Step 4**: Genres (previously Step 5)
+- **Step 5**: Social Profiles (previously Step 6)
+
+#### Country Code Dropdown Enhancement
+- **Complete Coverage**: All 150 countries included (Afghanistan to Zimbabwe)
+- **Format**: Each option shows "+[code] [Country Name]"
+- **Examples**: +1 Canada, +44 United Kingdom, +81 Japan, +86 China, +971 UAE
+- **Implementation**: Uses existing `countryCodes` array from ApplicationForm.tsx
+
+#### Phone Number Input Validation
+- **Number-Only Input**: Blocks all letters and special characters
+- **Allowed Characters**: Only digits (0-9) and spaces
+- **Real-Time Filtering**: Regex `/[^0-9\s]/g` removes invalid characters as user types
+- **Type**: `type="tel"` for mobile keyboard optimization
+
+#### Form Width Consistency
+- **Issue Fixed**: First 4 steps were narrower than later steps, Location step was expanding dynamically
+- **Solution**: Removed all `max-w-md` and `max-w-2xl` constraints from step containers
+- **Result**: All steps now use `w-full mx-auto` to fill available GlassPanel width (max-w-4xl = 896px)
+- **Consistency**: Uniform width across all 6 steps, no more dynamic expansion
+
+#### Instagram Verification Notice
+- **Updated Helper Text**: Added clear identification/authentication messaging
+- **New Text**: "Your Instagram handle will be used for identity verification and authentication purposes. Please provide an account that best represents your professional profile."
+- **Previous Text**: "Please use an Instagram account that is most representative of your online identity as it will be used for verification purposes."
+- **Length**: Concise 2-line message (under 3-line max)
+- **Professional Wording**: Uses proper legal terminology (identity verification, authentication)
+
+#### Technical Improvements
+- **State Cleanup**: Removed unused verification states (`verificationCode`, `codeSent`, `phoneVerified`)
+- **Kept States**: Only `countryCode` and `phoneNumber` (required for CONTACTS screen)
+- **Code Quality**: No hidden code, no dead code, clean and maintainable
+- **Progress Tracking**: 6-step progress bar matches actual form steps
+
+---
+
 ## Recent Updates (March 21, 2026)
 
 ### Admin Dashboard Implementation (COMPLETE ✅)
@@ -155,15 +226,14 @@ tora-application/
 ## Application Flow
 
 ### User Journey
-1. **Intro Splash** (2.5 seconds) → TORA logo animation
-2. **Application Form** (7 steps):
-   - Step 0: Phone verification (simulated)
-   - Step 1: Role selection (Artist, Promoter, Venue, Agent)
-   - Step 2: Identification (first name, last name, profile name)
-   - Step 3: Email (with confirmation)
-   - Step 4: Location (zone → country → city)
-   - Step 5: Genres (multi-select)
-   - Step 6: Social profiles + Privacy consent
+1. **Intro Splash** (2.5 seconds) → TORA logo animation with tagline "THE PROFESSIONAL NETWORK FOR CLUB MUSIC INDUSTRY"
+2. **Application Form** (6 steps):
+   - Step 0: Role selection (Artist, Promoter, Venue, Agent) - "What's Your Role?"
+   - Step 1: Identification (first name, last name, profile name)
+   - Step 2: CONTACTS (email + confirm email + phone number with country code)
+   - Step 3: Location (zone → country → city)
+   - Step 4: Genres (multi-select)
+   - Step 5: Social profiles (Instagram with verification notice) + Privacy consent
 3. **Confirmation Screen** → Success message with next steps
 4. **Email Confirmation** → Auto-sent to applicant (pending implementation)
 

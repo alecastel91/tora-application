@@ -144,8 +144,8 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                                     letterSpacing: '0.15em'
                                 }}
                             >
-                                THE PROFESSIONAL NETWORK FOR<br />
-                                THE ELECTRONIC MUSIC INDUSTRY
+                                THE PROFESSIONAL NETWORK<br />
+                                FOR CLUB MUSIC INDUSTRY
                             </p>
                         </motion.div>
 
