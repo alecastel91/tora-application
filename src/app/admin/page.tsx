@@ -408,10 +408,12 @@ export default function AdminDashboard() {
                                                     rel="noopener noreferrer"
                                                     className="flex items-center gap-1.5 hover:text-white/60 transition-colors"
                                                 >
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M7.5 9.75h3v3h-3v-3zm6 0h3v3h-3v-3zm-6 6h3v3h-3v-3zm6 0h3v3h-3v-3zM3 3v18h18V3H3zm16.5 16.5h-15v-15h15v15z"/>
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
+                                                        <path d="M7 8h3c1.1 0 2 .9 2 2v0c0 1.1-.9 2-2 2H9v2"/>
+                                                        <path d="M14 8h2l2 6m-2-6v6"/>
                                                     </svg>
-                                                    Resident Advisor
+                                                    RA
                                                 </a>
                                             )}
                                         </div>
