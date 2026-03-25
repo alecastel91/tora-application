@@ -576,7 +576,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                     animate={{ opacity: 1 }}
                                     className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 text-center mb-4 font-tech"
                                 >
-                                    What's Your Role?
+                                    Select Your Role
                                 </motion.p>
                                 <motion.div
                                     className="grid grid-cols-1 gap-4 w-full"
