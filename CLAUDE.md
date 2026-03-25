@@ -37,6 +37,54 @@ tora-application/
 
 ## Recent Updates (March 25, 2026)
 
+### Email Automation System (COMPLETE ✅)
+
+#### Resend Email Integration
+- **Email Service**: Integrated Resend for transactional emails
+- **Domain Verification**: Successfully verified `mail.torahub.io` subdomain
+  - DNS Records: SPF, DKIM, MX configured in Namecheap
+  - Sender email: `TORA <noreply@mail.torahub.io>`
+- **Template System**: Using Resend Dashboard templates (not React Email code templates)
+  - Template ID: `c9ccf7de-fa7f-4c7f-b4cc-be917eb87b47`
+  - Template variables: `firstName`, `email`, `submittedDate`
+- **API Endpoint**: Created `/api/send-email/route.ts` for email sending
+  - Fire-and-forget pattern (doesn't block form submission)
+  - Proper error handling
+- **Confirmation Email Flow**:
+  1. User submits application → Supabase saves data
+  2. Email API triggered with user details
+  3. Resend sends confirmation email with branded template
+  4. User sees confirmation page (email sent in background)
+- **Production Deployment**:
+  - Environment variable `RESEND_API_KEY` configured in Vercel
+  - Successfully deployed and tested in production
+- **Free Tier**: 3,000 emails/month, 100/day limit (sufficient for landing page)
+
+#### Files Modified
+- `/emails/application-received.tsx` - React Email template (backup)
+- `/src/app/api/send-email/route.ts` - Email API endpoint
+- `/src/components/sections/infrared/ApplicationForm.tsx` - Email trigger integration
+- `package.json` - Added `@react-email/components` dependency
+
+### Admin Dashboard Enhancements (COMPLETE ✅)
+
+#### Resident Advisor URL Generation
+- **Smart URL Builder**: Created `convertToRASlug()` function with special rules
+  - Regular spaces: `Al Jones` → `/aljones` (spaces removed)
+  - Brackets with country codes: `FU (JP)` → `/fu-jp` (brackets to dash)
+  - Numbers in brackets: `DNG (1)` → `/dng-1` (same pattern)
+  - Existing dashes: `FU-JP` → `/fu-jp` (kept, lowercase)
+- **Data Priority Fix**: Changed from `profile_name || resident_advisor` to `resident_advisor || profile_name`
+  - Now uses the full RA field value (with brackets) first
+  - Falls back to profile name only if RA field is empty
+- **Empty Field Handling**: Hide RA link when field is empty or whitespace only
+- **Logo Update**: Replaced generic icon with custom "RA" letters logo
+  - Minimalist square design matching brand style
+  - Label shortened from "Resident Advisor" to "RA"
+
+#### Files Modified
+- `/src/app/admin/page.tsx` - RA URL logic, logo update, empty field handling
+
 ### Application Form Refinements (COMPLETE ✅)
 
 #### Landing Page Tagline Update
