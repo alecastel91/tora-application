@@ -12,6 +12,16 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Helper function to convert artist name to RA URL slug
+const convertToRASlug = (name: string): string => {
+    return name
+        .toLowerCase()
+        .replace(/\s+\(([^)]+)\)/g, '-$1')     // "DNG (1)" → "dng-1" (space+brackets to dash+content)
+        .replace(/\s+/g, '')                   // Remove remaining spaces: "Al Jones" → "aljones"
+        .replace(/--+/g, '-')                  // Multiple dashes to single dash
+        .replace(/^-|-$/g, '');                // Remove leading/trailing dashes
+};
+
 interface Application {
     id: number;
     created_at: string;
@@ -388,11 +398,11 @@ export default function AdminDashboard() {
                                                     SoundCloud
                                                 </a>
                                             )}
-                                            {app.resident_advisor && (
+                                            {app.resident_advisor && app.resident_advisor.trim() !== '' && (
                                                 <a
                                                     href={app.resident_advisor.startsWith('http')
                                                         ? app.resident_advisor
-                                                        : `https://ra.co/dj/${(app.profile_name || app.resident_advisor).toLowerCase().replace(/\s+/g, '')}`
+                                                        : `https://ra.co/dj/${convertToRASlug(app.resident_advisor || app.profile_name)}`
                                                     }
                                                     target="_blank"
                                                     rel="noopener noreferrer"
