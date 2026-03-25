@@ -359,6 +359,25 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                         console.error("Database error:", dbError);
                         console.log("Continuing to confirmation despite database error...");
                         // Don't return - continue to show confirmation page
+                    } else {
+                        // Send confirmation email (fire-and-forget - don't block on errors)
+                        fetch('/api/send-email', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                firstName,
+                                email,
+                                role,
+                            }),
+                        })
+                            .then(res => {
+                                if (res.ok) {
+                                    console.log('Confirmation email sent successfully!');
+                                } else {
+                                    console.log('Email failed (continuing anyway):', res.status);
+                                }
+                            })
+                            .catch(err => console.log('Email error (continuing anyway):', err));
                     }
                 } else {
                     // Log form data to console instead (for testing without Supabase)
