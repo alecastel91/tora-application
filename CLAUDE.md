@@ -85,6 +85,20 @@ tora-application/
 #### Files Modified
 - `/src/app/admin/page.tsx` - RA URL logic, logo update, empty field handling
 
+#### Admin Dashboard Accept/Decline Buttons
+- **Issue Fixed**: Buttons were not showing for applications with NULL status
+- **Solution**: Updated condition to show buttons when `status === 'PENDING' || !status`
+- **TypeScript Fix**: Changed `id: number` to `id: string` (UUID type)
+- **Debug Logging**: Added comprehensive logging for approve/decline operations
+- **Files Modified**: `/src/app/admin/page.tsx`
+
+#### Known Issue (IN PROGRESS ⚠️)
+- **Status Update Not Working**: Approve/Decline buttons execute but don't update database
+- **Console shows**: `{data: Array(0), error: null}` - 0 rows updated
+- **Verified**: All required columns exist in database (`status`, `coupon_code`, `invited_at`)
+- **Next Investigation**: Row Level Security (RLS) policies may be blocking updates
+- **Hypothesis**: Supabase `anon` key has restricted UPDATE permissions
+
 ### Application Form Refinements (COMPLETE ✅)
 
 #### Landing Page Tagline Update

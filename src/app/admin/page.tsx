@@ -23,7 +23,7 @@ const convertToRASlug = (name: string): string => {
 };
 
 interface Application {
-    id: number;
+    id: string;  // UUID is a string, not a number
     created_at: string;
     phone_number: string;
     role: string;
@@ -105,19 +105,27 @@ export default function AdminDashboard() {
         if (!confirm(`Approve ${displayName}?`)) return;
 
         try {
+            console.log('Approving application:', application.id);
             // Update status to APPROVED
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('waitlist')
                 .update({ status: 'APPROVED' })
-                .eq('id', application.id);
+                .eq('id', application.id)
+                .select(); // Force return of updated rows
+
+            console.log('Approve result:', { data, error });
 
             if (error) throw error;
 
+            if (!data || data.length === 0) {
+                throw new Error('No rows were updated. ID might not exist in database.');
+            }
+
             alert(`✅ ${displayName} has been approved!`);
-            loadApplications(); // Reload list
+            await loadApplications(); // Wait for reload to complete
         } catch (err) {
             console.error('Error approving:', err);
-            alert('Failed to approve application');
+            alert(`Failed to approve application: ${err}`);
         }
     };
 
@@ -126,18 +134,26 @@ export default function AdminDashboard() {
         if (!confirm(`Decline ${displayName}?`)) return;
 
         try {
-            const { error } = await supabase
+            console.log('Declining application:', application.id);
+            const { data, error } = await supabase
                 .from('waitlist')
                 .update({ status: 'DECLINED' })
-                .eq('id', application.id);
+                .eq('id', application.id)
+                .select(); // Force return of updated rows
+
+            console.log('Decline result:', { data, error });
 
             if (error) throw error;
 
+            if (!data || data.length === 0) {
+                throw new Error('No rows were updated. ID might not exist in database.');
+            }
+
             alert(`❌ ${displayName} has been declined.`);
-            loadApplications();
+            await loadApplications(); // Wait for reload to complete
         } catch (err) {
             console.error('Error declining:', err);
-            alert('Failed to decline application');
+            alert(`Failed to decline application: ${err}`);
         }
     };
 
