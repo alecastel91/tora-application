@@ -424,7 +424,7 @@ export default function AdminDashboard() {
 
                                     {/* Right: Actions */}
                                     <div className="flex flex-col gap-2 min-w-[200px]">
-                                        {app.status === 'PENDING' && (
+                                        {(app.status === 'PENDING' || !app.status) && (
                                             <>
                                                 <button
                                                     onClick={() => handleApprove(app)}
