@@ -157,6 +157,59 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleSendInvitation = async (application: Application) => {
+        const displayName = application.profile_name || application.full_name;
+        if (!confirm(`Send invitation to ${displayName}?`)) return;
+
+        try {
+            // Generate unique coupon code (format: TORA-XXXX-XXXX)
+            const couponCode = `TORA-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+            // Update database with coupon code and invited timestamp
+            const { data, error } = await supabase
+                .from('waitlist')
+                .update({
+                    status: 'INVITED',
+                    coupon_code: couponCode,
+                    invited_at: new Date().toISOString()
+                })
+                .eq('id', application.id)
+                .select();
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                throw new Error('Failed to update application status.');
+            }
+
+            // Send invitation email (fire-and-forget)
+            fetch('/api/send-invitation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName: application.profile_name || application.full_name.split(' ')[0],
+                    email: application.email,
+                    role: application.role,
+                    couponCode: couponCode,
+                }),
+            })
+                .then(res => {
+                    if (res.ok) {
+                        console.log('Invitation email sent successfully!');
+                    } else {
+                        console.log('Email failed (invitation saved):', res.status);
+                    }
+                })
+                .catch(err => console.log('Email error (invitation saved):', err));
+
+            alert(`✅ Invitation sent to ${displayName}!\nCoupon Code: ${couponCode}`);
+            await loadApplications();
+        } catch (err) {
+            console.error('Error sending invitation:', err);
+            alert(`Failed to send invitation: ${err}`);
+        }
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'PENDING': return 'bg-yellow-500/20 text-yellow-300';
@@ -464,12 +517,15 @@ export default function AdminDashboard() {
                                             </>
                                         )}
                                         {app.status === 'APPROVED' && (
-                                            <div className="text-green-300 text-sm text-center py-2 flex items-center justify-center gap-2">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                            <button
+                                                onClick={() => handleSendInvitation(app)}
+                                                className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded text-sm font-semibold transition-colors flex items-center justify-center gap-2 w-full"
+                                            >
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                                 </svg>
-                                                Approved - Ready for invitation
-                                            </div>
+                                                SEND INVITATION
+                                            </button>
                                         )}
                                         {app.status === 'INVITED' && app.coupon_code && (
                                             <div className="text-blue-300 text-sm">

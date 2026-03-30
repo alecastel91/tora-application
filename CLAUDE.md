@@ -35,6 +35,54 @@ tora-application/
 └── package.json
 ```
 
+## Recent Updates (March 30, 2026)
+
+### Email Template System - Complete Overhaul (COMPLETE ✅)
+
+#### Application Received Email
+- **New Template ID**: `03afbe67-12b7-4ca2-8e88-afee3373a472`
+- **Design**: TORA logo + checkmark icon (140px circle) + application details
+- **Structure**: Simplified 3-step process (Review → Approval → Launch Access)
+- **Spacing**: Consistent margins matching Application Accepted email style
+- **Variables**: `{{firstName}}`, `{{email}}`, `{{submittedDate}}`
+- **API**: `/api/send-email/route.ts` updated with new template ID
+
+#### Application Accepted Email (Invitation)
+- **New Template ID**: `b22d00aa-d640-4040-9433-97b58108c18e`
+- **Design**: TORA logo + Globe icon (tilted 45 degrees) + tier benefits box + invitation code
+- **Complete Structure**:
+  - Header: TORA logo (150px) + Globe icon (80px) + "APPLICATION ACCEPTED!"
+  - Intro: Congratulations paragraph
+  - Beta Info: Founding member benefits with complimentary Premium access
+  - Tier Box: Role-specific membership benefits (Artist/Promoter/Venue/Agent)
+  - Invitation Code: Large pink text (28px monospace)
+  - CTA: "Create Your Account" button
+  - How to Join: 3-step numbered instructions
+  - Support: Email contact info
+  - Footer: Copyright + "WHERE MUSIC MEETS" tagline
+- **Variables**:
+  - `{{firstName}}` - User's first name
+  - `{{tierTitle}}` - Membership type (e.g., "Artist Membership")
+  - `{{tierBenefit}}` - "Founding Member • Complimentary Premium Access"
+  - `{{tierDescription}}` - Role-specific description
+  - `{{invitationCode}}` - Generated coupon code (TORA-XXXX-XXXX)
+- **API**: `/api/send-invitation/route.ts` updated with new template ID
+
+#### Template Content Updates
+- **Changed terminology**: "electronic music industry" → "club music industry"
+- **Beta messaging**: Emphasizes complimentary Premium access without specific end date
+- **Community focus**: Highlights founding member importance and contribution to platform growth
+- **Role-specific content**: Dynamic descriptions for Artists, Promoters, Venues, and Agents
+
+#### Technical Implementation
+- **HTML Templates**: Created complete HTML email templates on Desktop
+  - `tora-invitation-email-complete.html` - Application Accepted email
+  - `tora-application-received-email.html` - Application Received email
+  - `EMAIL-TEMPLATE-SETUP-INSTRUCTIONS.md` - Setup guide for Resend
+- **Image Assets**: Using TORA logo and Globe Icon from Desktop
+- **Resend Integration**: Both templates uploaded to Resend Dashboard
+- **Backend**: Updated API endpoints with new template IDs
+
 ## Recent Updates (March 25, 2026)
 
 ### Email Automation System (COMPLETE ✅)
@@ -45,8 +93,6 @@ tora-application/
   - DNS Records: SPF, DKIM, MX configured in Namecheap
   - Sender email: `TORA <noreply@mail.torahub.io>`
 - **Template System**: Using Resend Dashboard templates (not React Email code templates)
-  - Template ID: `c9ccf7de-fa7f-4c7f-b4cc-be917eb87b47`
-  - Template variables: `firstName`, `email`, `submittedDate`
 - **API Endpoint**: Created `/api/send-email/route.ts` for email sending
   - Fire-and-forget pattern (doesn't block form submission)
   - Proper error handling

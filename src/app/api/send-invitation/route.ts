@@ -1,0 +1,81 @@
+import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function POST(request: Request) {
+  try {
+    const { firstName, email, role, couponCode } = await request.json();
+
+    // Founding member benefits - kept general and flexible
+    // You can update this text later based on subscription trends
+    let membershipTier = 'Founding Member';
+    let premiumDuration = 'Complimentary Premium Access';
+
+    // Map role to tier information
+    const tierInfo = {
+      ARTIST: {
+        title: 'Artist Membership',
+        benefit: `${membershipTier} • ${premiumDuration}`,
+        description: 'Connect with venues, promoters, and agents worldwide. Book gigs, manage your calendar, and grow your career in the club music industry.'
+      },
+      PROMOTER: {
+        title: 'Promoter Membership',
+        benefit: `${membershipTier} • ${premiumDuration}`,
+        description: 'Discover and book talented artists for your events. Access a global network of club music professionals and streamline your booking process.'
+      },
+      VENUE: {
+        title: 'Venue Membership',
+        benefit: `${membershipTier} • ${premiumDuration}`,
+        description: 'Connect with artists and promoters to fill your calendar. Find the perfect acts for your venue and manage bookings efficiently.'
+      },
+      AGENT: {
+        title: 'Agent Membership',
+        benefit: `${membershipTier} • ${premiumDuration}`,
+        description: 'Represent artists and manage their bookings in one platform. Connect your roster with venues and promoters, track deals, and grow your business.'
+      }
+    };
+
+    const tier = tierInfo[role as keyof typeof tierInfo] || tierInfo.ARTIST;
+
+    console.log('📧 Sending invitation email with variables:', {
+      firstName,
+      email,
+      role,
+      couponCode,
+      tierTitle: tier.title
+    });
+
+    // Send invitation email to approved applicant using Resend template
+    const { data, error } = await resend.emails.send({
+      from: 'TORA <noreply@mail.torahub.io>',
+      to: [email],
+      subject: 'Welcome to TORA - Your Invitation',
+      // Reference Resend template by ID with variables
+      template: {
+        id: 'b22d00aa-d640-4040-9433-97b58108c18e',
+        variables: {
+          firstName: firstName,
+          invitationCode: couponCode,
+          tierTitle: tier.title,
+          tierBenefit: tier.benefit,
+          tierDescription: tier.description,
+        },
+      },
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    console.log('✅ Invitation email sent successfully to:', email);
+    return NextResponse.json({ success: true, data });
+  } catch (error) {
+    console.error('Invitation email API error:', error);
+    return NextResponse.json(
+      { error: 'Failed to send invitation email' },
+      { status: 500 }
+    );
+  }
+}

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       subject: 'Application Received - TORA',
       // Reference Resend template by ID with variables
       template: {
-        id: 'c9ccf7de-fa7f-4c7f-b4cc-be917eb87b47',
+        id: '03afbe67-12b7-4ca2-8e88-afee3373a472',
         variables: {
           firstName: firstName,
           email: email,
