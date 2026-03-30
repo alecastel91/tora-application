@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Rajdhani, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -41,7 +42,9 @@ export default function RootLayout({
       <body
         className={`${orbitron.variable} ${rajdhani.variable} ${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
       >
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

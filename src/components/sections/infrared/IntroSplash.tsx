@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { InfraredButton } from "@/components/ui/InfraredButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface IntroSplashProps {
     onComplete: () => void;
     onApply: () => void;
+    onShowContent?: (show: boolean) => void;
 }
 
-export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
+export function IntroSplash({ onComplete, onApply, onShowContent }: IntroSplashProps) {
+    const { t } = useLanguage();
     const [showLogo, setShowLogo] = useState(false);
     const [showTagline, setShowTagline] = useState(false);
     const [hideTagline, setHideTagline] = useState(false);
@@ -40,6 +43,13 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
             clearTimeout(contentTimer);
         };
     }, [onComplete]);
+
+    // Notify parent when content becomes visible
+    useEffect(() => {
+        if (onShowContent) {
+            onShowContent(showContent);
+        }
+    }, [showContent, onShowContent]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen w-full bg-black px-4">
@@ -89,7 +99,7 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                             letterSpacing: '0.22em'
                         }}
                     >
-                        WHERE MUSIC MEETS
+                        {t('tagline')}
                     </span>
                 </motion.div>
 
@@ -143,10 +153,8 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                                     fontWeight: 400,
                                     letterSpacing: '0.15em'
                                 }}
-                            >
-                                THE PROFESSIONAL NETWORK<br />
-                                FOR CLUB MUSIC INDUSTRY
-                            </p>
+                                dangerouslySetInnerHTML={{ __html: t('main_heading') }}
+                            />
                         </motion.div>
 
                         {/* Description text */}
@@ -157,7 +165,7 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                             className="flex flex-col items-center text-center w-full mb-8"
                         >
                             <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-sm">
-                                Connect with artists, agents, venues, and promoters worldwide. Discover opportunities, manage bookings, and grow your network in one seamless platform
+                                {t('description')}
                             </p>
                         </motion.div>
 
@@ -169,7 +177,7 @@ export function IntroSplash({ onComplete, onApply }: IntroSplashProps) {
                             className="flex justify-center w-full"
                         >
                             <InfraredButton onClick={onApply} className="w-full md:w-auto min-w-[200px] text-sm md:text-base py-3 md:py-4 uppercase tracking-wider">
-                                Apply Now
+                                {t('apply_now')}
                             </InfraredButton>
                         </motion.div>
                     </div>

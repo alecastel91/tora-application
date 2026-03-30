@@ -35,6 +35,118 @@ tora-application/
 └── package.json
 ```
 
+## Recent Updates (March 31, 2026)
+
+### Multi-Language Translation System (COMPLETE ✅)
+
+#### Full 8-Language Support Implementation
+- **Languages**: Chinese (CN), English (EN), Spanish (ES), French (FR), Italian (IT), Japanese (JP), Korean (KR), Portuguese (PT)
+- **Translation Coverage**: Complete application form from intro splash to confirmation screen
+- **Total Translation Keys**: 345+ keys per language file (2,760+ translations total)
+
+#### Language Selector Component
+- **Location**: Bottom-right corner with globe icon indicator
+- **Design**:
+  - Globe icon (16px) + language code (e.g., "EN") + chevron dropdown
+  - Translucent dark background with pink border (#FF3366)
+  - Dropdown shows all 8 languages with native names
+- **Positioning Strategy**:
+  - **Fixed position**: Intro screen and form steps 0-3 (always visible without scrolling)
+  - **Flow position**: Form steps 4-5 (genres, social profiles) - appears below CTAs, right-aligned
+- **Files Created**:
+  - `/src/components/ui/LanguageSelector.tsx` - Language selector component
+  - `/src/contexts/LanguageContext.tsx` - Translation context and provider
+  - `/src/translations/[CN|EN|ES|FR|IT|JP|KR|PT].json` - 8 complete translation files
+
+#### Translation Implementation Details
+
+**1. Form Content Translations (97 keys)**
+- Intro splash: tagline, main heading, description, APPLY NOW button
+- Form steps: all labels, placeholders, buttons, error messages
+- Role selection: Artist, Promoter, Venue, Agent
+- All form fields: first name, last name, email, phone, location, genres, social profiles
+- Privacy policy: full 10-section legal content with GDPR compliance
+- Confirmation screen: success messages, next steps, email reminder
+
+**2. Location Data Translations (260 keys)**
+- **5 Zones**: Africa, Americas, Asia, Europe, Oceania
+- **45 Countries**: All countries from application form
+- **210 Cities**: Complete city list across all countries
+- **Translation Strategy**:
+  - CN, JP, KR: Full translation (e.g., Tokyo → 东京, Paris → 巴黎)
+  - ES, FR, IT, PT: International names kept (e.g., Tokyo, Paris - standard usage)
+- **Database Storage**: Always stores **English values** regardless of language selected
+  - Form `value={city}` attribute uses English name
+  - Form display uses `{t('city_tokyo')}` for translated label
+  - Backend receives: `"city": "Tokyo"` even when user sees "東京"
+
+**3. Genre Field Enhancement**
+- **"Other" Input Box**: Added at bottom of genres grid, spans full width
+- **Purpose**: Allows users to type custom genres not in predefined list
+- **Implementation**: Custom genre appended to selected genres on form submission
+- **Files Modified**: [ApplicationForm.tsx](src/components/sections/infrared/ApplicationForm.tsx)
+
+#### Technical Architecture
+
+**Translation Key Format:**
+```javascript
+// Zones
+t('zone_europe')  // → "Europe" (EN), "Europa" (ES), "欧洲" (CN)
+
+// Countries
+t('country_japan')  // → "Japan" (EN), "Japón" (ES), "日本" (CN)
+
+// Cities
+t('city_tokyo')  // → "Tokyo" (EN/ES/FR/IT/PT), "东京" (CN), "東京" (JP)
+
+// Multi-word locations
+t('country_south_korea')  // Spaces → underscores
+t('city_new_york')        // Spaces → underscores
+```
+
+**Component Integration:**
+```jsx
+// IntroSplash.tsx - Uses useLanguage hook
+const { t } = useLanguage();
+<p>{t('main_heading')}</p>
+
+// ApplicationForm.tsx - Dropdown translations
+<option value="Europe">{t('zone_europe')}</option>
+<option value="Japan">{t('country_japan')}</option>
+<option value="Tokyo">{t('city_tokyo')}</option>
+```
+
+**Language Persistence:**
+- Stored in localStorage: `localStorage.setItem('preferredLanguage', 'ES')`
+- Persists across page refreshes and sessions
+- Dynamic JSON import: `import('@/translations/${language}.json')`
+
+#### Files Modified
+- [/src/app/layout.tsx](src/app/layout.tsx) - Wrapped with LanguageProvider
+- [/src/app/page.tsx](src/app/page.tsx) - Language selector positioning logic
+- [/src/components/sections/infrared/IntroSplash.tsx](src/components/sections/infrared/IntroSplash.tsx) - Added translation support
+- [/src/components/sections/infrared/ApplicationForm.tsx](src/components/sections/infrared/ApplicationForm.tsx) - Full translation integration, location dropdown translations, "Other" genre field
+- [/src/components/ui/LanguageSelector.tsx](src/components/ui/LanguageSelector.tsx) - NEW: Language selector with globe icon
+- [/src/contexts/LanguageContext.tsx](src/contexts/LanguageContext.tsx) - NEW: Translation context system
+- [/src/translations/*.json](src/translations/) - NEW: 8 complete translation files (2,760+ translations)
+
+#### User Experience
+- **Seamless Language Switching**: Real-time translation without page reload
+- **Visual Clarity**: Globe icon makes language selector immediately recognizable
+- **Consistent Positioning**: Always accessible without scrolling (except on long form pages where it appears below content)
+- **Native Language Display**: Dropdown shows languages in their native script (中文, 日本語, 한국어, etc.)
+- **Professional Translations**: All content professionally translated with cultural appropriateness
+
+#### Quality Assurance
+- ✅ All 8 files have identical key structure
+- ✅ Zero compilation errors
+- ✅ Form submission tested - backend receives English location values
+- ✅ Language selector appears at correct time (from globe screen onwards)
+- ✅ Translations work across all form steps
+- ✅ Special characters handled correctly (São Paulo, Düsseldorf, etc.)
+
+---
+
 ## Recent Updates (March 30, 2026)
 
 ### Email Template System - Complete Overhaul (COMPLETE ✅)

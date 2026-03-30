@@ -4,8 +4,9 @@ import { GlassPanel } from "@/components/ui/GlassPanel";
 import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Create a dummy Supabase client with placeholder values for build time
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
@@ -276,9 +277,11 @@ const citiesByCountry: Record<string, string[]> = {
 
 interface ApplicationFormProps {
     onSubmit: () => void;
+    onStepChange?: (step: number) => void;
 }
 
-export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
+export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps) {
+    const { t } = useLanguage();
     const [step, setStep] = useState(0);
     const [direction, setDirection] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -300,6 +303,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
     const [genres, setGenres] = useState<string[]>([]);
+    const [otherGenre, setOtherGenre] = useState("");
     const [instagram, setInstagram] = useState("");
     const [residentAdvisor, setResidentAdvisor] = useState("");
     const [soundcloud, setSoundcloud] = useState("");
@@ -309,6 +313,13 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     const [website, setWebsite] = useState("");
     const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
     const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+
+    // Notify parent component when step changes
+    useEffect(() => {
+        if (onStepChange) {
+            onStepChange(step);
+        }
+    }, [step, onStepChange]);
 
     const nextStep = () => { setDirection(1); setStep((s) => s + 1); };
     const prevStep = () => { setDirection(-1); setStep((s) => s - 1); };
@@ -344,7 +355,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             zone,
                             country,
                             city,
-                            genres: genres.join(', '),
+                            genres: otherGenre ? [...genres, otherGenre].join(', ') : genres.join(', '),
                             instagram,
                             resident_advisor: residentAdvisor || null,
                             soundcloud: soundcloud || null,
@@ -390,7 +401,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                         zone,
                         country,
                         city,
-                        genres: genres.join(', '),
+                        genres: otherGenre ? [...genres, otherGenre].join(', ') : genres.join(', '),
                         instagram,
                         resident_advisor: residentAdvisor || null,
                         soundcloud: soundcloud || null,
@@ -407,7 +418,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
             } catch (err) {
                 console.error("Unexpected error:", err);
                 setLoading(false);
-                setError("Something went wrong. Please try again.");
+                setError(t('error_generic'));
             }
         }, 1500); // 1.5 second delay to show loading state
     };
@@ -476,7 +487,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 letterSpacing: '0.2em'
                             }}
                         >
-                            APPLICATION RECEIVED
+                            {t('application_received')}
                         </motion.h2>
 
                         {/* Confirmation message */}
@@ -487,10 +498,10 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             className="space-y-4"
                         >
                             <p className="text-white/80 text-base md:text-lg leading-relaxed mx-auto">
-                                Thank you for applying to TORA!
+                                {t('thank_you')}
                             </p>
                             <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-lg mx-auto">
-                                Your application has been received and will be carefully reviewed. TORA is currently in pre-launch phase – we're building an exclusive community of verified professionals before opening the platform.
+                                {t('application_received_message')}
                             </p>
                         </motion.div>
 
@@ -502,17 +513,17 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             className="pt-6 border-t border-white/10 space-y-4"
                         >
                             <p className="text-white/70 text-sm md:text-base font-medium uppercase tracking-wider">
-                                What Happens Next
+                                {t('what_happens_next')}
                             </p>
                             <div className="text-white/50 text-xs md:text-sm leading-relaxed space-y-2 max-w-lg mx-auto">
                                 <p>
-                                    <span className="text-infrared font-medium">1. Review:</span> Our team will carefully review your application
+                                    <span className="text-infrared font-medium">1. {t('step_review')}</span> {t('step_review_text')}
                                 </p>
                                 <p>
-                                    <span className="text-infrared font-medium">2. Approval:</span> If approved, you'll receive an invitation code via email
+                                    <span className="text-infrared font-medium">2. {t('step_approval')}</span> {t('step_approval_text')}
                                 </p>
                                 <p>
-                                    <span className="text-infrared font-medium">3. Launch Access:</span> Use your code to create your account when TORA launches
+                                    <span className="text-infrared font-medium">3. {t('step_launch_access')}</span> {t('step_launch_access_text')}
                                 </p>
                             </div>
                         </motion.div>
@@ -525,7 +536,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             className="pt-4"
                         >
                             <p className="text-white/40 text-xs md:text-sm">
-                                Check your email and spam folder for updates.
+                                {t('check_email')}
                             </p>
                         </motion.div>
                     </motion.div>
@@ -551,7 +562,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                             letterSpacing: '0.15em'
                         }}
                     >
-                        ACCESS REQUEST
+                        {t('access_request')}
                     </motion.h2>
 
                     {/* Progress bar with pink active tint */}
@@ -595,7 +606,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                     animate={{ opacity: 1 }}
                                     className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 text-center mb-4 font-tech"
                                 >
-                                    Select Your Role
+                                    {t('select_your_role')}
                                 </motion.p>
                                 <motion.div
                                     className="grid grid-cols-1 gap-4 w-full"
@@ -621,7 +632,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 animate={{ opacity: role === r ? 1 : 0.5 }}
                                             >
                                                 <span className="text-xs opacity-50">0{i + 1}</span>
-                                                {r}
+                                                {t(`role_${r.toLowerCase()}`)}
                                             </motion.span>
                                         </motion.button>
                                     ))}
@@ -649,11 +660,11 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
-                                            Identification
+                                            {t('identification')}
                                         </motion.p>
                                         <InfraredInput
                                             label=""
-                                            placeholder="First name"
+                                            placeholder={t('first_name')}
                                             required
                                             value={firstName}
                                             onChange={(e) => setFirstName(e.target.value)}
@@ -661,7 +672,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         />
                                         <InfraredInput
                                             label=""
-                                            placeholder="Last name"
+                                            placeholder={t('last_name')}
                                             required
                                             value={lastName}
                                             onChange={(e) => setLastName(e.target.value)}
@@ -670,10 +681,10 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <InfraredInput
                                             label=""
                                             placeholder={
-                                                role === 'Artist' ? 'Artist name' :
-                                                role === 'Promoter' ? 'Promoter / Event name' :
-                                                role === 'Venue' ? 'Venue name' :
-                                                'Agent name'
+                                                role === 'Artist' ? t('artist_name') :
+                                                role === 'Promoter' ? t('promoter_event_name') :
+                                                role === 'Venue' ? t('venue_name') :
+                                                t('agent_name')
                                             }
                                             required
                                             value={profileName}
@@ -682,8 +693,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         />
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -705,9 +716,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                 <form onSubmit={(e) => {
                                     e.preventDefault();
                                     if (!email.trim() || !validateEmail(email.trim())) {
-                                        setError("Please enter a valid email address (e.g., name@example.com)");
+                                        setError(t('email_validation_error'));
                                     } else if (email.trim() !== confirmEmail.trim()) {
-                                        setError("Email addresses do not match");
+                                        setError(t('email_mismatch_error'));
                                     } else {
                                         setError(null);
                                         nextStep();
@@ -719,12 +730,12 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
-                                            Contacts
+                                            {t('contacts')}
                                         </motion.p>
                                         <InfraredInput
                                             label=""
                                             type="text"
-                                            placeholder="Email address"
+                                            placeholder={t('email_address')}
                                             required
                                             value={email}
                                             onChange={(e) => {
@@ -736,7 +747,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         <InfraredInput
                                             label=""
                                             type="text"
-                                            placeholder="Confirm email address"
+                                            placeholder={t('confirm_email_address')}
                                             required
                                             value={confirmEmail}
                                             onChange={(e) => {
@@ -752,7 +763,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 required
                                                 className="w-32 px-3 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                             >
-                                                <option value="" disabled>Code</option>
+                                                <option value="" disabled>{t('code')}</option>
                                                 {countryCodes.map((c) => (
                                                     <option
                                                         key={`${c.code}-${c.country}`}
@@ -766,7 +777,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             <InfraredInput
                                                 label=""
                                                 type="tel"
-                                                placeholder="Phone number"
+                                                placeholder={t('phone_number')}
                                                 required
                                                 value={phoneNumber}
                                                 onChange={(e) => {
@@ -788,8 +799,8 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         )}
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -815,7 +826,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
-                                            Location
+                                            {t('location')}
                                         </motion.p>
 
                                         {/* Zone Dropdown */}
@@ -829,9 +840,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             required
                                             className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                         >
-                                            <option value="" disabled>Select zone</option>
+                                            <option value="" disabled>{t('select_zone')}</option>
                                             {zones.map((z) => (
-                                                <option key={z} value={z} className="bg-[#0a0a0a] text-white">{z}</option>
+                                                <option key={z} value={z} className="bg-[#0a0a0a] text-white">{t(`zone_${z.toLowerCase()}`)}</option>
                                             ))}
                                         </select>
 
@@ -849,9 +860,9 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 required
                                                 className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                             >
-                                                <option value="" disabled>Select country</option>
+                                                <option value="" disabled>{t('select_country')}</option>
                                                 {countriesByZone[zone]?.map((c) => (
-                                                    <option key={c} value={c} className="bg-[#0a0a0a] text-white">{c}</option>
+                                                    <option key={c} value={c} className="bg-[#0a0a0a] text-white">{t(`country_${c.toLowerCase().replace(/ /g, '_')}`)}</option>
                                                 ))}
                                             </motion.select>
                                         )}
@@ -867,17 +878,17 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 required
                                                 className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
                                             >
-                                                <option value="" disabled>Select city</option>
+                                                <option value="" disabled>{t('select_city')}</option>
                                                 {citiesByCountry[country]?.map((c) => (
-                                                    <option key={c} value={c} className="bg-[#0a0a0a] text-white">{c}</option>
+                                                    <option key={c} value={c} className="bg-[#0a0a0a] text-white">{t(`city_${c.toLowerCase().replace(/ /g, '_').normalize('NFD').replace(/[\u0300-\u036f]/g, '')}`)}</option>
                                                 ))}
-                                                <option value="Other" className="bg-[#0a0a0a] text-white">Other</option>
+                                                <option value="Other" className="bg-[#0a0a0a] text-white">{t('other')}</option>
                                             </motion.select>
                                         )}
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -903,7 +914,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
-                                            Genres
+                                            {t('genres')}
                                         </motion.p>
 
                                         {/* Genre selection grid */}
@@ -932,13 +943,21 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             ))}
                                         </div>
 
+                                        {/* Other Genre Input - spans both columns */}
+                                        <InfraredInput
+                                            placeholder={t('other')}
+                                            value={otherGenre}
+                                            onChange={(e) => setOtherGenre(e.target.value)}
+                                            className="w-full text-center text-sm md:text-base py-5 font-tech mb-4"
+                                        />
+
                                         <p className="text-white/40 text-xs tracking-wide">
-                                            {genres.length === 0 ? 'Select at least one genre' : `${genres.length} genre${genres.length !== 1 ? 's' : ''} selected`}
+                                            {genres.length === 0 ? t('select_at_least_one') : `${genres.length} ${genres.length === 1 ? t('genres_selected') : t('genres_selected_plural')} ${t('genres_selected_text')}`}
                                         </p>
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">NEXT</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
+                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -964,10 +983,10 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="text-sm md:text-base uppercase tracking-wide md:tracking-[0.2em] text-white/60 mb-6 font-tech"
                                         >
-                                            {role === 'Artist' && 'Social & Music Profiles'}
-                                            {role === 'Agent' && 'Instagram & Agency Details'}
-                                            {role === 'Venue' && 'Instagram & Venue Details'}
-                                            {role === 'Promoter' && 'Instagram & Additional Info'}
+                                            {role === 'Artist' && t('social_music_profiles_artist')}
+                                            {role === 'Agent' && t('instagram_agency_details_agent')}
+                                            {role === 'Venue' && t('instagram_venue_details_venue')}
+                                            {role === 'Promoter' && t('instagram_additional_info_promoter')}
                                         </motion.p>
                                         <div className="relative w-full">
                                             <div className="absolute left-0 top-0 bottom-0 flex items-center pl-4 pointer-events-none z-10">
@@ -975,7 +994,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             </div>
                                             <InfraredInput
                                                 label=""
-                                                placeholder="Instagram username"
+                                                placeholder={t('instagram_username')}
                                                 required
                                                 value={instagram}
                                                 onChange={(e) => setInstagram(e.target.value)}
@@ -989,7 +1008,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
                                             style={{ marginTop: '-16px' }}
                                         >
-                                            Your Instagram handle will be used for identity verification and authentication purposes. Please provide an account that best represents your professional profile.
+                                            {t('instagram_verification_notice')}
                                         </motion.p>
 
                                         {/* Artist: RA + SoundCloud */}
@@ -997,7 +1016,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             <>
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Resident Advisor artist name (optional)"
+                                                    placeholder={t('resident_advisor_optional')}
                                                     value={residentAdvisor}
                                                     onChange={(e) => setResidentAdvisor(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
@@ -1009,11 +1028,11 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
                                                     style={{ marginTop: '-16px' }}
                                                 >
-                                                    Enter your artist name as it appears on your Resident Advisor artist page
+                                                    {t('resident_advisor_helper')}
                                                 </motion.p>
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="SoundCloud login username (optional)"
+                                                    placeholder={t('soundcloud_username_optional')}
                                                     value={soundcloud}
                                                     onChange={(e) => setSoundcloud(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
@@ -1025,7 +1044,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
                                                     style={{ marginTop: '-16px' }}
                                                 >
-                                                    Enter your SoundCloud username (e.g., if your profile is soundcloud.com/username, enter "username")
+                                                    {t('soundcloud_helper')}
                                                 </motion.p>
                                             </>
                                         )}
@@ -1035,7 +1054,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             <>
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Agency name"
+                                                    placeholder={t('agency_name')}
                                                     required
                                                     value={agencyName}
                                                     onChange={(e) => setAgencyName(e.target.value)}
@@ -1043,14 +1062,14 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 />
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Website (optional)"
+                                                    placeholder={t('website_optional')}
                                                     value={website}
                                                     onChange={(e) => setWebsite(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="LinkedIn name (optional)"
+                                                    placeholder={t('linkedin_optional')}
                                                     value={linkedin}
                                                     onChange={(e) => setLinkedin(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
@@ -1064,7 +1083,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 <InfraredInput
                                                     label=""
                                                     type="number"
-                                                    placeholder="Venue capacity"
+                                                    placeholder={t('venue_capacity')}
                                                     required
                                                     value={venueCapacity}
                                                     onChange={(e) => setVenueCapacity(e.target.value)}
@@ -1072,7 +1091,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 />
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Website (optional)"
+                                                    placeholder={t('website_optional')}
                                                     value={website}
                                                     onChange={(e) => setWebsite(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
@@ -1085,7 +1104,7 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                             <>
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder="Website (optional)"
+                                                    placeholder={t('website_optional')}
                                                     value={website}
                                                     onChange={(e) => setWebsite(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
@@ -1111,20 +1130,20 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                 fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
                                             }}
                                         >
-                                            I agree to the{' '}
+                                            {t('privacy_consent_text')}{' '}
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPrivacyModal(true)}
                                                 className="text-infrared hover:text-infrared/80 underline cursor-pointer"
                                             >
-                                                Privacy Policy and Terms of Service
+                                                {t('privacy_policy_link')}
                                             </button>
-                                            {' '}and understand that my data will be used to review my application for membership.
+                                            {' '}{t('privacy_consent_full')}
                                         </label>
                                     </div>
 
                                     <div className="flex space-x-4 w-full justify-center">
-                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">BACK</InfraredButton>
+                                        <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
                                         <InfraredButton type="submit" disabled={loading} className="flex-1 py-3 text-sm relative overflow-hidden">
                                             {loading ? (
                                                 <motion.span
@@ -1138,10 +1157,10 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                                     >
                                                         ⟳
                                                     </motion.span>
-                                                    SUBMITTING...
+                                                    {t('submitting')}
                                                 </motion.span>
                                             ) : (
-                                                'SUBMIT APPLICATION'
+                                                t('submit_application')
                                             )}
                                         </InfraredButton>
                                     </div>
@@ -1189,76 +1208,65 @@ export function ApplicationForm({ onSubmit }: ApplicationFormProps) {
                                         fontWeight: 400
                                     }}
                                 >
-                                    Privacy Policy & Terms
+                                    {t('privacy_policy_title')}
                                 </h2>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>Information We Collect</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('information_we_collect_title')}</h3>
                                     <p className="text-sm">
-                                        When you submit an application to join TORA, we collect: contact information (name, email, phone),
-                                        professional information (role, profile name, agency/venue details), location (zone, country, city),
-                                        music preferences (genres), and social media profiles (Instagram, Resident Advisor, SoundCloud, website, LinkedIn).
+                                        {t('information_we_collect_text')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>How We Use Your Information</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('how_we_use_title')}</h3>
                                     <p className="text-sm">
-                                        We use your information to review and process your application, verify your professional identity,
-                                        create your account if approved, communicate about your application status, and send invitations when we launch.
+                                        {t('how_we_use_text')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>Data Storage and Security</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('data_storage_title')}</h3>
                                     <p className="text-sm">
-                                        Your application data is securely stored using Supabase with enterprise-grade security.
-                                        We implement industry-standard measures to protect your information from unauthorized access.
+                                        {t('data_storage_text')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>Your Rights</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('your_rights_title')}</h3>
                                     <p className="text-sm">
-                                        You have the right to access, correct, or delete your application data at any time.
-                                        You can also withdraw your application before it is processed.
+                                        {t('your_rights_text')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>Data Sharing</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('data_sharing_title')}</h3>
                                     <p className="text-sm">
-                                        We do not sell, trade, or rent your personal information. Your data is only accessible to
-                                        authorized TORA team members for application review purposes.
+                                        {t('data_sharing_text')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>GDPR Compliance</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('gdpr_title')}</h3>
                                     <p className="text-sm">
-                                        For EU users, we comply with GDPR. Your data is processed based on consent and legitimate interest
-                                        in reviewing professional applications for our membership platform.
+                                        {t('gdpr_text')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4 pt-6 border-t border-white/10">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>Terms of Service</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('terms_title')}</h3>
                                     <p className="text-sm">
-                                        By submitting an application, you agree that all information provided is accurate and truthful.
-                                        You are a professional in the electronic music industry. Submission does not guarantee acceptance.
-                                        TORA reserves the right to approve or decline applications at our sole discretion.
+                                        {t('terms_text_1')}
                                     </p>
                                     <p className="text-sm">
-                                        TORA is an invitation-only, membership-based platform. Access is granted exclusively through
-                                        the application and approval process.
+                                        {t('terms_text_2')}
                                     </p>
                                 </section>
 
                                 <section className="space-y-4 pt-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>Pre-Launch Notice</h3>
+                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('prelaunch_title')}</h3>
                                     <p className="text-sm">
-                                        TORA is currently in pre-launch phase. Early applicants may receive priority consideration
-                                        and special membership benefits when we launch.
+                                        {t('prelaunch_text')}
                                     </p>
                                 </section>
                             </div>
