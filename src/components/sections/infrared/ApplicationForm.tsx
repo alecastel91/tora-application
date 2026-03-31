@@ -169,7 +169,6 @@ const countryCodes = [
 
 // Genres data (matching main TORA app)
 const genresList = [
-    "Acid",
     "Afro House",
     "Afrobeat",
     "Amapiano",
@@ -198,6 +197,7 @@ const genresList = [
     "Melodic Techno",
     "Minimal",
     "Noise",
+    "Pop",
     "Progressive House",
     "Psytrance",
     "R&B",
