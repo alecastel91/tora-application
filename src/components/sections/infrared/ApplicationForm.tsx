@@ -345,11 +345,22 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                     process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co';
 
                 if (hasSupabaseConfig) {
-                    const { error: dbError } = await supabase.from("waitlist").insert([
+                    // Get environment mode and determine table name
+                    const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
+                    const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
+
+                    console.log('🔵 Attempting database insert:', {
+                        envMode,
+                        tableName,
+                        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL
+                    });
+
+                    const { error: dbError } = await supabase.from(tableName).insert([
                         {
                             phone_number: `${countryCode} ${phoneNumber}`,
                             role,
-                            full_name: `${firstName} ${lastName}`,
+                            first_name: firstName,
+                            last_name: lastName,
                             profile_name: profileName,
                             email,
                             zone,
@@ -367,10 +378,13 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                     ]);
 
                     if (dbError) {
-                        console.error("Database error:", dbError);
+                        console.error("❌ Database error:", dbError);
+                        console.error("Error details:", JSON.stringify(dbError, null, 2));
                         console.log("Continuing to confirmation despite database error...");
                         // Don't return - continue to show confirmation page
                     } else {
+                        console.log('✅ Database insert successful!');
+
                         // Send confirmation email (fire-and-forget - don't block on errors)
                         fetch('/api/send-email', {
                             method: 'POST',
