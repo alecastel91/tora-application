@@ -69,7 +69,7 @@
   "information_we_collect_title": "Información que Recopilamos",
   "information_we_collect_text": "Cuando envías una solicitud para unirte a TORA, recopilamos: información de contacto (nombre, correo, teléfono), información profesional (rol, nombre de perfil, detalles de agencia/local), ubicación (zona, país, ciudad), preferencias musicales (géneros), y perfiles de redes sociales (Instagram, Resident Advisor, SoundCloud, sitio web, LinkedIn).",
   "how_we_use_title": "Cómo Usamos Tu Información",
-  "how_we_use_text": "Usamos tu información para revisar y procesar tu solicitud, verificar tu identidad profesional, crear tu cuenta si es aprobada, comunicarnos sobre el estado de tu solicitud y enviar invitaciones cuando lancemos.",
+  "how_we_use_text": "Usamos tu información para revisar y procesar tu solicitud, verificar tu identidad profesional, crear tu cuenta si es aprobada, comunicarnos sobre el estado de tu solicitud y enviar invitaciones cuando lancemos. Si tu solicitud es aprobada, los datos de tu perfil serán visibles para otros miembros de la plataforma antes de que tu cuenta sea activada.",
   "data_storage_title": "Almacenamiento y Seguridad de Datos",
   "data_storage_text": "Los datos de tu solicitud se almacenan de forma segura usando Supabase con seguridad de nivel empresarial. Implementamos medidas estándar de la industria para proteger tu información del acceso no autorizado.",
   "your_rights_title": "Tus Derechos",

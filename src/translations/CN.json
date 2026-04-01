@@ -78,7 +78,7 @@
   "information_we_collect_title": "我们收集的信息",
   "information_we_collect_text": "当您提交加入TORA的申请时，我们会收集：联系信息（姓名、电子邮箱、电话）、专业信息（角色、个人资料名称、经纪公司/场地详情）、地点（区域、国家、城市）、音乐偏好（类型）和社交媒体资料（Instagram、Resident Advisor、SoundCloud、网站、LinkedIn）。",
   "how_we_use_title": "我们如何使用您的信息",
-  "how_we_use_text": "我们使用您的信息来审核和处理您的申请、验证您的专业身份、在获得批准后创建您的账户、就您的申请状态进行沟通，以及在我们启动时发送邀请。",
+  "how_we_use_text": "我们使用您的信息来审核和处理您的申请、验证您的专业身份、在获得批准后创建您的账户、就您的申请状态进行沟通，以及在我们启动时发送邀请。如果您的申请获得批准，在您的账户激活之前，您的个人资料数据将对平台的其他成员可见。",
   "data_storage_title": "数据存储和安全",
   "data_storage_text": "您的申请数据使用Supabase安全存储，具有企业级安全性。我们采用行业标准措施来保护您的信息免遭未经授权的访问。",
   "your_rights_title": "您的权利",

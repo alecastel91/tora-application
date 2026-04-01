@@ -78,7 +78,7 @@
   "information_we_collect_title": "Information We Collect",
   "information_we_collect_text": "When you submit an application to join TORA, we collect: contact information (name, email, phone), professional information (role, profile name, agency/venue details), location (zone, country, city), music preferences (genres), and social media profiles (Instagram, Resident Advisor, SoundCloud, website, LinkedIn).",
   "how_we_use_title": "How We Use Your Information",
-  "how_we_use_text": "We use your information to review and process your application, verify your professional identity, create your account if approved, communicate about your application status, and send invitations when we launch.",
+  "how_we_use_text": "We use your information to review and process your application, verify your professional identity, create your account if approved, communicate about your application status, and send invitations when we launch. If your application is approved, your profile data will be visible to other members of the platform before your account is activated.",
   "data_storage_title": "Data Storage and Security",
   "data_storage_text": "Your application data is securely stored using Supabase with enterprise-grade security. We implement industry-standard measures to protect your information from unauthorized access.",
   "your_rights_title": "Your Rights",

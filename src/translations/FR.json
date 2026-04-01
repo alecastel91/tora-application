@@ -69,7 +69,7 @@
   "information_we_collect_title": "Informations que Nous Collectons",
   "information_we_collect_text": "Lorsque vous soumettez une candidature pour rejoindre TORA, nous collectons : informations de contact (nom, e-mail, téléphone), informations professionnelles (rôle, nom de profil, détails de l'agence/du lieu), localisation (zone, pays, ville), préférences musicales (genres), et profils de médias sociaux (Instagram, Resident Advisor, SoundCloud, site web, LinkedIn).",
   "how_we_use_title": "Comment Nous Utilisons Vos Informations",
-  "how_we_use_text": "Nous utilisons vos informations pour examiner et traiter votre candidature, vérifier votre identité professionnelle, créer votre compte si approuvé, communiquer sur le statut de votre candidature et envoyer des invitations lors du lancement.",
+  "how_we_use_text": "Nous utilisons vos informations pour examiner et traiter votre candidature, vérifier votre identité professionnelle, créer votre compte si approuvé, communiquer sur le statut de votre candidature et envoyer des invitations lors du lancement. Si votre candidature est approuvée, les données de votre profil seront visibles par les autres membres de la plateforme avant l'activation de votre compte.",
   "data_storage_title": "Stockage et Sécurité des Données",
   "data_storage_text": "Les données de votre candidature sont stockées en toute sécurité en utilisant Supabase avec une sécurité de niveau entreprise. Nous mettons en œuvre des mesures standard de l'industrie pour protéger vos informations contre tout accès non autorisé.",
   "your_rights_title": "Vos Droits",
