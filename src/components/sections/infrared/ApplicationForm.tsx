@@ -409,7 +409,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                     console.log("Supabase not configured. Form data:", {
                         phone_number: `${countryCode} ${phoneNumber}`,
                         role,
-                        full_name: `${firstName} ${lastName}`,
+                        first_name: firstName,
+                        last_name: lastName,
                         profile_name: profileName,
                         email,
                         zone,

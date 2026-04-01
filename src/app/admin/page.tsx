@@ -12,6 +12,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Determine table name based on environment mode
+const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
+const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
+
 // Helper function to convert artist name to RA URL slug
 const convertToRASlug = (name: string): string => {
     return name
@@ -27,7 +31,8 @@ interface Application {
     created_at: string;
     phone_number: string;
     role: string;
-    full_name: string;
+    first_name: string;
+    last_name: string;
     profile_name: string;
     email: string;
     zone: string;
@@ -87,7 +92,7 @@ export default function AdminDashboard() {
         setLoading(true);
         try {
             const { data, error } = await supabase
-                .from('waitlist')
+                .from(tableName)
                 .select('*')
                 .order('created_at', { ascending: false });
 
@@ -101,14 +106,14 @@ export default function AdminDashboard() {
     };
 
     const handleApprove = async (application: Application) => {
-        const displayName = application.profile_name || application.full_name;
+        const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
         if (!confirm(`Approve ${displayName}?`)) return;
 
         try {
             console.log('Approving application:', application.id);
             // Update status to APPROVED
             const { data, error } = await supabase
-                .from('waitlist')
+                .from(tableName)
                 .update({ status: 'APPROVED' })
                 .eq('id', application.id)
                 .select(); // Force return of updated rows
@@ -130,13 +135,13 @@ export default function AdminDashboard() {
     };
 
     const handleDecline = async (application: Application) => {
-        const displayName = application.profile_name || application.full_name;
+        const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
         if (!confirm(`Decline ${displayName}?`)) return;
 
         try {
             console.log('Declining application:', application.id);
             const { data, error } = await supabase
-                .from('waitlist')
+                .from(tableName)
                 .update({ status: 'DECLINED' })
                 .eq('id', application.id)
                 .select(); // Force return of updated rows
@@ -158,7 +163,7 @@ export default function AdminDashboard() {
     };
 
     const handleSendInvitation = async (application: Application) => {
-        const displayName = application.profile_name || application.full_name;
+        const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
         if (!confirm(`Send invitation to ${displayName}?`)) return;
 
         try {
@@ -167,7 +172,7 @@ export default function AdminDashboard() {
 
             // Update database with coupon code and invited timestamp
             const { data, error } = await supabase
-                .from('waitlist')
+                .from(tableName)
                 .update({
                     status: 'INVITED',
                     coupon_code: couponCode,
@@ -187,7 +192,7 @@ export default function AdminDashboard() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    firstName: application.profile_name || application.full_name.split(' ')[0],
+                    firstName: application.profile_name || application.first_name,
                     email: application.email,
                     role: application.role,
                     couponCode: couponCode,
@@ -240,7 +245,8 @@ export default function AdminDashboard() {
             const query = searchQuery.toLowerCase();
             return (
                 app.profile_name?.toLowerCase().includes(query) ||
-                app.full_name?.toLowerCase().includes(query) ||
+                app.first_name?.toLowerCase().includes(query) ||
+                app.last_name?.toLowerCase().includes(query) ||
                 app.email?.toLowerCase().includes(query) ||
                 app.role?.toLowerCase().includes(query) ||
                 app.city?.toLowerCase().includes(query)
@@ -400,7 +406,7 @@ export default function AdminDashboard() {
                                                 className="text-white text-2xl font-bold uppercase tracking-wide"
                                                 style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                                             >
-                                                {app.profile_name || app.full_name}
+                                                {app.profile_name || `${app.first_name} ${app.last_name}`}
                                             </h3>
                                             <span
                                                 className="px-2 py-1 rounded text-xs uppercase font-semibold"
@@ -417,7 +423,7 @@ export default function AdminDashboard() {
                                             </span>
                                         </div>
                                         <div className="text-white/60 text-sm">
-                                            <span className="text-white/40">Legal name:</span> <span className="text-white/60">{app.full_name}</span>
+                                            <span className="text-white/40">Legal name:</span> <span className="text-white/60">{app.first_name} {app.last_name}</span>
                                         </div>
                                         <div className="text-white/60 text-sm">
                                             {app.city}, {app.country}
