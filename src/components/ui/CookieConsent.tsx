@@ -12,11 +12,8 @@ export default function CookieConsent() {
     // Check if user has already made a choice
     const consent = localStorage.getItem("cookie-consent");
     if (!consent) {
-      // Show banner after a short delay for better UX
-      const timer = setTimeout(() => {
-        setShowBanner(true);
-      }, 1000);
-      return () => clearTimeout(timer);
+      // Show banner immediately on intro screen
+      setShowBanner(true);
     }
   }, []);
 
