@@ -58,7 +58,7 @@
 
   "privacy_consent_text": "我同意",
   "privacy_policy_link": "隐私政策和服务条款",
-  "privacy_consent_full": "并理解我的数据将用于审核我的会员申请。",
+  "privacy_consent_full": "并理解我的数据将用于审核我的申请,如果被接受,将用于创建我的TORA个人资料,该资料将对平台的其他成员可见。",
   "submit_application": "提交申请",
   "submitting": "提交中...",
 
