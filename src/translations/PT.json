@@ -84,6 +84,11 @@
   "prelaunch_title": "Aviso de Pré-Lançamento",
   "prelaunch_text": "O TORA está atualmente em fase de pré-lançamento. Os candidatos iniciais podem receber consideração prioritária e benefícios especiais de membro quando lançarmos.",
   "error_generic": "Algo correu mal. Por favor, tente novamente.",
+
+  "cookie_banner_text": "Utilizamos cookies para melhorar a sua experiência. Ao utilizar o nosso site, você consente com os cookies.",
+  "cookie_accept": "Aceitar",
+  "cookie_decline": "Recusar",
+
   "city_aarhus": "Aarhus",
   "city_abuja": "Abuja",
   "city_adelaide": "Adelaide",

@@ -95,6 +95,10 @@
 
   "error_generic": "出现错误，请重试。",
 
+  "cookie_banner_text": "我们使用Cookie来改善您的体验。使用我们的网站即表示您同意使用Cookie。",
+  "cookie_accept": "接受",
+  "cookie_decline": "拒绝",
+
   "zone_africa": "非洲",
   "zone_americas": "美洲",
   "zone_asia": "亚洲",

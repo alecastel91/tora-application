@@ -7,6 +7,7 @@ import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
 import { Confirmation } from "@/components/sections/infrared/Confirmation";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import CookieConsent from "@/components/ui/CookieConsent";
 
 type FlowState = "intro" | "form" | "confirmation";
 
@@ -78,6 +79,9 @@ export default function Home() {
           <LanguageSelector />
         </div>
       )}
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent />
     </main>
   );
 }
