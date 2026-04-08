@@ -1097,11 +1097,16 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             <>
                                                 <InfraredInput
                                                     label=""
-                                                    type="number"
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
                                                     placeholder={t('venue_capacity')}
                                                     required
                                                     value={venueCapacity}
-                                                    onChange={(e) => setVenueCapacity(e.target.value)}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value.replace(/[^0-9]/g, '');
+                                                        setVenueCapacity(val);
+                                                    }}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
                                                 <InfraredInput

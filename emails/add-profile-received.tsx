@@ -12,20 +12,20 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-interface ApplicationReceivedEmailProps {
+interface AddProfileReceivedEmailProps {
   firstName?: string;
-  email?: string;
-  submittedDate?: string;
+  role?: string;
+  profileName?: string;
 }
 
-export const ApplicationReceivedEmail = ({
+export const AddProfileReceivedEmail = ({
   firstName = 'there',
-  email = '',
-  submittedDate = '',
-}: ApplicationReceivedEmailProps) => (
+  role = 'Artist',
+  profileName = '',
+}: AddProfileReceivedEmailProps) => (
   <Html>
     <Head />
-    <Preview>Your application to TORA has been received</Preview>
+    <Preview>Your new profile application has been received</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Logo */}
@@ -51,7 +51,7 @@ export const ApplicationReceivedEmail = ({
         </Section>
 
         {/* Heading */}
-        <Heading style={heading}>APPLICATION RECEIVED</Heading>
+        <Heading style={heading}>NEW PROFILE APPLICATION</Heading>
 
         {/* Body Text */}
         <Text style={paragraph}>
@@ -59,45 +59,39 @@ export const ApplicationReceivedEmail = ({
         </Text>
 
         <Text style={paragraph}>
-          Thank you for your interest in joining TORA - the exclusive network where the music industry connects.
+          We've received your application for a new {role} profile ({profileName}) on TORA.
         </Text>
 
         <Text style={{ ...paragraph, margin: '0 0 24px 0' }}>
-          We've successfully received your application and our team will review it carefully. Here's what happens next:
+          Our team will review your request and get back to you shortly. Here's what happens next:
         </Text>
 
         {/* Steps Card */}
         <Section style={card}>
-          <Text style={stepTitle}>1. Review Process</Text>
+          <Text style={stepTitle}>1. Review</Text>
           <Text style={stepText}>
-            Our team carefully evaluates each application to ensure quality and relevance to our community.
+            Our team reviews your new profile application
           </Text>
 
           <Text style={stepTitle}>2. Approval</Text>
           <Text style={stepText}>
-            If approved, you'll receive a confirmation email with a unique invitation code to join TORA.
+            If approved, the new profile will appear automatically in your account
           </Text>
 
-          <Text style={stepTitle}>3. Launch Access</Text>
+          <Text style={stepTitle}>3. Confirmation</Text>
           <Text style={{ ...stepText, margin: '0' }}>
-            Use your code to create your account when TORA launches.
+            You'll receive a confirmation email when it's ready
           </Text>
         </Section>
 
-        {/* Application Details Card */}
-        <Section style={card}>
-          <Text style={detailsLabel}>YOUR APPLICATION DETAILS</Text>
-          <Text style={detailsRow}>
-            Email: <span style={{ color: '#FFFFFF' }}>{email}</span>
-          </Text>
-          <Text style={{ ...detailsRow, margin: '0' }}>
-            Submitted: <span style={{ color: '#FFFFFF' }}>{submittedDate}</span>
-          </Text>
-        </Section>
-
-        {/* Patience Text */}
+        {/* No Action Required */}
         <Text style={paragraph}>
-          We appreciate your patience during the review process. If you have any questions, feel free to reach out to us at{' '}
+          No further action is required from you at this time.
+        </Text>
+
+        {/* Support Text */}
+        <Text style={paragraph}>
+          If you have any questions, feel free to reach out to us at{' '}
           <Link href="mailto:support@torahub.io" style={link}>support@torahub.io</Link>
         </Text>
 
@@ -133,7 +127,7 @@ export const ApplicationReceivedEmail = ({
   </Html>
 );
 
-export default ApplicationReceivedEmail;
+export default AddProfileReceivedEmail;
 
 const main = {
   backgroundColor: '#000000',
@@ -183,22 +177,6 @@ const stepText = {
   fontSize: '15px',
   lineHeight: '1.5',
   margin: '0 0 20px 0',
-};
-
-const detailsLabel = {
-  color: '#FF3366',
-  fontSize: '14px',
-  fontWeight: '700' as const,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.05em',
-  margin: '0 0 16px 0',
-};
-
-const detailsRow = {
-  color: 'rgba(255, 255, 255, 0.7)',
-  fontSize: '15px',
-  lineHeight: '1.5',
-  margin: '0 0 8px 0',
 };
 
 const link = {

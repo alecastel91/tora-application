@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { InvitationAcceptedEmail } from '../../../../emails/invitation-accepted';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -46,22 +47,18 @@ export async function POST(request: Request) {
       tierTitle: tier.title
     });
 
-    // Send invitation email to approved applicant using Resend template
+    // Send invitation email to approved applicant using React component
     const { data, error } = await resend.emails.send({
-      from: 'TORA <noreply@mail.torahub.io>',
+      from: 'TORA <invitation@mail.torahub.io>',
       to: [email],
       subject: 'Welcome to TORA - Your Invitation',
-      // Reference Resend template by ID with variables
-      template: {
-        id: 'b22d00aa-d640-4040-9433-97b58108c18e',
-        variables: {
-          firstName: firstName,
-          invitationCode: couponCode,
-          tierTitle: tier.title,
-          tierBenefit: tier.benefit,
-          tierDescription: tier.description,
-        },
-      },
+      react: InvitationAcceptedEmail({
+        firstName,
+        invitationCode: couponCode,
+        tierTitle: tier.title,
+        tierBenefit: tier.benefit,
+        tierDescription: tier.description,
+      }),
     });
 
     if (error) {

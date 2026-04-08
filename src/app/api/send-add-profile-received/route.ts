@@ -1,26 +1,20 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { ApplicationReceivedEmail } from '../../../../emails/application-received';
+import { AddProfileReceivedEmail } from '../../../../emails/add-profile-received';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { firstName, email } = await request.json();
+    const { firstName, email, role, profileName } = await request.json();
 
-    // Format submitted date (e.g., "March 25, 2026")
-    const submittedDate = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    console.log('📧 Sending add-profile-received email to:', email);
 
-    // Send confirmation email to applicant using React component
     const { data, error } = await resend.emails.send({
       from: 'TORA <noreply@mail.torahub.io>',
       to: [email],
-      subject: 'Application Received - TORA',
-      react: ApplicationReceivedEmail({ firstName, email, submittedDate }),
+      subject: 'New Profile Application Received - TORA',
+      react: AddProfileReceivedEmail({ firstName, role, profileName }),
     });
 
     if (error) {
@@ -28,9 +22,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
+    console.log('✅ Add-profile-received email sent to:', email);
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    console.error('Email API error:', error);
+    console.error('Add-profile-received email error:', error);
     return NextResponse.json(
       { error: 'Failed to send email' },
       { status: 500 }

@@ -46,6 +46,8 @@ interface Application {
     website: string | null;
     linkedin: string | null;
     venue_capacity: string | null;
+    existing_user_id: string | null;
+    application_type: string;
     status: string;
     coupon_code: string | null;
     invited_at: string | null;
@@ -59,6 +61,7 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
+    const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
 
     // Check if already authenticated
     useEffect(() => {
@@ -187,27 +190,93 @@ export default function AdminDashboard() {
                 throw new Error('Failed to update application status.');
             }
 
-            // Send invitation email (fire-and-forget)
-            fetch('/api/send-invitation', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    firstName: application.profile_name || application.first_name,
-                    email: application.email,
-                    role: application.role,
-                    couponCode: couponCode,
-                }),
-            })
-                .then(res => {
-                    if (res.ok) {
-                        console.log('Invitation email sent successfully!');
-                    } else {
-                        console.log('Email failed (invitation saved):', res.status);
-                    }
-                })
-                .catch(err => console.log('Email error (invitation saved):', err));
+            // Push invitation data to the app backend
+            const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://192.168.2.101:5002/api';
+            const INVITATION_API_KEY = process.env.INVITATION_API_KEY || 'tora-invite-key-2026';
 
-            alert(`✅ Invitation sent to ${displayName}!\nCoupon Code: ${couponCode}`);
+            try {
+                await fetch(`${BACKEND_API_URL}/invitations/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': INVITATION_API_KEY
+                    },
+                    body: JSON.stringify({
+                        code: couponCode,
+                        email: application.email,
+                        couponPackage: invitationPackages[application.id] || 'STANDARD',
+                        existingUserId: application.existing_user_id,
+                        applicationType: application.application_type,
+                        firstName: application.first_name,
+                        lastName: application.last_name,
+                        profileName: application.profile_name,
+                        role: application.role,
+                        phone: application.phone_number,
+                        zone: application.zone,
+                        country: application.country,
+                        city: application.city,
+                        genres: application.genres,
+                        instagram: application.instagram,
+                        residentAdvisor: application.resident_advisor,
+                        soundcloud: application.soundcloud,
+                        website: application.website,
+                        linkedin: application.linkedin,
+                        agencyName: application.agency_name,
+                        venueCapacity: application.venue_capacity
+                    })
+                });
+                console.log('Invitation data pushed to backend');
+            } catch (backendError) {
+                console.error('Failed to push to backend (continuing with email):', backendError);
+            }
+
+            // Send email based on application type
+            if (application.application_type === 'ADD_PROFILE') {
+                // Add Profile: send "profile approved" email (no code needed)
+                fetch('/api/send-add-profile-approved', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstName: application.first_name || application.profile_name,
+                        email: application.email,
+                        role: application.role,
+                        profileName: application.profile_name,
+                    }),
+                })
+                    .then(res => {
+                        if (res.ok) {
+                            console.log('Add-profile-approved email sent!');
+                        } else {
+                            console.log('Email failed:', res.status);
+                        }
+                    })
+                    .catch(err => console.log('Email error:', err));
+
+                alert(`✅ Profile approved for ${displayName}!`);
+            } else {
+                // New user: send invitation email with code
+                fetch('/api/send-invitation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstName: application.profile_name || application.first_name,
+                        email: application.email,
+                        role: application.role,
+                        couponCode: couponCode,
+                        couponPackage: invitationPackages[application.id] || 'STANDARD',
+                    }),
+                })
+                    .then(res => {
+                        if (res.ok) {
+                            console.log('Invitation email sent successfully!');
+                        } else {
+                            console.log('Email failed (invitation saved):', res.status);
+                        }
+                    })
+                    .catch(err => console.log('Email error (invitation saved):', err));
+
+                alert(`✅ Invitation sent to ${displayName}!\nCoupon Code: ${couponCode}`);
+            }
             await loadApplications();
         } catch (err) {
             console.error('Error sending invitation:', err);
@@ -421,6 +490,11 @@ export default function AdminDashboard() {
                                             <span className={`px-2 py-1 rounded text-xs uppercase ${getStatusColor(app.status || 'PENDING')}`}>
                                                 {app.status || 'PENDING'}
                                             </span>
+                                            {app.application_type === 'ADD_PROFILE' && (
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-500/20 text-blue-400 ml-2">
+                                                    Additional Profile
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="text-white/60 text-sm">
                                             <span className="text-white/40">Legal name:</span> <span className="text-white/60">{app.first_name} {app.last_name}</span>
@@ -523,15 +597,30 @@ export default function AdminDashboard() {
                                             </>
                                         )}
                                         {app.status === 'APPROVED' && (
-                                            <button
-                                                onClick={() => handleSendInvitation(app)}
-                                                className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded text-sm font-semibold transition-colors flex items-center justify-center gap-2 w-full"
-                                            >
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                                </svg>
-                                                SEND INVITATION
-                                            </button>
+                                            <>
+                                                {app.application_type !== 'ADD_PROFILE' && (
+                                                    <select
+                                                        value={invitationPackages[app.id] || 'STANDARD'}
+                                                        onChange={(e) => setInvitationPackages(prev => ({ ...prev, [app.id]: e.target.value }))}
+                                                        className="px-3 py-2 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-500/50 appearance-none cursor-pointer"
+                                                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                                                    >
+                                                        <option value="FOUNDING" className="bg-black text-white">FOUNDING</option>
+                                                        <option value="LAUNCH" className="bg-black text-white">LAUNCH</option>
+                                                        <option value="STANDARD" className="bg-black text-white">STANDARD</option>
+                                                        <option value="INFLUENCER" className="bg-black text-white">INFLUENCER</option>
+                                                    </select>
+                                                )}
+                                                <button
+                                                    onClick={() => handleSendInvitation(app)}
+                                                    className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded text-sm font-semibold transition-colors flex items-center justify-center gap-2 w-full"
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                                    </svg>
+                                                    SEND INVITATION
+                                                </button>
+                                            </>
                                         )}
                                         {app.status === 'INVITED' && app.coupon_code && (
                                             <div className="text-blue-300 text-sm">

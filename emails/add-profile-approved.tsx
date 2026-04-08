@@ -12,20 +12,20 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-interface ApplicationReceivedEmailProps {
+interface AddProfileApprovedEmailProps {
   firstName?: string;
-  email?: string;
-  submittedDate?: string;
+  role?: string;
+  profileName?: string;
 }
 
-export const ApplicationReceivedEmail = ({
+export const AddProfileApprovedEmail = ({
   firstName = 'there',
-  email = '',
-  submittedDate = '',
-}: ApplicationReceivedEmailProps) => (
+  role = 'Artist',
+  profileName = '',
+}: AddProfileApprovedEmailProps) => (
   <Html>
     <Head />
-    <Preview>Your application to TORA has been received</Preview>
+    <Preview>Your new {role} profile is now active on TORA</Preview>
     <Body style={main}>
       <Container style={container}>
         {/* Logo */}
@@ -39,19 +39,19 @@ export const ApplicationReceivedEmail = ({
           />
         </Section>
 
-        {/* Check Icon */}
+        {/* Globe/Geometric Art */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
-            src="https://resend-attachments.s3.amazonaws.com/64377867-89f3-4cd1-b14a-fe57f9636d55"
-            width="140"
-            height="140"
-            alt="Check"
-            style={{ display: 'block', margin: '0 auto', width: '140px', height: '140px' }}
+            src="https://resend-attachments.s3.amazonaws.com/d266cb6a-5596-436a-8e2b-49c1c377840e"
+            width="300"
+            height="290"
+            alt="TORA Globe"
+            style={{ display: 'block', margin: '0 auto', width: '300px', height: '290px' }}
           />
         </Section>
 
         {/* Heading */}
-        <Heading style={heading}>APPLICATION RECEIVED</Heading>
+        <Heading style={heading}>PROFILE APPROVED!</Heading>
 
         {/* Body Text */}
         <Text style={paragraph}>
@@ -59,45 +59,28 @@ export const ApplicationReceivedEmail = ({
         </Text>
 
         <Text style={paragraph}>
-          Thank you for your interest in joining TORA - the exclusive network where the music industry connects.
+          Great news! Your new {role} profile ({profileName}) has been approved and is now active on TORA.
         </Text>
 
-        <Text style={{ ...paragraph, margin: '0 0 24px 0' }}>
-          We've successfully received your application and our team will review it carefully. Here's what happens next:
+        <Text style={{ ...paragraph, margin: '0 0 32px 0' }}>
+          You can switch to your new profile right away from your profile switcher in the app. No additional sign-up or code is needed.
         </Text>
 
-        {/* Steps Card */}
+        {/* Instruction Card */}
         <Section style={card}>
-          <Text style={stepTitle}>1. Review Process</Text>
-          <Text style={stepText}>
-            Our team carefully evaluates each application to ensure quality and relevance to our community.
-          </Text>
-
-          <Text style={stepTitle}>2. Approval</Text>
-          <Text style={stepText}>
-            If approved, you'll receive a confirmation email with a unique invitation code to join TORA.
-          </Text>
-
-          <Text style={stepTitle}>3. Launch Access</Text>
-          <Text style={{ ...stepText, margin: '0' }}>
-            Use your code to create your account when TORA launches.
+          <Text style={{ color: '#FFFFFF', fontSize: '15px', lineHeight: '1.6', margin: '0' }}>
+            Open TORA and tap on your profile icon to switch to your new {role} profile.
           </Text>
         </Section>
 
-        {/* Application Details Card */}
-        <Section style={card}>
-          <Text style={detailsLabel}>YOUR APPLICATION DETAILS</Text>
-          <Text style={detailsRow}>
-            Email: <span style={{ color: '#FFFFFF' }}>{email}</span>
-          </Text>
-          <Text style={{ ...detailsRow, margin: '0' }}>
-            Submitted: <span style={{ color: '#FFFFFF' }}>{submittedDate}</span>
-          </Text>
-        </Section>
-
-        {/* Patience Text */}
+        {/* Welcome Text */}
         <Text style={paragraph}>
-          We appreciate your patience during the review process. If you have any questions, feel free to reach out to us at{' '}
+          Welcome to your expanded TORA experience!
+        </Text>
+
+        {/* Support Text */}
+        <Text style={paragraph}>
+          If you have any questions, feel free to reach out to us at{' '}
           <Link href="mailto:support@torahub.io" style={link}>support@torahub.io</Link>
         </Text>
 
@@ -133,7 +116,7 @@ export const ApplicationReceivedEmail = ({
   </Html>
 );
 
-export default ApplicationReceivedEmail;
+export default AddProfileApprovedEmail;
 
 const main = {
   backgroundColor: '#000000',
@@ -168,37 +151,6 @@ const card = {
   borderRadius: '8px',
   padding: '24px',
   margin: '0 0 32px 0',
-};
-
-const stepTitle = {
-  color: '#FFFFFF',
-  fontSize: '15px',
-  fontWeight: '700' as const,
-  lineHeight: '1.5',
-  margin: '0 0 4px 0',
-};
-
-const stepText = {
-  color: 'rgba(255, 255, 255, 0.7)',
-  fontSize: '15px',
-  lineHeight: '1.5',
-  margin: '0 0 20px 0',
-};
-
-const detailsLabel = {
-  color: '#FF3366',
-  fontSize: '14px',
-  fontWeight: '700' as const,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.05em',
-  margin: '0 0 16px 0',
-};
-
-const detailsRow = {
-  color: 'rgba(255, 255, 255, 0.7)',
-  fontSize: '15px',
-  lineHeight: '1.5',
-  margin: '0 0 8px 0',
 };
 
 const link = {
