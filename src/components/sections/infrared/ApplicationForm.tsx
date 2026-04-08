@@ -349,11 +349,18 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                     const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
                     const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
 
-                    console.log('🔵 Attempting database insert:', {
-                        envMode,
-                        tableName,
-                        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL
-                    });
+                    // Check for duplicate application with same email
+                    const { data: existingApp } = await supabase
+                        .from(tableName)
+                        .select('id, status')
+                        .eq('email', email)
+                        .limit(1);
+
+                    if (existingApp && existingApp.length > 0) {
+                        setLoading(false);
+                        setError("You've already applied with this email. Check your inbox for updates.");
+                        return;
+                    }
 
                     const { error: dbError } = await supabase.from(tableName).insert([
                         {
