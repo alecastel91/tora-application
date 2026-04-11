@@ -3,6 +3,51 @@
 ## Overview
 TORA Landing Page is a Next.js application for collecting pre-launch applications for the TORA platform. The application uses Supabase for database storage, Resend for email notifications, and supports multi-language translations. It's designed to collect applications from Artists, Agents, Promoters, and Venues interested in joining the TORA network.
 
+- **Production URL**: https://tora-application.vercel.app
+- **Admin URL**: https://tora-application.vercel.app/admin (password: `tora2026admin`)
+- **Tech**: Next.js 16, TypeScript, Tailwind, Framer Motion, Supabase, Resend, Vercel
+
+## Deployment Topology (as of April 12, 2026)
+
+**Local dev** (`npm run dev` → `localhost:3000`) → Supabase **Project 1** (`kujkzoaobkpqnbtpskpo`)
+- Reads `.env.local` (in repo root, gitignored)
+- Submissions land in Project 1 `waitlist` table
+- Local admin dashboard manages Project 1 applications
+
+**Production** (`tora-application.vercel.app`) → Supabase **Project 2** (`jzhrtaivrfegxbvpkfjg`)
+- Vercel env vars (Production scope):
+  - `NEXT_PUBLIC_SUPABASE_URL` = `https://jzhrtaivrfegxbvpkfjg.supabase.co`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = Project 2 anon key
+  - `NEXT_PUBLIC_BACKEND_API_URL` = Railway URL (legacy, kept for any client-side reads)
+  - `BACKEND_API_URL` = Railway URL (server-side only, used by `/api/admin/send-invitation`)
+  - `INVITATION_API_KEY` = Railway's value (server-side only — never `NEXT_PUBLIC_`)
+  - `NEXT_PUBLIC_ENV_MODE` = `production`
+  - `RESEND_API_KEY` = Resend key
+
+## Recent Updates (April 11-12, 2026)
+
+### Admin Invitation Flow — Server-Side Proxy Route
+- **Critical bug fix**: The previous "Send Invitation" flow called the backend's `/api/invitations/create` endpoint **directly from the browser** with `INVITATION_API_KEY` read from `process.env`. But Next.js refuses to expose any non-`NEXT_PUBLIC_*` env var to the browser, so the API key was ALWAYS undefined client-side, and the hardcoded fallback didn't match Railway's real key. The call always returned 401, and the failure was swallowed by a fire-and-forget fetch.
+- **Result of the bug**: Supabase row got marked `INVITED`, an email got sent with a coupon code, but no row was ever created in the backend's `invitations` table. Users received codes that didn't exist → signup always failed.
+- **Fix**: New server-side route at `src/app/api/admin/send-invitation/route.ts` reads `INVITATION_API_KEY` and `BACKEND_API_URL` from `process.env` (which works server-side) and proxies the POST to Railway with the correct `x-api-key` header.
+- **Reordered admin flow**: backend invitation is now created FIRST. If backend rejects (wrong key, downtime, validation error), Supabase is NOT updated and the admin sees a clear error (not silent failure).
+- **Error handling**: replaces fire-and-forget `console.error` with thrown errors that propagate to the UI.
+
+### Email Tier Label — Now Reflects Coupon Package
+- `src/app/api/send-invitation/route.ts` was hardcoding "Founding Member" regardless of which package the admin selected.
+- Now maps `couponPackage` to:
+  - `FOUNDING` → "Founding Member · 3 months Premium · Complimentary"
+  - `LAUNCH` → "Launch Member · 1 month Premium · Complimentary"
+  - `INFLUENCER` → "Influencer Member · 12 months Premium · Complimentary"
+  - `STANDARD` → "TORA Member · 7-day Premium Trial" (intentionally avoids saying "Standard")
+
+### Local Dev Env Vars
+- `.env.local` now includes `BACKEND_API_URL` (server-side, no `NEXT_PUBLIC_`) and `INVITATION_API_KEY` for the new admin proxy route to work locally
+- The existing `NEXT_PUBLIC_BACKEND_API_URL` is kept for any legacy client-side reads — both can coexist
+
+### Known Issue (deferred)
+- **Existing-user invitation collision**: when admin re-sends an invitation for an email that already has a User in the backend, the backend creates a new invitation row but does NOT update the existing user's profile or change subscription tier. New application data is silently ignored. Two possible fixes (Option A: block; Option C: create a second profile under existing user). Track for next session.
+
 ## Recent Updates (April 1, 2026)
 
 ### Database Schema Migration - Name Fields Split  
