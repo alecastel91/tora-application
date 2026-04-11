@@ -6,12 +6,20 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { firstName, email, role, couponCode } = await request.json();
+    const { firstName, email, role, couponCode, couponPackage } = await request.json();
 
-    // Founding member benefits - kept general and flexible
-    // You can update this text later based on subscription trends
-    let membershipTier = 'Founding Member';
-    let premiumDuration = 'Complimentary Premium Access';
+    // Map coupon package to a friendly membership label.
+    // STANDARD intentionally avoids saying "Standard" — every TORA member is exclusive.
+    const packageInfo: Record<string, { label: string; duration: string }> = {
+      FOUNDING: { label: 'Founding Member', duration: '3 months Premium · Complimentary' },
+      LAUNCH: { label: 'Launch Member', duration: '1 month Premium · Complimentary' },
+      INFLUENCER: { label: 'Influencer Member', duration: '12 months Premium · Complimentary' },
+      STANDARD: { label: 'TORA Member', duration: '7-day Premium Trial' },
+    };
+    const pkgKey = (couponPackage || 'STANDARD').toUpperCase();
+    const pkg = packageInfo[pkgKey] || packageInfo.STANDARD;
+    const membershipTier = pkg.label;
+    const premiumDuration = pkg.duration;
 
     // Map role to tier information
     const tierInfo = {
