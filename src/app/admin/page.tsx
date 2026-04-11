@@ -173,7 +173,49 @@ export default function AdminDashboard() {
             // Generate unique coupon code (format: TORA-XXXX-XXXX)
             const couponCode = `TORA-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
-            // Update database with coupon code and invited timestamp
+            // Step 1: Create the invitation in the backend FIRST (via server-side proxy route).
+            // If this fails, we do NOT update Supabase or send the email — so the user
+            // never receives a code that doesn't exist in the backend database.
+            const backendRes = await fetch('/api/admin/send-invitation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: couponCode,
+                    email: application.email,
+                    couponPackage: invitationPackages[application.id] || 'STANDARD',
+                    existingUserId: application.existing_user_id,
+                    applicationType: application.application_type,
+                    firstName: application.first_name,
+                    lastName: application.last_name,
+                    profileName: application.profile_name,
+                    role: application.role,
+                    phone: application.phone_number,
+                    zone: application.zone,
+                    country: application.country,
+                    city: application.city,
+                    genres: application.genres,
+                    instagram: application.instagram,
+                    residentAdvisor: application.resident_advisor,
+                    soundcloud: application.soundcloud,
+                    website: application.website,
+                    linkedin: application.linkedin,
+                    agencyName: application.agency_name,
+                    venueCapacity: application.venue_capacity
+                })
+            });
+
+            if (!backendRes.ok) {
+                const errBody = await backendRes.json().catch(() => ({}));
+                throw new Error(
+                    `Backend rejected invitation: ${errBody.error || backendRes.statusText}`
+                );
+            }
+
+            console.log('Invitation created in backend successfully');
+
+            // Step 2: Now that the backend has accepted the invitation, update Supabase
+            // to mark the waitlist row as INVITED. If this fails, we'll alert the admin
+            // but the backend already has the invitation — they can manually reconcile.
             const { data, error } = await supabase
                 .from(tableName)
                 .update({
@@ -188,46 +230,6 @@ export default function AdminDashboard() {
 
             if (!data || data.length === 0) {
                 throw new Error('Failed to update application status.');
-            }
-
-            // Push invitation data to the app backend
-            const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://192.168.2.101:5002/api';
-            const INVITATION_API_KEY = process.env.INVITATION_API_KEY || 'tora-invite-key-2026';
-
-            try {
-                await fetch(`${BACKEND_API_URL}/invitations/create`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': INVITATION_API_KEY
-                    },
-                    body: JSON.stringify({
-                        code: couponCode,
-                        email: application.email,
-                        couponPackage: invitationPackages[application.id] || 'STANDARD',
-                        existingUserId: application.existing_user_id,
-                        applicationType: application.application_type,
-                        firstName: application.first_name,
-                        lastName: application.last_name,
-                        profileName: application.profile_name,
-                        role: application.role,
-                        phone: application.phone_number,
-                        zone: application.zone,
-                        country: application.country,
-                        city: application.city,
-                        genres: application.genres,
-                        instagram: application.instagram,
-                        residentAdvisor: application.resident_advisor,
-                        soundcloud: application.soundcloud,
-                        website: application.website,
-                        linkedin: application.linkedin,
-                        agencyName: application.agency_name,
-                        venueCapacity: application.venue_capacity
-                    })
-                });
-                console.log('Invitation data pushed to backend');
-            } catch (backendError) {
-                console.error('Failed to push to backend (continuing with email):', backendError);
             }
 
             // Send email based on application type
@@ -280,7 +282,8 @@ export default function AdminDashboard() {
             await loadApplications();
         } catch (err) {
             console.error('Error sending invitation:', err);
-            alert(`Failed to send invitation: ${err}`);
+            const message = err instanceof Error ? err.message : String(err);
+            alert(`❌ Failed to send invitation\n\n${message}\n\nThe waitlist row was NOT updated. Please retry.`);
         }
     };
 
