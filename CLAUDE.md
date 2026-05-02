@@ -24,6 +24,21 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 2, 2026)
+
+### Application Decline Email
+- **New email template**: `emails/application-declined.tsx` — matches existing email design (black bg, TORA logo, pink accents)
+- **New API route**: `src/app/api/send-decline/route.ts` — sends decline email via Resend
+- **Admin dashboard**: Decline button now sends email automatically (fire-and-forget)
+- Subject: "Application Update - TORA", from: `noreply@mail.torahub.io`
+- Tone: respectful, encourages re-applying in the future
+
+### Application Form Improvements
+- **Early duplicate check**: Email duplicate validation moved from final submit to email step (step 2)
+- User sees "already applied" error immediately when entering email, not after completing the whole form
+- **Declined applications can re-apply**: Duplicate check excludes `DECLINED` status entries
+- **Spam folder note**: Error message now says "Check your inbox (and spam folder) for updates"
+
 ## Recent Updates (April 11-12, 2026)
 
 ### Admin Invitation Flow — Server-Side Proxy Route

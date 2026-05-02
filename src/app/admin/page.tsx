@@ -157,6 +157,24 @@ export default function AdminDashboard() {
                 throw new Error('No rows were updated. ID might not exist in database.');
             }
 
+            // Send decline email (fire-and-forget — don't block on failure)
+            fetch('/api/send-decline', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName: application.first_name,
+                    email: application.email,
+                }),
+            })
+                .then(res => {
+                    if (res.ok) {
+                        console.log('Decline email sent successfully');
+                    } else {
+                        console.log('Decline email failed (status updated anyway):', res.status);
+                    }
+                })
+                .catch(err => console.log('Decline email error (status updated anyway):', err));
+
             alert(`❌ ${displayName} has been declined.`);
             await loadApplications(); // Wait for reload to complete
         } catch (err) {

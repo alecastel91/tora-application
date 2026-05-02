@@ -349,19 +349,6 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                     const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
                     const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
 
-                    // Check for duplicate application with same email
-                    const { data: existingApp } = await supabase
-                        .from(tableName)
-                        .select('id, status')
-                        .eq('email', email)
-                        .limit(1);
-
-                    if (existingApp && existingApp.length > 0) {
-                        setLoading(false);
-                        setError("You've already applied with this email. Check your inbox for updates.");
-                        return;
-                    }
-
                     const { error: dbError } = await supabase.from(tableName).insert([
                         {
                             phone_number: `${countryCode} ${phoneNumber}`,
@@ -735,13 +722,30 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                 className="mx-auto flex flex-col items-center"
                                 style={{ width: '328px' }}
                             >
-                                <form onSubmit={(e) => {
+                                <form onSubmit={async (e) => {
                                     e.preventDefault();
                                     if (!email.trim() || !validateEmail(email.trim())) {
                                         setError(t('email_validation_error'));
                                     } else if (email.trim() !== confirmEmail.trim()) {
                                         setError(t('email_mismatch_error'));
                                     } else {
+                                        // Check for duplicate email in waitlist
+                                        try {
+                                            const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
+                                            const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
+                                            const { data: existingApp } = await supabase
+                                                .from(tableName)
+                                                .select('id')
+                                                .eq('email', email.trim())
+                                                .neq('status', 'DECLINED')
+                                                .limit(1);
+                                            if (existingApp && existingApp.length > 0) {
+                                                setError("You've already applied with this email. Check your inbox (and spam folder) for updates.");
+                                                return;
+                                            }
+                                        } catch (err) {
+                                            console.error('Duplicate check error:', err);
+                                        }
                                         setError(null);
                                         nextStep();
                                     }
