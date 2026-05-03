@@ -735,13 +735,23 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
                                             const { data: existingApp } = await supabase
                                                 .from(tableName)
-                                                .select('id')
+                                                .select('id, status')
                                                 .eq('email', email.trim())
                                                 .neq('status', 'DECLINED')
                                                 .limit(1);
                                             if (existingApp && existingApp.length > 0) {
-                                                setError("You've already applied with this email. Check your inbox (and spam folder) for updates.");
-                                                return;
+                                                const status = existingApp[0].status;
+                                                if (status === 'INVITED' || status === 'SIGNED_UP') {
+                                                    // User already has an account — let them continue but inform
+                                                    const proceed = window.confirm(
+                                                        "An account already exists with this email. If your application is accepted, this new profile will be added to your existing account.\n\nDo you want to continue?"
+                                                    );
+                                                    if (!proceed) return;
+                                                } else {
+                                                    // PENDING or APPROVED — already in the pipeline
+                                                    setError("You've already applied with this email. Check your inbox (and spam folder) for updates.");
+                                                    return;
+                                                }
                                             }
                                         } catch (err) {
                                             console.error('Duplicate check error:', err);

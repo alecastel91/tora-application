@@ -188,6 +188,27 @@ export default function AdminDashboard() {
         if (!confirm(`Send invitation to ${displayName}?`)) return;
 
         try {
+            // Check if this email already has an account in the backend
+            if (!application.existing_user_id) {
+                // Quick check: look for other INVITED/SIGNED_UP entries with same email
+                const { data: existingEntries } = await supabase
+                    .from(tableName)
+                    .select('id, status, role')
+                    .eq('email', application.email)
+                    .in('status', ['INVITED', 'SIGNED_UP'])
+                    .limit(1);
+
+                if (existingEntries && existingEntries.length > 0) {
+                    const existing = existingEntries[0];
+                    const proceed = confirm(
+                        `⚠️ ${application.email} already has an account (${existing.status}, ${existing.role}).\n\n` +
+                        `This will add a new ${application.role} profile to their existing account.\n\n` +
+                        `Continue?`
+                    );
+                    if (!proceed) return;
+                }
+            }
+
             // Generate unique coupon code (format: TORA-XXXX-XXXX)
             const couponCode = `TORA-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
