@@ -14,6 +14,7 @@ export async function POST(request: Request) {
       FOUNDING: { label: 'Founding Member', duration: '3 months Premium · Complimentary' },
       LAUNCH: { label: 'Launch Member', duration: '1 month Premium · Complimentary' },
       INFLUENCER: { label: 'Influencer Member', duration: '12 months Premium · Complimentary' },
+      ADMIN: { label: 'Admin', duration: 'Lifetime Premium · Complimentary' },
       STANDARD: { label: 'TORA Member', duration: '7-day Premium Trial' },
     };
     const pkgKey = (couponPackage || 'STANDARD').toUpperCase();

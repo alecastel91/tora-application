@@ -651,6 +651,7 @@ export default function AdminDashboard() {
                                                         <option value="LAUNCH" className="bg-black text-white">LAUNCH</option>
                                                         <option value="STANDARD" className="bg-black text-white">STANDARD</option>
                                                         <option value="INFLUENCER" className="bg-black text-white">INFLUENCER</option>
+                                                        <option value="ADMIN" className="bg-black text-white">ADMIN</option>
                                                     </select>
                                                 )}
                                                 <button
