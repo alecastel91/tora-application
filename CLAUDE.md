@@ -24,6 +24,33 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 3-4, 2026)
+
+### Website Redesign — Raya-Inspired Presentation
+- **New homepage** (`/`): TORA logo, "WHERE MUSIC MEETS" tagline, "Apply For Membership" CTA (pink hover)
+- **Application form** moved to `/apply` — skips splash, goes straight to globe screen
+- **New pages**: `/about` (manifesto), `/roles` (4 role cards with color-coded icons), `/features` (10 feature cards with pink icons)
+- **Legal pages**: `/privacy` (comprehensive, Raya-level), `/terms` (Singapore governing law), `/data-deletion`
+- **Navigation**: TopNav (Apply, About, Roles, Features) + BottomNav (Privacy, Terms, Social, Language picker)
+- **Fonts**: Rajdhani for titles, Space Grotesk for all body text
+- **Deleted old pages**: `/mission`, `/whats-coming`, `/policy`, `/who-we-are`
+- **Deleted unused components**: `Navbar.tsx`, `Footer.tsx`, `LandingPage.tsx`
+
+### Full i18n — 8 Languages
+- All pages translated: EN, ES, FR, IT, PT, JP, CN, KR (516 keys per language)
+- Language picker in bottom nav with native labels (日本語, 中文, 한국어)
+- Legal pages translated with proper legal register per language
+- "WHERE MUSIC MEETS" stays in English across all languages (brand tagline)
+
+### Existing-User Invitation Collision (Option B)
+- Backend auto-creates second profile when admin sends invitation to existing email
+- Application form warns user: "An account already exists, new profile will be added to existing account"
+- Admin dashboard confirms before adding profile to existing user
+
+### Custom Domain
+- `app.torahub.io` → tora-app-sql (main app) — live
+- `torahub.io` → tora-application (website + apply + admin) — configured
+
 ## Recent Updates (May 2, 2026)
 
 ### Application Decline Email

@@ -3,14 +3,12 @@
   "main_heading": "LE RÉSEAU PROFESSIONNEL<br />POUR L'INDUSTRIE DE LA MUSIQUE CLUB",
   "description": "Connectez-vous avec des artistes, des agents, des lieux et des promoteurs du monde entier. Découvrez des opportunités, gérez vos réservations et développez votre réseau sur une plateforme intégrée",
   "apply_now": "POSTULER MAINTENANT",
-
   "access_request": "DEMANDE D'ACCÈS",
   "select_your_role": "Sélectionnez Votre Rôle",
   "role_artist": "Artiste",
   "role_promoter": "Promoteur",
   "role_venue": "Lieu",
   "role_agent": "Agent",
-
   "identification": "Identification",
   "first_name": "Prénom",
   "last_name": "Nom",
@@ -20,7 +18,6 @@
   "agent_name": "Nom de l'agent",
   "back": "RETOUR",
   "next": "SUIVANT",
-
   "contacts": "Contacts",
   "email_address": "Adresse e-mail",
   "confirm_email_address": "Confirmer l'adresse e-mail",
@@ -28,19 +25,16 @@
   "phone_number": "Numéro de téléphone",
   "email_validation_error": "Veuillez entrer une adresse e-mail valide (par ex. nom@exemple.com)",
   "email_mismatch_error": "Les adresses e-mail ne correspondent pas",
-
   "location": "Localisation",
   "select_zone": "Sélectionner une zone",
   "select_country": "Sélectionner un pays",
   "select_city": "Sélectionner une ville",
   "other": "Autre",
-
   "genres": "Genres",
   "select_at_least_one": "Sélectionnez au moins un genre",
   "genres_selected": "genre",
   "genres_selected_plural": "genres",
   "genres_selected_text": "sélectionné",
-
   "social_music_profiles_artist": "Profils Sociaux et Musicaux",
   "instagram_agency_details_agent": "Instagram et Détails de l'Agence",
   "instagram_venue_details_venue": "Instagram et Détails du Lieu",
@@ -55,13 +49,11 @@
   "website_optional": "Site web (optionnel)",
   "linkedin_optional": "Nom LinkedIn (optionnel)",
   "venue_capacity": "Capacité du lieu",
-
   "privacy_consent_text": "J'accepte la",
   "privacy_policy_link": "Politique de Confidentialité et Conditions de Service",
   "privacy_consent_full": "et je comprends que mes données seront utilisées pour examiner ma candidature et, si elle est acceptée, pour créer mon profil TORA qui sera visible par les autres membres de la plateforme.",
   "submit_application": "SOUMETTRE LA CANDIDATURE",
   "submitting": "ENVOI EN COURS...",
-
   "application_received": "CANDIDATURE REÇUE",
   "thank_you": "Merci d'avoir postulé à TORA !",
   "application_received_message": "Votre candidature a été reçue et sera examinée attentivement. TORA est actuellement en phase de pré-lancement – nous construisons une communauté exclusive de professionnels vérifiés avant d'ouvrir la plateforme.",
@@ -73,7 +65,6 @@
   "step_launch_access": "Accès au Lancement :",
   "step_launch_access_text": "Utilisez votre code pour créer votre compte lors du lancement de TORA",
   "check_email": "Vérifiez votre e-mail et votre dossier de spam pour les mises à jour.",
-
   "privacy_policy_title": "Politique de Confidentialité et Conditions",
   "information_we_collect_title": "Informations que Nous Collectons",
   "information_we_collect_text": "Lorsque vous soumettez une candidature pour rejoindre TORA, nous collectons : informations de contact (nom, e-mail, téléphone), informations professionnelles (rôle, nom de profil, détails de l'agence/du lieu), localisation (zone, pays, ville), préférences musicales (genres), et profils de médias sociaux (Instagram, Resident Advisor, SoundCloud, site web, LinkedIn).",
@@ -92,9 +83,7 @@
   "terms_text_2": "TORA est une plateforme d'adhésion sur invitation uniquement. L'accès est accordé exclusivement par le processus de candidature et d'approbation.",
   "prelaunch_title": "Avis de Pré-Lancement",
   "prelaunch_text": "TORA est actuellement en phase de pré-lancement. Les premiers candidats peuvent bénéficier d'une considération prioritaire et d'avantages spéciaux d'adhésion lors du lancement.",
-
   "error_generic": "Une erreur s'est produite. Veuillez réessayer.",
-
   "nav_apply": "Postuler",
   "nav_about": "À propos",
   "nav_roles": "Rôles",
@@ -104,8 +93,7 @@
   "nav_social": "Social",
   "back_link": "Retour",
   "apply_for_membership": "Demander l'Adhésion",
-  "where_music_meets": "OÙ LA MUSIQUE SE RENCONTRE",
-
+  "where_music_meets": "WHERE MUSIC MEETS",
   "about_title": "À propos",
   "about_subtitle": "Notre mission et notre vision",
   "about_p1": "TORA est née d'une observation simple : l'industrie de la musique club fonctionne encore sur des connexions fragmentées, des réseaux informels et un accès inégal aux opportunités. Des artistes talentueux peinent à obtenir de la visibilité au-delà de leur scène locale. Les promoteurs et les lieux font face à des coûts croissants sans moyen efficace de découvrir les talents émergents. Les tournées restent un privilège réservé à ceux qui ont les bons contacts.",
@@ -113,7 +101,6 @@
   "about_p3": "Mais TORA ne concerne pas uniquement la portée mondiale. Il s'agit aussi de nourrir les scènes locales — en facilitant la recherche de talents émergents à proximité, en soutenant les artistes émergents et en renforçant le tissu culturel de chaque ville de l'intérieur.",
   "about_p4": "Le processus de réservation n'a jamais été optimisé pour cette industrie. TORA intègre la découverte, la négociation, les contrats et les paiements en une seule plateforme — offrant aux artistes, promoteurs, lieux et agents un espace unique pour gérer l'ensemble du parcours, du premier contact au règlement final.",
   "about_p5": "En son cœur, TORA est un manifeste pour une industrie musicale plus connectée, plus transparente et plus accessible — une industrie où l'opportunité se gagne par le talent et la dévotion, et non par la géographie ou les relations.",
-
   "roles_title": "Rôles",
   "roles_subtitle": "Un réseau sélectionné de professionnels de la musique",
   "role_artists_title": "Artistes",
@@ -124,7 +111,6 @@
   "role_venues_desc": "Clubs, festivals et espaces événementiels. Connectez-vous avec des artistes internationaux en tournée dans votre ville, découvrez les talents et promoteurs de la scène locale, et remplissez votre calendrier d'événements de qualité.",
   "role_agents_title": "Agents",
   "role_agents_desc": "Managers d'artistes et agents de réservation. Gérez votre roster, traitez les réservations, contrats et paiements pour vos artistes — l'ensemble du processus sur une seule plateforme.",
-
   "features_title": "Fonctionnalités",
   "features_subtitle": "Des outils conçus pour les professionnels de la musique",
   "feature_search_title": "Recherche et Découverte",
@@ -147,7 +133,6 @@
   "feature_agent_desc": "Gestion complète du roster pour les agents. Gérez les calendriers, réservations, finances et contrats de tous vos artistes depuis un seul endroit.",
   "feature_multirole_title": "Support Multi-Rôle",
   "feature_multirole_desc": "Gérez plusieurs profils sous un seul compte. Soyez artiste et agent, ou promoteur et lieu — changez de rôle en toute fluidité.",
-
   "privacy_title": "Politique de Confidentialité",
   "privacy_subtitle": "Mise à jour et en vigueur depuis mai 2026",
   "privacy_intro_title": "Introduction",
@@ -200,7 +185,6 @@
   "privacy_age_text": "Le Service est réservé aux personnes âgées de 18 ans et plus. Nous ne collectons, ne conservons ni n'utilisons sciemment des informations provenant de personnes de moins de 18 ans. Si nous apprenons qu'un utilisateur ne satisfait pas à cette exigence, nous le retirerons immédiatement de notre Service.",
   "privacy_contact_title": "Contact",
   "privacy_contact_text": "Si vous avez des questions concernant cette Politique de Confidentialité, veuillez nous contacter à",
-
   "terms_subtitle": "Mis à jour et en vigueur depuis mai 2026",
   "terms_acceptance_title": "Acceptation des Conditions",
   "terms_acceptance_text": "En accédant ou en utilisant la plateforme TORA sur torahub.io, y compris le formulaire de candidature, l'application web et tout service connexe (collectivement, le « Service »), vous acceptez d'être lié par ces Conditions de Service (les « Conditions »). Si vous n'acceptez pas ces Conditions, n'utilisez pas le Service. Nous pouvons modifier ces Conditions à tout moment. Les modifications seront publiées sur cette page avec une date d'entrée en vigueur mise à jour. Votre utilisation continue du Service après toute modification constitue l'acceptation des Conditions révisées.",
@@ -252,7 +236,6 @@
   "terms_severability_text": "Si une disposition de ces Conditions est jugée invalide ou inapplicable, les dispositions restantes resteront en pleine vigueur et effet. La disposition invalide ou inapplicable sera modifiée dans la mesure minimale nécessaire pour la rendre valide et applicable.",
   "terms_contact_title": "Contact",
   "terms_contact_text": "Si vous avez des questions concernant ces Conditions de Service, veuillez nous contacter à",
-
   "deletion_title": "Suppression des Données",
   "deletion_subtitle": "Vos données, votre contrôle",
   "deletion_intro": "Vous avez le droit de demander la suppression de vos données personnelles de TORA à tout moment.",
@@ -272,13 +255,11 @@
   "deletion_what_item3": "Tous les messages et l'historique des connexions",
   "deletion_what_item4": "Tout média ou document téléchargé",
   "deletion_what_note": "Remarque : Nous pouvons conserver des données anonymisées et non identifiables à des fins analytiques conformément aux directives du RGPD.",
-
   "zone_africa": "Afrique",
   "zone_americas": "Amériques",
   "zone_asia": "Asie",
   "zone_europe": "Europe",
   "zone_oceania": "Océanie",
-
   "country_argentina": "Argentine",
   "country_australia": "Australie",
   "country_austria": "Autriche",
@@ -324,7 +305,6 @@
   "country_united_kingdom": "Royaume-Uni",
   "country_united_states": "États-Unis",
   "country_vietnam": "Vietnam",
-
   "city_aarhus": "Aarhus",
   "city_abuja": "Abuja",
   "city_adelaide": "Adélaïde",
