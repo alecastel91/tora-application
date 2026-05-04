@@ -645,6 +645,15 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                         </motion.button>
                                     ))}
                                 </motion.div>
+                                <div className="mt-8 text-center">
+                                    <a
+                                        href="/apply"
+                                        className="text-white/30 hover:text-white transition-colors text-xs uppercase tracking-[0.2em]"
+                                        style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
+                                    >
+                                        &lsaquo; Back
+                                    </a>
+                                </div>
                             </motion.div>
                         )}
 

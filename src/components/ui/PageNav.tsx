@@ -15,19 +15,20 @@ const LANGUAGES = [
     { code: 'FR' as const, label: 'FR' },
     { code: 'IT' as const, label: 'IT' },
     { code: 'PT' as const, label: 'PT' },
-    { code: 'JP' as const, label: 'JP' },
-    { code: 'CN' as const, label: 'CN' },
-    { code: 'KR' as const, label: 'KR' },
+    { code: 'JP' as const, label: '日本語' },
+    { code: 'CN' as const, label: '中文' },
+    { code: 'KR' as const, label: '한국어' },
 ];
 
 export function TopNav() {
     const pathname = usePathname();
+    const { t } = useLanguage();
 
     const links = [
-        { name: "Apply", href: "/apply" },
-        { name: "About", href: "/about" },
-        { name: "Roles", href: "/roles" },
-        { name: "Features", href: "/features" },
+        { key: "nav_apply", href: "/apply" },
+        { key: "nav_about", href: "/about" },
+        { key: "nav_roles", href: "/roles" },
+        { key: "nav_features", href: "/features" },
     ];
 
     return (
@@ -40,7 +41,7 @@ export function TopNav() {
             <div className="flex items-center space-x-8 md:space-x-10">
                 {links.map((link) => (
                     <Link
-                        key={link.name}
+                        key={link.key}
                         href={link.href}
                         style={sgFont}
                         className={`text-[10px] font-bold uppercase tracking-[0.3em] transition-colors ${
@@ -49,7 +50,7 @@ export function TopNav() {
                                 : "text-white/30 hover:text-white"
                         }`}
                     >
-                        {link.name}
+                        {t(link.key)}
                     </Link>
                 ))}
             </div>
@@ -132,6 +133,8 @@ function LanguagePicker() {
 }
 
 export function BottomNav() {
+    const { t } = useLanguage();
+
     return (
         <>
             <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10 z-50" />
@@ -143,29 +146,29 @@ export function BottomNav() {
             >
                 <div className="flex items-center space-x-10">
                     {[
-                        { name: "Privacy", href: "/privacy", external: false },
-                        { name: "Terms", href: "/terms", external: false },
-                        { name: "Social", href: "https://instagram.com/tora.hub", external: true },
+                        { key: "nav_privacy", href: "/privacy", external: false },
+                        { key: "nav_terms", href: "/terms", external: false },
+                        { key: "nav_social", href: "https://instagram.com/tora.hub", external: true },
                     ].map((link) => (
                         link.external ? (
                             <a
-                                key={link.name}
+                                key={link.key}
                                 href={link.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={sgFont}
                                 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20 hover:text-white/50 transition-colors"
                             >
-                                {link.name}
+                                {t(link.key)}
                             </a>
                         ) : (
                             <Link
-                                key={link.name}
+                                key={link.key}
                                 href={link.href}
                                 style={sgFont}
                                 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20 hover:text-white/50 transition-colors"
                             >
-                                {link.name}
+                                {t(link.key)}
                             </Link>
                         )
                     ))}

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
 import { Confirmation } from "@/components/sections/infrared/Confirmation";
@@ -16,15 +15,6 @@ export default function Apply() {
 
   return (
     <main className="relative min-h-screen bg-black overflow-x-hidden overflow-y-auto font-sans selection:bg-infrared/30 selection:text-white">
-
-      {/* Back link */}
-      <Link
-        href="/"
-        className="fixed top-5 left-6 z-[1001] text-white/30 hover:text-white transition-colors text-xs uppercase tracking-[0.2em]"
-        style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
-      >
-        &lsaquo; Back
-      </Link>
 
       <AnimatePresence mode="wait">
         {view === "globe" && (

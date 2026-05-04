@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { BottomNav } from "@/components/ui/PageNav";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
     <main className="relative min-h-screen bg-black overflow-hidden font-sans selection:bg-infrared/30 selection:text-white">
 
@@ -18,17 +21,17 @@ export default function Home() {
       >
         <div className="flex items-center space-x-8 md:space-x-10">
           {[
-            { name: "Apply", href: "/apply" },
-            { name: "About", href: "/about" },
-            { name: "Roles", href: "/roles" },
-            { name: "Features", href: "/features" },
+            { key: "nav_apply", href: "/apply" },
+            { key: "nav_about", href: "/about" },
+            { key: "nav_roles", href: "/roles" },
+            { key: "nav_features", href: "/features" },
           ].map((link) => (
             <Link
-              key={link.name}
+              key={link.key}
               href={link.href}
               className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 hover:text-white transition-colors"
             >
-              {link.name}
+              {t(link.key)}
             </Link>
           ))}
         </div>
@@ -68,7 +71,7 @@ export default function Home() {
               letterSpacing: '0.22em'
             }}
           >
-            WHERE MUSIC MEETS
+            {t('where_music_meets')}
           </span>
         </motion.div>
 
@@ -81,10 +84,10 @@ export default function Home() {
         >
           <Link
             href="/apply"
-            className="px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-white hover:text-black transition-all duration-300"
+            className="px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300"
             style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
           >
-            Apply For Membership
+            {t('apply_for_membership')}
           </Link>
         </motion.div>
       </div>

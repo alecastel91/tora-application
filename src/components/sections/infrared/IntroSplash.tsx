@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { InfraredButton } from "@/components/ui/InfraredButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -69,7 +70,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                                   opacity: 1,
                                   scale: slideUp ? 0.7 : 1, // 320px -> 224px (0.7x)
                                   filter: "blur(0px)",
-                                  y: slideUp ? -80 : 0 // Slide up 80px (reduced from 120px)
+                                  y: slideUp ? -40 : 0 // Slide up 40px
                               }
                             : {}
                     }
@@ -111,7 +112,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
 
                 {/* Content appears after slide */}
                 {slideUp && (
-                    <div className="w-full flex flex-col items-center -mt-24 md:-mt-28">
+                    <div className="w-full flex flex-col items-center -mt-12 md:-mt-16">
                         {/* Rotating Globe Icon */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
@@ -185,6 +186,22 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                             <InfraredButton onClick={onApply} className="w-full md:w-auto min-w-[200px] text-sm md:text-base py-3 md:py-4 uppercase tracking-wider">
                                 {t('apply_now')}
                             </InfraredButton>
+                        </motion.div>
+
+                        {/* Back link */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={showContent ? { opacity: 1 } : {}}
+                            transition={{ delay: 0.8, duration: 0.6 }}
+                            className="mt-8"
+                        >
+                            <Link
+                                href="/"
+                                className="text-white/30 hover:text-white transition-colors text-xs uppercase tracking-[0.2em]"
+                                style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
+                            >
+                                &lsaquo; Back
+                            </Link>
                         </motion.div>
                     </div>
                 )}
