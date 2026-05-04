@@ -24,6 +24,13 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 5, 2026)
+
+### Navigation Refinements
+- Removed "Apply" from top nav — replaced with rotating pink globe SVG linking to home
+- "Apply For Membership" CTA added at bottom of About, Roles, Features pages (not legal pages)
+- ADMIN coupon package added to admin dashboard (lifetime premium)
+
 ## Recent Updates (May 3-4, 2026)
 
 ### Website Redesign — Raya-Inspired Presentation
