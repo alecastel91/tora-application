@@ -10,17 +10,23 @@ interface IntroSplashProps {
     onComplete: () => void;
     onApply: () => void;
     onShowContent?: (show: boolean) => void;
+    skipSplash?: boolean;
 }
 
-export function IntroSplash({ onComplete, onApply, onShowContent }: IntroSplashProps) {
+export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = false }: IntroSplashProps) {
     const { t } = useLanguage();
-    const [showLogo, setShowLogo] = useState(false);
+    const [showLogo, setShowLogo] = useState(skipSplash);
     const [showTagline, setShowTagline] = useState(false);
-    const [hideTagline, setHideTagline] = useState(false);
-    const [slideUp, setSlideUp] = useState(false);
-    const [showContent, setShowContent] = useState(false);
+    const [hideTagline, setHideTagline] = useState(skipSplash);
+    const [slideUp, setSlideUp] = useState(skipSplash);
+    const [showContent, setShowContent] = useState(skipSplash);
 
     useEffect(() => {
+        if (skipSplash) {
+            onComplete();
+            return;
+        }
+
         // Logo animates in first
         const logoTimer = setTimeout(() => setShowLogo(true), 300);
         // Tagline appears shortly after logo
@@ -42,7 +48,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent }: IntroSplashP
             clearTimeout(slideTimer);
             clearTimeout(contentTimer);
         };
-    }, [onComplete]);
+    }, [onComplete, skipSplash]);
 
     // Notify parent when content becomes visible
     useEffect(() => {

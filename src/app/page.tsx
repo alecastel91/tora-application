@@ -1,83 +1,96 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ThreeDBackground } from "@/components/ui/ThreeDBackground";
-import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
-import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
-import { Confirmation } from "@/components/sections/infrared/Confirmation";
-import LanguageSelector from "@/components/ui/LanguageSelector";
-
-type FlowState = "intro" | "form" | "confirmation";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { BottomNav } from "@/components/ui/PageNav";
 
 export default function Home() {
-  const [view, setView] = useState<FlowState>("intro");
-  const [introComplete, setIntroComplete] = useState(false);
-  const [formStep, setFormStep] = useState(0);
-  const [showIntroContent, setShowIntroContent] = useState(false);
-
   return (
-    <main className="relative min-h-screen bg-black overflow-x-hidden overflow-y-auto font-sans selection:bg-infrared/30 selection:text-white">
+    <main className="relative min-h-screen bg-black overflow-hidden font-sans selection:bg-infrared/30 selection:text-white">
 
-      <AnimatePresence mode="wait">
-        {view === "intro" && (
-          <motion.div
-            key="intro"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0"
-          >
-            <IntroSplash
-              onComplete={() => setIntroComplete(true)}
-              onApply={() => setView("form")}
-              onShowContent={setShowIntroContent}
-            />
-          </motion.div>
-        )}
-
-        {view === "form" && (
-          <motion.div
-            key="form"
-            initial={{ opacity: 0, x: 50, filter: "blur(5px)" }}
-            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="relative w-full min-h-screen"
-          >
-            <ApplicationForm
-              onSubmit={() => setView("confirmation")}
-              onStepChange={setFormStep}
-            />
-          </motion.div>
-        )}
-
-        {view === "confirmation" && (
-          <motion.div
-            key="confirmation"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0"
-          >
-            <Confirmation />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Language Selector - Conditional positioning based on view and form step */}
-      {((view === "intro" && showIntroContent) || view === "form" || view === "confirmation") && (
-        <div
-          className={
-            view === "form" && (formStep === 4 || formStep === 5)
-              ? "w-full flex justify-end px-8 py-8"
-              : "fixed bottom-8 right-8 z-[1000]"
-          }
-        >
-          <LanguageSelector />
+      {/* Top nav links */}
+      <motion.nav
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center py-5"
+      >
+        <div className="flex items-center space-x-8 md:space-x-10">
+          {[
+            { name: "Apply", href: "/apply" },
+            { name: "About", href: "/about" },
+            { name: "Roles", href: "/roles" },
+            { name: "Features", href: "/features" },
+          ].map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 hover:text-white transition-colors"
+            >
+              {link.name}
+            </Link>
+          ))}
         </div>
-      )}
+      </motion.nav>
+
+      {/* Center content */}
+      <div className="flex flex-col items-center justify-center min-h-screen px-4">
+
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            src="/tora_logo_v2.png"
+            alt="TORA"
+            width={500}
+            height={166}
+            className="w-[280px] md:w-[400px] h-auto object-contain"
+            priority
+          />
+        </motion.div>
+
+        {/* Tagline — exact match from IntroSplash */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="mt-2 md:mt-1"
+        >
+          <span
+            className="text-white text-[12px] md:text-[14px] tracking-[0.22em] uppercase whitespace-nowrap"
+            style={{
+              fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
+              fontWeight: 400,
+              letterSpacing: '0.22em'
+            }}
+          >
+            WHERE MUSIC MEETS
+          </span>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.6 }}
+          className="mt-16"
+        >
+          <Link
+            href="/apply"
+            className="px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-white hover:text-black transition-all duration-300"
+            style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
+          >
+            Apply For Membership
+          </Link>
+        </motion.div>
+      </div>
+
+      <BottomNav />
+
     </main>
   );
 }

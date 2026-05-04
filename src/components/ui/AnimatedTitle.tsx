@@ -14,7 +14,7 @@ export function AnimatedTitle({ children, className }: AnimatedTitleProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className={`text-4xl md:text-6xl font-black uppercase tracking-tight italic ${className}`}
+            className={`text-4xl md:text-6xl font-black uppercase tracking-tight font-tech ${className}`}
         >
             {children}
         </motion.h2>

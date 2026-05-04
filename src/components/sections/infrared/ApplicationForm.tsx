@@ -312,7 +312,6 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     const [venueCapacity, setVenueCapacity] = useState("");
     const [website, setWebsite] = useState("");
     const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
-    const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
     // Notify parent component when step changes
     useEffect(() => {
@@ -1171,15 +1170,25 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                                 fontFamily: 'var(--font-space-grotesk), var(--font-rajdhani), sans-serif',
                                             }}
                                         >
-                                            {t('privacy_consent_text')}{' '}
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPrivacyModal(true)}
-                                                className="text-infrared hover:text-infrared/80 underline cursor-pointer"
+                                            I agree to the{' '}
+                                            <a
+                                                href="/privacy"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-infrared hover:text-infrared/80 underline"
                                             >
-                                                {t('privacy_policy_link')}
-                                            </button>
-                                            {' '}{t('privacy_consent_full')}
+                                                Privacy Policy
+                                            </a>
+                                            {' '}and{' '}
+                                            <a
+                                                href="/terms"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-infrared hover:text-infrared/80 underline"
+                                            >
+                                                Terms of Service
+                                            </a>
+                                            {' '}and understand that my data will be used to review my application and, if accepted, to create my TORA profile.
                                         </label>
                                     </div>
 
@@ -1214,107 +1223,6 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                 </div>
             </GlassPanel>
 
-            {/* Privacy Policy Modal */}
-            <AnimatePresence>
-                {showPrivacyModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setShowPrivacyModal(false)}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-[#1a1a1a] border border-white/10 rounded-lg max-w-4xl max-h-[80vh] overflow-y-auto p-8 relative"
-                        >
-                            {/* Close button */}
-                            <button
-                                onClick={() => setShowPrivacyModal(false)}
-                                className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl"
-                            >
-                                ×
-                            </button>
-
-                            {/* Privacy Policy Content - Simplified without emails */}
-                            <div className="prose prose-invert max-w-none text-white/70 space-y-8 leading-relaxed">
-                                <h2
-                                    className="text-white text-2xl mb-8 tracking-wide uppercase"
-                                    style={{
-                                        fontFamily: 'var(--font-rajdhani), sans-serif',
-                                        letterSpacing: '0.1em',
-                                        fontWeight: 400
-                                    }}
-                                >
-                                    {t('privacy_policy_title')}
-                                </h2>
-
-                                <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('information_we_collect_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('information_we_collect_text')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('how_we_use_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('how_we_use_text')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('data_storage_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('data_storage_text')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('your_rights_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('your_rights_text')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('data_sharing_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('data_sharing_text')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('gdpr_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('gdpr_text')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4 pt-6 border-t border-white/10">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('terms_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('terms_text_1')}
-                                    </p>
-                                    <p className="text-sm">
-                                        {t('terms_text_2')}
-                                    </p>
-                                </section>
-
-                                <section className="space-y-4 pt-4">
-                                    <h3 className="text-white text-lg" style={{ fontFamily: 'var(--font-rajdhani), sans-serif', fontWeight: 700 }}>{t('prelaunch_title')}</h3>
-                                    <p className="text-sm">
-                                        {t('prelaunch_text')}
-                                    </p>
-                                </section>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }
