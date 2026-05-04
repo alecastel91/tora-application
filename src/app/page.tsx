@@ -21,7 +21,6 @@ export default function Home() {
       >
         <div className="flex items-center space-x-8 md:space-x-10">
           {[
-            { key: "nav_apply", href: "/apply" },
             { key: "nav_about", href: "/about" },
             { key: "nav_roles", href: "/roles" },
             { key: "nav_features", href: "/features" },

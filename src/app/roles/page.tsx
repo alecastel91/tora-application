@@ -75,6 +75,13 @@ export default function Roles() {
                 </div>
 
                 <div className="text-center">
+                    <Link
+                        href="/apply"
+                        className="inline-block px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300 mb-8"
+                        style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
+                    >
+                        {t('apply_for_membership')}
+                    </Link><br />
                     <Link href="/" className="text-white/30 hover:text-white transition-colors text-xs uppercase tracking-[0.2em]" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>&lsaquo; {t('back_link')}</Link>
                 </div>
                 <PageBrand />

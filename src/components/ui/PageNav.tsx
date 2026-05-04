@@ -25,7 +25,6 @@ export function TopNav() {
     const { t } = useLanguage();
 
     const links = [
-        { key: "nav_apply", href: "/apply" },
         { key: "nav_about", href: "/about" },
         { key: "nav_roles", href: "/roles" },
         { key: "nav_features", href: "/features" },
@@ -36,8 +35,23 @@ export function TopNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="fixed top-0 left-0 right-0 z-50 flex justify-center py-5 bg-black/80 backdrop-blur-xl"
+            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
         >
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                    <svg width="24" height="24" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth="8" fill="none" opacity="0.9"/>
+                        <line x1="120" y1="20" x2="120" y2="220" stroke="#FF3366" strokeWidth="6" opacity="0.7"/>
+                        <line x1="20" y1="120" x2="220" y2="120" stroke="#FF3366" strokeWidth="6" opacity="0.7"/>
+                        <ellipse cx="120" cy="120" rx="100" ry="50" stroke="#FF3366" strokeWidth="5" fill="none" opacity="0.5"/>
+                        <path d="M 120 20 Q 80 120 120 220" stroke="#FF3366" strokeWidth="5" fill="none" opacity="0.5"/>
+                        <path d="M 120 20 Q 160 120 120 220" stroke="#FF3366" strokeWidth="5" fill="none" opacity="0.5"/>
+                    </svg>
+                </motion.div>
+            </Link>
             <div className="flex items-center space-x-8 md:space-x-10">
                 {links.map((link) => (
                     <Link
