@@ -63,31 +63,55 @@ export default function AdminDashboard() {
     const [searchQuery, setSearchQuery] = useState("");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
 
-    // Check if already authenticated
+    // Check if already authenticated (server-side cookie verification)
     useEffect(() => {
-        const auth = sessionStorage.getItem("admin_authenticated");
-        if (auth === "true") {
-            setIsAuthenticated(true);
-            loadApplications();
-        }
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await fetch("/api/admin/session", { credentials: "include" });
+                if (cancelled) return;
+                const data = await res.json();
+                if (data?.authenticated) {
+                    setIsAuthenticated(true);
+                    loadApplications();
+                }
+            } catch {
+                // Network error — leave logged out
+            }
+        })();
+        return () => { cancelled = true; };
     }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simple password check (you can change this password)
-        if (password === "tora2026admin") {
-            setIsAuthenticated(true);
-            sessionStorage.setItem("admin_authenticated", "true");
-            setError("");
-            loadApplications();
-        } else {
-            setError("Invalid password");
+        try {
+            const res = await fetch("/api/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ password }),
+            });
+            if (res.ok) {
+                setIsAuthenticated(true);
+                setPassword("");
+                setError("");
+                loadApplications();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                setError(data?.error || "Invalid password");
+            }
+        } catch {
+            setError("Login failed. Try again.");
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
+        } catch {
+            // Logging out client-side anyway
+        }
         setIsAuthenticated(false);
-        sessionStorage.removeItem("admin_authenticated");
         setApplications([]);
     };
 
