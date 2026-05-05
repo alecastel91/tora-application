@@ -24,6 +24,26 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 6, 2026)
+
+### Phase 1 Pre-Launch Hardening — Admin Auth + Email Deliverability
+- **Admin dashboard auth fully rewritten** (replaces hardcoded `tora2026admin` + sessionStorage flag)
+  - New routes: `POST /api/admin/login`, `POST /api/admin/logout`, `GET /api/admin/session`
+  - New file `src/lib/adminAuth.ts` — JWT signing/verification helpers (uses `jose` library, ~6.2.3, Edge-runtime compatible)
+  - New `src/middleware.ts` — protects `/api/admin/*` (except login/logout/session) plus `/api/send-invitation`, `/api/send-decline`, `/api/send-add-profile-approved`. Public routes (`/`, `/apply`, `/api/waitlist`, `/api/send-email`) unaffected.
+  - `src/app/admin/page.tsx` updated: handleLogin POSTs to login route; useEffect hits session route; handleLogout POSTs to logout route. No more client-side password comparison.
+  - Cookie: `admin_session`, httpOnly, secure (in prod), sameSite=lax, HS256-signed, 24h TTL
+  - DevTools `sessionStorage.admin_authenticated = true` bypass no longer works
+  - Required env vars: `ADMIN_PASSWORD`, `ADMIN_JWT_SECRET` (server-side only, set in Vercel Production scope)
+  - Shipped via PR #1 (merged to main, Vercel auto-deployed)
+- **Email DMARC upgraded to `p=quarantine`** for `torahub.io`
+  - Previous: `v=DMARC1; p=none;` (monitor-only, no enforcement, no reports)
+  - New: `v=DMARC1; p=quarantine; pct=100; rua=mailto:admin@torahub.io,mailto:alessandro.castelbuono@gmail.com; sp=quarantine; adkim=r; aspf=r;`
+  - DKIM (`resend._domainkey.mail.torahub.io`) and SPF (`send.mail.torahub.io`) were already verified — no changes needed there
+  - DNS managed at Namecheap; record edited under torahub.io → Advanced DNS → `_dmarc` TXT record
+  - Verified deliverability via mail-tester.com: **10/10 score**
+- **Next.js deprecation warning**: `middleware.ts` convention is deprecated in Next.js 16.1 (rename to `proxy.ts` pending in future major version). Auto-aliased for now, no functional impact.
+
 ## Recent Updates (May 5, 2026)
 
 ### Navigation Refinements
