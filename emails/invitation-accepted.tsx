@@ -18,6 +18,8 @@ interface InvitationAcceptedEmailProps {
   tierTitle?: string;
   tierBenefit?: string;
   tierDescription?: string;
+  /** Where the "Create Your Account" CTA links to. Pass dev URL in dev, prod URL in prod. */
+  appUrl?: string;
 }
 
 export const InvitationAcceptedEmail = ({
@@ -26,7 +28,11 @@ export const InvitationAcceptedEmail = ({
   tierTitle = 'Artist Membership',
   tierBenefit = 'Founding Member • Complimentary Premium Access',
   tierDescription = '',
-}: InvitationAcceptedEmailProps) => (
+  appUrl = 'https://app.torahub.io',
+}: InvitationAcceptedEmailProps) => {
+  // Strip the protocol for the visible "Go to ..." text in step 1, but keep it on the href.
+  const appHostname = appUrl.replace(/^https?:\/\//, '');
+  return (
   <Html>
     <Head />
     <Preview>Your TORA application has been accepted - welcome!</Preview>
@@ -95,7 +101,7 @@ export const InvitationAcceptedEmail = ({
         {/* CTA Button */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Link
-            href="https://torahub.io/signup"
+            href={appUrl}
             style={ctaButton}
           >
             Create Your Account
@@ -110,7 +116,7 @@ export const InvitationAcceptedEmail = ({
 
           <Text style={stepTitle}>1. Visit</Text>
           <Text style={stepText}>
-            Go to <Link href="https://torahub.io/signup" style={link}>torahub.io/signup</Link>
+            Go to <Link href={appUrl} style={link}>{appHostname}</Link>
           </Text>
 
           <Text style={stepTitle}>2. Enter Your Code</Text>
@@ -160,7 +166,8 @@ export const InvitationAcceptedEmail = ({
       </Container>
     </Body>
   </Html>
-);
+  );
+};
 
 export default InvitationAcceptedEmail;
 

@@ -3,6 +3,7 @@
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
+import { TORALoader } from "@/components/ui/TORALoader";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -814,7 +815,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                                         value={c.code}
                                                         className="bg-[#0a0a0a] text-white"
                                                     >
-                                                        {c.code} {c.name}
+                                                        {c.name} ({c.code})
                                                     </option>
                                                 ))}
                                             </select>
@@ -1205,19 +1206,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
                                         <InfraredButton type="submit" disabled={loading} className="flex-1 py-3 text-sm relative overflow-hidden">
                                             {loading ? (
-                                                <motion.span
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    className="flex items-center justify-center gap-2"
-                                                >
-                                                    <motion.span
-                                                        animate={{ rotate: 360 }}
-                                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                                    >
-                                                        ⟳
-                                                    </motion.span>
-                                                    {t('submitting')}
-                                                </motion.span>
+                                                <TORALoader inline size={16} label={t('submitting')} />
                                             ) : (
                                                 t('submit_application')
                                             )}

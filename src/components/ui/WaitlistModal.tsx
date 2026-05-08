@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "./GlassCard";
 import { GlowButton } from "./GlowButton";
+import { TORALoader } from "./TORALoader";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 
@@ -162,7 +163,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                                                     Reset
                                                 </button>
                                                 <GlowButton type="submit" className="flex-1" disabled={loading}>
-                                                    {loading ? "Transmitting..." : "Initialize"}
+                                                    {loading ? <TORALoader inline size={14} label="Transmitting..." /> : "Initialize"}
                                                 </GlowButton>
                                             </div>
                                         </form>

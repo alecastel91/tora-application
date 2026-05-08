@@ -56,18 +56,55 @@ export async function POST(request: Request) {
       tierTitle: tier.title
     });
 
+    // Where the "Create Your Account" CTA points. Set NEXT_PUBLIC_APP_URL in
+    // .env.local to your local frontend (e.g. http://alessandro.local:3002) so
+    // dev tests don't bounce you into production. Vercel production sets it to
+    // https://app.torahub.io.
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.torahub.io';
+
+    // Plain-text fallback — significantly improves deliverability with Gmail / Outlook
+    // (spam filters dock messages that ship HTML only).
+    const plainText = [
+      `Hi ${firstName},`,
+      ``,
+      `Your application to TORA has been accepted. Welcome.`,
+      ``,
+      `Your exclusive invitation code: ${couponCode}`,
+      ``,
+      `Membership: ${tier.title} (${tier.benefit})`,
+      ``,
+      `${tier.description}`,
+      ``,
+      `How to join:`,
+      `1. Visit ${appUrl}`,
+      `2. Enter your invitation code during signup`,
+      `3. Complete your profile and start connecting`,
+      ``,
+      `Questions? Reply to this email or contact support@torahub.io`,
+      ``,
+      `— The TORA Team`,
+      `https://torahub.io`,
+    ].join('\n');
+
     // Send invitation email to approved applicant using React component
     const { data, error } = await resend.emails.send({
       from: 'TORA <invitation@mail.torahub.io>',
+      replyTo: 'support@torahub.io',
       to: [email],
-      subject: 'Welcome to TORA - Your Invitation',
+      subject: `${firstName}, your TORA invitation is ready`,
       react: InvitationAcceptedEmail({
         firstName,
         invitationCode: couponCode,
         tierTitle: tier.title,
         tierBenefit: tier.benefit,
         tierDescription: tier.description,
+        appUrl,
       }),
+      text: plainText,
+      headers: {
+        'List-Unsubscribe': '<mailto:support@torahub.io?subject=Unsubscribe>',
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     });
 
     if (error) {

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
+import { TORALoader } from "@/components/ui/TORALoader";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -521,7 +522,9 @@ export default function AdminDashboard() {
 
                 {/* Applications List */}
                 {loading ? (
-                    <div className="text-center text-white/60 py-12">Loading applications...</div>
+                    <div className="py-12">
+                        <TORALoader size={48} label="Loading applications..." />
+                    </div>
                 ) : filteredApplications.length === 0 ? (
                     <div className="text-center text-white/60 py-12">No applications found</div>
                 ) : (
