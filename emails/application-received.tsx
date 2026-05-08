@@ -51,6 +51,13 @@ export const ApplicationReceivedEmail = ({
     <Preview>Your application to TORA has been received</Preview>
     <Body style={main}>
       <Container style={container}>
+        {/* Web fallback link for clients that mangle email rendering */}
+        <Section style={{ textAlign: 'center' as const, paddingBottom: '12px' }}>
+          <Text style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', margin: '0' }}>
+            Trouble viewing? <Link href="https://torahub.io" style={{ color: '#FF3366', textDecoration: 'underline' }}>Open torahub.io</Link>
+          </Text>
+        </Section>
+
         {/* Logo */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '40px' }}>
           <Img
@@ -62,10 +69,11 @@ export const ApplicationReceivedEmail = ({
           />
         </Section>
 
-        {/* Check Icon */}
+        {/* Check Icon (transparent SVG so it renders correctly on
+            both dark email body and Gmail-iOS-inverted white body) */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
-            src="https://resend-attachments.s3.amazonaws.com/64377867-89f3-4cd1-b14a-fe57f9636d55"
+            src="https://torahub.io/email-assets/check.svg"
             width="140"
             height="140"
             alt="Check"

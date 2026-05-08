@@ -70,6 +70,13 @@ export const InvitationAcceptedEmail = ({
     <Preview>Your TORA application has been accepted - welcome!</Preview>
     <Body style={main}>
       <Container style={container}>
+        {/* Web fallback link for clients that mangle email rendering */}
+        <Section style={{ textAlign: 'center' as const, paddingBottom: '12px' }}>
+          <Text style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', margin: '0' }}>
+            Trouble viewing? <Link href="https://torahub.io" style={{ color: '#FF3366', textDecoration: 'underline' }}>Open torahub.io</Link>
+          </Text>
+        </Section>
+
         {/* Logo */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '40px' }}>
           <Img
@@ -81,10 +88,11 @@ export const InvitationAcceptedEmail = ({
           />
         </Section>
 
-        {/* Globe/Geometric Art */}
+        {/* Globe/Geometric Art — transparent SVG so it renders correctly on
+            both dark email body and Gmail-iOS-inverted white body */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
-            src="https://resend-attachments.s3.amazonaws.com/d266cb6a-5596-436a-8e2b-49c1c377840e"
+            src="https://torahub.io/email-assets/globe.svg"
             width="300"
             height="290"
             alt="TORA Globe"
