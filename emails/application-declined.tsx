@@ -23,8 +23,8 @@ export const ApplicationDeclinedEmail = ({
 }: ApplicationDeclinedEmailProps) => (
   <Html>
     <Head>
-      <meta name="color-scheme" content="dark light" />
-      <meta name="supported-color-schemes" content="dark light" />
+      <meta name="color-scheme" content="dark" />
+      <meta name="supported-color-schemes" content="dark" />
     </Head>
     <Preview>Update on your TORA application</Preview>
     <Body style={main}>

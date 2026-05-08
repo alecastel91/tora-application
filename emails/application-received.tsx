@@ -25,8 +25,8 @@ export const ApplicationReceivedEmail = ({
 }: ApplicationReceivedEmailProps) => (
   <Html>
     <Head>
-      <meta name="color-scheme" content="dark light" />
-      <meta name="supported-color-schemes" content="dark light" />
+      <meta name="color-scheme" content="dark" />
+      <meta name="supported-color-schemes" content="dark" />
     </Head>
     <Preview>Your application to TORA has been received</Preview>
     <Body style={main}>
