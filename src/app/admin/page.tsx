@@ -162,6 +162,33 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleRemoveRow = async (application: Application) => {
+        const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
+        const ok = confirm(
+            `Remove this waitlist row for ${displayName} (${application.email})?\n\n` +
+            `This deletes ONLY this application row. The user account and any other rows for the same email are untouched.\n\n` +
+            `For full data removal (GDPR), use the "Delete (GDPR)" button instead.`
+        );
+        if (!ok) return;
+        try {
+            const res = await fetch('/api/admin/delete-waitlist-row', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ id: application.id }),
+            });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                alert(`Failed to remove row: ${data.error || 'unknown error'}`);
+                return;
+            }
+            await loadApplications();
+        } catch (err) {
+            console.error('Remove row error:', err);
+            alert(`Failed to remove row: ${err}`);
+        }
+    };
+
     const handleDeleteGdpr = async (application: Application) => {
         const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
         try {
@@ -583,8 +610,22 @@ export default function AdminDashboard() {
                                 key={app.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/[0.07] transition-colors"
+                                className="relative bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/[0.07] transition-colors"
                             >
+                                {/* Remove single waitlist row (does NOT touch the user account or
+                                    any other rows for the same email — for that, use Delete (GDPR)) */}
+                                <button
+                                    onClick={() => handleRemoveRow(app)}
+                                    className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-white/30 hover:text-white/80 hover:bg-white/10 rounded transition-colors"
+                                    title="Remove this waitlist row only (not a GDPR action)"
+                                    aria-label="Remove row"
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+
                                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                                     {/* Left: Application Details */}
                                     <div className="flex-1 space-y-2">
