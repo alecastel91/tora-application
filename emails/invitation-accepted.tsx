@@ -70,13 +70,6 @@ export const InvitationAcceptedEmail = ({
     <Preview>Your TORA application has been accepted - welcome!</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Web fallback link for clients that mangle email rendering */}
-        <Section style={{ textAlign: 'center' as const, paddingBottom: '12px' }}>
-          <Text style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', margin: '0' }}>
-            Trouble viewing? <Link href="https://torahub.io" style={{ color: '#FF3366', textDecoration: 'underline' }}>Open torahub.io</Link>
-          </Text>
-        </Section>
-
         {/* Logo */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '40px' }}>
           <Img
