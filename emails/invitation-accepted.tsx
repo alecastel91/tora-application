@@ -81,11 +81,13 @@ export const InvitationAcceptedEmail = ({
           />
         </Section>
 
-        {/* Globe/Geometric Art — transparent SVG so it renders correctly on
-            both dark email body and Gmail-iOS-inverted white body */}
+        {/* Globe/Geometric Art — original animated GIF (rotation intact).
+            Most recipients see this on a dark email body where it renders as
+            designed; the small subset whose Gmail iOS auto-inverts will see
+            it as a black-stamp variant, consistent with the logo treatment. */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
-            src="https://torahub.io/email-assets/globe.svg"
+            src="https://resend-attachments.s3.amazonaws.com/d266cb6a-5596-436a-8e2b-49c1c377840e"
             width="300"
             height="290"
             alt="TORA Globe"
