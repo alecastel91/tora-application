@@ -616,7 +616,7 @@ export default function AdminDashboard() {
                                     any other rows for the same email — for that, use Delete (GDPR)) */}
                                 <button
                                     onClick={() => handleRemoveRow(app)}
-                                    className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-white/30 hover:text-white/80 hover:bg-white/10 rounded transition-colors"
+                                    className="absolute bottom-3 right-3 w-7 h-7 flex items-center justify-center text-white/30 hover:text-white/80 hover:bg-white/10 rounded transition-colors"
                                     title="Remove this waitlist row only (not a GDPR action)"
                                     aria-label="Remove row"
                                 >
