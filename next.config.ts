@@ -5,13 +5,11 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
 };
 
-// Sentry build-time options. tunnelRoute proxies Sentry events through our
-// own /monitoring path so ad-blockers and corporate firewalls don't drop
-// them. silent + disableLogger keep build output clean. Source-map upload
-// is intentionally disabled (requires an auth token) — line numbers in
-// stack traces will be from compiled code, which is acceptable trade-off.
+// Tunnel Sentry events through /monitoring to bypass ad-blockers and
+// corporate firewalls that drop direct sentry.io calls. Source-map upload
+// is intentionally not configured — requires SENTRY_AUTH_TOKEN, accept
+// minified stack traces in exchange for one less secret to manage.
 export default withSentryConfig(nextConfig, {
   silent: true,
   tunnelRoute: "/monitoring",
-  disableLogger: true,
 });

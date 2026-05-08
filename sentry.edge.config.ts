@@ -1,7 +1,6 @@
-// Sentry initialization for Next.js Edge runtime (middleware, edge route
-// handlers). Required because middleware runs in a different runtime than
-// Node — needs its own Sentry init.
-
+// Loaded by instrumentation.ts when NEXT_RUNTIME === "edge" (middleware,
+// edge route handlers). Edge runtime needs its own Sentry init separate
+// from the Node config.
 import * as Sentry from "@sentry/nextjs";
 
 if (process.env.SENTRY_DSN) {
