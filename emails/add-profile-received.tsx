@@ -24,7 +24,10 @@ export const AddProfileReceivedEmail = ({
   profileName = '',
 }: AddProfileReceivedEmailProps) => (
   <Html>
-    <Head />
+    <Head>
+      <meta name="color-scheme" content="dark light" />
+      <meta name="supported-color-schemes" content="dark light" />
+    </Head>
     <Preview>Your new profile application has been received</Preview>
     <Body style={main}>
       <Container style={container}>

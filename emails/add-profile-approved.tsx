@@ -24,7 +24,10 @@ export const AddProfileApprovedEmail = ({
   profileName = '',
 }: AddProfileApprovedEmailProps) => (
   <Html>
-    <Head />
+    <Head>
+      <meta name="color-scheme" content="dark light" />
+      <meta name="supported-color-schemes" content="dark light" />
+    </Head>
     <Preview>Your new {role} profile is now active on TORA</Preview>
     <Body style={main}>
       <Container style={container}>

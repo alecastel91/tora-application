@@ -34,7 +34,13 @@ export const InvitationAcceptedEmail = ({
   const appHostname = appUrl.replace(/^https?:\/\//, '');
   return (
   <Html>
-    <Head />
+    <Head>
+      {/* Tell mobile email clients (especially Gmail Android) not to auto-invert
+          our dark-themed email. Without these, light-mode users see white bg /
+          black text with our logo images stranded as black islands. */}
+      <meta name="color-scheme" content="dark light" />
+      <meta name="supported-color-schemes" content="dark light" />
+    </Head>
     <Preview>Your TORA application has been accepted - welcome!</Preview>
     <Body style={main}>
       <Container style={container}>
