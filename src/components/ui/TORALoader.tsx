@@ -10,13 +10,12 @@ interface TORALoaderProps {
 
 export function TORALoader({ size = 18, inline = false, label }: TORALoaderProps) {
   // Stroke widths are in viewBox units (240). The browser scales them by
-  // (size / 240) when rendering. To get a consistent ~3px display stroke
-  // across all sizes, we compute viewBox stroke = 3 * 240 / size.
-  // At size=240 → stroke 3 (matches IntroSplash). At size=16 → stroke 45
-  // (renders as 3px). The Math.max floor keeps large variants from going
-  // hairline.
-  const primaryStroke = Math.max(3, 720 / size);
-  const secondaryStroke = Math.max(2.5, 600 / size);
+  // (size / 240) when rendering. To get a consistent ~2px display stroke
+  // across all sizes, we compute viewBox stroke = 2 * 240 / size.
+  // At size=240 → stroke 2. At size=16 → stroke 30 (renders as 2px).
+  // The Math.max floor keeps large variants from going hairline.
+  const primaryStroke = Math.max(2, 480 / size);
+  const secondaryStroke = Math.max(1.5, 360 / size);
 
   const globe = (
     <motion.svg
