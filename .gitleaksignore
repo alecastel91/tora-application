@@ -1,0 +1,9 @@
+# Known historical findings — all remediated. Regenerate this file with:
+#   gitleaks detect --no-banner --report-format json --report-path /tmp/gl.json
+#   python3 -c "import json; [print(f['Fingerprint']) for f in json.load(open('/tmp/gl.json'))]"
+
+# Both findings are Supabase anon keys (NEXT_PUBLIC_SUPABASE_ANON_KEY) that
+# appeared in CLAUDE.md / CLAUDE.md.backup. Anon keys are public-by-design —
+# they ship in every browser bundle of any Supabase-using site. Not a leak.
+33c8b80e9f281dedfeefa355a6eeea10b1a182bd:CLAUDE.md.backup:generic-api-key:384
+576950dfd36e87ed80b9cf1d3bd3a12579b6b89b:CLAUDE.md:generic-api-key:79
