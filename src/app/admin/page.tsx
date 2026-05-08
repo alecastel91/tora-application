@@ -162,6 +162,55 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleDeleteGdpr = async (application: Application) => {
+        const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
+        try {
+            const dryRes = await fetch('/api/admin/delete-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: application.email, dryRun: true }),
+            });
+            if (!dryRes.ok) {
+                alert('Could not preview deletion. Check console.');
+                return;
+            }
+            const { counts } = await dryRes.json();
+            const total = Object.values(counts as Record<string, number>).reduce((a, b) => a + b, 0);
+            if (total === 0) {
+                alert(`No data found for ${application.email}. Nothing to delete.`);
+                return;
+            }
+            const summary = Object.entries(counts as Record<string, number>)
+                .filter(([, v]) => v > 0)
+                .map(([k, v]) => `  ${k}: ${v}`)
+                .join('\n');
+            const ok = confirm(
+                `GDPR DELETION — Irreversible.\n\n` +
+                `About to permanently delete all data for ${displayName} (${application.email}):\n\n${summary}\n\n` +
+                `After this completes, reply to the requester by email confirming deletion.\n\nProceed?`
+            );
+            if (!ok) return;
+
+            const delRes = await fetch('/api/admin/delete-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: application.email }),
+            });
+            if (!delRes.ok) {
+                const data = await delRes.json().catch(() => ({}));
+                alert(`Deletion failed: ${data.error || 'unknown error'}`);
+                return;
+            }
+            alert(`✓ All data for ${application.email} has been deleted.`);
+            await loadApplications();
+        } catch (err) {
+            console.error('GDPR deletion error:', err);
+            alert(`Deletion failed: ${err}`);
+        }
+    };
+
     const handleDecline = async (application: Application) => {
         const displayName = application.profile_name || `${application.first_name} ${application.last_name}`;
         if (!confirm(`Decline ${displayName}?`)) return;
@@ -708,6 +757,20 @@ export default function AdminDashboard() {
                                                 Active User
                                             </div>
                                         )}
+
+                                        {/* Always available — GDPR Article 17 deletion. Last in the column,
+                                            visually subdued so it does not invite accidental clicks. */}
+                                        <button
+                                            onClick={() => handleDeleteGdpr(app)}
+                                            className="px-3 py-1.5 mt-2 bg-red-900/10 hover:bg-red-900/30 text-red-400/80 hover:text-red-300 border border-red-900/30 rounded text-[11px] uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
+                                            title="Permanently delete this user and all related data (GDPR Article 17)"
+                                        >
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"></path>
+                                            </svg>
+                                            Delete (GDPR)
+                                        </button>
                                     </div>
                                 </div>
                             </motion.div>
