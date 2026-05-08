@@ -25,6 +25,26 @@ export const ApplicationDeclinedEmail = ({
     <Head>
       <meta name="color-scheme" content="dark" />
       <meta name="supported-color-schemes" content="dark" />
+      <style>{`
+        :root { color-scheme: dark only; supported-color-schemes: dark; }
+        body, table, td, div, .body-bg {
+          background-color: #000000 !important;
+          color: #FFFFFF !important;
+        }
+        @media (prefers-color-scheme: light) {
+          body, table, td, div, .body-bg {
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
+          }
+          h1, h2, h3, p, span, a:not(.cta-button) { color: #FFFFFF !important; }
+        }
+        @media (prefers-color-scheme: dark) {
+          body, table, td, div, .body-bg {
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
+          }
+        }
+      `}</style>
     </Head>
     <Preview>Update on your TORA application</Preview>
     <Body style={main}>

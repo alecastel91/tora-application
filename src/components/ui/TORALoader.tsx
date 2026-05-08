@@ -9,7 +9,14 @@ interface TORALoaderProps {
 }
 
 export function TORALoader({ size = 18, inline = false, label }: TORALoaderProps) {
-  const stroke = Math.max(1, Math.round(size / 12));
+  // Stroke widths are in viewBox units (240). The browser scales them by
+  // (size / 240) when rendering. To get a consistent ~3px display stroke
+  // across all sizes, we compute viewBox stroke = 3 * 240 / size.
+  // At size=240 → stroke 3 (matches IntroSplash). At size=16 → stroke 45
+  // (renders as 3px). The Math.max floor keeps large variants from going
+  // hairline.
+  const primaryStroke = Math.max(3, 720 / size);
+  const secondaryStroke = Math.max(2.5, 600 / size);
 
   const globe = (
     <motion.svg
@@ -23,11 +30,11 @@ export function TORALoader({ size = 18, inline = false, label }: TORALoaderProps
       style={{ flexShrink: 0 }}
       aria-hidden
     >
-      <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth={stroke * 1.5} fill="none" opacity="0.85" />
-      <line x1="120" y1="20" x2="120" y2="220" stroke="#FF3366" strokeWidth={stroke * 1.5} opacity="0.85" />
-      <line x1="20" y1="120" x2="220" y2="120" stroke="#FF3366" strokeWidth={stroke * 1.5} opacity="0.85" />
-      <ellipse cx="120" cy="120" rx="100" ry="50" stroke="#FF3366" strokeWidth={stroke} fill="none" opacity="0.6" />
-      <ellipse cx="120" cy="120" rx="100" ry="25" stroke="#FF3366" strokeWidth={stroke} fill="none" opacity="0.6" />
+      <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth={primaryStroke} fill="none" opacity="0.9" />
+      <line x1="120" y1="20" x2="120" y2="220" stroke="#FF3366" strokeWidth={primaryStroke} opacity="0.9" />
+      <line x1="20" y1="120" x2="220" y2="120" stroke="#FF3366" strokeWidth={primaryStroke} opacity="0.9" />
+      <ellipse cx="120" cy="120" rx="100" ry="50" stroke="#FF3366" strokeWidth={secondaryStroke} fill="none" opacity="0.7" />
+      <ellipse cx="120" cy="120" rx="100" ry="25" stroke="#FF3366" strokeWidth={secondaryStroke} fill="none" opacity="0.7" />
     </motion.svg>
   );
 

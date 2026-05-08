@@ -35,11 +35,37 @@ export const InvitationAcceptedEmail = ({
   return (
   <Html>
     <Head>
-      {/* Tell mobile email clients (especially Gmail Android) not to auto-invert
-          our dark-themed email. Without these, light-mode users see white bg /
-          black text with our logo images stranded as black islands. */}
+      {/* Force dark theme on mobile clients that auto-invert (Gmail iOS,
+          some Outlook builds). The meta tag alone is insufficient for some
+          clients — the style block with prefers-color-scheme media queries
+          + !important overrides the inversion algorithm. */}
       <meta name="color-scheme" content="dark" />
       <meta name="supported-color-schemes" content="dark" />
+      <style>{`
+        :root {
+          color-scheme: dark only;
+          supported-color-schemes: dark;
+        }
+        body, table, td, div, .body-bg {
+          background-color: #000000 !important;
+          color: #FFFFFF !important;
+        }
+        @media (prefers-color-scheme: light) {
+          body, table, td, div, .body-bg {
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
+          }
+          h1, h2, h3, p, span, a:not(.cta-button) {
+            color: #FFFFFF !important;
+          }
+        }
+        @media (prefers-color-scheme: dark) {
+          body, table, td, div, .body-bg {
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
+          }
+        }
+      `}</style>
     </Head>
     <Preview>Your TORA application has been accepted - welcome!</Preview>
     <Body style={main}>
