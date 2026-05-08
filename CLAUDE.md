@@ -24,6 +24,24 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 8, 2026)
+
+### Email Deliverability & UX Pass
+- **TORALoader** (`src/components/ui/TORALoader.tsx`) — new reusable rotating pink-globe loader. Replaces text/Unicode spinners across `ApplicationForm`, `WaitlistModal`, and the admin dashboard loading state. Stroke widths scale inversely with size for consistent display weight (~1.5px primary, ~1px secondary).
+- **Country code dropdown bug fix** (`ApplicationForm.tsx`): display order changed from `+1876 Jamaica` to `Jamaica (+1876)` so browser typeahead matches by country name. Was unmatchable because every option started with `+`.
+- **Invitation email rewrite** (`api/send-invitation/route.ts` + `emails/invitation-accepted.tsx`):
+  - Personalized subject: `${firstName}, your TORA invitation is ready`
+  - Plain-text fallback added (Gmail/Outlook penalize HTML-only)
+  - `replyTo: support@torahub.io` (positive emails only — decline email intentionally has no replyTo)
+  - `List-Unsubscribe` + `List-Unsubscribe-Post` headers
+  - CTA URL now reads `NEXT_PUBLIC_APP_URL` env var (dev → local app, prod → app.torahub.io)
+- **Email dark-mode forcing** (all 5 templates): added `<meta name="color-scheme" content="dark" />` + `<style>` block with `prefers-color-scheme` media queries + `!important` overrides. Defeats most clients' auto-inversion. Extracted to shared `<EmailHead>` component (`emails/EmailHead.tsx`).
+- **Email asset**: `public/email-assets/check.svg` — transparent SVG (pink check + circle) replaces the old dark-bg PNG in `application-received.tsx`. Renders correctly on both dark email body and Gmail-iOS-inverted white body. URL uses canonical `www.torahub.io` to skip the apex-to-www redirect.
+- **Vercel Web Analytics** added (cookie-free, GDPR-compliant). Package `@vercel/analytics` + `<Analytics />` in `src/app/layout.tsx`. Enabled in Vercel dashboard → Analytics tab.
+
+### Gmail iOS rendering note
+Gmail iOS auto-inverts dark emails for some users in light mode — discovered to be **non-deterministic across users**, likely Gmail A/B test buckets. Decision: ship dark theme as-designed; ~80–90% of users see emails correctly. The minority who get inversion see a "stamp" variant (logo + globe as black squares on white body) which is still readable.
+
 ## Recent Updates (May 6, 2026)
 
 ### Phase 1 Pre-Launch Hardening — Admin Auth + Email Deliverability
