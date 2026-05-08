@@ -9,9 +9,8 @@ interface TORALoaderProps {
 }
 
 export function TORALoader({ size = 18, inline = false, label }: TORALoaderProps) {
-  // Stroke widths are in viewBox units (240). The browser scales them by
-  // (size / 240) when rendering. Target display strokes: ~1.5px primary,
-  // ~1px secondary. Computed as display_target * 240 / size.
+  // Scale strokes inversely with size so display widths stay constant
+  // (~1.5px primary, ~1px secondary) regardless of render size.
   const primaryStroke = Math.max(1.5, 360 / size);
   const secondaryStroke = Math.max(1, 240 / size);
 

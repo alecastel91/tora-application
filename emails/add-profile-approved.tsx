@@ -1,7 +1,6 @@
 import {
   Body,
   Container,
-  Head,
   Heading,
   Html,
   Img,
@@ -11,6 +10,7 @@ import {
   Text,
 } from '@react-email/components';
 import * as React from 'react';
+import { EmailHead } from './EmailHead';
 
 interface AddProfileApprovedEmailProps {
   firstName?: string;
@@ -24,30 +24,7 @@ export const AddProfileApprovedEmail = ({
   profileName = '',
 }: AddProfileApprovedEmailProps) => (
   <Html>
-    <Head>
-      <meta name="color-scheme" content="dark" />
-      <meta name="supported-color-schemes" content="dark" />
-      <style>{`
-        :root { color-scheme: dark only; supported-color-schemes: dark; }
-        body, table, td, div, .body-bg {
-          background-color: #000000 !important;
-          color: #FFFFFF !important;
-        }
-        @media (prefers-color-scheme: light) {
-          body, table, td, div, .body-bg {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-          }
-          h1, h2, h3, p, span, a:not(.cta-button) { color: #FFFFFF !important; }
-        }
-        @media (prefers-color-scheme: dark) {
-          body, table, td, div, .body-bg {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-          }
-        }
-      `}</style>
-    </Head>
+    <EmailHead />
     <Preview>Your new {role} profile is now active on TORA</Preview>
     <Body style={main}>
       <Container style={container}>

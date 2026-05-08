@@ -1,7 +1,6 @@
 import {
   Body,
   Container,
-  Head,
   Heading,
   Html,
   Img,
@@ -11,6 +10,7 @@ import {
   Text,
 } from '@react-email/components';
 import * as React from 'react';
+import { EmailHead } from './EmailHead';
 
 interface InvitationAcceptedEmailProps {
   firstName?: string;
@@ -34,39 +34,7 @@ export const InvitationAcceptedEmail = ({
   const appHostname = appUrl.replace(/^https?:\/\//, '');
   return (
   <Html>
-    <Head>
-      {/* Force dark theme on mobile clients that auto-invert (Gmail iOS,
-          some Outlook builds). The meta tag alone is insufficient for some
-          clients — the style block with prefers-color-scheme media queries
-          + !important overrides the inversion algorithm. */}
-      <meta name="color-scheme" content="dark" />
-      <meta name="supported-color-schemes" content="dark" />
-      <style>{`
-        :root {
-          color-scheme: dark only;
-          supported-color-schemes: dark;
-        }
-        body, table, td, div, .body-bg {
-          background-color: #000000 !important;
-          color: #FFFFFF !important;
-        }
-        @media (prefers-color-scheme: light) {
-          body, table, td, div, .body-bg {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-          }
-          h1, h2, h3, p, span, a:not(.cta-button) {
-            color: #FFFFFF !important;
-          }
-        }
-        @media (prefers-color-scheme: dark) {
-          body, table, td, div, .body-bg {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-          }
-        }
-      `}</style>
-    </Head>
+    <EmailHead />
     <Preview>Your TORA application has been accepted - welcome!</Preview>
     <Body style={main}>
       <Container style={container}>
@@ -81,10 +49,6 @@ export const InvitationAcceptedEmail = ({
           />
         </Section>
 
-        {/* Globe/Geometric Art — original animated GIF (rotation intact).
-            Most recipients see this on a dark email body where it renders as
-            designed; the small subset whose Gmail iOS auto-inverts will see
-            it as a black-stamp variant, consistent with the logo treatment. */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
             src="https://resend-attachments.s3.amazonaws.com/d266cb6a-5596-436a-8e2b-49c1c377840e"

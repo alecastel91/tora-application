@@ -56,10 +56,6 @@ export async function POST(request: Request) {
       tierTitle: tier.title
     });
 
-    // Where the "Create Your Account" CTA points. Set NEXT_PUBLIC_APP_URL in
-    // .env.local to your local frontend (e.g. http://alessandro.local:3002) so
-    // dev tests don't bounce you into production. Vercel production sets it to
-    // https://app.torahub.io.
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.torahub.io';
 
     // Plain-text fallback — significantly improves deliverability with Gmail / Outlook

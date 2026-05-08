@@ -1,7 +1,6 @@
 import {
   Body,
   Container,
-  Head,
   Heading,
   Html,
   Img,
@@ -11,6 +10,7 @@ import {
   Text,
 } from '@react-email/components';
 import * as React from 'react';
+import { EmailHead } from './EmailHead';
 
 interface ApplicationReceivedEmailProps {
   firstName?: string;
@@ -24,30 +24,7 @@ export const ApplicationReceivedEmail = ({
   submittedDate = '',
 }: ApplicationReceivedEmailProps) => (
   <Html>
-    <Head>
-      <meta name="color-scheme" content="dark" />
-      <meta name="supported-color-schemes" content="dark" />
-      <style>{`
-        :root { color-scheme: dark only; supported-color-schemes: dark; }
-        body, table, td, div, .body-bg {
-          background-color: #000000 !important;
-          color: #FFFFFF !important;
-        }
-        @media (prefers-color-scheme: light) {
-          body, table, td, div, .body-bg {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-          }
-          h1, h2, h3, p, span, a:not(.cta-button) { color: #FFFFFF !important; }
-        }
-        @media (prefers-color-scheme: dark) {
-          body, table, td, div, .body-bg {
-            background-color: #000000 !important;
-            color: #FFFFFF !important;
-          }
-        }
-      `}</style>
-    </Head>
+    <EmailHead />
     <Preview>Your application to TORA has been received</Preview>
     <Body style={main}>
       <Container style={container}>
@@ -62,11 +39,9 @@ export const ApplicationReceivedEmail = ({
           />
         </Section>
 
-        {/* Check Icon (transparent SVG so it renders correctly on
-            both dark email body and Gmail-iOS-inverted white body) */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
-            src="https://torahub.io/email-assets/check.svg"
+            src="https://www.torahub.io/email-assets/check.svg"
             width="140"
             height="140"
             alt="Check"
