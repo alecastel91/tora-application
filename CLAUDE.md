@@ -42,6 +42,16 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
 ### Gmail iOS rendering note
 Gmail iOS auto-inverts dark emails for some users in light mode — discovered to be **non-deterministic across users**, likely Gmail A/B test buckets. Decision: ship dark theme as-designed; ~80–90% of users see emails correctly. The minority who get inversion see a "stamp" variant (logo + globe as black squares on white body) which is still readable.
 
+### Admin Dashboard: GDPR + Row Cleanup
+- **`Delete (GDPR)` button** (red, action column bottom) — shows a dry-run preview of all records that would be wiped (user + profiles + deals + tours + invitations + waitlist) and asks for confirmation before deletion. Backed by `POST /api/admin/delete-user` proxy → `tora-backend-sql /api/admin/delete-user`. Use only for genuine GDPR Article 17 requests.
+- **Small `X` button** (top-right of each row, faint gray) — removes only that single waitlist row. Does NOT touch the user account, profiles, deals, or other rows for the same email. Use for duplicates / spam / test data. Backed by `POST /api/admin/delete-waitlist-row`.
+- Both endpoints are protected by the existing admin middleware (httpOnly session cookie) and forward to Railway with `INVITATION_API_KEY`.
+
+### Phase 2: Secrets Hygiene
+- **`INVITATION_API_KEY` rotated** on May 8 (was historically committed in `tora-backend-sql/CLAUDE.md`). Vercel + Railway both updated; old value returns 401, new value passes through the proxy chain end-to-end.
+- **`.gitleaksignore`** added — both findings here are Supabase anon keys (public-by-design), documented as known-safe.
+- **`SECRETS.md`** added — internal reference for where every Vercel env var lives, which ones are Sensitive, rotation procedures, and after-incident response. Includes one logged incident (the 2026-05-08 INVITATION_API_KEY rotation).
+
 ## Recent Updates (May 6, 2026)
 
 ### Phase 1 Pre-Launch Hardening — Admin Auth + Email Deliverability
