@@ -24,6 +24,24 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 9, 2026)
+
+### Sentry error monitoring (EU region)
+- New file `instrumentation.ts` + 3 runtime configs (`sentry.{server,edge,client}.config.ts`)
+- `next.config.ts` wrapped with `withSentryConfig` — events tunneled through `/monitoring` route to bypass ad-blockers
+- Server uses `SENTRY_DSN`, client uses `NEXT_PUBLIC_SENTRY_DSN` (same value, public-by-design)
+- No-op when DSN unset (local dev stays clean)
+- Vercel env vars added; alert rule configured to email `admin@torahub.io` on every new issue (verified end-to-end with a test exception → email arrived)
+
+### Content Security Policy + security headers
+- `next.config.ts` now sets CSP + 4 supporting headers (X-Frame-Options DENY, X-Content-Type-Options, Referrer-Policy, Permissions-Policy disabling camera/mic/geo)
+- CSP allows: self, Vercel Analytics, Vercel Insights, Supabase REST, Railway backend, Resend / Flaticon for img-src
+- `'unsafe-inline'` and `'unsafe-eval'` retained on script-src — Next.js inlines hydration scripts and Framer Motion uses eval; eliminating would require per-request nonces (significant refactor for marginal gain pre-launch)
+- Verified: pages still render, no CSP violations in browser console
+
+### Favicon
+- Replaced default Vercel triangle (`favicon.ico`) with `src/app/icon.svg` — pink globe rotated 45° on black rounded square. Recognizable at 16-32px.
+
 ## Recent Updates (May 8, 2026)
 
 ### Email Deliverability & UX Pass
