@@ -26,6 +26,11 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
 
 ## Recent Updates (May 9, 2026)
 
+### Performance trim
+- `src/app/layout.tsx` — Orbitron font loaded weights cut from `[400, 500, 600, 700, 800, 900]` to `[400, 900]`. Codebase only ever applies `font-black` (900) to Orbitron headings; 400 kept as fallback for any heading without an explicit weight class. Drops 4 woff2 files (~100KB transferred on first load).
+- Deleted three unused public images (`tora-globe-animation.gif` 723KB, `logo_original.png` 196KB, `logo_new.png.PNG` 196KB dupe). Grep confirmed zero source references; the email-based GIF lives at a Resend S3 URL, not in `/public`.
+- After deploy, Lighthouse mobile perf 83 → 90. Desktop perf is TBT-bound and varies wildly run-to-run (saw 70 → 99 in same 5 min window) — single-run scores are noise; treat as directional.
+
 ### Sentry error monitoring (EU region)
 - New file `instrumentation.ts` + 3 runtime configs (`sentry.{server,edge,client}.config.ts`)
 - `next.config.ts` wrapped with `withSentryConfig` — events tunneled through `/monitoring` route to bypass ad-blockers
