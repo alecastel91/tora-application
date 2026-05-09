@@ -7,7 +7,7 @@ const PUBLIC_API_PATHS = new Set([
   "/api/admin/session",
 ]);
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (PUBLIC_API_PATHS.has(pathname)) return NextResponse.next();
