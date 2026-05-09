@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# tora-application
 
-## Getting Started
+The public-facing Next.js app for [TORA](https://torahub.io) — a curated network for the electronic music industry. Hosts:
 
-First, run the development server:
+- **Marketing site** at `torahub.io` (homepage, /about, /roles, /features, /privacy, /terms)
+- **Application form** at `torahub.io/apply`
+- **Admin dashboard** at `torahub.io/admin` (password-protected, server-side JWT cookie auth)
+- **Transactional email templates** sent via [Resend](https://resend.com)
+
+The other two repos in the system:
+- [`tora-backend`](https://github.com/alecastel91/tora-backend) — Express + Prisma API
+- [`tora-app`](https://github.com/alecastel91/tora-app) — the main Vite/React app at `app.torahub.io`
+
+## Tech stack
+
+- Next.js 16 (App Router, Turbopack)
+- TypeScript
+- Tailwind CSS, Framer Motion
+- [Supabase](https://supabase.com) for the `waitlist` table
+- [Resend](https://resend.com) for transactional emails
+- [Sentry](https://sentry.io) for error monitoring
+- [Vercel Web Analytics](https://vercel.com/analytics) (cookie-free)
+- Hosted on Vercel; auto-deploys from `main`
+
+## Local setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/alecastel91/tora-application.git
+cd tora-application
+npm install
+cp .env.local.example .env.local        # then fill in real values — see SECRETS.md
+npm run dev                             # localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You'll need values for: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RESEND_API_KEY`, `BACKEND_API_URL`, `INVITATION_API_KEY`, `ADMIN_PASSWORD`, `ADMIN_JWT_SECRET`. See `SECRETS.md` for where each one lives.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Useful commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| | |
+|---|---|
+| `npm run dev` | Local dev server on port 3000 |
+| `npm run build` | Production build (verifies it compiles) |
+| `npm run lint` | Run ESLint |
+| `npx tsc --noEmit` | Type-check without emitting files |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                   # Next.js App Router pages + API routes
+│   ├── admin/page.tsx     # Admin dashboard
+│   ├── apply/page.tsx     # Application form (waitlist)
+│   ├── api/admin/         # Admin auth + GDPR delete endpoints
+│   └── api/send-*/        # Resend-powered email send endpoints
+├── components/sections/   # Marketing page sections
+├── components/ui/         # Reusable UI primitives
+├── lib/adminAuth.ts       # JWT helpers for admin session cookie
+├── middleware.ts          # Protects /api/admin/* routes
+└── translations/          # 8 language files (EN, ES, FR, IT, PT, JP, CN, KR)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+emails/                    # React Email templates
+sentry.{server,edge,client}.config.ts  # Sentry runtime configs
+instrumentation.ts         # Next.js Sentry init
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Documentation
 
-## Deploy on Vercel
+- **`CLAUDE.md`** — full project context, recent updates, architectural decisions
+- **`SECRETS.md`** — where every secret lives (Vercel, Railway, Supabase) + rotation procedures
+- **`docs/LIGHTHOUSE_BASELINE.md`** — perf/a11y/best-practices/SEO scores snapshot
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Conventions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Pre-commit: husky runs `gitleaks protect --staged` to block accidental secret leaks
+- Push to `main` auto-deploys to Vercel production
+- Commit messages: short imperative, no conventional-commit prefix
