@@ -44,7 +44,7 @@ export function AboutApply({ onApply }: AboutApplyProps) {
                         IS THE PROFESSIONAL NETWORK
                     </span>
                     <span className="text-xs md:text-sm font-black uppercase tracking-[0.3em] font-[var(--font-geist-sans)] text-infrared mt-1 w-full text-justify text-justify-last-center">
-                        FOR THE ELECTRONIC MUSIC INDUSTRY
+                        FOR THE CLUB MUSIC INDUSTRY
                     </span>
                 </motion.div>
 

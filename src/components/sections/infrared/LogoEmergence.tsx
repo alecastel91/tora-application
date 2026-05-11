@@ -56,7 +56,7 @@ export function LogoEmergence({ onApply }: LogoEmergenceProps) {
                     <p className="text-sm md:text-base font-light uppercase tracking-wide text-white leading-relaxed">
                         IS THE PROFESSIONAL<br />
                         NETWORK FOR THE<br />
-                        ELECTRONIC MUSIC<br />
+                        CLUB MUSIC<br />
                         INDUSTRY.
                     </p>
                 </motion.div>
