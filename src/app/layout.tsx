@@ -29,8 +29,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Tora - Where the Music Industry Connects",
-  description: "The professional network for the electronic music industry. Connect with artists, agents, venues, and promoters.",
+  title: "TORA - Where Music Meets",
+  description: "The professional network for the club music industry. Connect with artists, agents, venues, and promoters.",
 };
 
 export default function RootLayout({
