@@ -24,6 +24,26 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 10-12, 2026)
+
+### Selective Supreme font (Pangram Pangram)
+- New `--font-supreme` variable loaded via `next/font/local` in `src/app/layout.tsx`. Self-hosted `.otf` files in `src/app/fonts/supreme/` (300/400/500/700 weights — Supreme has no SemiBold 600 in the family, so anywhere `font-semibold` falls under Supreme the browser picks the nearest weight).
+- Used on three element classes, falling back to Space Grotesk if Supreme fails to load:
+  - Home: "WHERE MUSIC MEETS" tagline + "APPLY FOR MEMBERSHIP" CTA
+  - About / Roles / Features: subtitle + Apply CTA
+  - Privacy / Terms / Data-Deletion: subtitle only (no CTA on legal pages)
+- Every other element keeps Rajdhani + Space Grotesk untouched.
+
+### Brand framing — electronic → club music industry
+- Page metadata (`title` + `description`) → "TORA - Where Music Meets" + "The professional network for the club music industry…" (this is what WhatsApp/Telegram/Slack pull for link previews; cache busts on first paste in a fresh chat).
+- Hero copy in `components/sections/infrared/AboutApply.tsx` + `LogoEmergence.tsx`.
+- Terms text (`terms_text_1`) in EN.json and JP.json. JP went 電子音楽業界 → クラブミュージック業界 — flag for a native-speaker check when convenient.
+
+### Middleware → proxy rename (already in May 9 section above; staying)
+
+### Font preview branch (now deleted)
+- Briefly maintained a `font-preview-khand-supreme` branch to evaluate full-site swap with Khand + Supreme via Vercel preview deploys. Decision: keep Rajdhani/Space Grotesk site-wide, add Supreme selectively (see above). Branch removed from local + remote.
+
 ## Recent Updates (May 9, 2026)
 
 ### Performance trim
