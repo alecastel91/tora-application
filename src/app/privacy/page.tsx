@@ -14,7 +14,7 @@ export default function Privacy() {
             <div className="pt-32 pb-20 px-8 max-w-4xl mx-auto space-y-12">
                 <div className="text-center space-y-4">
                     <AnimatedTitle>{t('privacy_title')}</AnimatedTitle>
-                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
+                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-supreme), var(--font-space-grotesk), sans-serif' }}>
                         {t('privacy_subtitle')}
                     </p>
                 </div>

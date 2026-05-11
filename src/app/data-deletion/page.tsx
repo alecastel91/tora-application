@@ -15,7 +15,7 @@ export default function DataDeletion() {
             <div className="pt-32 pb-20 px-8 max-w-4xl mx-auto space-y-12">
                 <div className="text-center space-y-4">
                     <AnimatedTitle>{t('deletion_title')}</AnimatedTitle>
-                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
+                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-supreme), var(--font-space-grotesk), sans-serif' }}>
                         {t('deletion_subtitle')}
                     </p>
                 </div>

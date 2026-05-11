@@ -68,7 +68,7 @@ export default function Features() {
             <div className="pt-32 pb-20 px-8 max-w-4xl mx-auto space-y-16">
                 <div className="text-center space-y-4">
                     <AnimatedTitle>{t('features_title')}</AnimatedTitle>
-                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
+                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-supreme), var(--font-space-grotesk), sans-serif' }}>
                         {t('features_subtitle')}
                     </p>
                 </div>
@@ -91,7 +91,7 @@ export default function Features() {
                     <Link
                         href="/apply"
                         className="inline-block px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300 mb-8"
-                        style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
+                        style={{ fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" }}
                     >
                         {t('apply_for_membership')}
                     </Link><br />
