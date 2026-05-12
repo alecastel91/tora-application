@@ -5,7 +5,7 @@ import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
 import { TORALoader } from "@/components/ui/TORALoader";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -322,8 +322,24 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         }
     }, [step, onStepChange]);
 
-    const nextStep = () => { setDirection(1); setStep((s) => s + 1); };
-    const prevStep = () => { setDirection(-1); setStep((s) => s - 1); };
+    // Synchronous lock: state-based guards lose the race because React batches
+    // setState within the same event tick, so two clicks both see stepSubmitting=false.
+    // A ref updates immediately, so the second click sees lockRef.current=true and returns.
+    const lockRef = useRef(false);
+    useEffect(() => { lockRef.current = false; }, [step]);
+
+    const nextStep = () => {
+        if (lockRef.current) return;
+        lockRef.current = true;
+        setDirection(1);
+        setStep((s) => s + 1);
+    };
+    const prevStep = () => {
+        if (lockRef.current) return;
+        lockRef.current = true;
+        setDirection(-1);
+        setStep((s) => s - 1);
+    };
 
     const validateEmail = (email: string): boolean => {
         // Regex that requires: username@domain.extension
