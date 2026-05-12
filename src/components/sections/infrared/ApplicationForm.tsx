@@ -286,6 +286,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     const [step, setStep] = useState(0);
     const [direction, setDirection] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [stepSubmitting, setStepSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState(false);
 
@@ -712,7 +713,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
+                                        <InfraredButton type="submit" disabled={stepSubmitting} className="flex-1 py-3 text-sm">{stepSubmitting ? '...' : t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -733,40 +734,46 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             >
                                 <form onSubmit={async (e) => {
                                     e.preventDefault();
+                                    if (stepSubmitting) return;
                                     if (!email.trim() || !validateEmail(email.trim())) {
                                         setError(t('email_validation_error'));
-                                    } else if (email.trim() !== confirmEmail.trim()) {
+                                        return;
+                                    }
+                                    if (email.trim() !== confirmEmail.trim()) {
                                         setError(t('email_mismatch_error'));
-                                    } else {
-                                        // Check for duplicate email in waitlist
-                                        try {
-                                            const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
-                                            const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
-                                            const { data: existingApp } = await supabase
-                                                .from(tableName)
-                                                .select('id, status')
-                                                .eq('email', email.trim())
-                                                .neq('status', 'DECLINED')
-                                                .limit(1);
-                                            if (existingApp && existingApp.length > 0) {
-                                                const status = existingApp[0].status;
-                                                if (status === 'INVITED' || status === 'SIGNED_UP') {
-                                                    // User already has an account — let them continue but inform
-                                                    const proceed = window.confirm(
-                                                        "An account already exists with this email. If your application is accepted, this new profile will be added to your existing account.\n\nDo you want to continue?"
-                                                    );
-                                                    if (!proceed) return;
-                                                } else {
-                                                    // PENDING or APPROVED — already in the pipeline
-                                                    setError("You've already applied with this email. Check your inbox (and spam folder) for updates.");
-                                                    return;
-                                                }
+                                        return;
+                                    }
+                                    setStepSubmitting(true);
+                                    try {
+                                        const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
+                                        const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
+                                        const { data: existingApp } = await supabase
+                                            .from(tableName)
+                                            .select('id, status')
+                                            .eq('email', email.trim())
+                                            .neq('status', 'DECLINED')
+                                            .limit(1);
+                                        if (existingApp && existingApp.length > 0) {
+                                            const status = existingApp[0].status;
+                                            if (status === 'INVITED' || status === 'SIGNED_UP') {
+                                                const proceed = window.confirm(
+                                                    "An account already exists with this email. If your application is accepted, this new profile will be added to your existing account.\n\nDo you want to continue?"
+                                                );
+                                                if (!proceed) { setStepSubmitting(false); return; }
+                                            } else {
+                                                setError("You've already applied with this email. Check your inbox (and spam folder) for updates.");
+                                                setStepSubmitting(false);
+                                                return;
                                             }
-                                        } catch (err) {
-                                            console.error('Duplicate check error:', err);
                                         }
                                         setError(null);
                                         nextStep();
+                                    } catch (err) {
+                                        console.error('Duplicate check error:', err);
+                                        setError(null);
+                                        nextStep();
+                                    } finally {
+                                        setStepSubmitting(false);
                                     }
                                 }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center space-y-6">
@@ -845,7 +852,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
+                                        <InfraredButton type="submit" disabled={stepSubmitting} className="flex-1 py-3 text-sm">{stepSubmitting ? '...' : t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -933,7 +940,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
+                                        <InfraredButton type="submit" disabled={stepSubmitting} className="flex-1 py-3 text-sm">{stepSubmitting ? '...' : t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
@@ -1002,7 +1009,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
-                                        <InfraredButton type="submit" className="flex-1 py-3 text-sm">{t('next')}</InfraredButton>
+                                        <InfraredButton type="submit" disabled={stepSubmitting} className="flex-1 py-3 text-sm">{stepSubmitting ? '...' : t('next')}</InfraredButton>
                                     </div>
                                 </form>
                             </motion.div>
