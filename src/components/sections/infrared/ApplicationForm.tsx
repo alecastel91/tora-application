@@ -322,23 +322,29 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         }
     }, [step, onStepChange]);
 
-    // Synchronous lock: state-based guards lose the race because React batches
-    // setState within the same event tick, so two clicks both see stepSubmitting=false.
-    // A ref updates immediately, so the second click sees lockRef.current=true and returns.
+    // Synchronous lock to block fast-fire step changes. Held long enough to
+    // outlive the AnimatePresence exit animation (400ms) — without this delay,
+    // a useEffect that cleared on step change releases the lock while the old
+    // step is still rendered and clickable mid-animation, letting the second
+    // click on the same DOM button advance again.
     const lockRef = useRef(false);
-    useEffect(() => { lockRef.current = false; }, [step]);
+    const releaseLock = () => {
+        setTimeout(() => { lockRef.current = false; }, 500);
+    };
 
     const nextStep = () => {
         if (lockRef.current) return;
         lockRef.current = true;
         setDirection(1);
         setStep((s) => s + 1);
+        releaseLock();
     };
     const prevStep = () => {
         if (lockRef.current) return;
         lockRef.current = true;
         setDirection(-1);
         setStep((s) => s - 1);
+        releaseLock();
     };
 
     const validateEmail = (email: string): boolean => {
