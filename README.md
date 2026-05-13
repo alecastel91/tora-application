@@ -1,6 +1,6 @@
 # tora-application
 
-The public-facing Next.js app for [TORA](https://torahub.io) — a curated network for the electronic music industry. Hosts:
+The public-facing Next.js app for [TORA](https://torahub.io) — a curated network for the club music industry. Hosts:
 
 - **Marketing site** at `torahub.io` (homepage, /about, /roles, /features, /privacy, /terms)
 - **Application form** at `torahub.io/apply`

@@ -24,6 +24,19 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 13-14, 2026)
+
+### Application form NEXT — double-click guard
+A double-click on the NEXT button used to advance two steps because:
+1. The 3 sync-validation steps had no `disabled` state. State-based guards lose the race because React batches setState within the same event tick, so two clicks both see the same false flag.
+2. The framer-motion exit animation (~400ms) kept the old step's button clickable while the new step was rendering. Even after switching to a `useRef`, releasing the lock via `useEffect([step])` cleared the ref before the animation finished, so the second click landed on the still-visible old button and advanced again.
+
+Fixed by:
+- `lockRef` instead of state — updates synchronously, so the second click in the same tick sees `lockRef.current=true` and returns early.
+- Releasing the lock via `setTimeout(() => { lockRef.current = false }, 500)` — outlives the 400ms framer transition. The button (and any other path through nextStep/prevStep) stays gated through the animation.
+
+The email step (async — Supabase duplicate check) was already guarded by the `stepSubmitting` state. The fix above covers the sync steps, the role-card click path, and rapid Enter-key submission.
+
 ## Recent Updates (May 10-12, 2026)
 
 ### Selective Supreme font (Pangram Pangram)
