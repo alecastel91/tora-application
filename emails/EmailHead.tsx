@@ -20,19 +20,26 @@ export function EmailHead() {
       <meta name="supported-color-schemes" content="dark" />
       <style>{`
         :root { color-scheme: dark only; supported-color-schemes: dark; }
-        body, table, td, div, .body-bg {
+        /* Force-dark only on the outer page chrome — body + the explicit
+           .body-bg marker. Avoid trampling table/td/div so the inline
+           dark-grey card backgrounds (rgba(30,30,30,0.6) on <Section>) keep
+           rendering correctly. */
+        body, .body-bg {
           background-color: #000000 !important;
           color: #FFFFFF !important;
         }
         @media (prefers-color-scheme: light) {
-          body, table, td, div, .body-bg {
+          body, .body-bg {
             background-color: #000000 !important;
             color: #FFFFFF !important;
           }
-          h1, h2, h3, p, span, a:not(.cta-button) { color: #FFFFFF !important; }
+          /* Force-white only on the heading; don't touch p / span / a so the
+             deliberate pink (#FF3366) text and links keep rendering correctly.
+             Body color cascades down for everything else by default. */
+          h1, h2, h3 { color: #FFFFFF !important; }
         }
         @media (prefers-color-scheme: dark) {
-          body, table, td, div, .body-bg {
+          body, .body-bg {
             background-color: #000000 !important;
             color: #FFFFFF !important;
           }

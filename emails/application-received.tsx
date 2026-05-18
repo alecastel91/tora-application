@@ -41,7 +41,7 @@ export const ApplicationReceivedEmail = ({
 
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
           <Img
-            src="https://www.torahub.io/email-assets/check.svg"
+            src="https://resend-attachments.s3.amazonaws.com/64377867-89f3-4cd1-b14a-fe57f9636d55"
             width="140"
             height="140"
             alt="Check"

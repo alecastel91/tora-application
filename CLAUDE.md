@@ -24,6 +24,13 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 15-19, 2026)
+
+### Email rendering fixes (driven by contract-email work in tora-backend-sql)
+- `emails/EmailHead.tsx` — the dark-mode force `body, table, td, div, .body-bg { background-color: #000 !important; color: #FFFFFF !important; }` was too aggressive. The `td/div` blanket override was trampling the deliberate `rgba(30,30,30,0.6)` card backgrounds on inner `<Section>` elements (which render as `<table>`), and the `p/span/a` color override was killing the pink invitation-code styling. New rule scopes the force-dark to `body, .body-bg` only and limits the light-mode override to `h1, h2, h3` — inline pink colors on the invitation code, links, and tier title now render correctly.
+- `emails/application-received.tsx` — check icon URL reverted from `https://www.torahub.io/email-assets/check.svg` (transparent SVG, had Gmail rendering issues that caused the earlier switch) back to the Resend-hosted pink-on-pink check at `https://resend-attachments.s3.amazonaws.com/64377867-89f3-4cd1-b14a-fe57f9636d55` — same one originally used and known good.
+- `public/email-assets/contract-signed.svg` — new icon used by the tora-backend-sql contract-signed email (pink document with check inside a pink ring, same brand cue as the application-received check). Backend references this via `https://torahub.io/email-assets/contract-signed.svg`. **Requires this repo deploy before the prod contract email shows the icon correctly.**
+
 ## Recent Updates (May 13-14, 2026)
 
 ### Application form NEXT — double-click guard
