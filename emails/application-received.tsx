@@ -79,7 +79,7 @@ export const ApplicationReceivedEmail = ({
 
           <Text style={stepTitle}>3. Launch Access</Text>
           <Text style={{ ...stepText, margin: '0' }}>
-            Use your code to create your account when TORA launches.
+            TORA launches later this year. When we open the platform, use your invitation code to create your account.
           </Text>
         </Section>
 
@@ -96,7 +96,9 @@ export const ApplicationReceivedEmail = ({
 
         {/* Patience Text */}
         <Text style={paragraph}>
-          We appreciate your patience during the review process. If you have any questions, feel free to reach out to us at{' '}
+          We appreciate your patience during the review process. Follow{' '}
+          <Link href="https://instagram.com/tora.hub" style={link}>@tora.hub</Link>
+          {' '}on Instagram for launch updates and behind-the-scenes news. If you have any questions, feel free to reach out to us at{' '}
           <Link href="mailto:support@torahub.io" style={link}>support@torahub.io</Link>
         </Text>
 
