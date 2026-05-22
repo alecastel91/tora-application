@@ -768,16 +768,17 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                     setStepSubmitting(true);
                                     try {
                                         const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
-                                        const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
-                                        const { data: existingApp } = await supabase
-                                            .from(tableName)
-                                            .select('id, status')
-                                            .eq('email', email.trim())
-                                            .neq('status', 'DECLINED')
-                                            .limit(1);
-                                        if (existingApp && existingApp.length > 0) {
-                                            const status = existingApp[0].status;
-                                            if (status === 'INVITED' || status === 'SIGNED_UP') {
+                                        // Goes through /api/public/waitlist/check (Next.js
+                                        // proxy → backend service_role) — no direct
+                                        // Supabase read so the apply form can't be used
+                                        // to scrape waitlist PII via the public anon key.
+                                        const checkRes = await fetch(
+                                            `/api/public/waitlist/check?email=${encodeURIComponent(email.trim())}&env=${envMode}`,
+                                            { cache: 'no-store' }
+                                        );
+                                        const checkData = await checkRes.json();
+                                        if (checkRes.ok && checkData.exists) {
+                                            if (checkData.allowReapply) {
                                                 const proceed = window.confirm(
                                                     "An account already exists with this email. If your application is accepted, this new profile will be added to your existing account.\n\nDo you want to continue?"
                                                 );

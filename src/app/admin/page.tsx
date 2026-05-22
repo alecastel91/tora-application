@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { GlassPanel } from "@/components/ui/GlassPanel";
@@ -9,13 +8,10 @@ import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
 import { TORALoader } from "@/components/ui/TORALoader";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Determine table name based on environment mode
+// All waitlist reads/writes now go through /api/admin/waitlist[/:id]
+// (Next.js proxy → backend service_role). Direct anon Supabase reads
+// stopped working when we enabled RLS to close the PII leak.
 const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
-const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
 
 // Helper function to convert artist name to RA URL slug
 const convertToRASlug = (name: string): string => {
@@ -119,18 +115,26 @@ export default function AdminDashboard() {
     const loadApplications = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from(tableName)
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-            setApplications(data || []);
+            const res = await fetch(`/api/admin/waitlist?env=${envMode}`, { cache: 'no-store' });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+            setApplications(data.rows || []);
         } catch (err) {
             console.error('Error loading applications:', err);
         } finally {
             setLoading(false);
         }
+    };
+
+    const patchWaitlistRow = async (id: string, body: Record<string, unknown>) => {
+        const res = await fetch(`/api/admin/waitlist/${id}?env=${envMode}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+        return data.row;
     };
 
     const handleApprove = async (application: Application) => {
@@ -139,20 +143,7 @@ export default function AdminDashboard() {
 
         try {
             console.log('Approving application:', application.id);
-            // Update status to APPROVED
-            const { data, error } = await supabase
-                .from(tableName)
-                .update({ status: 'APPROVED' })
-                .eq('id', application.id)
-                .select(); // Force return of updated rows
-
-            console.log('Approve result:', { data, error });
-
-            if (error) throw error;
-
-            if (!data || data.length === 0) {
-                throw new Error('No rows were updated. ID might not exist in database.');
-            }
+            await patchWaitlistRow(application.id, { status: 'APPROVED' });
 
             alert(`✅ ${displayName} has been approved!`);
             await loadApplications(); // Wait for reload to complete
@@ -244,19 +235,7 @@ export default function AdminDashboard() {
 
         try {
             console.log('Declining application:', application.id);
-            const { data, error } = await supabase
-                .from(tableName)
-                .update({ status: 'DECLINED' })
-                .eq('id', application.id)
-                .select(); // Force return of updated rows
-
-            console.log('Decline result:', { data, error });
-
-            if (error) throw error;
-
-            if (!data || data.length === 0) {
-                throw new Error('No rows were updated. ID might not exist in database.');
-            }
+            await patchWaitlistRow(application.id, { status: 'DECLINED' });
 
             // Send decline email (fire-and-forget — don't block on failure)
             fetch('/api/send-decline', {
@@ -289,18 +268,16 @@ export default function AdminDashboard() {
         if (!confirm(`Send invitation to ${displayName}?`)) return;
 
         try {
-            // Check if this email already has an account in the backend
+            // Check if this email already has an account in the backend.
+            // The full waitlist is already loaded; filter client-side so we
+            // don't hit the server for what we already have.
             if (!application.existing_user_id) {
-                // Quick check: look for other INVITED/SIGNED_UP entries with same email
-                const { data: existingEntries } = await supabase
-                    .from(tableName)
-                    .select('id, status, role')
-                    .eq('email', application.email)
-                    .in('status', ['INVITED', 'SIGNED_UP'])
-                    .limit(1);
-
-                if (existingEntries && existingEntries.length > 0) {
-                    const existing = existingEntries[0];
+                const existing = applications.find(
+                    (a) => a.email === application.email
+                        && a.id !== application.id
+                        && (a.status === 'INVITED' || a.status === 'SIGNED_UP')
+                );
+                if (existing) {
                     const proceed = confirm(
                         `⚠️ ${application.email} already has an account (${existing.status}, ${existing.role}).\n\n` +
                         `This will add a new ${application.role} profile to their existing account.\n\n` +
@@ -353,24 +330,14 @@ export default function AdminDashboard() {
 
             console.log('Invitation created in backend successfully');
 
-            // Step 2: Now that the backend has accepted the invitation, update Supabase
-            // to mark the waitlist row as INVITED. If this fails, we'll alert the admin
-            // but the backend already has the invitation — they can manually reconcile.
-            const { data, error } = await supabase
-                .from(tableName)
-                .update({
-                    status: 'INVITED',
-                    coupon_code: couponCode,
-                    invited_at: new Date().toISOString()
-                })
-                .eq('id', application.id)
-                .select();
-
-            if (error) throw error;
-
-            if (!data || data.length === 0) {
-                throw new Error('Failed to update application status.');
-            }
+            // Step 2: Backend invitation succeeded — mark the waitlist row
+            // as INVITED. If this fails, we alert the admin; the backend
+            // already has the invitation and they can manually reconcile.
+            await patchWaitlistRow(application.id, {
+                status: 'INVITED',
+                coupon_code: couponCode,
+                invited_at: new Date().toISOString(),
+            });
 
             // Send email based on application type
             if (application.application_type === 'ADD_PROFILE') {
