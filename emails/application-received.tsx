@@ -40,8 +40,11 @@ export const ApplicationReceivedEmail = ({
         </Section>
 
         <Section style={{ textAlign: 'center' as const, paddingBottom: '32px' }}>
+          {/* Transparent-background SVG so the icon survives Gmail iOS dark-mode
+              auto-inversion. The previous Resend-hosted PNG had a dark fill that
+              showed as a black square once the email body was inverted to light. */}
           <Img
-            src="https://resend-attachments.s3.amazonaws.com/64377867-89f3-4cd1-b14a-fe57f9636d55"
+            src="https://www.torahub.io/email-assets/check.svg"
             width="140"
             height="140"
             alt="Check"
