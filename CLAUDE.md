@@ -24,6 +24,26 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (May 22-25, 2026)
+
+### Admin dashboard + apply form duplicate check routed through backend
+RLS-on-all-tables (backend May 20) closed an anon-readable PII leak on the waitlist table but also broke this site's admin dashboard (couldn't SELECT) and the apply form's duplicate check (couldn't SELECT). All sensitive ops now go through Next.js proxy routes that call backend endpoints with `INVITATION_API_KEY` auth — `service_role` bypasses RLS. The only remaining anon-key operation is the apply form `INSERT`, which works after the backend added a single `INSERT TO anon` RLS policy on waitlist.
+
+- **`/api/admin/waitlist` GET** → backend `GET /api/admin/waitlist` — list rows.
+- **`/api/admin/waitlist/[id]` PATCH** → backend `PATCH /api/admin/waitlist/:id` — status / coupon_code / invited_at.
+- **`/api/public/waitlist/check` GET** → backend `GET /api/public/waitlist/check` — returns only `{ exists, allowReapply }`, no PII.
+- `admin/page.tsx` dropped the Supabase client entirely. Reads via `loadApplications()` + status updates via a single `patchWaitlistRow()` helper. The send-invitation duplicate check now scans the already-loaded applications array client-side instead of refetching.
+- `ApplicationForm.tsx`: only the `INSERT` remains as direct Supabase (public, RLS-INSERT-policy-allowed). The duplicate check before email step goes through `/api/public/waitlist/check`.
+
+### Application copy — "later this year" + Instagram CTA
+Pre-launch context: applications opened May 22, the platform launches later in 2026. Confirmation screen + email needed clearer expectation-setting so silence in the inbox between application and invitation feels expected rather than worrying.
+
+- `translations/{EN,IT,FR,ES,PT,JP,KR,CN}.json` — `application_received_message` appends "...later this year. Follow @tora.hub on Instagram for launch updates." `step_launch_access_text` rewritten to lead with the timeline.
+- `emails/application-received.tsx` — Step 3 (Launch Access) now leads with "TORA launches later this year"; patience paragraph adds an Instagram follow link to `@tora.hub` before the support email.
+
+### Email check icon — transparent SVG to survive Gmail iOS dark-mode inversion
+The Resend-hosted PNG had an opaque dark background that matched the email's dark theme on most clients but rendered as a black square on Gmail iOS clients that auto-invert dark emails to light. Swapped to the existing transparent `check.svg` at `www.torahub.io/email-assets/check.svg` (canonical www URL avoids the apex→www 307 redirect — some email clients refuse to follow redirects on `<img>`).
+
 ## Recent Updates (May 15-19, 2026)
 
 ### Email rendering fixes (driven by contract-email work in tora-backend-sql)
