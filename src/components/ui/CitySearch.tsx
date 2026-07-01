@@ -26,6 +26,7 @@ export function CitySearch({ city, country, onSelect }: Props) {
   const [manualCity, setManualCity] = useState('');
   const [manualCountry, setManualCountry] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export function CitySearch({ city, country, onSelect }: Props) {
     setQuery(v);
     onSelect('', '', ''); // typing invalidates any prior pick — keep NEXT gated until re-selected
     if (debounceRef.current) clearTimeout(debounceRef.current);
+    abortRef.current?.abort(); // cancel any in-flight request so stale results can't land
     const term = v.trim();
     if (term.length < 2) {
       setResults([]);
@@ -49,14 +51,16 @@ export function CitySearch({ city, country, onSelect }: Props) {
     setLoading(true);
     setOpen(true);
     debounceRef.current = setTimeout(async () => {
+      const controller = new AbortController();
+      abortRef.current = controller;
       try {
-        const res = await fetch(`/api/cities?q=${encodeURIComponent(term)}`);
+        const res = await fetch(`/api/cities?q=${encodeURIComponent(term)}`, { signal: controller.signal });
         const data = await res.json();
         setResults(Array.isArray(data) ? data : []);
-      } catch {
-        setResults([]);
+      } catch (e) {
+        if (!(e instanceof DOMException && e.name === 'AbortError')) setResults([]);
       } finally {
-        setLoading(false);
+        if (abortRef.current === controller) setLoading(false);
       }
     }, 220);
   }

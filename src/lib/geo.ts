@@ -2,7 +2,8 @@
 // Single source of truth for deriving country + zone from a city's country code
 // (see /api/cities) and for the manual "add your city" fallback country picker.
 
-export type Zone = 'Africa' | 'Americas' | 'Asia' | 'Europe' | 'Oceania';
+export const ZONES = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'] as const;
+export type Zone = (typeof ZONES)[number];
 
 export const COUNTRY_BY_ISO2: Record<string, { name: string; zone: Zone }> = {
   "AD": { name: "Andorra", zone: "Europe" },
@@ -246,10 +247,6 @@ export const COUNTRY_BY_ISO2: Record<string, { name: string; zone: Zone }> = {
   "ZM": { name: "Zambia", zone: "Africa" },
   "ZW": { name: "Zimbabwe", zone: "Africa" },
 };
-
-export function countryForCode(code?: string): { name: string; zone: Zone } | undefined {
-  return code ? COUNTRY_BY_ISO2[code.toUpperCase()] : undefined;
-}
 
 // Inhabited countries/territories for the manual "add your city" fallback picker,
 // alphabetized by name.

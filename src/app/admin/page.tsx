@@ -24,7 +24,7 @@ const convertToRASlug = (name: string): string => {
         .replace(/^-|-$/g, '');                // Remove leading/trailing dashes
 };
 
-interface Application {
+export interface Application {
     id: string;  // UUID is a string, not a number
     created_at: string;
     phone_number: string;

@@ -1,22 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-
-export type RecapRow = {
-  role?: string;
-  zone?: string;
-  country?: string;
-  city?: string;
-  genres?: string;
-  status?: string;
-  created_at?: string;
-  email?: string;
-  first_name?: string;
-  last_name?: string;
-};
+import type { Application } from './page';
+import { ZONES } from '@/lib/geo';
 
 const ROLES = ['ARTIST', 'AGENT', 'PROMOTER', 'VENUE'] as const;
-const ZONES = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
 const selectCls =
   'bg-white/5 border border-white/10 text-white text-sm rounded px-3 py-2 focus:outline-none focus:border-infrared/50';
@@ -73,7 +61,7 @@ function Ranking({ title, data, limit = 10 }: { title: string; data: [string, nu
   );
 }
 
-export function RecapView({ applications }: { applications: RecapRow[] }) {
+export function RecapView({ applications }: { applications: Application[] }) {
   const [role, setRole] = useState('all');
   const [zone, setZone] = useState('all');
   const [country, setCountry] = useState('all');
@@ -104,41 +92,38 @@ export function RecapView({ applications }: { applications: RecapRow[] }) {
     [applications, role, zone, country, status, from, to],
   );
 
-  const tally = (getKey: (a: RecapRow) => string | string[] | undefined): [string, number][] => {
-    const m = new Map<string, number>();
-    for (const a of filtered) {
-      const k = getKey(a);
-      if (!k) continue;
-      const keys = Array.isArray(k) ? k : [k];
-      for (const key of keys) if (key) m.set(key, (m.get(key) || 0) + 1);
-    }
-    return [...m.entries()].sort((x, y) => y[1] - x[1]);
-  };
-
   const total = filtered.length;
-  const roleCounts = useMemo(() => {
-    const m: Record<string, number> = { ARTIST: 0, AGENT: 0, PROMOTER: 0, VENUE: 0, OTHER: 0 };
-    for (const a of filtered) {
-      const r = (a.role || '').toUpperCase();
-      if (r in m) m[r]++;
-      else m.OTHER++;
-    }
-    return m;
-  }, [filtered]);
 
-  const byCountry = tally((a) => a.country);
-  const byCity = tally((a) => a.city);
-  const byGenre = tally((a) => parseGenres(a.genres));
-  const byZone = tally((a) => a.zone);
-  const byStatus = tally((a) => (a.status || '').toUpperCase());
-  const byMonth: [string, number][] = useMemo(() => {
-    const m = new Map<string, number>();
+  // All tallies derive from `filtered`, so compute them together in one memo keyed
+  // on [filtered] — avoids re-scanning/re-sorting (and re-parsing genres) on every
+  // unrelated render (e.g. toggling a "Show all" or typing in a date input).
+  const { byRole, byCountry, byCity, byGenre, byZone, byStatus, byMonth } = useMemo(() => {
+    const tally = (getKey: (a: Application) => string | string[] | undefined): [string, number][] => {
+      const m = new Map<string, number>();
+      for (const a of filtered) {
+        const k = getKey(a);
+        if (!k) continue;
+        for (const key of Array.isArray(k) ? k : [k]) if (key) m.set(key, (m.get(key) || 0) + 1);
+      }
+      return [...m.entries()].sort((x, y) => y[1] - x[1]);
+    };
+    const months = new Map<string, number>();
     for (const a of filtered) {
       const d = (a.created_at || '').slice(0, 7); // YYYY-MM
-      if (d) m.set(d, (m.get(d) || 0) + 1);
+      if (d) months.set(d, (months.get(d) || 0) + 1);
     }
-    return [...m.entries()].sort((x, y) => x[0].localeCompare(y[0])); // chronological
+    return {
+      byRole: tally((a) => (a.role || '').toUpperCase()),
+      byCountry: tally((a) => a.country),
+      byCity: tally((a) => a.city),
+      byGenre: tally((a) => parseGenres(a.genres)),
+      byZone: tally((a) => a.zone),
+      byStatus: tally((a) => (a.status || '').toUpperCase()),
+      byMonth: [...months.entries()].sort((x, y) => x[0].localeCompare(y[0])), // chronological
+    };
   }, [filtered]);
+
+  const roleCount = Object.fromEntries(byRole) as Record<string, number>;
   const monthMax = byMonth.reduce((mx, [, v]) => Math.max(mx, v), 0);
 
   const reset = () => {
@@ -151,7 +136,7 @@ export function RecapView({ applications }: { applications: RecapRow[] }) {
   };
 
   const exportCsv = () => {
-    const cols: (keyof RecapRow)[] = ['created_at', 'first_name', 'last_name', 'email', 'role', 'zone', 'country', 'city', 'genres', 'status'];
+    const cols: (keyof Application)[] = ['created_at', 'first_name', 'last_name', 'email', 'role', 'zone', 'country', 'city', 'genres', 'status'];
     const esc = (v: unknown) => {
       const s = v == null ? '' : String(v);
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
@@ -207,7 +192,7 @@ export function RecapView({ applications }: { applications: RecapRow[] }) {
           <div className="text-white text-2xl font-bold">{total}</div>
         </div>
         {ROLES.map((r) => {
-          const v = roleCounts[r];
+          const v = roleCount[r] ?? 0;
           const pct = total > 0 ? Math.round((v / total) * 100) : 0;
           return (
             <div key={r} className="bg-white/5 border border-white/10 rounded-lg p-4">

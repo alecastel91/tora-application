@@ -23,11 +23,16 @@ export function GET(request: Request) {
     if (c.lower.startsWith(q)) starts.push(c);
     else if (c.lower.includes(q)) contains.push(c);
   }
-  // Prefix matches first, each ranked by population (so "par" -> Paris FR before Parma).
+  // Prefix matches first, ranked by population (so "par" -> Paris FR before Parma).
   starts.sort((a, b) => b.pop - a.pop);
-  contains.sort((a, b) => b.pop - a.pop);
+  // Only fall back to (and sort) substring matches if prefixes don't fill the list.
+  let ranked = starts;
+  if (starts.length < LIMIT) {
+    contains.sort((a, b) => b.pop - a.pop);
+    ranked = starts.concat(contains);
+  }
 
-  const out = starts.concat(contains).slice(0, LIMIT).map((c) => {
+  const out = ranked.slice(0, LIMIT).map((c) => {
     const meta = COUNTRY_BY_ISO2[c.cc];
     return { city: c.name, country: meta.name, zone: meta.zone };
   });
