@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { RecapView } from "./RecapView";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { GlassPanel } from "@/components/ui/GlassPanel";
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
     const [filter, setFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
+    const [view, setView] = useState<'applications' | 'recap'>('applications');
 
     // Check if already authenticated (server-side cookie verification)
     useEffect(() => {
@@ -513,6 +515,23 @@ export default function AdminDashboard() {
                     </button>
                 </div>
 
+                {/* View toggle */}
+                <div className="flex gap-2 mb-6">
+                    {(['applications', 'recap'] as const).map((v) => (
+                        <button
+                            key={v}
+                            onClick={() => setView(v)}
+                            className={`px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors ${view === v ? 'bg-white/10 text-white border border-white/20' : 'text-white/50 hover:text-white border border-white/10'}`}
+                            style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                        >
+                            {v === 'applications' ? 'Applications' : 'Recap'}
+                        </button>
+                    ))}
+                </div>
+
+                {view === 'recap' && <RecapView applications={applications} />}
+
+                {view === 'applications' && (<>
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
                     <div className="bg-white/5 border border-white/10 rounded-lg p-4">
@@ -785,6 +804,7 @@ export default function AdminDashboard() {
                         ))}
                     </div>
                 )}
+                </>)}
             </div>
         </div>
     );
