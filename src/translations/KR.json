@@ -29,6 +29,7 @@
   "select_zone": "지역 선택",
   "select_country": "국가 선택",
   "select_city": "도시 선택",
+  "city_not_found": "도시를 찾을 수 없나요?",
   "other": "기타",
   "genres": "장르",
   "select_at_least_one": "최소 하나의 장르를 선택하세요",

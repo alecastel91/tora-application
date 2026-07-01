@@ -29,6 +29,7 @@
   "select_zone": "Selecionar zona",
   "select_country": "Selecionar país",
   "select_city": "Selecionar cidade",
+  "city_not_found": "Não encontra a sua cidade?",
   "other": "Outro",
   "genres": "Gêneros",
   "select_at_least_one": "Selecione pelo menos um gênero",

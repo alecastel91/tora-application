@@ -29,6 +29,7 @@
   "select_zone": "地域を選択",
   "select_country": "国を選択",
   "select_city": "都市を選択",
+  "city_not_found": "都市が見つかりませんか？",
   "other": "その他",
   "genres": "ジャンル",
   "select_at_least_one": "少なくとも1つのジャンルを選択してください",

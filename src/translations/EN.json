@@ -33,6 +33,7 @@
   "select_zone": "Select zone",
   "select_country": "Select country",
   "select_city": "Select city",
+  "city_not_found": "Can't find your city?",
   "other": "Other",
 
   "genres": "Genres",

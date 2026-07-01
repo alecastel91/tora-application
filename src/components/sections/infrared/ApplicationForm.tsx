@@ -4,6 +4,7 @@ import { GlassPanel } from "@/components/ui/GlassPanel";
 import { InfraredInput } from "@/components/ui/InfraredInput";
 import { InfraredButton } from "@/components/ui/InfraredButton";
 import { TORALoader } from "@/components/ui/TORALoader";
+import { CitySearch } from "@/components/ui/CitySearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -209,72 +210,6 @@ const genresList = [
 ];
 
 // Location data
-const zones = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
-
-const countriesByZone: Record<string, string[]> = {
-    "Europe": ["Austria", "Belgium", "Czech Republic", "Denmark", "Finland", "France", "Germany", "Greece", "Ireland", "Italy", "Netherlands", "Norway", "Poland", "Portugal", "Spain", "Sweden", "Switzerland", "United Kingdom"],
-    "Asia": ["China", "Hong Kong", "India", "Indonesia", "Japan", "Malaysia", "Philippines", "Singapore", "South Korea", "Taiwan", "Thailand", "Vietnam"],
-    "Americas": ["Argentina", "Brazil", "Canada", "Chile", "Colombia", "Mexico", "Peru", "United States"],
-    "Africa": ["Egypt", "Kenya", "Morocco", "Nigeria", "South Africa"],
-    "Oceania": ["Australia", "New Zealand"]
-};
-
-const citiesByCountry: Record<string, string[]> = {
-    // Europe
-    "Austria": ["Graz", "Innsbruck", "Linz", "Salzburg", "Vienna"],
-    "Belgium": ["Antwerp", "Bruges", "Brussels", "Ghent", "Leuven", "Liège"],
-    "Czech Republic": ["Brno", "Ostrava", "Prague"],
-    "Denmark": ["Aarhus", "Copenhagen", "Odense"],
-    "Finland": ["Espoo", "Helsinki", "Tampere"],
-    "France": ["Lyon", "Marseille", "Montpellier", "Nantes", "Nice", "Paris", "Strasbourg", "Toulouse"],
-    "Germany": ["Berlin", "Cologne", "Dortmund", "Düsseldorf", "Frankfurt", "Hamburg", "Munich", "Stuttgart"],
-    "Greece": ["Athens", "Heraklion", "Patras", "Thessaloniki"],
-    "Ireland": ["Cork", "Dublin", "Galway", "Limerick"],
-    "Italy": ["Bologna", "Florence", "Genoa", "Milan", "Naples", "Rome", "Turin", "Venice"],
-    "Netherlands": ["Amsterdam", "Eindhoven", "Groningen", "Rotterdam", "The Hague", "Utrecht"],
-    "Norway": ["Bergen", "Oslo", "Stavanger", "Trondheim"],
-    "Poland": ["Gdańsk", "Kraków", "Poznań", "Warsaw", "Wrocław"],
-    "Portugal": ["Lisbon", "Porto"],
-    "Spain": ["Barcelona", "Bilbao", "Ibiza", "Madrid", "Málaga", "Palma", "Seville", "Valencia"],
-    "Sweden": ["Gothenburg", "Malmö", "Stockholm"],
-    "Switzerland": ["Basel", "Bern", "Geneva", "Lausanne", "Lucerne", "Zurich"],
-    "United Kingdom": ["Birmingham", "Bristol", "Edinburgh", "Glasgow", "Leeds", "Liverpool", "London", "Manchester"],
-
-    // Asia
-    "China": ["Beijing", "Chengdu", "Guangzhou", "Shanghai", "Shenzhen"],
-    "Hong Kong": ["Hong Kong"],
-    "India": ["Bangalore", "Chennai", "Delhi", "Goa", "Hyderabad", "Kolkata", "Mumbai", "Pune"],
-    "Indonesia": ["Bali", "Bandung", "Jakarta", "Surabaya"],
-    "Japan": ["Fukuoka", "Kobe", "Kyoto", "Nagoya", "Osaka", "Sapporo", "Tokyo", "Yokohama"],
-    "Malaysia": ["Johor Bahru", "Kuala Lumpur", "Penang"],
-    "Philippines": ["Cebu", "Davao", "Manila"],
-    "Singapore": ["Singapore"],
-    "South Korea": ["Busan", "Daegu", "Daejeon", "Gwangju", "Incheon", "Seoul"],
-    "Taiwan": ["Kaohsiung", "Taichung", "Taipei"],
-    "Thailand": ["Bangkok", "Chiang Mai", "Koh Samui", "Krabi", "Pattaya", "Phuket"],
-    "Vietnam": ["Da Nang", "Hanoi", "Ho Chi Minh City"],
-
-    // Americas
-    "Argentina": ["Buenos Aires", "Córdoba", "Mar del Plata", "Mendoza", "Rosario"],
-    "Brazil": ["Belo Horizonte", "Brasília", "Fortaleza", "Rio de Janeiro", "Salvador", "São Paulo"],
-    "Canada": ["Calgary", "Edmonton", "Montreal", "Ottawa", "Toronto", "Vancouver"],
-    "Chile": ["Santiago", "Valparaíso"],
-    "Colombia": ["Bogotá", "Cartagena", "Medellín"],
-    "Mexico": ["Cancún", "Guadalajara", "Mexico City", "Monterrey", "Playa del Carmen", "Tijuana"],
-    "Peru": ["Cusco", "Lima"],
-    "United States": ["Austin", "Chicago", "Denver", "Detroit", "Las Vegas", "Los Angeles", "Miami", "New York", "San Francisco", "Seattle"],
-
-    // Africa
-    "Egypt": ["Alexandria", "Cairo"],
-    "Kenya": ["Mombasa", "Nairobi"],
-    "Morocco": ["Casablanca", "Marrakech", "Rabat"],
-    "Nigeria": ["Abuja", "Lagos"],
-    "South Africa": ["Cape Town", "Durban", "Johannesburg", "Port Elizabeth", "Pretoria"],
-
-    // Oceania
-    "Australia": ["Adelaide", "Brisbane", "Gold Coast", "Melbourne", "Perth", "Sydney"],
-    "New Zealand": ["Auckland", "Christchurch", "Dunedin", "Queenstown", "Wellington"]
-};
 
 interface ApplicationFormProps {
     onSubmit: () => void;
@@ -904,62 +839,13 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             {t('location')}
                                         </motion.p>
 
-                                        {/* Zone Dropdown */}
-                                        <select
-                                            value={zone}
-                                            onChange={(e) => {
-                                                setZone(e.target.value);
-                                                setCountry("");
-                                                setCity("");
-                                            }}
-                                            required
-                                            className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
-                                        >
-                                            <option value="" disabled>{t('select_zone')}</option>
-                                            {zones.map((z) => (
-                                                <option key={z} value={z} className="bg-[#0a0a0a] text-white">{t(`zone_${z.toLowerCase()}`)}</option>
-                                            ))}
-                                        </select>
-
-                                        {/* Country Dropdown (appears after zone selected) */}
-                                        {zone && (
-                                            <motion.select
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.3 }}
-                                                value={country}
-                                                onChange={(e) => {
-                                                    setCountry(e.target.value);
-                                                    setCity("");
-                                                }}
-                                                required
-                                                className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
-                                            >
-                                                <option value="" disabled>{t('select_country')}</option>
-                                                {countriesByZone[zone]?.map((c) => (
-                                                    <option key={c} value={c} className="bg-[#0a0a0a] text-white">{t(`country_${c.toLowerCase().replace(/ /g, '_')}`)}</option>
-                                                ))}
-                                            </motion.select>
-                                        )}
-
-                                        {/* City Dropdown (appears after country selected) */}
-                                        {country && (
-                                            <motion.select
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.3 }}
-                                                value={city}
-                                                onChange={(e) => setCity(e.target.value)}
-                                                required
-                                                className="w-full px-4 py-5 bg-white/5 border border-white/10 text-white text-center text-sm md:text-base font-tech rounded focus:outline-none focus:border-infrared/50 transition-colors"
-                                            >
-                                                <option value="" disabled>{t('select_city')}</option>
-                                                {citiesByCountry[country]?.map((c) => (
-                                                    <option key={c} value={c} className="bg-[#0a0a0a] text-white">{t(`city_${c.toLowerCase().replace(/ /g, '_').normalize('NFD').replace(/[\u0300-\u036f]/g, '')}`)}</option>
-                                                ))}
-                                                <option value="Other" className="bg-[#0a0a0a] text-white">{t('other')}</option>
-                                            </motion.select>
-                                        )}
+                                        {/* City search \u2014 type your city; country + zone are derived.
+                                            Falls back to manual entry if a city isn't found. */}
+                                        <CitySearch
+                                            city={city}
+                                            country={country}
+                                            onSelect={(c, co, z) => { setCity(c); setCountry(co); setZone(z); }}
+                                        />
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>

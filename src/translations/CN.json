@@ -29,6 +29,7 @@
   "select_zone": "选择区域",
   "select_country": "选择国家",
   "select_city": "选择城市",
+  "city_not_found": "找不到您的城市？",
   "other": "其他",
   "genres": "音乐类型",
   "select_at_least_one": "至少选择一个音乐类型",
