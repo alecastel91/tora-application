@@ -46,6 +46,7 @@ export function CitySearch({ city, country, onSelect }: Props) {
     if (term.length < 2) {
       setResults([]);
       setOpen(false);
+      setLoading(false);
       return;
     }
     setLoading(true);

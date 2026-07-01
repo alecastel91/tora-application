@@ -112,6 +112,20 @@ export function RecapView({ applications }: { applications: Application[] }) {
       const d = (a.created_at || '').slice(0, 7); // YYYY-MM
       if (d) months.set(d, (months.get(d) || 0) + 1);
     }
+    // Contiguous month axis: fill zero months between the first and last so the
+    // trend doesn't render a gap (e.g. May, July with no June) as adjacent bars.
+    const present = [...months.keys()].sort();
+    const byMonth: [string, number][] = [];
+    if (present.length) {
+      let [y, m] = present[0].split('-').map(Number);
+      const last = present[present.length - 1];
+      for (let guard = 0; guard < 600; guard++) {
+        const key = `${y}-${String(m).padStart(2, '0')}`;
+        byMonth.push([key, months.get(key) || 0]);
+        if (key === last) break;
+        if (++m > 12) { m = 1; y++; }
+      }
+    }
     return {
       byRole: tally((a) => (a.role || '').toUpperCase()),
       byCountry: tally((a) => a.country),
@@ -119,7 +133,7 @@ export function RecapView({ applications }: { applications: Application[] }) {
       byGenre: tally((a) => parseGenres(a.genres)),
       byZone: tally((a) => a.zone),
       byStatus: tally((a) => (a.status || '').toUpperCase()),
-      byMonth: [...months.entries()].sort((x, y) => x[0].localeCompare(y[0])), // chronological
+      byMonth,
     };
   }, [filtered]);
 
@@ -139,7 +153,7 @@ export function RecapView({ applications }: { applications: Application[] }) {
     const cols: (keyof Application)[] = ['created_at', 'first_name', 'last_name', 'email', 'role', 'zone', 'country', 'city', 'genres', 'status'];
     const esc = (v: unknown) => {
       const s = v == null ? '' : String(v);
-      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
     const csv = [cols.join(','), ...filtered.map((r) => cols.map((c) => esc(r[c])).join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

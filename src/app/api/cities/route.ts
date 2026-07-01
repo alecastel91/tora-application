@@ -32,9 +32,18 @@ export function GET(request: Request) {
     ranked = starts.concat(contains);
   }
 
-  const out = ranked.slice(0, LIMIT).map((c) => {
+  // Dedup identical city+country rows (the dataset has many same-name cities in
+  // one country, e.g. several "Berlin, United States") — they'd store the same
+  // value and just look like duplicate suggestions.
+  const out: { city: string; country: string; zone: string }[] = [];
+  const seen = new Set<string>();
+  for (const c of ranked) {
     const meta = COUNTRY_BY_ISO2[c.cc];
-    return { city: c.name, country: meta.name, zone: meta.zone };
-  });
+    const key = `${c.name}|${meta.name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ city: c.name, country: meta.name, zone: meta.zone });
+    if (out.length >= LIMIT) break;
+  }
   return NextResponse.json(out);
 }
