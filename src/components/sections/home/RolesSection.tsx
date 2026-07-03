@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { RolesPinned } from "./RolesPinned";
+import { RolesMorph } from "./RolesMorph";
 import { RolesStack } from "./RolesStack";
 
 /**
@@ -18,6 +18,6 @@ export function RolesSection() {
 
   useEffect(() => setMounted(true), []);
 
-  const pin = mounted && isDesktop && !reduced;
-  return pin ? <RolesPinned /> : <RolesStack />;
+  const morph = mounted && isDesktop && !reduced;
+  return morph ? <RolesMorph /> : <RolesStack />;
 }

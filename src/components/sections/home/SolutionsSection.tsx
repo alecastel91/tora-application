@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { SolutionsRail } from "./SolutionsRail";
+import { SolutionsMorph } from "./SolutionsMorph";
 import { SolutionsGrid } from "./SolutionsGrid";
 
 /**
@@ -18,6 +18,6 @@ export function SolutionsSection() {
 
   useEffect(() => setMounted(true), []);
 
-  const rail = mounted && isDesktop && !reduced;
-  return rail ? <SolutionsRail /> : <SolutionsGrid />;
+  const morph = mounted && isDesktop && !reduced;
+  return morph ? <SolutionsMorph /> : <SolutionsGrid />;
 }

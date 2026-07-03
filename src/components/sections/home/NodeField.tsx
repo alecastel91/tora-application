@@ -2,18 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { roleBoxes, solutionBoxes, type Box } from "./morphLayout";
 
 const INFRARED = { r: 255, g: 51, b: 102 };
 
 type Node = {
-  // globe (connected) position in 3D unit-sphere space
-  x: number;
+  x: number; // globe 3D unit-sphere coords
   y: number;
   z: number;
-  // scattered position, as a fraction of viewport (0..1)
-  sx: number;
+  sx: number; // stable random 0..1, for load-scatter + within-cluster placement
   sy: number;
-  // per-node drift phase
   phase: number;
 };
 
@@ -21,18 +20,20 @@ const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2,
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 /**
- * The signature visual thread: pink nodes that sit scattered while the "problem"
- * beat is on screen, then connect into a slowly-rotating globe/constellation as
- * the #network section scrolls through ("the shift"), and linger as a faint
- * living web behind the rest of the page.
+ * The signature visual thread. On load the nodes assemble into a slowly-rotating
+ * globe (the wow). As #roles / #solutions scroll through the viewport centre, the
+ * globe blows apart and the nodes gather into clusters that sit exactly where the
+ * role / solution cards resolve (shared morphLayout). Links fade out while
+ * clustered so it reads as dot-clouds, not a tangle.
  *
- * A fixed full-viewport <canvas>. Formation progress is read from the #network
- * section's position each frame (self-syncing, no cross-component wiring).
- * Reduced motion → a single static connected frame, no RAF.
+ * Fixed full-viewport <canvas>. On mobile / reduced motion it stays a static
+ * globe (the sections use their own grid/stack fallbacks, no morph).
  */
 export function NodeField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const morphEnabled = isDesktop && !reduced;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,11 +45,11 @@ export function NodeField() {
     let height = 0;
     let dpr = 1;
 
-    const count = window.innerWidth < 768 ? 46 : 74;
+    const count = window.innerWidth < 768 ? 46 : 76;
     const golden = Math.PI * (3 - Math.sqrt(5));
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
-      const y = 1 - (i / (count - 1)) * 2; // 1 .. -1
+      const y = 1 - (i / (count - 1)) * 2;
       const r = Math.sqrt(Math.max(0, 1 - y * y));
       const theta = i * golden;
       nodes.push({
@@ -61,7 +62,6 @@ export function NodeField() {
       });
     }
 
-    // Precompute links between nodes that are near on the sphere (wireframe feel).
     const links: [number, number][] = [];
     const LINK_DIST = 0.62;
     for (let i = 0; i < count; i++) {
@@ -84,49 +84,90 @@ export function NodeField() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    // The globe assembles once on load (scattered → connected over ~1.4s) — the
-    // initial wow — then holds and rotates. No scroll dependency.
-    const INTRO_MS = 1400;
-    let introStart = -1;
-    const formation = (time: number) => {
-      if (reduced) return 1;
-      if (introStart < 0) introStart = time;
-      return clamp01((time - introStart) / INTRO_MS);
+    // Node's target inside a cluster box (stable placement from its random seed).
+    const clusterPos = (i: number, boxes: Box[]): [number, number] => {
+      const b = boxes[i % boxes.length];
+      return [b.x + (0.12 + 0.76 * nodes[i].sx) * b.w, b.y + (0.12 + 0.76 * nodes[i].sy) * b.h];
     };
 
+    // How centred a section is in the viewport: smooth 0→1→0 as it enters/leaves.
+    const activeness = (id: string): number => {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const rect = el.getBoundingClientRect();
+      const c = height / 2;
+      const top = rect.top;
+      const bottom = rect.top + rect.height;
+      const ramp = height * 0.5;
+      if (top <= c && bottom >= c) return 1;
+      if (bottom < c) return clamp01(1 - (c - bottom) / ramp);
+      return clamp01(1 - (top - c) / ramp);
+    };
+
+    // Load assembly: scattered → globe over ~1.4s, once.
+    const INTRO_MS = 1400;
+    let introStart = -1;
+
     const draw = (time: number) => {
-      const f = formation(time);
-      const ef = easeInOut(f);
+      if (introStart < 0) introStart = time;
+      const intro = reduced ? 1 : easeInOut(clamp01((time - introStart) / INTRO_MS));
+
       const cx = width / 2;
       const cy = height / 2;
       const R = Math.min(width, height) * 0.34;
-      const angle = time * 0.00006; // slow globe rotation
+      const angle = time * 0.00006;
+
+      const aR = morphEnabled ? activeness("roles") : 0;
+      const aS = morphEnabled ? activeness("solutions") : 0;
+      const clustered = Math.max(aR, aS);
+
+      const rBoxes = aR > 0.001 ? roleBoxes(width, height) : null;
+      const sBoxes = aS > 0.001 ? solutionBoxes(width, height) : null;
 
       ctx.clearRect(0, 0, width, height);
 
-      // Positions for this frame
       const px: number[] = new Array(count);
       const py: number[] = new Array(count);
       const depth: number[] = new Array(count);
+
       for (let i = 0; i < count; i++) {
         const n = nodes[i];
+        // globe position (rotating), with a little idle drift
         const rx = n.x * Math.cos(angle) - n.z * Math.sin(angle);
         const rz = n.x * Math.sin(angle) + n.z * Math.cos(angle);
         const drift = reduced ? 0 : Math.sin(time * 0.0008 + n.phase) * 3;
         const gx = cx + rx * R;
         const gy = cy + n.y * R + drift;
+        depth[i] = (rz + 1) / 2;
+
+        // load scatter → globe
         const scx = n.sx * width;
         const scy = n.sy * height;
-        px[i] = scx + (gx - scx) * ef;
-        py[i] = scy + (gy - scy) * ef;
-        depth[i] = (rz + 1) / 2; // 0 back .. 1 front
+        let X = scx + (gx - scx) * intro;
+        let Y = scy + (gy - scy) * intro;
+
+        // morph globe → role clusters → solution clusters
+        if (rBoxes) {
+          const [rcx, rcy] = clusterPos(i, rBoxes);
+          X += (rcx - X) * aR;
+          Y += (rcy - Y) * aR;
+        }
+        if (sBoxes) {
+          const [sxp, syp] = clusterPos(i, sBoxes);
+          X += (sxp - X) * aS;
+          Y += (syp - Y) * aS;
+        }
+        px[i] = X;
+        py[i] = Y;
       }
 
-      // Links (only meaningful once forming)
-      if (f > 0.01) {
+      // Links: strong on the globe, fade out as nodes cluster.
+      const linkFade = 1 - clustered;
+      if (linkFade > 0.02) {
         for (const [i, j] of links) {
           const d = (depth[i] + depth[j]) / 2;
-          const a = f * 0.18 * (0.4 + 0.6 * d);
+          const a = intro * linkFade * 0.18 * (0.4 + 0.6 * d);
+          if (a <= 0.005) continue;
           ctx.strokeStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${a})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
@@ -136,11 +177,11 @@ export function NodeField() {
         }
       }
 
-      // Nodes
       for (let i = 0; i < count; i++) {
+        // when clustered, brighten uniformly (no globe depth); on globe, use depth
         const d = depth[i];
-        const a = 0.25 + 0.55 * d;
-        const size = 1 + 1.6 * d;
+        const a = (0.25 + 0.55 * d) * (1 - clustered) + 0.7 * clustered;
+        const size = (1 + 1.6 * d) * (1 - clustered) + 2 * clustered;
         ctx.fillStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${a})`;
         ctx.beginPath();
         ctx.arc(px[i], py[i], size, 0, Math.PI * 2);
@@ -153,7 +194,7 @@ export function NodeField() {
 
     let raf = 0;
     if (reduced) {
-      draw(0); // single static connected frame
+      draw(0);
     } else {
       const loop = (t: number) => {
         if (!document.hidden) draw(t);
@@ -166,14 +207,14 @@ export function NodeField() {
       window.removeEventListener("resize", resize);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [reduced]);
+  }, [reduced, morphEnabled]);
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: 0.85 }}
+      style={{ opacity: 0.9 }}
     />
   );
 }
