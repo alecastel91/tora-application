@@ -16,7 +16,7 @@ export function SolutionsGrid() {
   const { t } = useLanguage();
 
   return (
-    <section id="solutions" className="relative scroll-mt-20 py-28 md:py-40 px-6">
+    <section id="solutions" className="relative scroll-mt-20 py-16 md:py-24 px-6">
       <div className="max-w-5xl mx-auto">
         <SectionReveal className="text-center mb-14">
           <h2 className="max-w-3xl mx-auto text-3xl md:text-5xl font-black uppercase tracking-tight text-white" style={headingFont}>

@@ -13,7 +13,7 @@ export function EthosSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-6 text-center">
+    <section className="relative py-24 md:py-32 flex flex-col items-center justify-center px-6 text-center">
       <SectionReveal>
         <div className="laser-line w-24 h-px mx-auto mb-10 opacity-60" />
       </SectionReveal>

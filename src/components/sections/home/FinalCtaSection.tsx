@@ -16,7 +16,7 @@ export function FinalCtaSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center pb-28">
+    <section className="relative min-h-[72vh] flex flex-col items-center justify-center px-6 text-center pt-16 pb-28">
       <SectionReveal>
         <h2
           className="max-w-3xl text-4xl md:text-6xl font-black uppercase tracking-tight text-white"

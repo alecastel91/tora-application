@@ -1,42 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { scrollToId } from "@/lib/scroll";
 
 const LINKS = [
-  { key: "home_nav_network", id: "network" },
-  { key: "nav_roles", id: "roles" },
-  { key: "home_nav_solutions", id: "solutions" },
+  { key: "nav_about", href: "/about" },
+  { key: "nav_roles", href: "/roles" },
+  { key: "nav_features", href: "/features" },
 ];
 
 const navFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
 
 /**
- * Home-only nav: links smooth-scroll to on-page sections (via Lenis when active),
- * and the active link tracks scroll position with an IntersectionObserver.
- * Kept separate from TopNav so the detail pages' pathname-based nav is untouched.
+ * Home nav — links to the standalone detail pages (About / Roles / Features),
+ * which remain the "read more" destinations. Kept separate from TopNav so the
+ * detail pages' own pathname-based nav is untouched.
  */
 export function HomeNav() {
   const { t } = useLanguage();
-  const [active, setActive] = useState<string>("");
-
-  useEffect(() => {
-    const sections = LINKS.map((l) => document.getElementById(l.id)).filter(Boolean) as HTMLElement[];
-    if (!sections.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        }
-      },
-      // Active when a section occupies the middle band of the viewport.
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
-    );
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <motion.nav
@@ -47,17 +29,14 @@ export function HomeNav() {
     >
       <div className="flex items-center space-x-8 md:space-x-10">
         {LINKS.map((link) => (
-          <button
+          <Link
             key={link.key}
-            type="button"
-            onClick={() => scrollToId(link.id)}
+            href={link.href}
             style={navFont}
-            className={`text-[10px] font-bold uppercase tracking-[0.3em] transition-colors ${
-              active === link.id ? "text-white" : "text-white/30 hover:text-white"
-            }`}
+            className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 hover:text-white transition-colors"
           >
             {t(link.key)}
-          </button>
+          </Link>
         ))}
       </div>
     </motion.nav>

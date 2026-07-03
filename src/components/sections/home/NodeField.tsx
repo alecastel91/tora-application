@@ -84,21 +84,18 @@ export function NodeField() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    // How "formed" the network is: 0 scattered → 1 connected, from #network scroll.
-    const formation = () => {
+    // The globe assembles once on load (scattered → connected over ~1.4s) — the
+    // initial wow — then holds and rotates. No scroll dependency.
+    const INTRO_MS = 1400;
+    let introStart = -1;
+    const formation = (time: number) => {
       if (reduced) return 1;
-      const section = document.getElementById("network");
-      if (!section) return 0;
-      const rect = section.getBoundingClientRect();
-      const travel = rect.height - height;
-      if (travel <= 0) return rect.top <= 0 ? 1 : 0;
-      const p = clamp01(-rect.top / travel);
-      // Complete the formation by ~55% through the section, then hold.
-      return clamp01(p / 0.55);
+      if (introStart < 0) introStart = time;
+      return clamp01((time - introStart) / INTRO_MS);
     };
 
     const draw = (time: number) => {
-      const f = formation();
+      const f = formation(time);
       const ef = easeInOut(f);
       const cx = width / 2;
       const cy = height / 2;

@@ -28,7 +28,7 @@ export function NetworkFormation() {
   const shiftY = useTransform(scrollYProgress, [0.48, 0.7], [30, 0]);
 
   return (
-    <section id="network" ref={ref} className="relative" style={{ height: "260vh" }}>
+    <section id="network" ref={ref} className="relative" style={{ height: "170vh" }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6">
         {/* The tension */}
         <motion.div

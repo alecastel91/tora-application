@@ -16,7 +16,7 @@ export function RolesStack() {
   const { t } = useLanguage();
 
   return (
-    <section id="roles" className="relative scroll-mt-20 py-28 md:py-40 px-6">
+    <section id="roles" className="relative scroll-mt-20 py-16 md:py-24 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionReveal className="text-center mb-14">
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white" style={headingFont}>

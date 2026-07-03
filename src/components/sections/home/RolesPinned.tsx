@@ -76,7 +76,7 @@ export function RolesPinned() {
   });
 
   return (
-    <section id="roles" ref={ref} className="relative" style={{ height: `${TOTAL * 100}vh` }}>
+    <section id="roles" ref={ref} className="relative" style={{ height: `${TOTAL * 72}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Section eyebrow */}
         <div className="absolute top-24 left-1/2 -translate-x-1/2 z-10 text-center px-6">
