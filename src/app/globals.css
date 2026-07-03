@@ -271,3 +271,23 @@
   animation: blink 1s step-end infinite;
   margin-left: 2px;
 }
+
+/* ===== REDUCED MOTION ===== */
+/* When the user asks for reduced motion, the home page skips Lenis smooth scroll
+   and scroll-jacked pins (handled in JS). This freezes the ambient CSS loops too. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .laser-line,
+  .animate-pulse-glow,
+  .animate-fade-slide-up,
+  .typing-cursor::after {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
