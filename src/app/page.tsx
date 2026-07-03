@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { BottomNav } from "@/components/ui/PageNav";
+import { NodeField } from "@/components/sections/home/NodeField";
 import { HeroSection } from "@/components/sections/home/HeroSection";
 import { NetworkFormation } from "@/components/sections/home/NetworkFormation";
 import { RolesSection } from "@/components/sections/home/RolesSection";
@@ -41,7 +42,9 @@ export default function Home() {
         </div>
       </motion.nav>
 
-      <main className="relative bg-black overflow-x-hidden font-sans selection:bg-infrared/30 selection:text-white">
+      <NodeField />
+
+      <main className="relative z-10 overflow-x-hidden font-sans selection:bg-infrared/30 selection:text-white">
         <HeroSection />
         <NetworkFormation />
         <RolesSection />
