@@ -1,51 +1,23 @@
 "use client";
 
-import { GlassCard } from "@/components/ui/GlassCard";
-import { SectionReveal } from "@/components/ui/SectionReveal";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { SOLUTIONS } from "./home.data";
-
-const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
-const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { SolutionsRail } from "./SolutionsRail";
+import { SolutionsGrid } from "./SolutionsGrid";
 
 /**
- * Beat 5 — what it solves. The 10 platform features regrouped into 5 solutions.
- * Phase-1 version: a responsive grid. Phase 4 swaps in a pinned horizontal rail
- * on desktop; this grid stays as the mobile / reduced-motion fallback.
+ * Beat 5 — picks the pinned horizontal rail on desktop, the responsive grid on
+ * mobile / reduced motion. Grid is the initial/SSR output; upgrades to the rail
+ * after mount (stable hydration, no conditional hooks).
  */
 export function SolutionsSection() {
-  const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const reduced = usePrefersReducedMotion();
 
-  return (
-    <section id="solutions" className="relative scroll-mt-20 py-28 md:py-40 px-6">
-      <div className="max-w-5xl mx-auto">
-        <SectionReveal className="text-center mb-14">
-          <h2
-            className="max-w-3xl mx-auto text-3xl md:text-5xl font-black uppercase tracking-tight text-white"
-            style={headingFont}
-          >
-            {t("home_solutions_title")}
-          </h2>
-        </SectionReveal>
+  useEffect(() => setMounted(true), []);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" style={bodyFont}>
-          {SOLUTIONS.map((s, i) => (
-            <SectionReveal key={s.id} delay={i * 0.05}>
-              <GlassCard className="border-white/5 h-full">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
-                    {s.icon}
-                  </div>
-                  <span className="text-infrared text-sm font-bold uppercase tracking-widest">
-                    {t(s.titleKey)}
-                  </span>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed mt-4">{t(s.descKey)}</p>
-              </GlassCard>
-            </SectionReveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const rail = mounted && isDesktop && !reduced;
+  return rail ? <SolutionsRail /> : <SolutionsGrid />;
 }
