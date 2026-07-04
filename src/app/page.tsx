@@ -4,6 +4,7 @@ import { LenisProvider } from "@/components/providers/LenisProvider";
 import { BottomNav } from "@/components/ui/PageNav";
 import { HomeNav } from "@/components/ui/HomeNav";
 import { ParallaxBackdrop } from "@/components/sections/home/ParallaxBackdrop";
+import { WaveMesh } from "@/components/sections/home/WaveMesh";
 import { NodeField } from "@/components/sections/home/NodeField";
 import { HeroSection } from "@/components/sections/home/HeroSection";
 import { NetworkFormation } from "@/components/sections/home/NetworkFormation";
@@ -17,6 +18,7 @@ export default function Home() {
     <LenisProvider>
       <HomeNav />
       <ParallaxBackdrop />
+      <WaveMesh />
       <NodeField />
 
       <main className="relative z-10 overflow-x-hidden font-sans selection:bg-infrared/30 selection:text-white">

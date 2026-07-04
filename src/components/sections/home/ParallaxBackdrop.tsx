@@ -16,8 +16,9 @@ export function ParallaxBackdrop() {
 
   return (
     <div aria-hidden="true" className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+      {/* faint flat grid, low opacity — the WaveMesh is the primary pattern now */}
       <motion.div
-        className="bg-grid absolute inset-0 opacity-[0.5]"
+        className="bg-grid absolute inset-0 opacity-[0.25]"
         style={reduced ? undefined : { y: gridY }}
       />
       <motion.div
