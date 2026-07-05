@@ -22,13 +22,18 @@ export function NetworkFormation() {
     offset: ["start start", "end end"],
   });
 
-  const problemOpacity = useTransform(scrollYProgress, [0, 0.28, 0.42], [1, 1, 0]);
-  const problemY = useTransform(scrollYProgress, [0, 0.42], [0, -30]);
-  const shiftOpacity = useTransform(scrollYProgress, [0.48, 0.62, 1], [0, 1, 1]);
-  const shiftY = useTransform(scrollYProgress, [0.48, 0.7], [30, 0]);
+  // True crossfade: the fades overlap around p=0.47 (no dead frame between the
+  // two headlines) and each hands off through a soft blur, so the swap reads as
+  // one continuous dissolve rather than a cut.
+  const problemOpacity = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 1, 0]);
+  const problemY = useTransform(scrollYProgress, [0, 0.5], [0, -40]);
+  const problemFilter = useTransform(scrollYProgress, [0.3, 0.5], ["blur(0px)", "blur(10px)"]);
+  const shiftOpacity = useTransform(scrollYProgress, [0.44, 0.64, 1], [0, 1, 1]);
+  const shiftY = useTransform(scrollYProgress, [0.44, 0.68], [40, 0]);
+  const shiftFilter = useTransform(scrollYProgress, [0.44, 0.64], ["blur(10px)", "blur(0px)"]);
 
   return (
-    <section id="network" ref={ref} className="relative" style={{ height: "170vh" }}>
+    <section id="network" ref={ref} className="relative" style={{ height: "200vh" }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6">
         {/* Soft scrim so the headlines stay legible over the node globe behind */}
         <div
@@ -38,7 +43,7 @@ export function NetworkFormation() {
         />
         {/* The tension */}
         <motion.div
-          style={{ opacity: problemOpacity, y: problemY }}
+          style={{ opacity: problemOpacity, y: problemY, filter: problemFilter }}
           className="absolute max-w-3xl text-center"
         >
           <h2
@@ -54,7 +59,7 @@ export function NetworkFormation() {
 
         {/* The shift */}
         <motion.div
-          style={{ opacity: shiftOpacity, y: shiftY }}
+          style={{ opacity: shiftOpacity, y: shiftY, filter: shiftFilter }}
           className="absolute max-w-4xl text-center"
         >
           <h2

@@ -51,21 +51,45 @@ export function SolutionsMorph() {
             <motion.div
               key={s.id}
               style={{ opacity, position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h }}
-              className="rounded-xl p-5 flex flex-col"
+              className="rounded-2xl p-5 flex flex-col overflow-hidden"
             >
-              <div className="absolute inset-0 rounded-xl bg-white/[0.02] border border-white/10 backdrop-blur-sm" />
-              <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-infrared/40" />
-              <div className="relative text-white/15 text-3xl font-black tabular-nums leading-none" style={headingFont}>
-                {String(i + 1).padStart(2, "0")}
-              </div>
-              <div className="relative mt-auto">
-                <div className="w-10 h-10 rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-3">
+              {/* Dark glass, same family as the role cards */}
+              <div
+                className="absolute inset-0 rounded-2xl backdrop-blur-md"
+                style={{
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 0 60px -26px rgba(255,51,102,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                }}
+              />
+              <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-infrared/50" />
+
+              <div className="relative flex items-start justify-between">
+                <div
+                  className="w-11 h-11 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(255,51,102,0.07)", border: "1px solid rgba(255,51,102,0.28)" }}
+                >
                   {s.icon}
                 </div>
-                <div className="text-infrared text-sm font-bold uppercase tracking-widest mb-2">{t(s.titleKey)}</div>
-                <p className="text-white/65 text-[13px] leading-relaxed" style={bodyFont}>
+                <div className="text-white/[0.13] text-2xl font-black tabular-nums leading-none" style={headingFont}>
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+              </div>
+
+              <div className="relative mt-auto">
+                <div className="text-infrared text-[13px] font-bold uppercase tracking-[0.2em] mb-1.5">{t(s.titleKey)}</div>
+                <p className="text-white/55 text-xs leading-snug" style={bodyFont}>
                   {t(s.descKey)}
                 </p>
+                {/* Step indicator — the five solutions are the booking pipeline, in order */}
+                <div className="flex items-center gap-1.5 mt-3.5">
+                  {SOLUTIONS.map((_, d) => (
+                    <span
+                      key={d}
+                      className={`h-[3px] rounded-full transition-none ${d === i ? "w-5 bg-infrared" : "w-[3px] bg-white/20"}`}
+                    />
+                  ))}
+                </div>
               </div>
             </motion.div>
           );

@@ -84,24 +84,35 @@ export function NodeField() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    // Node's target inside a cluster box (stable placement from its random seed).
+    // Node's target in/around a cluster box (stable placement from its random
+    // seed). Slightly wider than the box so some dots ring the card edges sharp
+    // while the ones behind the glass read as bokeh.
     const clusterPos = (i: number, boxes: Box[]): [number, number] => {
       const b = boxes[i % boxes.length];
-      return [b.x + (0.12 + 0.76 * nodes[i].sx) * b.w, b.y + (0.12 + 0.76 * nodes[i].sy) * b.h];
+      return [b.x + (-0.06 + 1.12 * nodes[i].sx) * b.w, b.y + (-0.08 + 1.16 * nodes[i].sy) * b.h];
     };
 
-    // How centred a section is in the viewport: smooth 0→1→0 as it enters/leaves.
-    const activeness = (id: string): number => {
+    // Pin progress of a tall pinned section (sticky 100vh child): 0 when the pin
+    // engages, 1 when it releases. Mirrors framer's useScroll("start start" →
+    // "end end") so canvas and DOM share one clock.
+    const pinProgress = (id: string): number => {
       const el = document.getElementById(id);
-      if (!el) return 0;
+      if (!el) return -1;
       const rect = el.getBoundingClientRect();
-      const c = height / 2;
-      const top = rect.top;
-      const bottom = rect.top + rect.height;
-      const ramp = height * 0.5;
-      if (top <= c && bottom >= c) return 1;
-      if (bottom < c) return clamp01(1 - (c - bottom) / ramp);
-      return clamp01(1 - (top - c) / ramp);
+      const range = rect.height - height;
+      if (range <= 0) return -1;
+      return -rect.top / range;
+    };
+
+    const window01 = (p: number, a: number, b: number) => easeInOut(clamp01((p - a) / (b - a)));
+
+    // Gather exactly when the cards resolve: these windows shadow the card
+    // opacity transforms in RolesMorph/SolutionsMorph ([0.06,0.22,0.8,0.94]),
+    // leading by a hair so the dots visibly arrive first.
+    const activeness = (id: string): number => {
+      const p = pinProgress(id);
+      if (p <= 0 || p >= 1) return 0;
+      return Math.min(window01(p, 0.03, 0.2), 1 - window01(p, 0.82, 0.97));
     };
 
     // Load assembly: scattered → globe over ~1.4s, once.
@@ -177,11 +188,30 @@ export function NodeField() {
         }
       }
 
+      // Constellation links inside each settled cluster — nodes i and i+k share
+      // a box by construction (clusterPos uses i % k), so each cluster reads as
+      // a small living network, not a loose dot pile.
+      if (clustered > 0.1) {
+        const k = aS >= aR ? 5 : 4;
+        ctx.lineWidth = 1;
+        for (let i = 0; i + k < count; i++) {
+          const j = i + k;
+          const dx = px[i] - px[j];
+          const dy = py[i] - py[j];
+          if (dx * dx + dy * dy > 170 * 170) continue;
+          ctx.strokeStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${clustered * 0.13})`;
+          ctx.beginPath();
+          ctx.moveTo(px[i], py[i]);
+          ctx.lineTo(px[j], py[j]);
+          ctx.stroke();
+        }
+      }
+
       for (let i = 0; i < count; i++) {
         // when clustered, brighten uniformly (no globe depth); on globe, use depth
         const d = depth[i];
-        const a = (0.25 + 0.55 * d) * (1 - clustered) + 0.7 * clustered;
-        const size = (1 + 1.6 * d) * (1 - clustered) + 2 * clustered;
+        const a = (0.25 + 0.55 * d) * (1 - clustered) + 0.85 * clustered;
+        const size = (1 + 1.6 * d) * (1 - clustered) + 2.2 * clustered;
         ctx.fillStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${a})`;
         ctx.beginPath();
         ctx.arc(px[i], py[i], size, 0, Math.PI * 2);

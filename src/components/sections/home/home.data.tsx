@@ -3,8 +3,13 @@ import type { ReactNode } from "react";
 /**
  * Home-page narrative data. Roles are reframed as one-line VALUE props (not the
  * paragraph copy on /roles); the 10 platform features are regrouped into 5
- * SOLUTIONS. Icons/colors are copied from the /roles and /features detail pages
- * (kept in sync manually — those pages are intentionally left untouched).
+ * SOLUTIONS, ordered as the chronological booking pipeline:
+ * Discover → Connect → Book → Contract → Tour.
+ *
+ * Icons are a bespoke set (not the stock outlines used on /roles & /features):
+ * one geometric language across all nine — 1.25px strokes, orbital/line motifs
+ * echoing the TORA globe, a single accent element per mark. Role icons carry the
+ * role color; solution icons are infrared with a white secondary layer.
  */
 
 export type Role = {
@@ -22,8 +27,8 @@ export type Solution = {
   icon: ReactNode;
 };
 
-const stroke = (color: string) =>
-  ({ fill: "none", stroke: color, strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const);
+const stroke = (color: string, width = 1.25) =>
+  ({ fill: "none", stroke: color, strokeWidth: width, strokeLinecap: "round", strokeLinejoin: "round" } as const);
 
 export const ROLES: Role[] = [
   {
@@ -32,11 +37,10 @@ export const ROLES: Role[] = [
     valueKey: "home_role_artist_value",
     color: "#667EEA",
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" {...stroke("#667EEA")}>
-        <circle cx="12" cy="12" r="10" />
-        <path d="M9 12l2-3h2l2 3" opacity="0.5" />
-        <path d="M8 16c0-2.2 1.8-4 4-4s4 1.8 4 4" />
-        <circle cx="12" cy="8" r="2" />
+      // Signal — a continuous audio pulse
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#667EEA")}>
+        <path d="M2.5 12h3l2-4.5 2.5 9L13 4l2.5 12.5 2-7.5 1.5 3h2.5" />
+        <circle cx="13" cy="4" r="0.9" fill="#667EEA" stroke="none" opacity="0.9" />
       </svg>
     ),
   },
@@ -46,11 +50,13 @@ export const ROLES: Role[] = [
     valueKey: "home_role_agent_value",
     color: "#43E97B",
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" {...stroke("#43E97B")}>
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" opacity="0.5" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" opacity="0.5" />
+      // Orbit — the connector at the centre of moving parts
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#43E97B")}>
+        <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(-25 12 12)" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(55 12 12)" opacity="0.45" />
+        <circle cx="12" cy="12" r="1.4" fill="#43E97B" stroke="none" />
+        <circle cx="19.6" cy="8.4" r="1" fill="#43E97B" stroke="none" opacity="0.85" />
+        <circle cx="6" cy="17.4" r="0.8" fill="#43E97B" stroke="none" opacity="0.5" />
       </svg>
     ),
   },
@@ -60,10 +66,12 @@ export const ROLES: Role[] = [
     valueKey: "home_role_promoter_value",
     color: "#FFC107",
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" {...stroke("#FFC107")}>
-        <path d="M18 3v12" />
-        <path d="M18 3L6 8H2v4h4l12 5V3z" />
-        <path d="M6 15v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3" opacity="0.5" />
+      // Broadcast — arcs radiating from the source
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FFC107")}>
+        <circle cx="6.5" cy="17.5" r="1.4" fill="#FFC107" stroke="none" />
+        <path d="M6.5 13.5A4 4 0 0 1 10.5 17.5" />
+        <path d="M6.5 10.5A7 7 0 0 1 13.5 17.5" opacity="0.55" />
+        <path d="M6.5 7.5A10 10 0 0 1 16.5 17.5" opacity="0.28" />
       </svg>
     ),
   },
@@ -73,15 +81,19 @@ export const ROLES: Role[] = [
     valueKey: "home_role_venue_value",
     color: "#F5576C",
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" {...stroke("#F5576C")}>
-        <path d="M3 21h18" />
-        <path d="M5 21V7l7-4 7 4v14" />
-        <rect x="9" y="13" width="6" height="8" rx="1" opacity="0.4" />
-        <line x1="12" y1="9" x2="12" y2="11" opacity="0.5" />
+      // Portal — the arch where it happens
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#F5576C")}>
+        <path d="M5.5 19.5v-6a6.5 6.5 0 0 1 13 0v6" />
+        <path d="M3 19.5h18" />
+        <path d="M9.5 19.5v-4a2.5 2.5 0 0 1 5 0v4" opacity="0.45" />
+        <circle cx="12" cy="6" r="0.9" fill="#F5576C" stroke="none" opacity="0.9" />
       </svg>
     ),
   },
 ];
+
+const INFRARED = "#FF3366";
+const GHOST = "rgba(255,255,255,0.45)";
 
 export const SOLUTIONS: Solution[] = [
   {
@@ -89,49 +101,14 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_discover_title",
     descKey: "home_solution_discover_desc",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" {...stroke("#FF3366")}>
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        <circle cx="11" cy="11" r="3" opacity="0.4" />
-      </svg>
-    ),
-  },
-  {
-    id: "book",
-    titleKey: "home_solution_book_title",
-    descKey: "home_solution_book_desc",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" {...stroke("#FF3366")}>
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
-        <path d="M9 15l2 2 4-4" opacity="0.6" />
-      </svg>
-    ),
-  },
-  {
-    id: "contract",
-    titleKey: "home_solution_contract_title",
-    descKey: "home_solution_contract_desc",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" {...stroke("#FF3366")}>
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-        <line x1="8" y1="13" x2="16" y2="13" opacity="0.5" />
-        <path d="M8 17l2 2 4-4" opacity="0.6" />
-      </svg>
-    ),
-  },
-  {
-    id: "tour",
-    titleKey: "home_solution_tour_title",
-    descKey: "home_solution_tour_desc",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" {...stroke("#FF3366")}>
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      // Radar — the scene, scanned
+      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
+        <circle cx="12" cy="12" r="8" stroke={GHOST} />
+        <path d="M12 12l4.6-4.6" />
+        <path d="M20 12a8 8 0 0 1-2.34 5.66" opacity="0.5" />
+        <circle cx="12" cy="12" r="1" fill={INFRARED} stroke="none" />
+        <circle cx="15.4" cy="15.2" r="1.1" fill={INFRARED} stroke="none" opacity="0.9" />
+        <path d="M12 3.5v1.2M12 19.3v1.2M3.5 12h1.2M19.3 12h1.2" stroke={GHOST} opacity="0.6" />
       </svg>
     ),
   },
@@ -140,10 +117,57 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_connect_title",
     descKey: "home_solution_connect_desc",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" {...stroke("#FF3366")}>
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        <line x1="8" y1="9" x2="16" y2="9" opacity="0.4" />
-        <line x1="8" y1="13" x2="13" y2="13" opacity="0.4" />
+      // Nodes — two sides of the scene, linked
+      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
+        <circle cx="6.5" cy="16.5" r="2.4" stroke={GHOST} />
+        <circle cx="17.5" cy="7.5" r="2.4" />
+        <path d="M8.4 14.9l7.2-5.8" />
+        <circle cx="19" cy="17" r="1" fill={INFRARED} stroke="none" opacity="0.8" />
+        <path d="M17.9 15.9l-6-4" stroke={GHOST} opacity="0.5" strokeDasharray="1.5 2.5" />
+      </svg>
+    ),
+  },
+  {
+    id: "book",
+    titleKey: "home_solution_book_title",
+    descKey: "home_solution_book_desc",
+    icon: (
+      // Date — held
+      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
+        <rect x="4" y="5.5" width="16" height="14.5" rx="2.5" stroke={GHOST} />
+        <path d="M8.5 3.5v3M15.5 3.5v3" stroke={GHOST} />
+        <path d="M4 10h16" stroke={GHOST} opacity="0.6" />
+        <circle cx="15" cy="14.5" r="1.3" fill={INFRARED} stroke="none" />
+        <circle cx="9" cy="14.5" r="0.8" fill="rgba(255,255,255,0.35)" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    id: "contract",
+    titleKey: "home_solution_contract_title",
+    descKey: "home_solution_contract_desc",
+    icon: (
+      // Terms — signed
+      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
+        <path d="M14 3.5H7A2 2 0 0 0 5 5.5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z" stroke={GHOST} />
+        <path d="M14 3.5v5h5" stroke={GHOST} opacity="0.6" />
+        <path d="M8.5 15.5c1.2-1 1.8 1 3 0s1.8 1 3.5 0" />
+        <circle cx="15.8" cy="12" r="0.9" fill={INFRARED} stroke="none" opacity="0.9" />
+      </svg>
+    ),
+  },
+  {
+    id: "tour",
+    titleKey: "home_solution_tour_title",
+    descKey: "home_solution_tour_desc",
+    icon: (
+      // Route — plotted city to city
+      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
+        <path d="M5 18.5c6.5 0 3.5-11.5 13-12.5" stroke={GHOST} strokeDasharray="2.5 3" />
+        <circle cx="5" cy="18.5" r="1.8" />
+        <circle cx="18.5" cy="5.8" r="1.8" stroke={GHOST} />
+        <circle cx="18.5" cy="5.8" r="0.7" fill={INFRARED} stroke="none" />
+        <circle cx="11.2" cy="11.6" r="0.8" fill={INFRARED} stroke="none" opacity="0.7" />
       </svg>
     ),
   },

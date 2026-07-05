@@ -33,7 +33,7 @@ export function roleBoxes(w: number, h: number): Box[] {
 /** 5 solution cards: 3 across the top, 2 across the bottom, centered. */
 export function solutionBoxes(w: number, h: number): Box[] {
   const cardW = clamp(w * 0.22, 200, 280);
-  const cardH = clamp(h * 0.26, 150, 190);
+  const cardH = clamp(h * 0.3, 175, 235);
   const gap = clamp(w * 0.025, 18, 40);
   const totalH = cardH * 2 + gap;
   const y0 = (h - totalH) / 2 + h * 0.03;

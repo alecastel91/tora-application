@@ -50,22 +50,28 @@ export function RolesMorph() {
             <motion.div
               key={role.id}
               style={{ opacity, position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h }}
-              className="flex flex-col items-center justify-center text-center rounded-xl px-5"
+              className="flex flex-col items-center justify-center text-center rounded-2xl px-5"
             >
+              {/* Dark glass: gathered dots behind read as soft bokeh, dots around
+                  the edges stay sharp — and the copy stays legible. */}
               <div
-                className="absolute inset-0 rounded-xl"
-                style={{ background: `${role.color}0a`, border: `1px solid ${role.color}33` }}
+                className="absolute inset-0 rounded-2xl backdrop-blur-md"
+                style={{
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
+                  border: `1px solid ${role.color}3d`,
+                  boxShadow: `0 0 60px -24px ${role.color}80, inset 0 1px 0 rgba(255,255,255,0.06)`,
+                }}
               />
               <div
                 className="relative w-12 h-12 rounded-full flex items-center justify-center mb-3"
-                style={{ background: `${role.color}12`, border: `1px solid ${role.color}30` }}
+                style={{ background: `${role.color}14`, border: `1px solid ${role.color}38` }}
               >
                 {role.icon}
               </div>
-              <div className="relative text-[11px] font-bold uppercase tracking-[0.25em] mb-1.5" style={{ color: role.color }}>
+              <div className="relative text-[10px] font-bold uppercase tracking-[0.3em] mb-2" style={{ color: role.color }}>
                 {t(role.labelKey)}
               </div>
-              <div className="relative text-white text-lg md:text-2xl font-black uppercase tracking-tight leading-tight" style={headingFont}>
+              <div className="relative text-white text-lg md:text-[22px] font-black uppercase tracking-tight leading-tight" style={headingFont}>
                 {t(role.valueKey)}
               </div>
             </motion.div>
