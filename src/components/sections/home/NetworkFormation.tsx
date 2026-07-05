@@ -30,6 +30,12 @@ export function NetworkFormation() {
   return (
     <section id="network" ref={ref} className="relative" style={{ height: "170vh" }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6">
+        {/* Soft scrim so the headlines stay legible over the node globe behind */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 55% 45% at center, rgba(0,0,0,0.55), transparent 70%)" }}
+        />
         {/* The tension */}
         <motion.div
           style={{ opacity: problemOpacity, y: problemY }}

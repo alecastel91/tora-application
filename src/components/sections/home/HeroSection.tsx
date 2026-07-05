@@ -36,7 +36,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, ease: EASE_TORA }}
         >
           <Image
-            src="/tora_logo_v2.png"
+            src="/tora_logo_transparent.png"
             alt="TORA"
             width={500}
             height={166}

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useScroll, useTransform } from "framer-motion";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { BottomNav } from "@/components/ui/PageNav";
 import { HomeNav } from "@/components/ui/HomeNav";
@@ -21,7 +22,8 @@ export default function Home() {
       <WaveMesh />
       <NodeField />
 
-      <main className="relative z-10 overflow-x-hidden font-sans selection:bg-infrared/30 selection:text-white">
+      {/* overflow-x-clip (not -hidden): hidden makes <main> a scroll container, which breaks position:sticky in every pinned section */}
+      <main className="relative z-10 overflow-x-clip font-sans selection:bg-infrared/30 selection:text-white">
         <HeroSection />
         <NetworkFormation />
         <RolesSection />
@@ -30,7 +32,23 @@ export default function Home() {
         <FinalCtaSection />
       </main>
 
-      <BottomNav />
+      <HomeBottomNav />
     </LenisProvider>
+  );
+}
+
+/**
+ * Bottom nav visible on the hero (language picker stays discoverable on landing)
+ * and at the final CTA / footer, but faded out during the scroll journey so the
+ * cinematic beats get the full viewport.
+ */
+function HomeBottomNav() {
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.04, 0.1, 0.85, 0.93], [1, 1, 0, 0, 1]);
+  const pointerEvents = useTransform(opacity, (v) => (v < 0.4 ? "none" : "auto"));
+  return (
+    <motion.div style={{ opacity, pointerEvents }}>
+      <BottomNav />
+    </motion.div>
   );
 }
