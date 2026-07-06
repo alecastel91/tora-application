@@ -56,7 +56,7 @@ export function SolutionsMorph() {
               <div
                 className="absolute inset-0 rounded-2xl backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(165deg, rgba(13,13,18,0.88), rgba(13,13,18,0.66))",
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.78), rgba(13,13,18,0.56))",
                   border: "1px solid rgba(255,255,255,0.1)",
                   boxShadow: "0 0 60px -26px rgba(255,51,102,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                 }}
