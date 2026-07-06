@@ -8,7 +8,6 @@ import { solutionBoxes, type Box } from "./morphLayout";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
-const supremeFont = { fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" };
 
 /**
  * Beat 5 desktop — the role clusters regroup into 5 solution clusters (NodeField)
@@ -39,7 +38,7 @@ export function SolutionsMorph() {
           style={{ opacity: eyebrow }}
           className="absolute top-24 left-1/2 -translate-x-1/2 text-center px-6"
         >
-          <span className="text-white/45 text-[11px] md:text-xs uppercase tracking-[0.3em]" style={supremeFont}>
+          <span className="text-white/90 text-2xl md:text-3xl font-black uppercase tracking-tight" style={headingFont}>
             {t("home_solutions_title")}
           </span>
         </motion.div>
@@ -65,19 +64,21 @@ export function SolutionsMorph() {
               <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-infrared/50" />
 
               <div className="relative flex items-start justify-between">
+                {/* [&>svg] sizing scales the shared icon up on desktop only — the
+                    mobile grid renders the same SVGs at their intrinsic size */}
                 <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center"
+                  className="w-16 h-16 rounded-full flex items-center justify-center [&>svg]:w-9 [&>svg]:h-9"
                   style={{ background: "rgba(255,51,102,0.07)", border: "1px solid rgba(255,51,102,0.28)" }}
                 >
                   {s.icon}
                 </div>
-                <div className="text-white/[0.13] text-2xl font-black tabular-nums leading-none" style={headingFont}>
+                <div className="text-white/[0.13] text-3xl font-black tabular-nums leading-none" style={headingFont}>
                   {String(i + 1).padStart(2, "0")}
                 </div>
               </div>
 
               <div className="relative mt-auto">
-                <div className="text-infrared text-[13px] font-bold uppercase tracking-[0.2em] mb-1.5">{t(s.titleKey)}</div>
+                <div className="text-infrared text-sm md:text-[15px] font-bold uppercase tracking-[0.18em] mb-2">{t(s.titleKey)}</div>
                 <p className="text-white/55 text-xs leading-snug" style={bodyFont}>
                   {t(s.descKey)}
                 </p>

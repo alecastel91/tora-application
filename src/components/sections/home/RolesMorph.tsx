@@ -7,7 +7,6 @@ import { ROLES } from "./home.data";
 import { roleBoxes, type Box } from "./morphLayout";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
-const supremeFont = { fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" };
 
 /**
  * Beat 4 desktop — the globe's nodes gather into 4 clusters (NodeField) while
@@ -39,7 +38,7 @@ export function RolesMorph() {
           style={{ opacity: eyebrow }}
           className="absolute top-24 left-1/2 -translate-x-1/2 text-center px-6"
         >
-          <span className="text-white/45 text-[11px] md:text-xs uppercase tracking-[0.3em]" style={supremeFont}>
+          <span className="text-white/90 text-2xl md:text-3xl font-black uppercase tracking-tight" style={headingFont}>
             {t("home_roles_title")}
           </span>
         </motion.div>
@@ -63,13 +62,15 @@ export function RolesMorph() {
                   boxShadow: `0 0 60px -24px ${role.color}80, inset 0 1px 0 rgba(255,255,255,0.06)`,
                 }}
               />
+              {/* [&>svg] sizing scales the shared icon up on desktop only — the
+                  mobile stack renders the same SVGs at their intrinsic size */}
               <div
-                className="relative w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                className="relative w-20 h-20 rounded-full flex items-center justify-center mb-5 [&>svg]:w-10 [&>svg]:h-10"
                 style={{ background: `${role.color}14`, border: `1px solid ${role.color}38` }}
               >
                 {role.icon}
               </div>
-              <div className="relative text-[10px] font-bold uppercase tracking-[0.3em] mb-2" style={{ color: role.color }}>
+              <div className="relative text-[11px] font-bold uppercase tracking-[0.3em] mb-2.5" style={{ color: role.color }}>
                 {t(role.labelKey)}
               </div>
               <div className="relative text-white text-lg md:text-[22px] font-black uppercase tracking-tight leading-tight" style={headingFont}>
