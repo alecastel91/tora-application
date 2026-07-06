@@ -55,9 +55,9 @@ export function RolesMorph() {
               {/* Dark glass: gathered dots behind read as soft bokeh, dots around
                   the edges stay sharp — and the copy stays legible. */}
               <div
-                className="absolute inset-0 rounded-2xl backdrop-blur-md"
+                className="absolute inset-0 rounded-2xl backdrop-blur-[3px]"
                 style={{
-                  background: "linear-gradient(165deg, rgba(13,13,18,0.76), rgba(13,13,18,0.46))",
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.6), rgba(13,13,18,0.3))",
                   border: `1px solid ${role.color}3d`,
                   boxShadow: `0 0 60px -24px ${role.color}80, inset 0 1px 0 rgba(255,255,255,0.06)`,
                 }}
