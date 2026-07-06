@@ -55,9 +55,9 @@ export function RolesMorph() {
               {/* Dark glass: gathered dots behind read as soft bokeh, dots around
                   the edges stay sharp — and the copy stays legible. */}
               <div
-                className="absolute inset-0 rounded-2xl backdrop-blur-[3px]"
+                className="absolute inset-0 rounded-2xl backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(165deg, rgba(13,13,18,0.6), rgba(13,13,18,0.3))",
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
                   border: `1px solid ${role.color}3d`,
                   boxShadow: `0 0 60px -24px ${role.color}80, inset 0 1px 0 rgba(255,255,255,0.06)`,
                 }}
@@ -75,7 +75,7 @@ export function RolesMorph() {
               <div className="relative text-[11px] font-bold uppercase tracking-[0.3em] mb-2.5" style={{ color: role.color }}>
                 {t(role.labelKey)}
               </div>
-              <div className="relative text-white text-lg md:text-[22px] font-black uppercase tracking-tight leading-tight" style={headingFont}>
+              <div className="relative text-white text-lg md:text-xl font-black uppercase tracking-tight leading-tight" style={headingFont}>
                 {t(role.valueKey)}
               </div>
             </motion.div>
