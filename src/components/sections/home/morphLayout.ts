@@ -11,37 +11,25 @@ export type Box = { x: number; y: number; w: number; h: number };
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
-/** 4 role cards in a centered 2×2 grid. */
+/** 4 role cards in one elegant row of squares spanning the page. */
 export function roleBoxes(w: number, h: number): Box[] {
-  const cardW = clamp(w * 0.34, 240, 340);
-  const cardH = clamp(h * 0.24, 120, 160);
-  const gapX = clamp(w * 0.05, 24, 56);
-  const gapY = clamp(h * 0.05, 24, 48);
-  const totalW = cardW * 2 + gapX;
-  const totalH = cardH * 2 + gapY;
-  const x0 = (w - totalW) / 2;
-  const y0 = (h - totalH) / 2 + h * 0.03;
+  const gap = clamp(w * 0.02, 16, 32);
+  const side = Math.min(clamp((w * 0.86 - gap * 3) / 4, 200, 300), h * 0.42);
+  const x0 = (w - (side * 4 + gap * 3)) / 2;
+  const y0 = (h - side) / 2 + h * 0.02;
   const boxes: Box[] = [];
-  for (let r = 0; r < 2; r++) {
-    for (let c = 0; c < 2; c++) {
-      boxes.push({ x: x0 + c * (cardW + gapX), y: y0 + r * (cardH + gapY), w: cardW, h: cardH });
-    }
-  }
-  return boxes; // [topL, topR, botL, botR]
+  for (let i = 0; i < 4; i++) boxes.push({ x: x0 + i * (side + gap), y: y0, w: side, h: side });
+  return boxes;
 }
 
-/** 5 solution cards: 3 across the top, 2 across the bottom, centered. */
+/** 5 solution cards in one row — the booking pipeline, left to right. */
 export function solutionBoxes(w: number, h: number): Box[] {
-  const cardW = clamp(w * 0.22, 200, 280);
-  const cardH = clamp(h * 0.3, 175, 235);
-  const gap = clamp(w * 0.025, 18, 40);
-  const totalH = cardH * 2 + gap;
-  const y0 = (h - totalH) / 2 + h * 0.03;
-  const rowWidth = (n: number) => n * cardW + (n - 1) * gap;
+  const gap = clamp(w * 0.016, 14, 26);
+  const cardW = clamp((w * 0.9 - gap * 4) / 5, 190, 260);
+  const cardH = clamp(h * 0.36, 260, 330);
+  const x0 = (w - (cardW * 5 + gap * 4)) / 2;
+  const y0 = (h - cardH) / 2 + h * 0.02;
   const boxes: Box[] = [];
-  let x0 = (w - rowWidth(3)) / 2;
-  for (let i = 0; i < 3; i++) boxes.push({ x: x0 + i * (cardW + gap), y: y0, w: cardW, h: cardH });
-  x0 = (w - rowWidth(2)) / 2;
-  for (let i = 0; i < 2; i++) boxes.push({ x: x0 + i * (cardW + gap), y: y0 + cardH + gap, w: cardW, h: cardH });
+  for (let i = 0; i < 5; i++) boxes.push({ x: x0 + i * (cardW + gap), y: y0, w: cardW, h: cardH });
   return boxes;
 }

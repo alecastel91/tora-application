@@ -13,11 +13,10 @@ export function EthosSection() {
   const { t } = useLanguage();
 
   return (
-    // -8vh: the headline peeks in only once the solutions cards have finished
-    // dissolving — attached to the beat, but never overlapping the cards
+    // Desktop: -8vh so the headline rides in as the solutions pin lets go (but
+    // never over the cards). Phone: real breathing room after the grid instead.
     <section
-      className="relative pt-10 pb-24 md:pt-12 md:pb-32 flex flex-col items-center justify-center px-6 text-center"
-      style={{ marginTop: "-8vh" }}
+      className="relative mt-16 md:-mt-[8vh] pt-10 pb-24 md:pt-12 md:pb-32 flex flex-col items-center justify-center px-6 text-center"
     >
       <SectionReveal>
         <div className="laser-line w-24 h-px mx-auto mb-10 opacity-60" />

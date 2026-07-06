@@ -12,8 +12,8 @@ const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
  * the roles beat. Each block carries a soft radial scrim for legibility over
  * the node globe behind.
  *
- * pointer-events-none: the section overlaps the hero's tail (-25vh) and is
- * purely text.
+ * pointer-events-none: purely text, never intercepts clicks meant for the
+ * layers around it.
  */
 export function NetworkFormation() {
   const { t } = useLanguage();
@@ -27,7 +27,7 @@ export function NetworkFormation() {
   );
 
   return (
-    <section id="network" className="relative pointer-events-none" style={{ marginTop: "-25vh" }}>
+    <section id="network" className="relative pointer-events-none">
       {/* The tension */}
       <div className="relative min-h-[70vh] flex items-center justify-center px-6">
         {scrim}

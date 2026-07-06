@@ -51,7 +51,7 @@ export function SolutionsMorph() {
             <motion.div
               key={s.id}
               style={{ opacity, position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h }}
-              className="rounded-2xl p-5 flex flex-col overflow-hidden"
+              className="rounded-2xl p-4 flex flex-col overflow-hidden"
             >
               {/* Dark glass, same family as the role cards */}
               <div

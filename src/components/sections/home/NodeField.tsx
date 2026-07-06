@@ -84,12 +84,29 @@ export function NodeField() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    // Node's target in/around a cluster box (stable placement from its random
-    // seed). Slightly wider than the box so some dots ring the card edges sharp
-    // while the ones behind the glass read as bokeh.
-    const clusterPos = (i: number, boxes: Box[]): [number, number] => {
-      const b = boxes[i % boxes.length];
-      return [b.x + (-0.06 + 1.12 * nodes[i].sx) * b.w, b.y + (-0.08 + 1.16 * nodes[i].sy) * b.h];
+    // Signal strand: instead of dot piles under each card, the nodes settle
+    // into a thin horizontal band running behind the single card row — the
+    // network threading the cards together. Stable placement from each node's
+    // random seed.
+    const rowMetrics = (boxes: Box[]) => {
+      let left = Infinity;
+      let right = -Infinity;
+      let cy = 0;
+      for (const b of boxes) {
+        left = Math.min(left, b.x);
+        right = Math.max(right, b.x + b.w);
+        cy += b.y + b.h / 2;
+      }
+      return { left, right, cy: cy / boxes.length, h: boxes[0].h };
+    };
+    // The strand extends past the row edges and stays vertically tight, so it
+    // reads as one thin network line threading through the gaps between cards.
+    const strandPos = (i: number, m: ReturnType<typeof rowMetrics>): [number, number] => {
+      const reach = width * 0.07;
+      return [
+        m.left - reach + nodes[i].sx * (m.right - m.left + reach * 2),
+        m.cy + (nodes[i].sy - 0.5) * Math.min(m.h * 0.35, 90),
+      ];
     };
 
     // Pin progress of a tall pinned section (sticky 100vh child): 0 when the pin
@@ -115,13 +132,13 @@ export function NodeField() {
       return Math.min(window01(p, 0.0, 0.16), 1 - window01(p, 0.82, 0.97));
     };
 
-    // Load assembly: scattered → globe over ~1.4s, once.
-    const INTRO_MS = 1400;
-    let introStart = -1;
-
     const draw = (time: number) => {
-      if (introStart < 0) introStart = time;
-      const intro = reduced ? 1 : easeInOut(clamp01((time - introStart) / INTRO_MS));
+      // The hero lands with no globe — only the ambient background. The nodes
+      // fly out of scatter and assemble into the globe over the first ~0.7
+      // viewports of scroll (static-visible under reduced motion).
+      const intro = reduced
+        ? 1
+        : easeInOut(clamp01((window.scrollY - height * 0.12) / (height * 0.55)));
 
       const cx = width / 2;
       const cy = height / 2;
@@ -132,8 +149,8 @@ export function NodeField() {
       const aS = morphEnabled ? activeness("solutions") : 0;
       const clustered = Math.max(aR, aS);
 
-      const rBoxes = aR > 0.001 ? roleBoxes(width, height) : null;
-      const sBoxes = aS > 0.001 ? solutionBoxes(width, height) : null;
+      const rM = aR > 0.001 ? rowMetrics(roleBoxes(width, height)) : null;
+      const sM = aS > 0.001 ? rowMetrics(solutionBoxes(width, height)) : null;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -157,14 +174,14 @@ export function NodeField() {
         let X = scx + (gx - scx) * intro;
         let Y = scy + (gy - scy) * intro;
 
-        // morph globe → role clusters → solution clusters
-        if (rBoxes) {
-          const [rcx, rcy] = clusterPos(i, rBoxes);
+        // morph globe → roles strand → solutions strand
+        if (rM) {
+          const [rcx, rcy] = strandPos(i, rM);
           X += (rcx - X) * aR;
           Y += (rcy - Y) * aR;
         }
-        if (sBoxes) {
-          const [sxp, syp] = clusterPos(i, sBoxes);
+        if (sM) {
+          const [sxp, syp] = strandPos(i, sM);
           X += (sxp - X) * aS;
           Y += (syp - Y) * aS;
         }
@@ -188,9 +205,9 @@ export function NodeField() {
         }
       }
 
-      // Constellation links inside each settled cluster — nodes i and i+k share
-      // a box by construction (clusterPos uses i % k), so each cluster reads as
-      // a small living network, not a loose dot pile.
+      // Strand links — short connections between nearby nodes in the band, so
+      // the settled strand reads as one continuous network line threading the
+      // cards, not a loose dot pile.
       if (clustered > 0.1) {
         const k = aS >= aR ? 5 : 4;
         ctx.lineWidth = 1;
@@ -198,7 +215,7 @@ export function NodeField() {
           const j = i + k;
           const dx = px[i] - px[j];
           const dy = py[i] - py[j];
-          if (dx * dx + dy * dy > 170 * 170) continue;
+          if (dx * dx + dy * dy > 150 * 150) continue;
           ctx.strokeStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${clustered * 0.13})`;
           ctx.beginPath();
           ctx.moveTo(px[i], py[i]);
@@ -210,7 +227,7 @@ export function NodeField() {
       for (let i = 0; i < count; i++) {
         // when clustered, brighten uniformly (no globe depth); on globe, use depth
         const d = depth[i];
-        const a = (0.25 + 0.55 * d) * (1 - clustered) + 0.85 * clustered;
+        const a = ((0.25 + 0.55 * d) * (1 - clustered) + 0.85 * clustered) * Math.max(intro, clustered);
         const size = (1 + 1.6 * d) * (1 - clustered) + 2.2 * clustered;
         ctx.fillStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${a})`;
         ctx.beginPath();
