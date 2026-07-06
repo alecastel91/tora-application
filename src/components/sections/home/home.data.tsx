@@ -37,10 +37,12 @@ export const ROLES: Role[] = [
     valueKey: "home_role_artist_value",
     color: "#667EEA",
     icon: (
-      // Signal — a continuous audio pulse
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#667EEA")}>
-        <path d="M2.5 12h3l2-4.5 2.5 9L13 4l2.5 12.5 2-7.5 1.5 3h2.5" />
-        <circle cx="13" cy="4" r="0.9" fill="#667EEA" stroke="none" opacity="0.9" />
+      // The artist — a performer, with a signal leaving them
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#667EEA", 1.4)}>
+        <circle cx="12" cy="7.5" r="3.2" />
+        <path d="M5.5 19.5c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2" />
+        <path d="M17 3.6a4.8 4.8 0 0 1 1.5 2.9" opacity="0.55" />
+        <circle cx="19.4" cy="3" r="0.8" fill="#667EEA" stroke="none" opacity="0.9" />
       </svg>
     ),
   },
@@ -50,13 +52,12 @@ export const ROLES: Role[] = [
     valueKey: "home_role_agent_value",
     color: "#43E97B",
     icon: (
-      // Orbit — the connector at the centre of moving parts
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#43E97B")}>
-        <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(-25 12 12)" />
-        <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(55 12 12)" opacity="0.45" />
-        <circle cx="12" cy="12" r="1.4" fill="#43E97B" stroke="none" />
-        <circle cx="19.6" cy="8.4" r="1" fill="#43E97B" stroke="none" opacity="0.85" />
-        <circle cx="6" cy="17.4" r="0.8" fill="#43E97B" stroke="none" opacity="0.5" />
+      // The agent — one person representing another
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#43E97B", 1.4)}>
+        <circle cx="9" cy="8" r="3" />
+        <path d="M3 19.5c0-3.3 2.7-5.7 6-5.7s6 2.4 6 5.7" />
+        <circle cx="16.8" cy="9" r="2.4" opacity="0.5" />
+        <path d="M16.6 13.9c2.6.4 4.4 2.5 4.4 5.1" opacity="0.5" />
       </svg>
     ),
   },
@@ -66,12 +67,11 @@ export const ROLES: Role[] = [
     valueKey: "home_role_promoter_value",
     color: "#FFC107",
     icon: (
-      // Broadcast — arcs radiating from the source
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FFC107")}>
-        <circle cx="6.5" cy="17.5" r="1.4" fill="#FFC107" stroke="none" />
-        <path d="M6.5 13.5A4 4 0 0 1 10.5 17.5" />
-        <path d="M6.5 10.5A7 7 0 0 1 13.5 17.5" opacity="0.55" />
-        <path d="M6.5 7.5A10 10 0 0 1 16.5 17.5" opacity="0.28" />
+      // The promoter — a megaphone, sound leaving the horn
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FFC107", 1.4)}>
+        <path d="M17.5 4 6.8 8.6H4.2a1.7 1.7 0 0 0-1.7 1.7v3.4a1.7 1.7 0 0 0 1.7 1.7h2.6L17.5 20z" />
+        <path d="M7.2 15.6v3.2a1.2 1.2 0 0 0 1.2 1.2h1.4" opacity="0.5" />
+        <path d="M20.2 9.2a4.2 4.2 0 0 1 0 5.6" opacity="0.6" />
       </svg>
     ),
   },
@@ -81,12 +81,12 @@ export const ROLES: Role[] = [
     valueKey: "home_role_venue_value",
     color: "#F5576C",
     icon: (
-      // Portal — the arch where it happens
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#F5576C")}>
-        <path d="M5.5 19.5v-6a6.5 6.5 0 0 1 13 0v6" />
-        <path d="M3 19.5h18" />
-        <path d="M9.5 19.5v-4a2.5 2.5 0 0 1 5 0v4" opacity="0.45" />
-        <circle cx="12" cy="6" r="0.9" fill="#F5576C" stroke="none" opacity="0.9" />
+      // The venue — a building with an arched entrance, light above the door
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#F5576C", 1.4)}>
+        <path d="M5 20V8.8L12 4.5l7 4.3V20" />
+        <path d="M3 20h18" />
+        <path d="M9.6 20v-3.4a2.4 2.4 0 0 1 4.8 0V20" opacity="0.55" />
+        <circle cx="12" cy="9.4" r="0.9" fill="#F5576C" stroke="none" opacity="0.9" />
       </svg>
     ),
   },
@@ -101,14 +101,12 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_discover_title",
     descKey: "home_solution_discover_desc",
     icon: (
-      // Radar — the scene, scanned
+      // Search — a magnifier with a live result inside the lens
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
-        <circle cx="12" cy="12" r="8" stroke={GHOST} />
-        <path d="M12 12l4.6-4.6" />
-        <path d="M20 12a8 8 0 0 1-2.34 5.66" opacity="0.5" />
-        <circle cx="12" cy="12" r="1" fill={INFRARED} stroke="none" />
-        <circle cx="15.4" cy="15.2" r="1.1" fill={INFRARED} stroke="none" opacity="0.9" />
-        <path d="M12 3.5v1.2M12 19.3v1.2M3.5 12h1.2M19.3 12h1.2" stroke={GHOST} opacity="0.6" />
+        <circle cx="10.8" cy="10.8" r="5.8" stroke={GHOST} />
+        <path d="M15.1 15.1 20 20" stroke={GHOST} />
+        <path d="M8 10.8a2.8 2.8 0 0 1 2.8-2.8" opacity="0.9" />
+        <circle cx="12.6" cy="12.2" r="1" fill={INFRARED} stroke="none" />
       </svg>
     ),
   },
@@ -117,13 +115,12 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_connect_title",
     descKey: "home_solution_connect_desc",
     icon: (
-      // Nodes — two sides of the scene, linked
+      // Messaging — a chat bubble, conversation live
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
-        <circle cx="6.5" cy="16.5" r="2.4" stroke={GHOST} />
-        <circle cx="17.5" cy="7.5" r="2.4" />
-        <path d="M8.4 14.9l7.2-5.8" />
-        <circle cx="19" cy="17" r="1" fill={INFRARED} stroke="none" opacity="0.8" />
-        <path d="M17.9 15.9l-6-4" stroke={GHOST} opacity="0.5" strokeDasharray="1.5 2.5" />
+        <path d="M20.5 14a2 2 0 0 1-2 2H8.2L4 19.5v-13a2 2 0 0 1 2-2h12.5a2 2 0 0 1 2 2z" stroke={GHOST} />
+        <circle cx="8.8" cy="10.3" r="0.8" fill="rgba(255,255,255,0.35)" stroke="none" />
+        <circle cx="12.2" cy="10.3" r="0.95" fill={INFRARED} stroke="none" />
+        <circle cx="15.6" cy="10.3" r="0.8" fill="rgba(255,255,255,0.35)" stroke="none" />
       </svg>
     ),
   },
@@ -132,13 +129,12 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_book_title",
     descKey: "home_solution_book_desc",
     icon: (
-      // Date — held
+      // Calendar — the date confirmed
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
-        <rect x="4" y="5.5" width="16" height="14.5" rx="2.5" stroke={GHOST} />
-        <path d="M8.5 3.5v3M15.5 3.5v3" stroke={GHOST} />
-        <path d="M4 10h16" stroke={GHOST} opacity="0.6" />
-        <circle cx="15" cy="14.5" r="1.3" fill={INFRARED} stroke="none" />
-        <circle cx="9" cy="14.5" r="0.8" fill="rgba(255,255,255,0.35)" stroke="none" />
+        <rect x="3.8" y="5.3" width="16.4" height="15" rx="2.4" stroke={GHOST} />
+        <path d="M8.3 3.2v3.4M15.7 3.2v3.4" stroke={GHOST} />
+        <path d="M3.8 10h16.4" stroke={GHOST} opacity="0.6" />
+        <path d="M9 14.8l2.1 2.1 4-4.2" />
       </svg>
     ),
   },
@@ -147,12 +143,11 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_contract_title",
     descKey: "home_solution_contract_desc",
     icon: (
-      // Terms — signed
+      // Document — signed
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
-        <path d="M14 3.5H7A2 2 0 0 0 5 5.5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z" stroke={GHOST} />
-        <path d="M14 3.5v5h5" stroke={GHOST} opacity="0.6" />
-        <path d="M8.5 15.5c1.2-1 1.8 1 3 0s1.8 1 3.5 0" />
-        <circle cx="15.8" cy="12" r="0.9" fill={INFRARED} stroke="none" opacity="0.9" />
+        <path d="M14 3.3H7a2 2 0 0 0-2 2v13.4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.3z" stroke={GHOST} />
+        <path d="M14 3.3v5h5" stroke={GHOST} opacity="0.6" />
+        <path d="M8.6 16.2c1.2-1 1.8 1 3 0s1.8 1 3.4 0" />
       </svg>
     ),
   },
@@ -161,13 +156,12 @@ export const SOLUTIONS: Solution[] = [
     titleKey: "home_solution_tour_title",
     descKey: "home_solution_tour_desc",
     icon: (
-      // Route — plotted city to city
+      // Map pin + route — city to city
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
-        <path d="M5 18.5c6.5 0 3.5-11.5 13-12.5" stroke={GHOST} strokeDasharray="2.5 3" />
-        <circle cx="5" cy="18.5" r="1.8" />
-        <circle cx="18.5" cy="5.8" r="1.8" stroke={GHOST} />
-        <circle cx="18.5" cy="5.8" r="0.7" fill={INFRARED} stroke="none" />
-        <circle cx="11.2" cy="11.6" r="0.8" fill={INFRARED} stroke="none" opacity="0.7" />
+        <path d="M18.3 3.5a3 3 0 0 1 3 3c0 2.2-3 5.2-3 5.2s-3-3-3-5.2a3 3 0 0 1 3-3z" stroke={GHOST} />
+        <circle cx="18.3" cy="6.5" r="1" fill={INFRARED} stroke="none" />
+        <path d="M4.5 20c6 0 4.5-7.5 9.3-8.8" stroke={GHOST} strokeDasharray="2.5 3" />
+        <circle cx="4.5" cy="20" r="1.7" />
       </svg>
     ),
   },

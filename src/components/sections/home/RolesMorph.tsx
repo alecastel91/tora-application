@@ -31,8 +31,9 @@ export function RolesMorph() {
   const eyebrow = useTransform(scrollYProgress, [0.02, 0.12, 0.85, 0.95], [0, 1, 1, 0]);
 
   return (
-    // -95vh overlap: the pin engages almost exactly as the previous one releases
-    <section id="roles" ref={ref} className="relative" style={{ height: "220vh", marginTop: "-95vh" }}>
+    // -32vh: the shift headline is still exiting the top of the viewport as the
+    // pin engages and the dots start gathering — attached, not overlapping
+    <section id="roles" ref={ref} className="relative" style={{ height: "220vh", marginTop: "-32vh" }}>
       <div className="sticky top-0 h-screen overflow-hidden pointer-events-none">
         <motion.div
           style={{ opacity: eyebrow }}

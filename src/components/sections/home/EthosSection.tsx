@@ -13,11 +13,11 @@ export function EthosSection() {
   const { t } = useLanguage();
 
   return (
-    // -35vh + slim top padding: the headline rides in while the solutions cards
-    // dissolve, so the post-pin scroll never shows a contentless viewport
+    // -8vh: the headline peeks in only once the solutions cards have finished
+    // dissolving — attached to the beat, but never overlapping the cards
     <section
       className="relative pt-10 pb-24 md:pt-12 md:pb-32 flex flex-col items-center justify-center px-6 text-center"
-      style={{ marginTop: "-35vh" }}
+      style={{ marginTop: "-8vh" }}
     >
       <SectionReveal>
         <div className="laser-line w-24 h-px mx-auto mb-10 opacity-60" />
