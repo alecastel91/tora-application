@@ -27,13 +27,13 @@ export function RolesMorph() {
   }, []);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const opacity = useTransform(scrollYProgress, [0.06, 0.22, 0.8, 0.94], [0, 1, 1, 0]);
-  const eyebrow = useTransform(scrollYProgress, [0.03, 0.15, 0.85, 0.95], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0.04, 0.18, 0.8, 0.94], [0, 1, 1, 0]);
+  const eyebrow = useTransform(scrollYProgress, [0.02, 0.12, 0.85, 0.95], [0, 1, 1, 0]);
 
   return (
-    // -50vh overlap: swallows half of the viewport-high dead gap after the previous pin releases
-    <section id="roles" ref={ref} className="relative" style={{ height: "220vh", marginTop: "-50vh" }}>
-      <div className="sticky top-0 h-screen overflow-hidden">
+    // -95vh overlap: the pin engages almost exactly as the previous one releases
+    <section id="roles" ref={ref} className="relative" style={{ height: "220vh", marginTop: "-95vh" }}>
+      <div className="sticky top-0 h-screen overflow-hidden pointer-events-none">
         <motion.div
           style={{ opacity: eyebrow }}
           className="absolute top-24 left-1/2 -translate-x-1/2 text-center px-6"

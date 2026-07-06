@@ -107,12 +107,12 @@ export function NodeField() {
     const window01 = (p: number, a: number, b: number) => easeInOut(clamp01((p - a) / (b - a)));
 
     // Gather exactly when the cards resolve: these windows shadow the card
-    // opacity transforms in RolesMorph/SolutionsMorph ([0.06,0.22,0.8,0.94]),
+    // opacity transforms in RolesMorph/SolutionsMorph ([0.04,0.18,0.8,0.94]),
     // leading by a hair so the dots visibly arrive first.
     const activeness = (id: string): number => {
       const p = pinProgress(id);
       if (p <= 0 || p >= 1) return 0;
-      return Math.min(window01(p, 0.03, 0.2), 1 - window01(p, 0.82, 0.97));
+      return Math.min(window01(p, 0.0, 0.16), 1 - window01(p, 0.82, 0.97));
     };
 
     // Load assembly: scattered → globe over ~1.4s, once.

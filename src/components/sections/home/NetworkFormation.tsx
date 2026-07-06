@@ -28,13 +28,23 @@ export function NetworkFormation() {
   const problemOpacity = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 1, 0]);
   const problemY = useTransform(scrollYProgress, [0, 0.5], [0, -40]);
   const problemFilter = useTransform(scrollYProgress, [0.3, 0.5], ["blur(0px)", "blur(10px)"]);
-  const shiftOpacity = useTransform(scrollYProgress, [0.44, 0.64, 1], [0, 1, 1]);
-  const shiftY = useTransform(scrollYProgress, [0.44, 0.68], [40, 0]);
-  const shiftFilter = useTransform(scrollYProgress, [0.44, 0.64], ["blur(10px)", "blur(0px)"]);
+  // The shift headline dissolves before the pin releases — with the -85vh roles
+  // overlap it would otherwise scroll off at full opacity over the role cards.
+  const shiftOpacity = useTransform(scrollYProgress, [0.44, 0.64, 0.88, 1], [0, 1, 1, 0]);
+  const shiftY = useTransform(scrollYProgress, [0.44, 0.68, 0.88, 1], [40, 0, 0, -30]);
+  const shiftFilter = useTransform(
+    scrollYProgress,
+    [0.44, 0.64, 0.88, 1],
+    ["blur(10px)", "blur(0px)", "blur(0px)", "blur(8px)"]
+  );
 
   return (
-    <section id="network" ref={ref} className="relative" style={{ height: "200vh" }}>
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6">
+    // -30vh overlap: the pin engages while the hero is still dissolving, so the
+    // problem headline slides straight up under the fading logo
+    <section id="network" ref={ref} className="relative" style={{ height: "200vh", marginTop: "-30vh" }}>
+      {/* pointer-events-none: with the section overlaps this child covers the
+          hero's scroll cue and the roles beat — it's purely visual */}
+      <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6 pointer-events-none">
         {/* Soft scrim so the headlines stay legible over the node globe behind */}
         <div
           aria-hidden="true"

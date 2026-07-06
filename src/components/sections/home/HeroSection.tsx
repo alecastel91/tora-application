@@ -24,7 +24,9 @@ export function HeroSection() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  // Fade late (0→0.85) so the logo is still dissolving as the problem headline
+  // slides up underneath — no blank frame between the hero and the first beat.
+  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
   const y = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
   return (

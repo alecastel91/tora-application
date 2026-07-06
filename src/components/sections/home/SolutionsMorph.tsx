@@ -28,13 +28,13 @@ export function SolutionsMorph() {
   }, []);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const opacity = useTransform(scrollYProgress, [0.06, 0.22, 0.8, 0.94], [0, 1, 1, 0]);
-  const eyebrow = useTransform(scrollYProgress, [0.03, 0.15, 0.85, 0.95], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0.04, 0.18, 0.8, 0.94], [0, 1, 1, 0]);
+  const eyebrow = useTransform(scrollYProgress, [0.02, 0.12, 0.85, 0.95], [0, 1, 1, 0]);
 
   return (
-    // -50vh overlap: swallows half of the viewport-high dead gap after the roles pin releases
-    <section id="solutions" ref={ref} className="relative" style={{ height: "220vh", marginTop: "-50vh" }}>
-      <div className="sticky top-0 h-screen overflow-hidden">
+    // -95vh overlap: role clusters sweep almost directly into the five solution clusters
+    <section id="solutions" ref={ref} className="relative" style={{ height: "220vh", marginTop: "-95vh" }}>
+      <div className="sticky top-0 h-screen overflow-hidden pointer-events-none">
         <motion.div
           style={{ opacity: eyebrow }}
           className="absolute top-24 left-1/2 -translate-x-1/2 text-center px-6"
@@ -57,7 +57,7 @@ export function SolutionsMorph() {
               <div
                 className="absolute inset-0 rounded-2xl backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.88), rgba(13,13,18,0.66))",
                   border: "1px solid rgba(255,255,255,0.1)",
                   boxShadow: "0 0 60px -26px rgba(255,51,102,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                 }}

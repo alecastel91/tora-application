@@ -13,7 +13,12 @@ export function EthosSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative py-24 md:py-32 flex flex-col items-center justify-center px-6 text-center">
+    // -35vh + slim top padding: the headline rides in while the solutions cards
+    // dissolve, so the post-pin scroll never shows a contentless viewport
+    <section
+      className="relative pt-10 pb-24 md:pt-12 md:pb-32 flex flex-col items-center justify-center px-6 text-center"
+      style={{ marginTop: "-35vh" }}
+    >
       <SectionReveal>
         <div className="laser-line w-24 h-px mx-auto mb-10 opacity-60" />
       </SectionReveal>

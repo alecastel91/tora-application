@@ -24,7 +24,8 @@ export function SolutionsGrid() {
           </h2>
         </SectionReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" style={bodyFont}>
+        {/* One solution per row on phones — the 5 steps read as a sequence */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={bodyFont}>
           {SOLUTIONS.map((s, i) => (
             <SectionReveal key={s.id} delay={i * 0.05}>
               <GlassCard className="border-white/5 h-full">
