@@ -25,7 +25,7 @@ export function HomeNav() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 1.2, duration: 0.8 }}
-      className="fixed top-0 left-0 right-0 z-50 flex justify-center py-5 bg-black/40 backdrop-blur-md"
+      className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-5 pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none [&_a]:pointer-events-auto"
     >
       <div className="flex items-center space-x-8 md:space-x-10">
         {LINKS.map((link) => (

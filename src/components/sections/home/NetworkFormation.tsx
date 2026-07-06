@@ -31,14 +31,15 @@ export function NetworkFormation() {
       {/* The tension */}
       <div className="relative min-h-[70vh] flex items-center justify-center px-6">
         {scrim}
-        <div className="relative max-w-3xl text-center">
+        <div className="relative max-w-4xl text-center">
+          {/* whitespace-pre-line: the translations break one phrase per line */}
           <h2
-            className="text-3xl md:text-5xl lg:text-6xl font-black leading-[1.05] uppercase tracking-tight text-white/85"
+            className="whitespace-pre-line text-3xl md:text-5xl lg:text-6xl font-black leading-[1.1] uppercase tracking-tight text-white/85"
             style={headingFont}
           >
             {t("home_problem")}
           </h2>
-          <p className="mt-6 mx-auto max-w-xl text-white/45 text-sm md:text-base leading-relaxed" style={bodyFont}>
+          <p className="whitespace-pre-line mt-6 mx-auto max-w-xl text-white/45 text-sm md:text-base leading-relaxed" style={bodyFont}>
             {t("home_problem_sub")}
           </p>
         </div>
@@ -54,7 +55,7 @@ export function NetworkFormation() {
           >
             {t("home_shift")}
           </h2>
-          <p className="mt-6 mx-auto max-w-xl text-infrared/80 text-sm md:text-base leading-relaxed uppercase tracking-widest" style={bodyFont}>
+          <p className="whitespace-pre-line mt-6 mx-auto max-w-xl text-infrared/80 text-sm md:text-base leading-relaxed uppercase tracking-widest" style={bodyFont}>
             {t("home_shift_sub")}
           </p>
         </div>
