@@ -63,27 +63,32 @@ export function SolutionsMorph() {
               />
               <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-infrared/50" />
 
-              <div className="relative flex items-start justify-between">
-                {/* [&>svg] sizing scales the shared icon up on desktop only — the
-                    mobile grid renders the same SVGs at their intrinsic size */}
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center [&>svg]:w-9 [&>svg]:h-9"
-                  style={{ background: "rgba(255,51,102,0.07)", border: "1px solid rgba(255,51,102,0.28)" }}
-                >
-                  {s.icon}
-                </div>
-                <div className="text-white/[0.13] text-3xl font-black tabular-nums leading-none" style={headingFont}>
-                  {String(i + 1).padStart(2, "0")}
-                </div>
+              <div
+                className="absolute top-4 right-4 text-white/[0.13] text-3xl font-black tabular-nums leading-none"
+                style={headingFont}
+              >
+                {String(i + 1).padStart(2, "0")}
               </div>
 
-              <div className="relative mt-auto">
+              {/* Hero icon, centred — [&>svg] scales the shared SVG up on
+                  desktop only; the mobile grid renders it at intrinsic size */}
+              <div className="relative flex-1 flex items-center justify-center [&>svg]:w-24 [&>svg]:h-24">
+                <div
+                  aria-hidden="true"
+                  className="absolute w-36 h-36 rounded-full"
+                  style={{ background: "radial-gradient(circle, rgba(255,51,102,0.13), transparent 70%)" }}
+                />
+                {s.icon}
+              </div>
+
+              <div className="relative">
                 <div className="text-infrared text-sm md:text-[15px] font-bold uppercase tracking-[0.18em] mb-2">{t(s.titleKey)}</div>
-                <p className="text-white/55 text-xs leading-snug" style={bodyFont}>
+                {/* Fixed desc height so the five titles sit on one line across the row */}
+                <p className="text-white/55 text-xs leading-snug h-12 overflow-hidden" style={bodyFont}>
                   {t(s.descKey)}
                 </p>
                 {/* Step indicator — the five solutions are the booking pipeline, in order */}
-                <div className="flex items-center gap-1.5 mt-3.5">
+                <div className="flex items-center gap-1.5 mt-2.5">
                   {SOLUTIONS.map((_, d) => (
                     <span
                       key={d}

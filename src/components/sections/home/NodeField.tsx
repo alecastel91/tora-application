@@ -133,12 +133,20 @@ export function NodeField() {
     };
 
     const draw = (time: number) => {
-      // The hero lands with no globe — only the ambient background. The nodes
-      // fly out of scatter and assemble into the globe over the first ~0.7
-      // viewports of scroll (static-visible under reduced motion).
-      const intro = reduced
-        ? 1
-        : easeInOut(clamp01((window.scrollY - height * 0.12) / (height * 0.55)));
+      // Narrative reveal, keyed to the #network blocks: hidden on the hero;
+      // loose scattered dots fade in with the problem headline ("the scene is
+      // fragmented"); they assemble into the globe as the shift headline ("one
+      // network") reaches centre. Static globe under reduced motion.
+      let reveal = 1;
+      let intro = 1;
+      if (!reduced) {
+        const net = document.getElementById("network");
+        if (net) {
+          const r = net.getBoundingClientRect();
+          reveal = easeInOut(clamp01((height * 0.85 - r.top) / (height * 0.5)));
+          intro = easeInOut(clamp01((height / 2 - (r.top + r.height * 0.25)) / (r.height * 0.5)));
+        }
+      }
 
       const cx = width / 2;
       const cy = height / 2;
@@ -168,9 +176,9 @@ export function NodeField() {
         const gy = cy + n.y * R + drift;
         depth[i] = (rz + 1) / 2;
 
-        // load scatter → globe
-        const scx = n.sx * width;
-        const scy = n.sy * height;
+        // scatter → globe; scattered dots wander gently so they read as alive
+        const scx = n.sx * width + (reduced ? 0 : Math.sin(time * 0.0004 + n.phase * 2) * 10);
+        const scy = n.sy * height + (reduced ? 0 : Math.cos(time * 0.0005 + n.phase) * 8);
         let X = scx + (gx - scx) * intro;
         let Y = scy + (gy - scy) * intro;
 
@@ -227,7 +235,7 @@ export function NodeField() {
       for (let i = 0; i < count; i++) {
         // when clustered, brighten uniformly (no globe depth); on globe, use depth
         const d = depth[i];
-        const a = ((0.25 + 0.55 * d) * (1 - clustered) + 0.85 * clustered) * Math.max(intro, clustered);
+        const a = ((0.25 + 0.55 * d) * (1 - clustered) + 0.85 * clustered) * Math.max(reveal, clustered);
         const size = (1 + 1.6 * d) * (1 - clustered) + 2.2 * clustered;
         ctx.fillStyle = `rgba(${INFRARED.r},${INFRARED.g},${INFRARED.b},${a})`;
         ctx.beginPath();

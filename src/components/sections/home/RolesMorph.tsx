@@ -64,10 +64,12 @@ export function RolesMorph() {
               />
               {/* [&>svg] sizing scales the shared icon up on desktop only — the
                   mobile stack renders the same SVGs at their intrinsic size */}
-              <div
-                className="relative w-20 h-20 rounded-full flex items-center justify-center mb-5 [&>svg]:w-10 [&>svg]:h-10"
-                style={{ background: `${role.color}14`, border: `1px solid ${role.color}38` }}
-              >
+              <div className="relative flex items-center justify-center mb-5 [&>svg]:w-24 [&>svg]:h-24">
+                <div
+                  aria-hidden="true"
+                  className="absolute w-36 h-36 rounded-full"
+                  style={{ background: `radial-gradient(circle, ${role.color}22, transparent 70%)` }}
+                />
                 {role.icon}
               </div>
               <div className="relative text-[11px] font-bold uppercase tracking-[0.3em] mb-2.5" style={{ color: role.color }}>
