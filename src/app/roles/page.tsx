@@ -1,92 +1,63 @@
 "use client";
 
-import Link from "next/link";
-import { TopNav, BottomNav, PageBrand } from "@/components/ui/PageNav";
-import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { motion } from "framer-motion";
+import { DetailPageShell } from "@/components/ui/DetailPageShell";
+import { SectionReveal } from "@/components/ui/SectionReveal";
+import { ROLES } from "@/components/sections/home/home.data";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const roles = [
-    {
-        titleKey: "role_artists_title",
-        descKey: "role_artists_desc",
-        color: "#667EEA",
-        icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#667EEA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2-3h2l2 3" opacity="0.5"/><path d="M8 16c0-2.2 1.8-4 4-4s4 1.8 4 4"/><circle cx="12" cy="8" r="2"/></svg>),
-    },
-    {
-        titleKey: "role_promoters_title",
-        descKey: "role_promoters_desc",
-        color: "#FFC107",
-        icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFC107" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 3v12"/><path d="M18 3L6 8H2v4h4l12 5V3z"/><path d="M6 15v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3" opacity="0.5"/></svg>),
-    },
-    {
-        titleKey: "role_venues_title",
-        descKey: "role_venues_desc",
-        color: "#F5576C",
-        icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F5576C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><rect x="9" y="13" width="6" height="8" rx="1" opacity="0.4"/><line x1="12" y1="9" x2="12" y2="11" opacity="0.5"/></svg>),
-    },
-    {
-        titleKey: "role_agents_title",
-        descKey: "role_agents_desc",
-        color: "#43E97B",
-        icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#43E97B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" opacity="0.5"/><path d="M16 3.13a4 4 0 0 1 0 7.75" opacity="0.5"/></svg>),
-    }
+const sgFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
+
+// Same bespoke icons/colors as the home tiles, keyed by role id; this page
+// keeps its own order and long-form descriptions.
+const roleById = Object.fromEntries(ROLES.map((r) => [r.id, r]));
+const PAGE_ROLES = [
+  { ...roleById.artist, descKey: "role_artists_desc" },
+  { ...roleById.promoter, descKey: "role_promoters_desc" },
+  { ...roleById.venue, descKey: "role_venues_desc" },
+  { ...roleById.agent, descKey: "role_agents_desc" },
 ];
 
 export default function Roles() {
-    const { t } = useLanguage();
+  const { t } = useLanguage();
 
-    return (
-        <main className="min-h-screen bg-black">
-            <TopNav />
-            <div className="pt-32 pb-20 px-8 max-w-4xl mx-auto space-y-16">
-                <div className="text-center space-y-4">
-                    <AnimatedTitle>{t('roles_title')}</AnimatedTitle>
-                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-supreme), var(--font-space-grotesk), sans-serif' }}>
-                        {t('roles_subtitle')}
-                    </p>
+  return (
+    <DetailPageShell title={t("roles_title")} subtitle={t("roles_subtitle")}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={sgFont}>
+        {PAGE_ROLES.map((role, i) => (
+          <SectionReveal key={role.id} delay={i * 0.06}>
+            <motion.div
+              className="relative h-full rounded-2xl p-6 overflow-hidden"
+              whileHover={{ y: -3 }}
+              transition={{ type: "tween", duration: 0.25 }}
+            >
+              <div
+                className="absolute inset-0 rounded-2xl backdrop-blur-md"
+                style={{
+                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
+                  border: `1px solid ${role.color}38`,
+                  boxShadow: `0 0 50px -22px ${role.color}70, inset 0 1px 0 rgba(255,255,255,0.05)`,
+                }}
+              />
+              <div className="relative flex items-center gap-4">
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 [&>svg]:w-8 [&>svg]:h-8"
+                  style={{ background: `${role.color}12`, border: `1px solid ${role.color}30` }}
+                >
+                  {role.icon}
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
-                    {roles.map((item) => (
-                        <motion.div
-                            key={item.titleKey}
-                            className="glass-card p-6 relative border-l-2 border-l-transparent"
-                            style={{ transition: 'border-color 0.3s' }}
-                            whileHover={{ x: 4 }}
-                            onMouseEnter={(e) => {
-                                (e.currentTarget as HTMLElement).style.borderLeftColor = item.color;
-                            }}
-                            onMouseLeave={(e) => {
-                                (e.currentTarget as HTMLElement).style.borderLeftColor = 'transparent';
-                            }}
-                        >
-                            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/20" />
-                            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/20" />
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: `${item.color}08`, border: `1px solid ${item.color}15` }}>
-                                    {item.icon}
-                                </div>
-                                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: item.color, fontFamily: 'var(--font-space-grotesk), sans-serif' }}>{t(item.titleKey)}</span>
-                            </div>
-                            <p className="text-white/70 text-sm leading-relaxed mt-3">{t(item.descKey)}</p>
-                        </motion.div>
-                    ))}
-                </div>
-
-                <div className="text-center">
-                    <Link
-                        href="/apply"
-                        className="inline-block px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300 mb-8"
-                        style={{ fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" }}
-                    >
-                        {t('apply_for_membership')}
-                    </Link><br />
-                    <Link href="/" className="text-white/30 hover:text-white transition-colors text-xs uppercase tracking-[0.2em]" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>&lsaquo; {t('back_link')}</Link>
-                </div>
-                <PageBrand />
-            </div>
-            <BottomNav />
-        </main>
-    );
+                <span
+                  className="text-xs font-bold uppercase tracking-[0.25em]"
+                  style={{ color: role.color }}
+                >
+                  {t(role.labelKey)}
+                </span>
+              </div>
+              <p className="relative text-white/65 text-sm leading-relaxed mt-4">{t(role.descKey)}</p>
+            </motion.div>
+          </SectionReveal>
+        ))}
+      </div>
+    </DetailPageShell>
+  );
 }

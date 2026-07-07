@@ -1,55 +1,39 @@
 "use client";
 
-import Link from "next/link";
-import { TopNav, BottomNav, PageBrand } from "@/components/ui/PageNav";
-import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
+import { DetailPageShell } from "@/components/ui/DetailPageShell";
+import { SectionReveal } from "@/components/ui/SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+const sgFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
+
 export default function About() {
-    const { t } = useLanguage();
+  const { t } = useLanguage();
 
-    return (
-        <main className="min-h-screen bg-black">
-            <TopNav />
-            <div className="pt-32 pb-20 px-8 max-w-4xl mx-auto space-y-12">
-                <div className="text-center space-y-4">
-                    <AnimatedTitle>{t('about_title')}</AnimatedTitle>
-                    <p className="text-white/40 text-sm uppercase tracking-widest" style={{ fontFamily: 'var(--font-supreme), var(--font-space-grotesk), sans-serif' }}>
-                        {t('about_subtitle')}
-                    </p>
-                </div>
+  return (
+    <DetailPageShell title={t("about_title")} subtitle={t("about_subtitle")} width="max-w-3xl">
+      <div className="space-y-12" style={sgFont}>
+        {/* The observation — treated as the opening statement */}
+        <SectionReveal>
+          <div className="laser-line w-16 h-px mx-auto mb-10 opacity-60" />
+          <p className="text-white/85 text-lg md:text-xl leading-relaxed text-center">{t("about_p1")}</p>
+        </SectionReveal>
 
-                <div className="space-y-6" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
-                    <p className="text-white/70 leading-relaxed">
-                        {t('about_p1')}
-                    </p>
-                    <p className="text-white/70 leading-relaxed">
-                        {t('about_p2')}
-                    </p>
-                    <p className="text-white/70 leading-relaxed">
-                        {t('about_p3')}
-                    </p>
-                    <p className="text-white/70 leading-relaxed">
-                        {t('about_p4')}
-                    </p>
-                    <p className="text-white/70 leading-relaxed">
-                        {t('about_p5')}
-                    </p>
-                </div>
+        {/* The response */}
+        <SectionReveal>
+          <div className="space-y-6 text-white/60 leading-relaxed">
+            <p>{t("about_p2")}</p>
+            <p>{t("about_p3")}</p>
+            <p>{t("about_p4")}</p>
+          </div>
+        </SectionReveal>
 
-                <div className="text-center">
-                    <Link
-                        href="/apply"
-                        className="inline-block px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300 mb-8"
-                        style={{ fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" }}
-                    >
-                        {t('apply_for_membership')}
-                    </Link><br />
-                    <Link href="/" className="text-white/30 hover:text-white transition-colors text-xs uppercase tracking-[0.2em]" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>&lsaquo; {t('back_link')}</Link>
-                </div>
-                <PageBrand />
-            </div>
-            <BottomNav />
-        </main>
-    );
+        {/* The manifesto line — pulled out with the infrared accent */}
+        <SectionReveal>
+          <blockquote className="border-l-2 border-infrared/70 pl-6 py-1 text-white/80 text-base md:text-lg leading-relaxed">
+            {t("about_p5")}
+          </blockquote>
+        </SectionReveal>
+      </div>
+    </DetailPageShell>
+  );
 }

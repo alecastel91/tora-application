@@ -13,7 +13,7 @@ const INFRARED = "255,51,102";
  *
  * Drawn as polylines (one stroke per row / per column) to keep it cheap.
  */
-export function WaveMesh() {
+export function WaveMesh({ opacity = 0.75 }: { opacity?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
 
@@ -119,7 +119,7 @@ export function WaveMesh() {
       aria-hidden="true"
       className="fixed inset-0 -z-[5] pointer-events-none"
       style={{
-        opacity: 0.75,
+        opacity,
         maskImage: "linear-gradient(to top, black 45%, transparent 92%)",
         WebkitMaskImage: "linear-gradient(to top, black 45%, transparent 92%)",
       }}
