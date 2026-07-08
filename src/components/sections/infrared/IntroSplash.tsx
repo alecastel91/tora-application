@@ -124,21 +124,21 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                             }}
                             className="mb-6"
                         >
-                            {/* Orbital sphere — matches the reference edit: outer
-                                circle + two perpendicular ellipse fans whose tips
-                                meet on the circle, the whole weave set on the
-                                diagonal (-25deg), uniform line weight */}
+                            {/* Orbital sphere — traced from the user's reference
+                                edit: a narrow steep fan + a wide shallow fan at
+                                65deg/-25deg, thin uniform strokes, dark burgundy
+                                #5F1F2B (all values measured from the image) */}
                             <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.8"/>
-                                <g transform="rotate(-25 120 120)" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.75">
-                                    {/* steep fan */}
-                                    <ellipse cx="120" cy="120" rx="62" ry="100"/>
-                                    <ellipse cx="120" cy="120" rx="38" ry="100"/>
-                                    <ellipse cx="120" cy="120" rx="15" ry="100"/>
-                                    {/* shallow fan */}
-                                    <ellipse cx="120" cy="120" rx="100" ry="62"/>
-                                    <ellipse cx="120" cy="120" rx="100" ry="38"/>
-                                    <ellipse cx="120" cy="120" rx="100" ry="15"/>
+                                <circle cx="120" cy="120" r="100" stroke="#5F1F2B" strokeWidth="1.6" fill="none"/>
+                                <g transform="rotate(-25 120 120)" stroke="#5F1F2B" strokeWidth="1.6" fill="none">
+                                    {/* steep fan — tight braid */}
+                                    <ellipse cx="120" cy="120" rx="34" ry="100"/>
+                                    <ellipse cx="120" cy="120" rx="21" ry="100"/>
+                                    <ellipse cx="120" cy="120" rx="11" ry="100"/>
+                                    {/* shallow fan — wide sweep */}
+                                    <ellipse cx="120" cy="120" rx="100" ry="47"/>
+                                    <ellipse cx="120" cy="120" rx="100" ry="33"/>
+                                    <ellipse cx="120" cy="120" rx="100" ry="20"/>
                                 </g>
                             </svg>
                         </motion.div>
