@@ -51,7 +51,7 @@ export function RolesStack() {
                       {t(role.labelKey)}
                     </div>
                     {/* min-h of two lines so all four tiles match regardless of text length */}
-                    <div className="text-white text-lg md:text-xl font-medium leading-snug min-h-[2.75em]">{t(role.valueKey)}</div>
+                    <div className="text-white text-lg md:text-xl font-medium leading-snug min-h-[2.75em] whitespace-pre-line">{t(role.valueKey)}</div>
                   </div>
                 </div>
               </motion.div>

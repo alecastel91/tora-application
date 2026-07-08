@@ -75,7 +75,7 @@ export function RolesMorph() {
               <div className="relative text-[11px] font-bold uppercase tracking-[0.3em] mb-2.5" style={{ color: role.color }}>
                 {t(role.labelKey)}
               </div>
-              <div className="relative text-white text-lg md:text-xl font-black uppercase tracking-tight leading-tight" style={headingFont}>
+              <div className="relative text-white text-lg md:text-xl font-black uppercase tracking-tight leading-tight whitespace-pre-line" style={headingFont}>
                 {t(role.valueKey)}
               </div>
             </motion.div>
