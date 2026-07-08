@@ -122,7 +122,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                                 scale: { duration: 0.5 },
                                 rotate: { duration: 30, repeat: Infinity, ease: "linear" }
                             }}
-                            className="mb-6"
+                            className="-mt-4 mb-6"
                         >
                             {/* The exact orbital-sphere mark, extracted from the
                                 designer's Intro.svg export (embedded 1093px PNG,
