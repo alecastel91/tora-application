@@ -14,7 +14,7 @@ export default function About() {
       <div className="space-y-12" style={sgFont}>
         {/* The observation — treated as the opening statement */}
         <SectionReveal>
-          <div className="laser-line w-16 h-px mx-auto mb-10 opacity-60" />
+          <div className="w-16 h-px mx-auto mb-10 opacity-60 bg-gradient-to-r from-transparent via-infrared/20 to-transparent" />
           <p className="text-white/85 text-lg md:text-xl leading-relaxed text-center">{t("about_p1")}</p>
         </SectionReveal>
 
