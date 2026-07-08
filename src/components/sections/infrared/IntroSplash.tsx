@@ -124,25 +124,21 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                             }}
                             className="mb-6"
                         >
+                            {/* Orbital sphere — the reel edit: outer circle + two
+                                orthogonal ellipse fans converging to points (no
+                                straight grid lines) */}
                             <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                {/* Outer circle */}
-                                <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth="3" fill="none" opacity="0.8"/>
+                                <circle cx="120" cy="120" r="100" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.85"/>
 
-                                {/* Vertical center line */}
-                                <line x1="120" y1="20" x2="120" y2="220" stroke="#FF3366" strokeWidth="3" opacity="0.8"/>
+                                {/* horizontal fan */}
+                                <ellipse cx="120" cy="120" rx="100" ry="62" stroke="#FF3366" strokeWidth="2.25" fill="none" opacity="0.7"/>
+                                <ellipse cx="120" cy="120" rx="100" ry="34" stroke="#FF3366" strokeWidth="2.25" fill="none" opacity="0.7"/>
+                                <ellipse cx="120" cy="120" rx="100" ry="12" stroke="#FF3366" strokeWidth="2.25" fill="none" opacity="0.6"/>
 
-                                {/* Horizontal center line (equator) */}
-                                <line x1="20" y1="120" x2="220" y2="120" stroke="#FF3366" strokeWidth="3" opacity="0.8"/>
-
-                                {/* Latitude lines (horizontal ellipses) */}
-                                <ellipse cx="120" cy="120" rx="100" ry="50" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
-                                <ellipse cx="120" cy="120" rx="100" ry="25" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
-
-                                {/* Longitude lines (vertical curves) */}
-                                <path d="M 120 20 Q 80 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
-                                <path d="M 120 20 Q 160 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
-                                <path d="M 120 20 Q 60 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
-                                <path d="M 120 20 Q 180 120 120 220" stroke="#FF3366" strokeWidth="2.5" fill="none" opacity="0.6"/>
+                                {/* vertical fan */}
+                                <ellipse cx="120" cy="120" rx="62" ry="100" stroke="#FF3366" strokeWidth="2.25" fill="none" opacity="0.7"/>
+                                <ellipse cx="120" cy="120" rx="34" ry="100" stroke="#FF3366" strokeWidth="2.25" fill="none" opacity="0.7"/>
+                                <ellipse cx="120" cy="120" rx="12" ry="100" stroke="#FF3366" strokeWidth="2.25" fill="none" opacity="0.6"/>
                             </svg>
                         </motion.div>
 
