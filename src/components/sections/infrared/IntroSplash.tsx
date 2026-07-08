@@ -133,7 +133,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                                 aria-hidden="true"
                                 width={1093}
                                 height={1092}
-                                className="w-[240px] h-[240px] object-contain"
+                                className="w-[240px] h-[240px] object-contain opacity-40"
                             />
                         </motion.div>
 
