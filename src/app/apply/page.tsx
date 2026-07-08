@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
 import { Confirmation } from "@/components/sections/infrared/Confirmation";
+import { WaveMesh } from "@/components/sections/home/WaveMesh";
+import { ParallaxBackdrop } from "@/components/sections/home/ParallaxBackdrop";
 
 type FlowState = "globe" | "form" | "confirmation";
 
@@ -14,7 +16,11 @@ export default function Apply() {
   const [showIntroContent, setShowIntroContent] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-black overflow-x-hidden overflow-y-auto font-sans selection:bg-infrared/30 selection:text-white">
+    // no bg-black on main: the body is already black, and the fixed ambient
+    // layers (negative z) must stay visible through every flow state
+    <main className="relative min-h-screen overflow-x-hidden overflow-y-auto font-sans selection:bg-infrared/30 selection:text-white">
+      <ParallaxBackdrop />
+      <WaveMesh opacity={0.35} />
 
       <AnimatePresence mode="wait">
         {view === "globe" && (

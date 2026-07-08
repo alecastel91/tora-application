@@ -59,7 +59,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
     }, [showContent, onShowContent]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen w-full bg-black px-4">
+        <div className="flex flex-col items-center justify-center min-h-screen w-full px-4">
             <div className="max-w-md w-full flex flex-col items-center text-center">
                 {/* Logo - slides up and shrinks, stays visible */}
                 <motion.div
@@ -78,7 +78,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                     className="mb-2"
                 >
                     <Image
-                        src="/tora_logo_v2.png"
+                        src="/tora_logo_transparent.png"
                         alt="TORA Logo"
                         width={500}
                         height={166}
