@@ -124,16 +124,15 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                             }}
                             className="mb-6"
                         >
-                            {/* The exact orbital-sphere mark from the user's
-                                reference edit, used as-is (black background made
-                                transparent). Replace with the original SVG export
-                                if/when the vector file is available. */}
+                            {/* The exact orbital-sphere mark, extracted from the
+                                designer's Intro.svg export (embedded 1093px PNG,
+                                black background made transparent). */}
                             <Image
-                                src="/apply_orb.png"
+                                src="/intro_orb.png"
                                 alt=""
                                 aria-hidden="true"
-                                width={635}
-                                height={635}
+                                width={1093}
+                                height={1092}
                                 className="w-[240px] h-[240px] object-contain"
                             />
                         </motion.div>
