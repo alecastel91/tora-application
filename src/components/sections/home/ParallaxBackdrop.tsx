@@ -22,7 +22,7 @@ export function ParallaxBackdrop() {
         style={reduced ? undefined : { y: gridY }}
       />
       <motion.div
-        className="absolute left-1/2 top-1/3 h-[70vh] w-[70vh] -translate-x-1/2 rounded-full"
+        className="absolute left-1/2 top-1/3 h-[70vh] w-[min(70vh,100vw)] -translate-x-1/2 rounded-full"
         style={{
           background: "radial-gradient(circle, rgba(255,51,102,0.10) 0%, transparent 70%)",
           ...(reduced ? {} : { y: glowY }),
