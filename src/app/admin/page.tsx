@@ -59,6 +59,22 @@ export default function AdminDashboard() {
     const [filter, setFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
+    const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
+
+    // Badge on the Verification nav button — how many profiles await review.
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await fetch("/api/admin/verification/queue", { credentials: "include" });
+                if (cancelled || !res.ok) return;
+                const data = await res.json();
+                setVerifyPendingCount((data.pending || []).length);
+            } catch { /* badge is best-effort */ }
+        })();
+        return () => { cancelled = true; };
+    }, [isAuthenticated]);
 
     // Check if already authenticated (server-side cookie verification)
     useEffect(() => {
@@ -507,10 +523,19 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-4">
                         <a
                             href="/admin/verification"
-                            className="text-white/60 hover:text-white text-sm uppercase tracking-wide"
+                            className={`flex items-center gap-2 px-4 py-2 rounded text-sm uppercase tracking-wide transition-colors ${
+                                verifyPendingCount
+                                    ? 'bg-infrared text-white'
+                                    : 'bg-white/5 text-white/60 hover:bg-white/10'
+                            }`}
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
                             Verification
+                            {verifyPendingCount ? (
+                                <span className="min-w-5 h-5 px-1 rounded-full bg-white text-black text-xs font-bold flex items-center justify-center">
+                                    {verifyPendingCount}
+                                </span>
+                            ) : null}
                         </a>
                         <button
                             onClick={handleLogout}
