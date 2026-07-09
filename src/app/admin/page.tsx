@@ -506,13 +506,22 @@ export default function AdminDashboard() {
                             Waitlist Manager
                         </h1>
                     </div>
-                    <button
-                        onClick={handleLogout}
-                        className="text-white/60 hover:text-white text-sm uppercase tracking-wide"
-                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
-                    >
-                        Logout
-                    </button>
+                    <div className="flex items-center gap-4">
+                        <a
+                            href="/admin/verification"
+                            className="text-white/60 hover:text-white text-sm uppercase tracking-wide"
+                            style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                        >
+                            Verification
+                        </a>
+                        <button
+                            onClick={handleLogout}
+                            className="text-white/60 hover:text-white text-sm uppercase tracking-wide"
+                            style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                        >
+                            Logout
+                        </button>
+                    </div>
                 </div>
 
                 {/* View toggle */}
