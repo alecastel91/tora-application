@@ -35,6 +35,9 @@
   "select_city": "Select city",
   "city_not_found": "Can't find your city?",
   "other": "Other",
+  "add_other": "Add",
+  "add_other_hint": "Type a genre and press + to add it",
+  "remove": "Remove",
 
   "genres": "Genres",
   "select_at_least_one": "Select at least one genre",

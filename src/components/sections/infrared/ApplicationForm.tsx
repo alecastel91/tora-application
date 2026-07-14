@@ -241,6 +241,9 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     const [city, setCity] = useState("");
     const [genres, setGenres] = useState<string[]>([]);
     const [otherGenre, setOtherGenre] = useState("");
+    // Custom genres the applicant added with "+" — each tracked separately so
+    // missing genres surface individually in the admin data.
+    const [otherGenres, setOtherGenres] = useState<string[]>([]);
     const [instagram, setInstagram] = useState("");
     const [residentAdvisor, setResidentAdvisor] = useState("");
     const [soundcloud, setSoundcloud] = useState("");
@@ -282,6 +285,24 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         releaseLock();
     };
 
+    // Add the current "Other" input as a tracked custom genre (deduped, case-insensitive).
+    const addOtherGenre = () => {
+        const g = otherGenre.trim();
+        if (!g) return;
+        const dup = [...genres, ...otherGenres].some((x) => x.toLowerCase() === g.toLowerCase());
+        if (!dup) setOtherGenres((prev) => [...prev, g]);
+        setOtherGenre("");
+    };
+
+    // Grid selections + custom entries, plus any text still in the input that
+    // wasn't committed with "+" — used for both validation and submission.
+    const collectGenres = () => {
+        const all = [...genres, ...otherGenres];
+        const pending = otherGenre.trim();
+        if (pending && !all.some((x) => x.toLowerCase() === pending.toLowerCase())) all.push(pending);
+        return all;
+    };
+
     const validateEmail = (email: string): boolean => {
         // Regex that requires: username@domain.extension
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -318,7 +339,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             zone,
                             country,
                             city,
-                            genres: otherGenre ? [...genres, otherGenre].join(', ') : genres.join(', '),
+                            genres: collectGenres().join(', '),
                             instagram,
                             resident_advisor: residentAdvisor || null,
                             soundcloud: soundcloud || null,
@@ -368,7 +389,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                         zone,
                         country,
                         city,
-                        genres: otherGenre ? [...genres, otherGenre].join(', ') : genres.join(', '),
+                        genres: collectGenres().join(', '),
                         instagram,
                         resident_advisor: residentAdvisor || null,
                         soundcloud: soundcloud || null,
@@ -868,7 +889,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                 className="mx-auto flex flex-col items-center"
                                 style={{ width: '328px' }}
                             >
-                                <form onSubmit={(e) => { e.preventDefault(); if (genres.length > 0) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
+                                <form onSubmit={(e) => { e.preventDefault(); if (collectGenres().length > 0) nextStep(); }} className="space-y-10 w-full flex flex-col items-center">
                                     <div className="w-full text-center">
                                         <motion.p
                                             initial={{ opacity: 0, y: -10 }}
@@ -904,16 +925,51 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             ))}
                                         </div>
 
-                                        {/* Other Genre Input - spans both columns */}
-                                        <InfraredInput
-                                            placeholder={t('other')}
-                                            value={otherGenre}
-                                            onChange={(e) => setOtherGenre(e.target.value)}
-                                            className="w-full text-center text-sm md:text-base py-5 font-tech mb-4"
-                                        />
+                                        {/* Other genres — add each missing one with "+", tracked separately */}
+                                        <div className="w-full mb-4">
+                                            <div className="flex gap-2 items-stretch">
+                                                <div className="flex-1">
+                                                    <InfraredInput
+                                                        placeholder={t('other')}
+                                                        value={otherGenre}
+                                                        onChange={(e) => setOtherGenre(e.target.value)}
+                                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addOtherGenre(); } }}
+                                                        className="w-full text-center text-sm md:text-base py-5 font-tech"
+                                                    />
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={addOtherGenre}
+                                                    disabled={!otherGenre.trim()}
+                                                    aria-label={t('add_other')}
+                                                    className="px-5 rounded-xl border border-white/10 bg-white/5 text-white/70 text-2xl leading-none transition-all hover:border-infrared hover:text-white disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-white/70"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+
+                                            <p className="text-white/40 text-xs tracking-wide mt-2">{t('add_other_hint')}</p>
+
+                                            {otherGenres.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 justify-center mt-3">
+                                                    {otherGenres.map((g) => (
+                                                        <button
+                                                            key={g}
+                                                            type="button"
+                                                            onClick={() => setOtherGenres(otherGenres.filter((x) => x !== g))}
+                                                            aria-label={`${t('remove')} ${g}`}
+                                                            className="inline-flex items-center gap-2 px-3 py-2 bg-infrared text-white border border-infrared text-sm font-medium tracking-wide"
+                                                        >
+                                                            <span>{g}</span>
+                                                            <span aria-hidden="true" className="text-white/80 text-base leading-none">×</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
 
                                         <p className="text-white/40 text-xs tracking-wide">
-                                            {genres.length === 0 ? t('select_at_least_one') : `${genres.length} ${genres.length === 1 ? t('genres_selected') : t('genres_selected_plural')} ${t('genres_selected_text')}`}
+                                            {(genres.length + otherGenres.length) === 0 ? t('select_at_least_one') : `${genres.length + otherGenres.length} ${(genres.length + otherGenres.length) === 1 ? t('genres_selected') : t('genres_selected_plural')} ${t('genres_selected_text')}`}
                                         </p>
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
