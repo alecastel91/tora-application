@@ -10,15 +10,19 @@ export async function POST(request: Request) {
 
     // Map coupon package to a friendly membership label.
     // STANDARD intentionally avoids saying "Standard" — every TORA member is exclusive.
+    // STANDARD is the Free tier: no Premium trial (the old "7-day Premium Trial" is gone).
     const packageInfo: Record<string, { label: string; duration: string }> = {
       FOUNDING: { label: 'Founding Member', duration: '3 months Premium · Complimentary' },
       LAUNCH: { label: 'Launch Member', duration: '1 month Premium · Complimentary' },
       INFLUENCER: { label: 'Influencer Member', duration: '12 months Premium · Complimentary' },
       ADMIN: { label: 'Admin', duration: 'Lifetime Premium · Complimentary' },
-      STANDARD: { label: 'TORA Member', duration: '7-day Premium Trial' },
+      STANDARD: { label: 'TORA Member', duration: 'Free membership' },
     };
     const pkgKey = (couponPackage || 'STANDARD').toUpperCase();
     const pkg = packageInfo[pkgKey] || packageInfo.STANDARD;
+    // Premium follows the resolved package, so an unknown key (which falls back
+    // to STANDARD above) is treated as Free too.
+    const isPremium = pkg !== packageInfo.STANDARD;
     const membershipTier = pkg.label;
     const premiumDuration = pkg.duration;
 
@@ -95,6 +99,7 @@ export async function POST(request: Request) {
         tierBenefit: tier.benefit,
         tierDescription: tier.description,
         appUrl,
+        isPremium,
       }),
       text: plainText,
       headers: {

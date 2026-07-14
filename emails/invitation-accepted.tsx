@@ -20,6 +20,8 @@ interface InvitationAcceptedEmailProps {
   tierDescription?: string;
   /** Where the "Create Your Account" CTA links to. Pass dev URL in dev, prod URL in prod. */
   appUrl?: string;
+  /** Paid packages get complimentary Premium; STANDARD is the Free tier. */
+  isPremium?: boolean;
 }
 
 export const InvitationAcceptedEmail = ({
@@ -29,6 +31,7 @@ export const InvitationAcceptedEmail = ({
   tierBenefit = 'Founding Member • Complimentary Premium Access',
   tierDescription = '',
   appUrl = 'https://app.torahub.io',
+  isPremium = true,
 }: InvitationAcceptedEmailProps) => {
   // Strip the protocol for the visible "Go to ..." text in step 1, but keep it on the href.
   const appHostname = appUrl.replace(/^https?:\/\//, '');
@@ -72,7 +75,9 @@ export const InvitationAcceptedEmail = ({
         </Text>
 
         <Text style={paragraph}>
-          As one of our founding members, you're joining TORA during its beta launch phase and will enjoy complimentary Premium access throughout this entire period.
+          {isPremium
+            ? "As one of our founding members, you're joining TORA during its beta launch phase and will enjoy complimentary Premium access throughout this entire period."
+            : "You're joining TORA during its beta launch phase - welcome to the community. Your membership is free, and you can upgrade to Premium anytime to unlock the full platform."}
         </Text>
 
         <Text style={{ ...paragraph, margin: '0 0 32px 0' }}>
