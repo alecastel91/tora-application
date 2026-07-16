@@ -688,6 +688,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             onChange={(e) => setProfileName(e.target.value)}
                                             className="text-center text-sm md:text-base py-5 font-tech"
                                         />
+                                        <p className="text-white/40 text-xs tracking-wide text-center mt-2">{t('profile_name_hint')}</p>
+                                        {role === 'Agent' && <p className="text-white/40 text-xs tracking-wide text-center mt-1">{t('agent_name_hint')}</p>}
                                     </div>
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
@@ -1025,7 +1027,9 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
                                             style={{ marginTop: '-16px' }}
                                         >
-                                            {t('instagram_verification_notice')}
+                                            {role === 'Venue' ? t('instagram_notice_venue')
+                                                : role === 'Promoter' ? t('instagram_notice_promoter')
+                                                : t('instagram_verification_notice')}
                                         </motion.p>
 
                                         {/* Artist: RA + SoundCloud */}
