@@ -42,8 +42,21 @@ const supreme = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.torahub.io"),
   title: "TORA - Where Music Meets",
   description: "The professional network for the club music industry. Connect with artists, agents, venues, and promoters.",
+  openGraph: {
+    title: "TORA - Where Music Meets",
+    description: "The professional network for the club music industry.",
+    url: "https://www.torahub.io",
+    siteName: "TORA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TORA - Where Music Meets",
+    description: "The professional network for the club music industry.",
+  },
 };
 
 export default function RootLayout({
