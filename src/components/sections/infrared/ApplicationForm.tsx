@@ -252,6 +252,58 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     const [venueCapacity, setVenueCapacity] = useState("");
     const [website, setWebsite] = useState("");
     const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+    const [hydrated, setHydrated] = useState(false);
+
+    // Draft persistence — keep the in-progress application across refreshes, so a
+    // reload (or an accidental tab close) doesn't wipe everything the user typed.
+    const DRAFT_KEY = "tora_application_draft";
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem(DRAFT_KEY);
+            if (raw) {
+                const d = JSON.parse(raw);
+                if (typeof d.step === "number") setStep(d.step);
+                if (d.role) setRole(d.role);
+                if (d.countryCode) setCountryCode(d.countryCode);
+                if (d.phoneNumber) setPhoneNumber(d.phoneNumber);
+                if (d.firstName) setFirstName(d.firstName);
+                if (d.lastName) setLastName(d.lastName);
+                if (d.profileName) setProfileName(d.profileName);
+                if (d.email) setEmail(d.email);
+                if (d.confirmEmail) setConfirmEmail(d.confirmEmail);
+                if (d.zone) setZone(d.zone);
+                if (d.country) setCountry(d.country);
+                if (d.city) setCity(d.city);
+                if (Array.isArray(d.genres)) setGenres(d.genres);
+                if (d.otherGenre) setOtherGenre(d.otherGenre);
+                if (Array.isArray(d.otherGenres)) setOtherGenres(d.otherGenres);
+                if (d.instagram) setInstagram(d.instagram);
+                if (d.residentAdvisor) setResidentAdvisor(d.residentAdvisor);
+                if (d.soundcloud) setSoundcloud(d.soundcloud);
+                if (d.agencyName) setAgencyName(d.agencyName);
+                if (d.linkedin) setLinkedin(d.linkedin);
+                if (d.venueCapacity) setVenueCapacity(d.venueCapacity);
+                if (d.website) setWebsite(d.website);
+                if (d.acceptedPrivacy) setAcceptedPrivacy(true);
+            }
+        } catch { /* ignore a malformed draft */ }
+        setHydrated(true);
+    }, []);
+
+    useEffect(() => {
+        if (!hydrated) return; // don't overwrite the saved draft before it's restored
+        try {
+            localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                step, role, countryCode, phoneNumber, firstName, lastName, profileName,
+                email, confirmEmail, zone, country, city, genres, otherGenre, otherGenres,
+                instagram, residentAdvisor, soundcloud, agencyName, linkedin, venueCapacity,
+                website, acceptedPrivacy,
+            }));
+        } catch { /* storage unavailable / full — non-fatal */ }
+    }, [hydrated, step, role, countryCode, phoneNumber, firstName, lastName, profileName,
+        email, confirmEmail, zone, country, city, genres, otherGenre, otherGenres,
+        instagram, residentAdvisor, soundcloud, agencyName, linkedin, venueCapacity,
+        website, acceptedPrivacy]);
 
     // Notify parent component when step changes
     useEffect(() => {
@@ -402,6 +454,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
 
                 setLoading(false);
                 console.log("Submission successful, showing confirmation...");
+                try { localStorage.removeItem(DRAFT_KEY); } catch { /* non-fatal */ }
                 setSubmitted(true);
             } catch (err) {
                 console.error("Unexpected error:", err);
