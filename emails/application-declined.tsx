@@ -29,11 +29,11 @@ export const ApplicationDeclinedEmail = ({
         {/* Logo */}
         <Section style={{ textAlign: 'center' as const, paddingBottom: '40px' }}>
           <Img
-            src="https://resend-attachments.s3.amazonaws.com/65ee3b03-1772-4168-9ce0-5625c3b15dca"
+            src="https://www.torahub.io/email-assets/tora-logo.png"
             width="255"
-            height="78"
+            height="72"
             alt="TORA"
-            style={{ display: 'block', margin: '0 auto', width: '255px', height: '78px' }}
+            style={{ display: 'block', margin: '0 auto', width: '255px', height: '72px' }}
           />
         </Section>
 
@@ -91,7 +91,7 @@ export const ApplicationDeclinedEmail = ({
         <Section style={{ textAlign: 'center' as const, paddingBottom: '24px' }}>
           <Link href="https://instagram.com/tora.hub" style={{ textDecoration: 'none' }}>
             <Img
-              src="https://cdn-icons-png.flaticon.com/512/174/174855.png"
+              src="https://www.torahub.io/email-assets/instagram.png"
               width="24"
               height="24"
               alt="Instagram"
@@ -139,8 +139,10 @@ const heading = {
 };
 
 const card = {
-  backgroundColor: 'rgba(30, 30, 30, 0.6)',
-  borderRadius: '8px',
+  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  border: '1px solid rgba(255, 255, 255, 0.08)',
+  borderLeft: '2px solid #FF3366',
+  borderRadius: '12px',
   padding: '24px',
   margin: '0 0 32px 0',
 };
