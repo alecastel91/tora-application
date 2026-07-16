@@ -568,23 +568,23 @@ export default function AdminDashboard() {
                 {view === 'applications' && (<>
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-                    <div className="bg-white/5 border border-white/10 rounded-lg p-4">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-4">
                         <div className="text-white/60 text-xs uppercase mb-1">Total</div>
                         <div className="text-white text-2xl font-bold">{stats.total}</div>
                     </div>
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4">
                         <div className="text-yellow-300/60 text-xs uppercase mb-1">Pending</div>
                         <div className="text-yellow-300 text-2xl font-bold">{stats.pending}</div>
                     </div>
-                    <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                    <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4">
                         <div className="text-green-300/60 text-xs uppercase mb-1">Approved</div>
                         <div className="text-green-300 text-2xl font-bold">{stats.approved}</div>
                     </div>
-                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
                         <div className="text-blue-300/60 text-xs uppercase mb-1">Invited</div>
                         <div className="text-blue-300 text-2xl font-bold">{stats.invited}</div>
                     </div>
-                    <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+                    <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
                         <div className="text-purple-300/60 text-xs uppercase mb-1">Signed Up</div>
                         <div className="text-purple-300 text-2xl font-bold">{stats.signedUp}</div>
                     </div>
@@ -630,7 +630,7 @@ export default function AdminDashboard() {
                                 key={app.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="relative bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/[0.07] transition-colors"
+                                className="relative bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/[0.07] transition-colors"
                             >
                                 {/* Remove single waitlist row (does NOT touch the user account or
                                     any other rows for the same email — for that, use Delete (GDPR)) */}
