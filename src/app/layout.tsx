@@ -43,7 +43,10 @@ const supreme = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.torahub.io"),
-  title: "TORA - Where Music Meets",
+  title: {
+    default: "TORA - Where Music Meets",
+    template: "%s — TORA",
+  },
   description: "The professional network for the club music industry. Connect with artists, agents, venues, and promoters.",
   openGraph: {
     title: "TORA - Where Music Meets",
