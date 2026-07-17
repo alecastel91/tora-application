@@ -290,20 +290,18 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         setHydrated(true);
     }, []);
 
-    useEffect(() => {
-        if (!hydrated) return; // don't overwrite the saved draft before it's restored
-        try {
-            localStorage.setItem(DRAFT_KEY, JSON.stringify({
-                step, role, countryCode, phoneNumber, firstName, lastName, profileName,
-                email, confirmEmail, zone, country, city, genres, otherGenre, otherGenres,
-                instagram, residentAdvisor, soundcloud, agencyName, linkedin, venueCapacity,
-                website, acceptedPrivacy,
-            }));
-        } catch { /* storage unavailable / full — non-fatal */ }
-    }, [hydrated, step, role, countryCode, phoneNumber, firstName, lastName, profileName,
+    // Serialize once per render; the effect only writes when this string changes,
+    // so there's no 20-field dependency array to hand-maintain.
+    const draftSnapshot = JSON.stringify({
+        step, role, countryCode, phoneNumber, firstName, lastName, profileName,
         email, confirmEmail, zone, country, city, genres, otherGenre, otherGenres,
         instagram, residentAdvisor, soundcloud, agencyName, linkedin, venueCapacity,
-        website, acceptedPrivacy]);
+        website, acceptedPrivacy,
+    });
+    useEffect(() => {
+        if (!hydrated) return; // don't overwrite the saved draft before it's restored
+        try { localStorage.setItem(DRAFT_KEY, draftSnapshot); } catch { /* storage unavailable — non-fatal */ }
+    }, [hydrated, draftSnapshot]);
 
     // Notify parent component when step changes
     useEffect(() => {
