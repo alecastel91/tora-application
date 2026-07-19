@@ -553,8 +553,8 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                {/* View toggle */}
-                <div className="flex gap-2 mb-6">
+                {/* View toggle + role filter */}
+                <div className="flex flex-wrap items-center gap-2 mb-6">
                     {(['applications', 'recap'] as const).map((v) => (
                         <button
                             key={v}
@@ -565,6 +565,25 @@ export default function AdminDashboard() {
                             {v === 'applications' ? 'Applications' : 'Recap'}
                         </button>
                     ))}
+                    {view === 'applications' && (
+                        <div className="flex gap-2 overflow-x-auto items-center md:ml-auto">
+                            <span className="text-white/40 text-xs uppercase tracking-wider mr-1 whitespace-nowrap">Role</span>
+                            {['all', 'Artist', 'Agent', 'Promoter', 'Venue'].map(r => (
+                                <button
+                                    key={r}
+                                    onClick={() => setRoleFilter(r.toLowerCase())}
+                                    className={`px-3 py-2 rounded text-xs uppercase tracking-wider transition-colors whitespace-nowrap ${
+                                        roleFilter === r.toLowerCase()
+                                            ? 'bg-infrared text-white'
+                                            : 'bg-white/5 text-white/60 hover:bg-white/10'
+                                    }`}
+                                    style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                                >
+                                    {r}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {view === 'recap' && <RecapView applications={applications} />}
@@ -595,47 +614,29 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Filters */}
-                <div className="flex flex-col gap-3 mb-6">
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <div className="flex gap-2 overflow-x-auto">
-                            {['all', 'pending', 'approved', 'invited', 'signed_up', 'declined'].map(f => (
-                                <button
-                                    key={f}
-                                    onClick={() => setFilter(f)}
-                                    className={`px-4 py-2 rounded text-sm uppercase tracking-wide transition-colors whitespace-nowrap ${
-                                        filter === f
-                                            ? 'bg-infrared text-white'
-                                            : 'bg-white/5 text-white/60 hover:bg-white/10'
-                                    }`}
-                                >
-                                    {f.replace('_', ' ')}
-                                </button>
-                            ))}
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search by name, email, role, city..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded text-white placeholder-white/40 focus:outline-none focus:border-infrared/50"
-                        />
-                    </div>
-                    <div className="flex gap-2 overflow-x-auto items-center">
-                        <span className="text-white/40 text-xs uppercase tracking-wider mr-1 whitespace-nowrap">Role</span>
-                        {['all', 'Artist', 'Agent', 'Promoter', 'Venue'].map(r => (
+                <div className="flex flex-col md:flex-row gap-4 mb-6">
+                    <div className="flex gap-2 overflow-x-auto">
+                        {['all', 'pending', 'approved', 'invited', 'signed_up', 'declined'].map(f => (
                             <button
-                                key={r}
-                                onClick={() => setRoleFilter(r.toLowerCase())}
+                                key={f}
+                                onClick={() => setFilter(f)}
                                 className={`px-4 py-2 rounded text-sm uppercase tracking-wide transition-colors whitespace-nowrap ${
-                                    roleFilter === r.toLowerCase()
+                                    filter === f
                                         ? 'bg-infrared text-white'
                                         : 'bg-white/5 text-white/60 hover:bg-white/10'
                                 }`}
                             >
-                                {r}
+                                {f.replace('_', ' ')}
                             </button>
                         ))}
                     </div>
+                    <input
+                        type="text"
+                        placeholder="Search by name, email, role, city..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded text-white placeholder-white/40 focus:outline-none focus:border-infrared/50"
+                    />
                 </div>
 
                 {/* Applications List */}
