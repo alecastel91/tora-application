@@ -257,11 +257,15 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     // Draft persistence — keep the in-progress application across refreshes, so a
     // reload (or an accidental tab close) doesn't wipe everything the user typed.
     const DRAFT_KEY = "tora_application_draft";
+    const DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // discard drafts older than 7 days
     useEffect(() => {
         try {
             const raw = localStorage.getItem(DRAFT_KEY);
-            if (raw) {
-                const d = JSON.parse(raw);
+            const w = raw ? JSON.parse(raw) : null;
+            const fresh = w && typeof w.t === "number" && Date.now() - w.t < DRAFT_MAX_AGE_MS && typeof w.v === "string";
+            if (raw && !fresh) localStorage.removeItem(DRAFT_KEY); // stale or old-format — don't let PII linger
+            if (fresh) {
+                const d = JSON.parse(w.v);
                 if (typeof d.step === "number") setStep(d.step);
                 if (d.role) setRole(d.role);
                 if (d.countryCode) setCountryCode(d.countryCode);
@@ -300,7 +304,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     });
     useEffect(() => {
         if (!hydrated) return; // don't overwrite the saved draft before it's restored
-        try { localStorage.setItem(DRAFT_KEY, draftSnapshot); } catch { /* storage unavailable — non-fatal */ }
+        // Stamp each save with a time so restore can drop drafts older than the max age.
+        try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ t: Date.now(), v: draftSnapshot })); } catch { /* storage unavailable — non-fatal */ }
     }, [hydrated, draftSnapshot]);
 
     // Notify parent component when step changes
