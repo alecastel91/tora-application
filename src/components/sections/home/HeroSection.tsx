@@ -77,27 +77,33 @@ export function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll cue */}
+      {/* Scroll cue — label + arrow, so it reads as an invitation, not just a mark */}
       <motion.button
         type="button"
-        aria-label="Scroll"
+        aria-label={t("scroll_explore")}
         onClick={() => scrollToId("network")}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.8 }}
         style={{ opacity }}
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 text-white/30 hover:text-white transition-colors"
+        className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/55 hover:text-white transition-colors"
       >
+        <span
+          className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] whitespace-nowrap"
+          style={{ ...supremeFont, fontWeight: 400 }}
+        >
+          {t("scroll_explore")}
+        </span>
         <motion.svg
-          width="20"
-          height="20"
+          width="28"
+          height="28"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          animate={{ y: [0, 6, 0] }}
+          animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
           <path d="M12 5v14" />
