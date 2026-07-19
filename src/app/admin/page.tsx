@@ -428,8 +428,8 @@ export default function AdminDashboard() {
         switch (role?.toUpperCase()) {
             case 'ARTIST': return '#6B5FFF';
             case 'VENUE': return '#FF5757';
-            case 'PROMOTER': return '#00D4FF';
-            case 'AGENT': return '#FFB800';
+            case 'PROMOTER': return '#FFB800';
+            case 'AGENT': return '#00C875';
             default: return '#999999';
         }
     };
