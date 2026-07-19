@@ -35,14 +35,14 @@ export const ROLES: Role[] = [
     id: "artist",
     labelKey: "role_artists_title",
     valueKey: "home_role_artist_value",
-    color: "#6B5FFF",
+    color: "#667EEA",
     icon: (
       // The artist — a performer, with a signal leaving them
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#6B5FFF", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#667EEA", 1.4)}>
         <circle cx="12" cy="7.5" r="3.2" />
         <path d="M5.5 19.5c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2" />
         <path d="M17 3.6a4.8 4.8 0 0 1 1.5 2.9" opacity="0.55" />
-        <circle cx="19.4" cy="3" r="0.8" fill="#6B5FFF" stroke="none" opacity="0.9" />
+        <circle cx="19.4" cy="3" r="0.8" fill="#667EEA" stroke="none" opacity="0.9" />
       </svg>
     ),
   },
@@ -50,10 +50,10 @@ export const ROLES: Role[] = [
     id: "agent",
     labelKey: "role_agents_title",
     valueKey: "home_role_agent_value",
-    color: "#FFB800",
+    color: "#43E97B",
     icon: (
       // The agent — one person representing another
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FFB800", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#43E97B", 1.4)}>
         <circle cx="9" cy="8" r="3" />
         <path d="M3 19.5c0-3.3 2.7-5.7 6-5.7s6 2.4 6 5.7" />
         <circle cx="16.8" cy="9" r="2.4" opacity="0.5" />
@@ -65,10 +65,10 @@ export const ROLES: Role[] = [
     id: "promoter",
     labelKey: "role_promoters_title",
     valueKey: "home_role_promoter_value",
-    color: "#00D4FF",
+    color: "#FFC107",
     icon: (
       // The promoter — a megaphone, sound leaving the horn
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#00D4FF", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FFC107", 1.4)}>
         <path d="M17.5 4 6.8 8.6H4.2a1.7 1.7 0 0 0-1.7 1.7v3.4a1.7 1.7 0 0 0 1.7 1.7h2.6L17.5 20z" />
         <path d="M7.2 15.6v3.2a1.2 1.2 0 0 0 1.2 1.2h1.4" opacity="0.5" />
         <path d="M20.2 9.2a4.2 4.2 0 0 1 0 5.6" opacity="0.6" />
@@ -79,14 +79,14 @@ export const ROLES: Role[] = [
     id: "venue",
     labelKey: "role_venues_title",
     valueKey: "home_role_venue_value",
-    color: "#FF5757",
+    color: "#F5576C",
     icon: (
       // The venue — a building with an arched entrance, light above the door
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FF5757", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#F5576C", 1.4)}>
         <path d="M5 20V8.8L12 4.5l7 4.3V20" />
         <path d="M3 20h18" />
         <path d="M9.6 20v-3.4a2.4 2.4 0 0 1 4.8 0V20" opacity="0.55" />
-        <circle cx="12" cy="9.4" r="0.9" fill="#FF5757" stroke="none" opacity="0.9" />
+        <circle cx="12" cy="9.4" r="0.9" fill="#F5576C" stroke="none" opacity="0.9" />
       </svg>
     ),
   },
