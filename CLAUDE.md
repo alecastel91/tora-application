@@ -24,6 +24,104 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
 
+## Recent Updates (July 20, 2026)
+
+### Role colors — aligned to the app's source of truth
+The homepage role tiles + admin role indicators now use the **canonical palette from
+`tora-app/src/utils/roles.js`**: Artist `#6B5FFF` (indigo), Agent `#00C875` (green),
+Promoter `#FFB800` (amber/yellow), Venue `#FF5757` (coral).
+- **Gotcha:** an earlier "align to the app" pass (July 17, `7d7cb0d`) copied from
+  `tora-app/src/styles/tora-theme.css`, which is **STALE** — it has promoter cyan
+  `#00D4FF` and agent gold `#FFB800`. Do NOT copy from `tora-theme.css`. `roles.js`,
+  `variables.css`, and `index.css` in tora-app all agree and are correct.
+- Touched `home.data.tsx`, `admin/page.tsx` (promoter/agent were swapped), `admin/verification/page.tsx`.
+
+### Home scroll cue — stronger invitation
+The lone 20px `white/30` down-arrow in `HeroSection.tsx` was easy to miss, so many
+visitors likely never scrolled past the hero. Replaced with a translatable **"EXPLORE"
+label** (`scroll_explore` key, all 8 languages) above a **28px `white/55` arrow** with a
+stronger bob. Skipped a "peek next section above the fold" idea — the next section
+centers its headline in its own 70vh block over the same full-page animated backdrop,
+so a peek would reveal only empty space, not real content.
+
+## Recent Updates (July 17-19, 2026)
+
+### Alignment + polish batch (mostly July 17)
+- **SEO basics** (`69df9db`): `src/app/sitemap.ts`, `src/app/robots.ts` (disallow
+  `/admin`, `/api/`), per-segment `layout.tsx` files giving each route its own
+  title/description; `metadataBase` + title template in root `layout.tsx`.
+- **Social preview** (`959ad04`→`c11f9f1`): branded `opengraph-image.png` /
+  `twitter-image.png` in `src/app/` — TORA wordmark on full black with
+  "WHERE MUSIC MEETS" centered below.
+- **Privacy/terms accuracy** (`bd4a935`): effective date freshened to **July 2026**;
+  EN collection statement now discloses the profile name.
+- **Loader** (`9a6d467`): `TORALoader` spins the app's designer globe
+  (`public/loading-globe.png`) instead of the old wireframe.
+- **Emails** (`631f678`): all 5 react-email templates restyled with hosted brand assets
+  (`www.torahub.io/email-assets/{tora-logo,tora-globe,instagram}.png`), infrared
+  left-accent cards. Standard tier = **Free** (dropped 7-day Premium trial copy, `2a2fc6b`).
+- **Apply form** (`7e4f2cb`, `10216d2`): input accessible names derived from placeholder;
+  **localStorage draft persistence** (`tora_application_draft`, 7-day TTL, cleared on
+  submit); agent display-name helper; venue/promoter Instagram guidance (enter the
+  venue/event page, not personal, for recognition).
+
+### Admin role filter (July 19, `2c077e7`→`7287c6a`)
+- Role filter (All / Artist / Agent / Promoter / Venue) on the admin applications view,
+  seated in the Applications/Recap header row, right-aligned on desktop.
+- Admin card radius standardized `rounded-lg` → `rounded-xl`.
+
+## Recent Updates (July 10-14, 2026)
+
+### @tora.verify — identity verification Phase 1 (`8add1e2`, `a164542`)
+- **Admin verification queue** at `src/app/admin/verification/page.tsx` — reviews
+  identity-challenge submissions (this is the website/admin side; the challenge itself
+  lives in tora-app / tora-backend).
+- Waitlist admin header: **Verification** is now a button with a pending-count badge.
+
+### Application form — genres + Free tier
+- Multiple **custom "Other" genres** addable with a `+` (`c0a304f`).
+- Standard invitation copy = **Free membership** (`2a2fc6b`).
+
+## Recent Updates (July 2-8, 2026)
+
+### Home scroll redesign — narrative single-page journey
+Major rebuild of `/` from a static hero into a **scroll-driven narrative**
+(`e06b54f`→`3c20db6`, `4281658`→`9dc3502`):
+- `LenisProvider` smooth scroll; section stack in `src/app/page.tsx`:
+  `HeroSection → NetworkFormation → RolesSection → SolutionsSection → EthosSection →
+  FinalCtaSection`, over fixed `ParallaxBackdrop` + `WaveMesh` + `NodeField` (animated
+  pink node network / wave-mesh background).
+- Pinned/sticky beats, globe-morph into role/solution boxes, bespoke role icons, glass
+  tiles, two-line role value copy, "no sentence-ending periods" copy style.
+- `/about`, `/roles`, `/features` brought into the same home design language (`9dc3502`).
+- Note: **`overflow-x-clip` (not `-hidden`)** on `<main>` — `-hidden` makes `<main>` a
+  scroll container and breaks `position: sticky` in every pinned section.
+
+### /apply orbital mark
+The intro circle on `/apply` is the exact designer orbital sphere from `Intro.svg`
+(`ab8ee01`), rendered as an image at **40% opacity over black** (`7c0f227`) and centered
+vertically between the TORA logo and heading (`42a846f`). This `#F24E6D` orb is a
+separate element from the app-wide `#FF3366` infrared.
+
+### Mobile horizontal-scroll fixes
+- `d6625dc` — cap ambient-glow width to viewport: `w-[70vh]` → `w-[min(70vh,100vw)]`.
+- `e1ed7a2` — About page `.laser-line` divider (forces `absolute + w-full`) replaced
+  with plain gradient utilities.
+
+## Recent Updates (July 2, 2026)
+
+### Searchable city picker + Recap analytics
+- Apply form: **searchable city picker** replaces the zone/country/city dropdowns
+  (`60784b1`).
+- Admin: **Recap analytics tab** with memoized aggregations (`bbca62a`, `b66d4a1`);
+  code-review fixes (`0b63a7a`).
+
+### Repo hygiene note — TWO clones on Desktop
+There are two clones of this repo: `~/Desktop/TORA_PROJECT/tora-application` (**active**,
+where all work happens) and `~/Desktop/tora-application` (**stale**, was 9 days behind as
+of July 20). Always work in the TORA_PROJECT clone. Also note: `tora-app` (member app,
+Railway) is a **separate repo** — role colors there are the source of truth (see July 20).
+
 ## Recent Updates (May 22-25, 2026)
 
 ### Admin dashboard + apply form duplicate check routed through backend
@@ -417,6 +515,7 @@ http://192.168.2.101:3000 (network)
 
 ---
 
-**Last Updated**: April 1, 2026  
-**Version**: 2.0.0  
-**Repository**: https://github.com/alecastel91/tora-application
+**Last Updated**: July 20, 2026  
+**Version**: 2.1.0  
+**Repository**: https://github.com/alecastel91/tora-application  
+**Active local clone**: ~/Desktop/TORA_PROJECT/tora-application (not ~/Desktop/tora-application)
