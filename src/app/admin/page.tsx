@@ -49,6 +49,17 @@ export interface Application {
     status: string;
     coupon_code: string | null;
     invited_at: string | null;
+    referral_code: string | null;
+    referred_by_user_id: string | null;
+    referred_by_name: string | null;
+    referred_by_instagram: string | null;
+}
+
+// Instagram values are stored as handles or full URLs — normalize to a link.
+function instagramUrl(value: string): string {
+    const v = value.trim();
+    if (/^https?:\/\//i.test(v)) return v;
+    return `https://instagram.com/${v.replace(/^@/, '')}`;
 }
 
 export default function AdminDashboard() {
@@ -336,7 +347,11 @@ export default function AdminDashboard() {
                     website: application.website,
                     linkedin: application.linkedin,
                     agencyName: application.agency_name,
-                    venueCapacity: application.venue_capacity
+                    venueCapacity: application.venue_capacity,
+                    // Referral attribution: lets the backend credit the inviter
+                    // (marks their referral invitation redeemed, freeing the slot).
+                    referralCode: application.referral_code,
+                    referredByUserId: application.referred_by_user_id
                 })
             });
 
@@ -696,6 +711,26 @@ export default function AdminDashboard() {
                                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-500/20 text-blue-400 ml-2">
                                                     Additional Profile
                                                 </span>
+                                            )}
+                                            {(app.referred_by_name || app.referral_code) && (
+                                                app.referred_by_instagram ? (
+                                                    <a
+                                                        href={instagramUrl(app.referred_by_instagram)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#FF3366]/15 text-[#FF7A9C] border border-[#FF3366]/30 ml-2 hover:bg-[#FF3366]/25 hover:text-white transition-colors"
+                                                        title={`Referred by ${app.referred_by_name || 'a member'} — open their Instagram`}
+                                                    >
+                                                        ↗ Referred{app.referred_by_name ? ` · ${app.referred_by_name}` : ''}
+                                                    </a>
+                                                ) : (
+                                                    <span
+                                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#FF3366]/15 text-[#FF7A9C] border border-[#FF3366]/30 ml-2"
+                                                        title={`Referred by ${app.referred_by_name || 'a member'}${app.referral_code ? ` (${app.referral_code})` : ''}`}
+                                                    >
+                                                        ↗ Referred{app.referred_by_name ? ` · ${app.referred_by_name}` : ''}
+                                                    </span>
+                                                )
                                             )}
                                         </div>
                                         <div className="text-white/60 text-sm">

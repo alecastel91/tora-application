@@ -254,6 +254,21 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
     const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
     const [hydrated, setHydrated] = useState(false);
 
+    // Referral: if the applicant arrived via a member's invite link (?ref=<code>),
+    // resolve it to the inviter so the completed application is tagged with them.
+    const [referral, setReferral] = useState<{ code: string; userId?: string; name?: string; instagram?: string } | null>(null);
+    useEffect(() => {
+        const code = new URLSearchParams(window.location.search).get("ref");
+        if (!code) return;
+        setReferral({ code });
+        fetch(`/api/public/referral/${encodeURIComponent(code)}`, { cache: "no-store" })
+            .then((r) => r.json())
+            .then((d) => {
+                if (d && d.valid) setReferral({ code, userId: d.inviterUserId, name: d.inviterName, instagram: d.inviterInstagram || undefined });
+            })
+            .catch(() => { /* keep the raw code even if resolve fails */ });
+    }, []);
+
     // Draft persistence — keep the in-progress application across refreshes, so a
     // reload (or an accidental tab close) doesn't wipe everything the user typed.
     const DRAFT_KEY = "tora_application_draft";
@@ -402,6 +417,10 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             website: website || null,
                             linkedin: linkedin || null,
                             venue_capacity: venueCapacity || null,
+                            referral_code: referral?.code || null,
+                            referred_by_user_id: referral?.userId || null,
+                            referred_by_name: referral?.name || null,
+                            referred_by_instagram: referral?.instagram || null,
                         },
                     ]);
 
