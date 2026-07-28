@@ -10,7 +10,7 @@ import {
   PhoneFrame,
   Reveal,
   ROLE,
-  ScrollablePhone,
+  ScrollInsidePhone,
   ScrollProgress,
   Section,
   EASE,
@@ -103,7 +103,6 @@ const DEEPDIVES = [
     role: "Artist",
     color: ROLE.artist,
     shot: "/founding/shots/artist-full.png",
-    imgRatio: 4.22,
     headline: ["Get discovered.", "Book globally."],
     body: "A verified profile that represents you professionally — genres, socials, availability, press kit. Visible to promoters and venues worldwide, not just in your city.",
     points: [
@@ -118,7 +117,6 @@ const DEEPDIVES = [
     role: "Agent",
     color: ROLE.agent,
     shot: "/founding/shots/agent-full.png",
-    imgRatio: 2.66,
     headline: ["Manage your roster.", "Close deals."],
     body: "One dashboard for your entire artist roster. Track every deal, calendar, contract and payment across all your artists — without losing your mind.",
     points: [
@@ -133,7 +131,6 @@ const DEEPDIVES = [
     role: "Promoter",
     color: ROLE.promoter,
     shot: "/founding/shots/promoter-full.png",
-    imgRatio: 3.56,
     headline: ["Find the right act.", "Build the right lineup."],
     body: "Search artists by genre, location and availability. Find venues to host your events. Send booking proposals directly — no intermediary required, unless you want one.",
     points: [
@@ -148,7 +145,6 @@ const DEEPDIVES = [
     role: "Venue",
     color: ROLE.venue,
     shot: "/founding/shots/venue-full.png",
-    imgRatio: 4.32,
     headline: ["Get seen.", "Fill your calendar."],
     body: "Your venue profile is visible to artists and agents planning tours. Set your dates, capacity and genres — TORA surfaces you to the right people at the right time.",
     points: [
@@ -160,15 +156,6 @@ const DEEPDIVES = [
     ],
   },
 ] as const;
-
-const FEATURES = [
-  { title: "Search & Discovery", body: "Filter by role, genre, location and availability. Find the right professional in seconds." },
-  { title: "Calendar Matching", body: "Set available dates. TORA surfaces artists, venues and promoters with overlapping schedules." },
-  { title: "Direct Messaging", body: "Connection requests, conversation threads and document sharing — communicate directly." },
-  { title: "Booking Workflow", body: "The full deal cycle: proposal → negotiation → counter-offer → acceptance, all tracked in one place." },
-  { title: "Contracts", body: "Generate, send and sign booking contracts digitally without leaving the platform." },
-  { title: "Payments", body: "Integrated processing with multi-currency support. Track status from invoice to confirmation." },
-];
 
 const CALENDAR_POINTS = [
   { k: "Set your dates", t: "Travel Schedule", b: "Mark the cities you'll be in and when. Artists set tour dates, agents plan routing, promoters see who's incoming to their market." },
@@ -255,7 +242,7 @@ function Hero() {
           className="mt-8 text-[11px] md:text-xs uppercase tracking-[0.34em] text-infrared"
           style={{ ...supreme, fontWeight: 500 }}
         >
-          Founding Members · Beta now open
+          Founding Members · Applications open
         </motion.span>
 
         <motion.h1
@@ -385,38 +372,35 @@ function Network() {
         </Reveal>
       </Section>
 
-      {DEEPDIVES.map((d, i) => {
-        const flip = i % 2 === 1;
-        return (
-          <Section key={d.role} className="py-16 md:py-20">
-            <div className={`grid items-center gap-12 md:grid-cols-2 ${flip ? "md:[&>*:first-child]:order-2" : ""}`}>
-              <ScrollablePhone
-                src={d.shot}
-                alt={`${d.role} profile in the TORA app`}
-                imgRatio={d.imgRatio}
-                glow={d.color}
-              />
-              <div>
-                <Reveal><Eyebrow color={d.color}>{d.role}</Eyebrow></Reveal>
-                <Reveal delay={0.05}>
-                  <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-balance md:text-4xl" style={rajdhani}>
-                    <span className="text-white">{d.headline[0]}</span>{" "}
-                    <span style={{ color: d.color }}>{d.headline[1]}</span>
-                  </h2>
-                </Reveal>
-                <Reveal delay={0.1}>
-                  <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
-                </Reveal>
-                <Reveal delay={0.15}>
-                  <ul className="mt-6 space-y-3">
-                    {d.points.map((p) => <Bullet key={p} text={p} color={d.color} />)}
-                  </ul>
-                </Reveal>
-              </div>
+      {DEEPDIVES.map((d) => (
+        <Section key={d.role} className="py-16 md:py-20">
+          <div className="grid items-center gap-12 md:grid-cols-2">
+            <div>
+              <Reveal><Eyebrow color={d.color}>{d.role}</Eyebrow></Reveal>
+              <Reveal delay={0.05}>
+                <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-balance md:text-4xl" style={rajdhani}>
+                  <span className="text-white">{d.headline[0]}</span>{" "}
+                  <span style={{ color: d.color }}>{d.headline[1]}</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
+              </Reveal>
+              <Reveal delay={0.15}>
+                <ul className="mt-6 space-y-3">
+                  {d.points.map((p) => <Bullet key={p} text={p} color={d.color} />)}
+                </ul>
+              </Reveal>
             </div>
-          </Section>
-        );
-      })}
+            <ScrollInsidePhone
+              src={d.shot}
+              alt={`${d.role} profile in the TORA app`}
+              glow={d.color}
+              className="md:order-2"
+            />
+          </div>
+        </Section>
+      ))}
     </div>
   );
 }
@@ -451,7 +435,14 @@ function Discovery() {
             </div>
           </Reveal>
         </div>
-        <PhoneFrame src="/founding/shots/search-globe.png" alt="TORA network globe" glow={INFRARED} className="md:order-2" />
+        <Reveal className="md:order-2">
+          <div className="relative mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
+            <div aria-hidden className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl" style={{ background: "#FF3366", opacity: 0.16 }} />
+            <div className="overflow-hidden rounded-[1.9rem] border border-white/5">
+              <video src="/founding/globe.mp4" autoPlay muted loop playsInline className="block w-full" />
+            </div>
+          </div>
+        </Reveal>
       </div>
     </Section>
   );
@@ -505,44 +496,18 @@ function BookingFlow() {
         </p>
       </Reveal>
 
-      <div className="mt-16 grid gap-12 md:grid-cols-2 md:items-start">
-        {/* pinned phone (desktop) — mobile shows it first, static */}
-        <div className="flex justify-center md:sticky md:top-24 md:self-start">
-          <PhoneFrame src="/founding/shots/bookings.png" alt="TORA bookings" glow={INFRARED} />
-        </div>
-        {/* advancing steps */}
-        <div className="space-y-6 md:space-y-10">
-          {STEPS.map((s) => (
-            <StepRow key={s.n} step={s} reduce={reduce} />
-          ))}
-        </div>
+      {/* the 6 steps as a centered vertical timeline */}
+      <div className="mx-auto mt-16 max-w-xl space-y-6 md:space-y-8">
+        {STEPS.map((s) => (
+          <StepRow key={s.n} step={s} reduce={reduce} />
+        ))}
+      </div>
+
+      {/* the real Offer → Contract → Documents → Payment tracker */}
+      <div className="mt-16 flex justify-center">
+        <PhoneFrame src="/founding/shots/bookings.png" alt="A booking in TORA, step by step" glow={INFRARED} />
       </div>
     </Section>
-  );
-}
-
-/* Calendar image in a tasteful browser-ish card (screenshot is ~square). */
-function CalendarCard() {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      className="relative md:order-2"
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-      transition={{ duration: 0.85, ease: EASE }}
-    >
-      <div aria-hidden className="absolute -inset-6 -z-10 rounded-[2.5rem] blur-3xl" style={{ background: INFRARED, opacity: 0.13 }} />
-      <div className="overflow-hidden rounded-2xl border border-white/12 bg-[#050505] shadow-2xl">
-        <div className="flex items-center gap-1.5 border-b border-white/8 px-4 py-3">
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-          <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/founding/shots/calendar.png" alt="TORA availability calendar" loading="lazy" className="block h-auto w-full" />
-      </div>
-    </motion.div>
   );
 }
 
@@ -575,71 +540,9 @@ function CalendarSpotlight() {
             ))}
           </div>
         </div>
-        <CalendarCard />
+        <PhoneFrame src="/founding/shots/calendar.png" alt="Availability calendar in TORA" glow={INFRARED} className="md:order-2" />
       </div>
     </Section>
-  );
-}
-
-/* Concept visual — a stylized tour route with a shared cost split across venues. */
-function KickstartRoute() {
-  const reduce = useReducedMotion();
-  const cities = [
-    { x: 40, y: 120, label: "Berlin" },
-    { x: 150, y: 70, label: "London" },
-    { x: 265, y: 130, label: "Paris" },
-    { x: 380, y: 65, label: "Milan" },
-  ];
-  const path = "M40 120 L150 70 L265 130 L380 65";
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-6">
-      <svg viewBox="0 0 420 200" className="h-auto w-full" role="img" aria-label="One touring artist co-hosted across four venues, splitting travel cost">
-        <defs>
-          <linearGradient id="ks-route" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={INFRARED} stopOpacity="0.25" />
-            <stop offset="100%" stopColor={INFRARED} stopOpacity="1" />
-          </linearGradient>
-        </defs>
-        {/* dashed base route */}
-        <path d={path} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" strokeDasharray="4 5" />
-        {/* animated infrared route */}
-        <motion.path
-          d={path}
-          fill="none"
-          stroke="url(#ks-route)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          initial={reduce ? { pathLength: 1 } : { pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true, margin: "-15% 0px" }}
-          transition={{ duration: 1.6, ease: EASE }}
-        />
-        {cities.map((c, i) => (
-          <g key={c.label}>
-            <motion.circle
-              cx={c.x}
-              cy={c.y}
-              r="6"
-              fill="#050505"
-              stroke={INFRARED}
-              strokeWidth="2"
-              initial={reduce ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.4 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 + i * 0.25, duration: 0.5, ease: EASE }}
-              style={{ transformOrigin: `${c.x}px ${c.y}px` }}
-            />
-            <text x={c.x} y={c.y - 14} textAnchor="middle" fill="rgba(255,255,255,0.75)" fontSize="11" style={supreme}>{c.label}</text>
-            <text x={c.x} y={c.y + 22} textAnchor="middle" fill={INFRARED} fontSize="10" style={rajdhani} fontWeight="700">¼ cost</text>
-          </g>
-        ))}
-      </svg>
-      <div className="mt-2 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.18em] text-white/45" style={supreme}>
-        <span className="h-px w-6 bg-infrared/60" />
-        One artist · four venues · shared travel
-        <span className="h-px w-6 bg-infrared/60" />
-      </div>
-    </div>
   );
 }
 
@@ -664,9 +567,7 @@ function TourKickstart() {
               </p>
             </Reveal>
           </div>
-          <Reveal delay={0.1}>
-            <KickstartRoute />
-          </Reveal>
+          <PhoneFrame src="/founding/shots/tour.png" alt="A tour in TORA — Tour Kickstart" glow={INFRARED} className="md:order-2" />
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {KICKSTART.map((k, i) => (
@@ -675,34 +576,6 @@ function TourKickstart() {
                 <h3 className="text-lg font-bold uppercase tracking-wide text-infrared" style={rajdhani}>{k.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/60" style={grotesk}>{k.b}</p>
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-
-      {/* compact features band — keeps the full FEATURES content without a whole chapter */}
-      <div className="mt-20">
-        <Reveal className="flex justify-center"><Eyebrow>Platform</Eyebrow></Reveal>
-        <Reveal delay={0.05}>
-          <h3 className="mt-5 text-center text-2xl font-black uppercase leading-tight tracking-tight text-white md:text-4xl" style={rajdhani}>
-            Everything a booking needs
-          </h3>
-        </Reveal>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => (
-            <Reveal key={f.title} delay={(i % 3) * 0.06}>
-              <motion.div
-                className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[transform,border-color,box-shadow] duration-300"
-                style={{ borderLeft: `2px solid ${INFRARED}` }}
-                whileHover={{
-                  y: -6,
-                  borderColor: "rgba(255,255,255,0.2)",
-                  boxShadow: `0 16px 40px -14px ${INFRARED}44`,
-                }}
-              >
-                <h4 className="text-base font-semibold text-white" style={supreme}>{f.title}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-white/55" style={grotesk}>{f.body}</p>
-              </motion.div>
             </Reveal>
           ))}
         </div>
@@ -722,13 +595,13 @@ function FoundingCTA() {
       </Reveal>
       <Reveal delay={0.12}>
         <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
-          The first members get full platform access during the beta period — free.
-          No credit card required.
+          The first to join TORA — full access from launch, a direct line to the team,
+          and founding-member status as the network grows.
         </p>
       </Reveal>
       <div className="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2">
         {[
-          { t: "Full access", b: "Every feature unlocked during beta — calendar, bookings, messaging, contracts." },
+          { t: "Full access", b: "Every feature from day one — calendar, bookings, messaging, contracts." },
           { t: "Shape the product", b: "A direct line to the team. Your feedback influences what gets built next." },
         ].map((f, i) => (
           <Reveal key={f.t} delay={i * 0.08}>

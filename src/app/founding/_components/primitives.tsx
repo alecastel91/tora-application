@@ -236,3 +236,61 @@ export function ScrollablePhone({
     </motion.div>
   );
 }
+
+/**
+ * Phone frame the viewer can scroll UP/DOWN inside (real overflow container),
+ * starting at the top of the screenshot. Use when we want the reader to explore
+ * the full app page at their own pace rather than tie it to page scroll.
+ */
+export function ScrollInsidePhone({
+  src,
+  alt,
+  glow = "#FF3366",
+  className = "",
+  frameRatio = 2.05,
+}: {
+  src: string;
+  alt: string;
+  glow?: string;
+  className?: string;
+  frameRatio?: number;
+}) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      className={`relative ${className}`}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-8% 0px -8% 0px" }}
+      transition={{ duration: 0.8, ease: EASE }}
+    >
+      <div
+        aria-hidden
+        className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
+        style={{ background: glow, opacity: 0.16 }}
+      />
+      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
+        <div
+          className="relative overflow-hidden rounded-[1.9rem] border border-white/5"
+          style={{ aspectRatio: `1 / ${frameRatio}` }}
+        >
+          <div
+            className="h-full w-full overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(255,51,102,0.5)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20"
+            tabIndex={0}
+            aria-label={alt}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={src} alt={alt} loading="lazy" className="block w-full" />
+          </div>
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#050505] to-transparent" />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-2.5 py-0.5 text-[9px] uppercase tracking-[0.2em] text-white/55 backdrop-blur-sm"
+          >
+            Scroll ↕
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
