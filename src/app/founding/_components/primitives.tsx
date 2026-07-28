@@ -168,3 +168,71 @@ export function PhoneFrame({
     </motion.div>
   );
 }
+
+/**
+ * Phone frame whose (tall) screenshot scrolls INSIDE the frame as the section
+ * passes through the viewport — reveals a full app page without taking the whole
+ * page height. `imgRatio` = screenshot height/width (so we know how far to travel).
+ * Under reduced motion the frame simply shows the top of the screenshot.
+ */
+export function ScrollablePhone({
+  src,
+  alt,
+  imgRatio,
+  glow = "#FF3366",
+  className = "",
+  frameRatio = 2.16,
+}: {
+  src: string;
+  alt: string;
+  imgRatio: number;
+  glow?: string;
+  className?: string;
+  frameRatio?: number;
+}) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  // travel = fraction of the image height that must slide up so the bottom
+  // reaches the frame bottom. translateY percentages are relative to the img.
+  const maxShift = Math.max(0, (1 - frameRatio / imgRatio) * 100);
+  const raw = useTransform(scrollYProgress, [0.1, 0.9], ["0%", `-${maxShift}%`]);
+  const y = useSpring(raw, { stiffness: 80, damping: 24, restDelta: 0.001 });
+
+  return (
+    <motion.div
+      ref={ref}
+      className={`relative ${className}`}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-8% 0px -8% 0px" }}
+      transition={{ duration: 0.8, ease: EASE }}
+    >
+      <div
+        aria-hidden
+        className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
+        style={{ background: glow, opacity: 0.16 }}
+      />
+      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
+        <div
+          className="relative overflow-hidden rounded-[1.9rem] border border-white/5"
+          style={{ aspectRatio: `1 / ${frameRatio}` }}
+        >
+          <motion.img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            className="absolute left-0 top-0 block w-full"
+            style={reduce ? undefined : { y }}
+          />
+          {/* top/bottom fades so the internal scroll reads as a viewport */}
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#050505] to-transparent" />
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#050505] to-transparent" />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
