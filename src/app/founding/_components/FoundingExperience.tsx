@@ -65,10 +65,10 @@ const ROLES = [
     body: "Talent agencies managing artist rosters, tours, deals and international opportunities.",
     icon: (c: string) => (
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="7" r="3" />
-        <circle cx="5" cy="17" r="2.4" />
-        <circle cx="19" cy="17" r="2.4" />
-        <path d="M12 10v3M12 13l-4.6 2.2M12 13l4.6 2.2" />
+        <circle cx="9" cy="8" r="3" />
+        <path d="M3 19.5c0-3.3 2.7-5.7 6-5.7s6 2.4 6 5.7" />
+        <circle cx="16.8" cy="9" r="2.4" opacity="0.5" />
+        <path d="M16.6 13.9c2.6.4 4.4 2.5 4.4 5.1" opacity="0.5" />
       </svg>
     ),
   },
@@ -79,8 +79,9 @@ const ROLES = [
     body: "Event organisers who book talent, build lineups and manage venue partnerships globally.",
     icon: (c: string) => (
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 10v4l11 5V5L3 10Z" />
-        <path d="M14 8a4 4 0 0 1 0 8" />
+        <path d="M17.5 4 6.8 8.6H4.2a1.7 1.7 0 0 0-1.7 1.7v3.4a1.7 1.7 0 0 0 1.7 1.7h2.6L17.5 20z" />
+        <path d="M7.2 15.6v3.2a1.2 1.2 0 0 0 1.2 1.2h1.4" opacity="0.5" />
+        <path d="M20.2 9.2a4.2 4.2 0 0 1 0 5.6" opacity="0.6" />
       </svg>
     ),
   },

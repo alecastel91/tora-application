@@ -37,12 +37,11 @@ export const ROLES: Role[] = [
     valueKey: "home_role_artist_value",
     color: "#6B5FFF",
     icon: (
-      // The artist — a performer, with a signal leaving them
+      // The artist — headphones (standardized icon)
       <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#6B5FFF", 1.4)}>
-        <circle cx="12" cy="7.5" r="3.2" />
-        <path d="M5.5 19.5c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2" />
-        <path d="M17 3.6a4.8 4.8 0 0 1 1.5 2.9" opacity="0.55" />
-        <circle cx="19.4" cy="3" r="0.8" fill="#6B5FFF" stroke="none" opacity="0.9" />
+        <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+        <rect x="3" y="14" width="4" height="6" rx="1.5" />
+        <rect x="17" y="14" width="4" height="6" rx="1.5" />
       </svg>
     ),
   },
@@ -81,12 +80,10 @@ export const ROLES: Role[] = [
     valueKey: "home_role_venue_value",
     color: "#FF5757",
     icon: (
-      // The venue — a building with an arched entrance, light above the door
+      // The venue — house / entrance (standardized icon)
       <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FF5757", 1.4)}>
-        <path d="M5 20V8.8L12 4.5l7 4.3V20" />
-        <path d="M3 20h18" />
-        <path d="M9.6 20v-3.4a2.4 2.4 0 0 1 4.8 0V20" opacity="0.55" />
-        <circle cx="12" cy="9.4" r="0.9" fill="#FF5757" stroke="none" opacity="0.9" />
+        <path d="M4 20V9l8-5 8 5v11" />
+        <path d="M9 20v-5a3 3 0 0 1 6 0v5" />
       </svg>
     ),
   },
