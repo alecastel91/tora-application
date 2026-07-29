@@ -153,8 +153,8 @@ export function PhoneFrame({
           animate={reduce ? { opacity: 0.14 } : { opacity: [0.11, 0.22, 0.11] }}
           transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
-          <div className="overflow-hidden rounded-[1.9rem] border border-white/5">
+        <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
+          <div className="overflow-hidden rounded-[1.9rem]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={src}
@@ -216,9 +216,9 @@ export function ScrollablePhone({
         className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
         style={{ background: glow, opacity: 0.16 }}
       />
-      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
+      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
         <div
-          className="relative overflow-hidden rounded-[1.9rem] border border-white/5"
+          className="relative overflow-hidden rounded-[1.9rem]"
           style={{ aspectRatio: `1 / ${frameRatio}` }}
         >
           <motion.img
@@ -269,12 +269,13 @@ export function ScrollInsidePhone({
         className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
         style={{ background: glow, opacity: 0.16 }}
       />
-      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
+      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
         <div
-          className="relative overflow-hidden rounded-[1.9rem] border border-white/5"
+          className="relative overflow-hidden rounded-[1.9rem]"
           style={{ aspectRatio: `1 / ${frameRatio}` }}
         >
           <div
+            data-lenis-prevent
             className="h-full w-full overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(255,51,102,0.5)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20"
             tabIndex={0}
             aria-label={alt}

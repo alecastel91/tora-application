@@ -436,9 +436,9 @@ function Discovery() {
           </Reveal>
         </div>
         <Reveal className="md:order-2">
-          <div className="relative mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] border border-white/12 bg-[#050505] p-2 shadow-2xl">
+          <div className="relative mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
             <div aria-hidden className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl" style={{ background: "#FF3366", opacity: 0.16 }} />
-            <div className="overflow-hidden rounded-[1.9rem] border border-white/5">
+            <div className="overflow-hidden rounded-[1.9rem]">
               <video src="/founding/globe.mp4" autoPlay muted loop playsInline className="block w-full" />
             </div>
           </div>
