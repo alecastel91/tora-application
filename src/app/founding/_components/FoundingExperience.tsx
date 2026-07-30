@@ -337,18 +337,7 @@ function ProblemSolution() {
           final payment confirmation, everything happens in one seamless platform.
         </p>
       </Reveal>
-      <Reveal delay={0.2}>
-        <div className="mx-auto mt-12 flex max-w-md items-center justify-center gap-3 md:gap-6">
-          {ROLES.map((r) => (
-            <div key={r.id} className="flex flex-col items-center gap-2">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full border" style={{ borderColor: `${r.color}55`, background: `${r.color}12` }}>
-                {r.icon(r.color)}
-              </span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-white/50" style={supreme}>{r.label}</span>
-            </div>
-          ))}
-        </div>
-      </Reveal>
+      <RolePicker />
     </Section>
   );
 }
@@ -403,20 +392,13 @@ function RolePicker() {
     if (i >= 0) setSelected(i);
   }, []);
   return (
-    <Section id="roles">
-      <Reveal className="flex justify-center"><Eyebrow>Who is TORA for</Eyebrow></Reveal>
-      <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-5 max-w-3xl text-center text-3xl font-black uppercase leading-[1.04] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>Choose your role</h2>
-      </Reveal>
-      <Reveal delay={0.1}>
-        <p className="mx-auto mt-5 max-w-xl text-center text-[15px] leading-relaxed text-white/55 md:text-base" style={grotesk}>Every side of the industry gets a purpose-built profile — tap yours to see it, then explore the others.</p>
-      </Reveal>
-      <div className="mt-12 md:mt-14">
-        <AnimatePresence mode="wait" initial={false}>
-          {selected === null ? (
-            <motion.div key="picker"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}
-              className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="mt-14 md:mt-16">
+      <AnimatePresence mode="wait" initial={false}>
+        {selected === null ? (
+          <motion.div key="picker"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}>
+            <p className="mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>Choose your role</p>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {ROLES.map((r, i) => (
                 <button key={r.id} onClick={() => setSelected(i)}
                   className="group flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center transition-colors hover:border-white/25">
@@ -427,13 +409,13 @@ function RolePicker() {
                   <span className="text-sm leading-relaxed text-white/55" style={grotesk}>{r.body}</span>
                 </button>
               ))}
-            </motion.div>
-          ) : (
-            <RoleDetail key={"detail-" + selected} index={selected} onPick={setSelected} onBack={() => setSelected(null)} reduce={reduce} />
-          )}
-        </AnimatePresence>
-      </div>
-    </Section>
+            </div>
+          </motion.div>
+        ) : (
+          <RoleDetail key={"detail-" + selected} index={selected} onPick={setSelected} onBack={() => setSelected(null)} reduce={reduce} />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -581,8 +563,7 @@ function CalendarSpotlight() {
 function TourKickstart() {
   return (
     <Section>
-      <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 md:p-14">
-        <div className="grid items-center gap-12 md:grid-cols-2">
+      <div className="grid items-center gap-12 md:grid-cols-2">
           <div>
             <Reveal><Eyebrow>Feature Spotlight</Eyebrow></Reveal>
             <Reveal delay={0.05}>
@@ -611,7 +592,6 @@ function TourKickstart() {
             </Reveal>
           ))}
         </div>
-      </div>
     </Section>
   );
 }
@@ -674,7 +654,7 @@ function Closing() {
 /* ------------------------------------------------------------------- shell */
 
 const CHAPTERS = [
-  { id: "top", label: "Intro" }, { id: "problem", label: "Problem" }, { id: "roles", label: "Roles" },
+  { id: "top", label: "Intro" }, { id: "problem", label: "The pitch" },
   { id: "discovery", label: "Network" }, { id: "booking", label: "Bookings" }, { id: "spotlights", label: "Features" }, { id: "join", label: "Join" },
 ];
 function ChapterNav() {
@@ -703,7 +683,6 @@ export function FoundingExperience() {
       <FoundingBackdrop />
       <Hero />
       <ProblemSolution />
-      <RolePicker />
       <Discovery />
       <BookingFlow />
       <CalendarSpotlight />
