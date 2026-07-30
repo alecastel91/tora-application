@@ -11,6 +11,7 @@ import {
   Reveal,
   ROLE,
   ScrollInsidePhone,
+  ScrollProgress,
   Section,
   EASE,
   grotesk,
@@ -668,11 +669,11 @@ function ChapterNav() {
     return () => obs.disconnect();
   }, []);
   return (
-    <nav aria-label="Chapters" className="fixed right-3 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-2.5 sm:right-6 sm:gap-3">
+    <nav aria-label="Chapters" className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 lg:flex">
       {CHAPTERS.map((c) => (
-        <a key={c.id} href={`#${c.id}`} aria-label={c.label} className="group flex items-center justify-end gap-2 py-0.5">
-          <span className="pointer-events-none hidden rounded-full bg-black/70 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-white/70 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 sm:inline-block" style={supreme}>{c.label}</span>
-          <span className={`h-2 w-2 rounded-full border transition-all sm:h-2.5 sm:w-2.5 ${active === c.id ? "scale-110 border-infrared bg-infrared" : "border-white/30 group-hover:border-white/60"}`} />
+        <a key={c.id} href={`#${c.id}`} aria-label={c.label} className="group flex items-center justify-end gap-2">
+          <span className="pointer-events-none rounded-full bg-black/70 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-white/70 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100" style={supreme}>{c.label}</span>
+          <span className={`h-2.5 w-2.5 rounded-full border transition-all ${active === c.id ? "scale-110 border-infrared bg-infrared" : "border-white/30 group-hover:border-white/60"}`} />
         </a>
       ))}
     </nav>
@@ -682,6 +683,7 @@ function ChapterNav() {
 export function FoundingExperience() {
   return (
     <main className="relative overflow-x-clip font-sans text-white selection:bg-infrared/30">
+      <ScrollProgress />
       <ChapterNav />
       <FoundingBackdrop />
       <Hero />

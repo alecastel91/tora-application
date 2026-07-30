@@ -31,7 +31,7 @@ export function ScrollProgress() {
   return (
     <motion.div
       aria-hidden
-      className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-infrared"
+      className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-infrared lg:hidden"
       style={{ scaleX, boxShadow: "0 0 12px rgba(255,51,102,0.7)" }}
     />
   );
