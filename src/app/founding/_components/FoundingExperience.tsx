@@ -401,12 +401,15 @@ function RolePicker() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {ROLES.map((r, i) => (
                 <button key={r.id} onClick={() => setSelected(i)}
-                  className="group flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center transition-colors hover:border-white/25">
-                  <span className="flex h-20 w-20 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-10 [&_svg]:w-10" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
+                  className="group flex flex-col items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.04]">
+                  <span className="flex h-24 w-24 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-12 [&_svg]:w-12" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
                     {r.icon(r.color)}
                   </span>
-                  <span className="text-lg font-bold uppercase tracking-wide" style={{ ...rajdhani, color: r.color }}>{r.label}</span>
-                  <span className="text-sm leading-relaxed text-white/55" style={grotesk}>{r.body}</span>
+                  <span className="text-xl font-bold uppercase tracking-wide" style={{ ...rajdhani, color: r.color }}>{r.label}</span>
+                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70" style={supreme}>
+                    Tap to explore
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                  </span>
                 </button>
               ))}
             </div>
