@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { FoundingBackdrop } from "./FoundingBackdrop";
 import {
   Eyebrow,
@@ -11,7 +11,6 @@ import {
   Reveal,
   ROLE,
   ScrollInsidePhone,
-  ScrollProgress,
   Section,
   EASE,
   grotesk,
@@ -204,7 +203,7 @@ function Hero() {
   const reduce = useReducedMotion();
 
   return (
-    <section ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
+    <section id="top" ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
       {/* cinematic layer behind the wordmark — radial pulse + faint rotating orb */}
       <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
         <motion.div
@@ -354,62 +353,94 @@ function ProblemSolution() {
   );
 }
 
-/* Chapter 3 — The Network. Role deep-dives, each a scroll-linked phone + copy. */
-function Network() {
+/* Chapter 3 — Choose your role. Picker → deep-dive, swapped with AnimatePresence. */
+function RoleDetail({ index, onPick, onBack, reduce }: { index: number; onPick: (i: number) => void; onBack: () => void; reduce: boolean | null; }) {
+  const d = DEEPDIVES[index];
   return (
-    <div className="relative">
-      <Section className="pb-8 text-center md:pb-10">
-        <Reveal className="flex justify-center"><Eyebrow>The Network</Eyebrow></Reveal>
-        <Reveal delay={0.05}>
-          <h2 className="mx-auto mt-5 max-w-3xl text-3xl font-black uppercase leading-[1.04] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-            Four roles, one ecosystem
+    <motion.div
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }}
+      transition={{ duration: 0.4, ease: EASE }}
+    >
+      <div className="mb-10 flex flex-wrap items-center justify-center gap-2">
+        <button onClick={onBack} className="mr-2 flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-white/70 transition-colors hover:bg-white/10" style={supreme}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          All roles
+        </button>
+        {ROLES.map((r, i) => (
+          <button key={r.id} onClick={() => onPick(i)}
+            className="flex items-center gap-2 rounded-full px-4 py-2 text-[11px] uppercase tracking-[0.18em] transition-colors [&_svg]:h-4 [&_svg]:w-4"
+            style={i === index ? { background: `${r.color}22`, border: `1px solid ${r.color}`, color: r.color } : { border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.55)" }}>
+            {r.icon(i === index ? r.color : "currentColor")}
+            <span style={supreme}>{r.label}</span>
+          </button>
+        ))}
+      </div>
+      <div className="grid items-center gap-12 md:grid-cols-2">
+        <div>
+          <Eyebrow color={d.color}>{d.role}</Eyebrow>
+          <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-balance md:text-4xl" style={rajdhani}>
+            <span className="text-white">{d.headline[0]}</span> <span style={{ color: d.color }}>{d.headline[1]}</span>
           </h2>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-white/55 md:text-base" style={grotesk}>
-            Every side of the industry gets a purpose-built profile — and they all book each
-            other in the same place.
-          </p>
-        </Reveal>
-      </Section>
+          <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
+          <ul className="mt-6 space-y-3">{d.points.map((p) => <Bullet key={p} text={p} color={d.color} />)}</ul>
+        </div>
+        <ScrollInsidePhone src={d.shot} alt={`${d.role} profile in the TORA app`} glow={d.color} className="md:order-2" />
+      </div>
+    </motion.div>
+  );
+}
 
-      {DEEPDIVES.map((d) => (
-        <Section key={d.role} className="py-16 md:py-20">
-          <div className="grid items-center gap-12 md:grid-cols-2">
-            <div>
-              <Reveal><Eyebrow color={d.color}>{d.role}</Eyebrow></Reveal>
-              <Reveal delay={0.05}>
-                <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-balance md:text-4xl" style={rajdhani}>
-                  <span className="text-white">{d.headline[0]}</span>{" "}
-                  <span style={{ color: d.color }}>{d.headline[1]}</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
-              </Reveal>
-              <Reveal delay={0.15}>
-                <ul className="mt-6 space-y-3">
-                  {d.points.map((p) => <Bullet key={p} text={p} color={d.color} />)}
-                </ul>
-              </Reveal>
-            </div>
-            <ScrollInsidePhone
-              src={d.shot}
-              alt={`${d.role} profile in the TORA app`}
-              glow={d.color}
-              className="md:order-2"
-            />
-          </div>
-        </Section>
-      ))}
-    </div>
+function RolePicker() {
+  const reduce = useReducedMotion();
+  const [selected, setSelected] = useState<number | null>(null);
+  useEffect(() => {
+    const r = new URLSearchParams(window.location.search).get("role");
+    const i = DEEPDIVES.findIndex((d) => d.role.toLowerCase() === (r || "").toLowerCase());
+    // Deep-link must run post-mount (window read) to avoid an SSR hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (i >= 0) setSelected(i);
+  }, []);
+  return (
+    <Section id="roles">
+      <Reveal className="flex justify-center"><Eyebrow>Who is TORA for</Eyebrow></Reveal>
+      <Reveal delay={0.05}>
+        <h2 className="mx-auto mt-5 max-w-3xl text-center text-3xl font-black uppercase leading-[1.04] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>Choose your role</h2>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <p className="mx-auto mt-5 max-w-xl text-center text-[15px] leading-relaxed text-white/55 md:text-base" style={grotesk}>Every side of the industry gets a purpose-built profile — tap yours to see it, then explore the others.</p>
+      </Reveal>
+      <div className="mt-12 md:mt-14">
+        <AnimatePresence mode="wait" initial={false}>
+          {selected === null ? (
+            <motion.div key="picker"
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}
+              className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {ROLES.map((r, i) => (
+                <button key={r.id} onClick={() => setSelected(i)}
+                  className="group flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center transition-colors hover:border-white/25">
+                  <span className="flex h-20 w-20 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-10 [&_svg]:w-10" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
+                    {r.icon(r.color)}
+                  </span>
+                  <span className="text-lg font-bold uppercase tracking-wide" style={{ ...rajdhani, color: r.color }}>{r.label}</span>
+                  <span className="text-sm leading-relaxed text-white/55" style={grotesk}>{r.body}</span>
+                </button>
+              ))}
+            </motion.div>
+          ) : (
+            <RoleDetail key={"detail-" + selected} index={selected} onPick={setSelected} onBack={() => setSelected(null)} reduce={reduce} />
+          )}
+        </AnimatePresence>
+      </div>
+    </Section>
   );
 }
 
 /* Chapter 4 — Discovery / the global network globe. */
 function Discovery() {
   return (
-    <Section>
+    <Section id="discovery">
       <div className="grid items-center gap-12 md:grid-cols-2">
         <div>
           <Reveal><Eyebrow>Search &amp; Discovery</Eyebrow></Reveal>
@@ -483,7 +514,7 @@ function StepRow({ step, reduce }: { step: (typeof STEPS)[number]; reduce: boole
 function BookingFlow() {
   const reduce = useReducedMotion();
   return (
-    <Section>
+    <Section id="booking">
       <Reveal className="text-center"><div className="flex justify-center"><Eyebrow>How it works</Eyebrow></div></Reveal>
       <Reveal delay={0.05}>
         <h2 className="mt-5 text-center text-3xl font-black uppercase leading-[1.05] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
@@ -514,7 +545,7 @@ function BookingFlow() {
 
 function CalendarSpotlight() {
   return (
-    <Section>
+    <Section id="spotlights">
       <div className="grid items-center gap-12 md:grid-cols-2">
         <div>
           <Reveal><Eyebrow>Feature Spotlight</Eyebrow></Reveal>
@@ -587,7 +618,7 @@ function TourKickstart() {
 
 function FoundingCTA() {
   return (
-    <Section className="text-center">
+    <Section id="join" className="text-center">
       <Reveal className="flex justify-center"><Eyebrow>Join TORA</Eyebrow></Reveal>
       <Reveal delay={0.05}>
         <h2 className="mx-auto mt-6 max-w-3xl text-4xl font-black uppercase leading-[1.0] tracking-tight text-white md:text-7xl" style={rajdhani}>
@@ -642,14 +673,37 @@ function Closing() {
 
 /* ------------------------------------------------------------------- shell */
 
+const CHAPTERS = [
+  { id: "top", label: "Intro" }, { id: "problem", label: "Problem" }, { id: "roles", label: "Roles" },
+  { id: "discovery", label: "Network" }, { id: "booking", label: "Bookings" }, { id: "spotlights", label: "Features" }, { id: "join", label: "Join" },
+];
+function ChapterNav() {
+  const [active, setActive] = useState("top");
+  useEffect(() => {
+    const obs = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); }); }, { rootMargin: "-45% 0px -45% 0px" });
+    CHAPTERS.forEach((c) => { const el = document.getElementById(c.id); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <nav aria-label="Chapters" className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 lg:flex">
+      {CHAPTERS.map((c) => (
+        <a key={c.id} href={`#${c.id}`} aria-label={c.label} className="group flex items-center justify-end gap-2">
+          <span className="pointer-events-none rounded-full bg-black/70 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-white/70 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100" style={supreme}>{c.label}</span>
+          <span className={`h-2.5 w-2.5 rounded-full border transition-all ${active === c.id ? "scale-110 border-infrared bg-infrared" : "border-white/30 group-hover:border-white/60"}`} />
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 export function FoundingExperience() {
   return (
     <main className="relative overflow-x-clip font-sans text-white selection:bg-infrared/30">
-      <ScrollProgress />
+      <ChapterNav />
       <FoundingBackdrop />
       <Hero />
       <ProblemSolution />
-      <Network />
+      <RolePicker />
       <Discovery />
       <BookingFlow />
       <CalendarSpotlight />
