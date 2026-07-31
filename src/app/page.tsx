@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { LenisProvider } from "@/components/providers/LenisProvider";
+import { HomeDrawerProvider } from "@/components/sections/home/HomeDrawer";
 import { BottomNav } from "@/components/ui/PageNav";
 import { HomeNav } from "@/components/ui/HomeNav";
 import { ParallaxBackdrop } from "@/components/sections/home/ParallaxBackdrop";
@@ -17,6 +18,7 @@ import { FinalCtaSection } from "@/components/sections/home/FinalCtaSection";
 export default function Home() {
   return (
     <LenisProvider>
+     <HomeDrawerProvider>
       <HomeNav />
       <ParallaxBackdrop />
       <WaveMesh />
@@ -33,6 +35,7 @@ export default function Home() {
       </main>
 
       <HomeBottomNav />
+     </HomeDrawerProvider>
     </LenisProvider>
   );
 }

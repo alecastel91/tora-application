@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { SectionReveal } from "@/components/ui/SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ROLES } from "./home.data";
+import { useHomeDrawer } from "./HomeDrawer";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
@@ -14,6 +15,7 @@ const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
  */
 export function RolesStack() {
   const { t } = useLanguage();
+  const { open } = useHomeDrawer();
 
   return (
     <section id="roles" className="relative scroll-mt-20 py-16 md:py-24 px-6">
@@ -28,8 +30,12 @@ export function RolesStack() {
           {ROLES.map((role, i) => (
             <SectionReveal key={role.id} delay={i * 0.06}>
               <motion.div
-                className="glass-card p-6 md:p-7 relative border-l-2 border-l-transparent transition-colors"
+                className="glass-card p-6 md:p-7 relative border-l-2 border-l-transparent transition-colors cursor-pointer group"
                 whileHover={{ x: 4 }}
+                onClick={() => open(role.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(role.id); } }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.borderLeftColor = role.color;
                 }}
@@ -54,6 +60,7 @@ export function RolesStack() {
                     <div className="text-white text-lg md:text-xl font-medium leading-snug min-h-[2.75em] whitespace-pre-line">{t(role.valueKey)}</div>
                   </div>
                 </div>
+                <svg aria-hidden className="absolute right-5 top-1/2 -translate-y-1/2 text-white/25 transition-colors group-hover:text-white/60" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
               </motion.div>
             </SectionReveal>
           ))}

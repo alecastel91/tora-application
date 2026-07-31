@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { SOLUTIONS } from "./home.data";
+import { useHomeDrawer } from "./HomeDrawer";
 import { solutionBoxes, type Box } from "./morphLayout";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
@@ -16,6 +17,7 @@ const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
  */
 export function SolutionsMorph() {
   const { t } = useLanguage();
+  const { open } = useHomeDrawer();
   const ref = useRef<HTMLElement>(null);
   const [boxes, setBoxes] = useState<Box[]>([]);
 
@@ -50,7 +52,11 @@ export function SolutionsMorph() {
             <motion.div
               key={s.id}
               style={{ opacity, position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h }}
-              className="rounded-2xl p-4 flex flex-col overflow-hidden"
+              className="group pointer-events-auto flex cursor-pointer flex-col overflow-hidden rounded-2xl p-4 transition-transform hover:scale-[1.02]"
+              onClick={() => open(s.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(s.id); } }}
             >
               {/* Dark glass, same family as the role cards */}
               <div
@@ -97,6 +103,7 @@ export function SolutionsMorph() {
                   ))}
                 </div>
               </div>
+              <svg aria-hidden className="absolute bottom-4 right-4 text-white/40 opacity-0 transition-opacity group-hover:opacity-100" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
             </motion.div>
           );
         })}

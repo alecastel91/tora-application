@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ROLES } from "./home.data";
+import { useHomeDrawer } from "./HomeDrawer";
 import { roleBoxes, type Box } from "./morphLayout";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
@@ -15,6 +16,7 @@ const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotes
  */
 export function RolesMorph() {
   const { t } = useLanguage();
+  const { open } = useHomeDrawer();
   const ref = useRef<HTMLElement>(null);
   const [boxes, setBoxes] = useState<Box[]>([]);
 
@@ -50,7 +52,11 @@ export function RolesMorph() {
             <motion.div
               key={role.id}
               style={{ opacity, position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h }}
-              className="flex flex-col items-center justify-center text-center rounded-2xl px-5"
+              className="group pointer-events-auto flex cursor-pointer flex-col items-center justify-center rounded-2xl px-5 text-center"
+              onClick={() => open(role.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(role.id); } }}
             >
               {/* Dark glass: gathered dots behind read as soft bokeh, dots around
                   the edges stay sharp — and the copy stays legible. */}
@@ -78,6 +84,10 @@ export function RolesMorph() {
               <div className="relative text-white text-lg md:text-xl font-black uppercase tracking-tight leading-tight whitespace-pre-line" style={headingFont}>
                 {t(role.valueKey)}
               </div>
+              <span className="relative mt-4 flex items-center gap-1 text-[9px] uppercase tracking-[0.22em] text-white/30 transition-colors group-hover:text-white/70">
+                Tap to explore
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </span>
             </motion.div>
           );
         })}
