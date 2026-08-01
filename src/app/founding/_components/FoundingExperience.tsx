@@ -3,11 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  HomeDrawerProvider,
+  useHomeDrawer,
+  DRAWER_CONTENT,
+  type DrawerItem,
+} from "@/components/sections/home/HomeDrawer";
 import { FoundingBackdrop } from "./FoundingBackdrop";
+import { LangMenu } from "./LangMenu";
 import {
   Eyebrow,
-  PhoneFrame,
   Reveal,
   ROLE,
   ScrollInsidePhone,
@@ -18,38 +24,21 @@ import {
   rajdhani,
   supreme,
 } from "./primitives";
+import type { FoundingContent, LangCode, DrawerId } from "../_content/types";
 
-/* ------------------------------------------------------------------ content */
+/* --------------------------------------------------------------- constants */
 
-const PROBLEMS = [
-  {
-    n: "01",
-    title: "No central directory",
-    body: "Artists, agents, promoters and venues have no shared platform. Most booking requests still start with cold DMs and unanswered emails.",
-  },
-  {
-    n: "02",
-    title: "International bookings are inaccessible",
-    body: "Bringing artists across markets is expensive, risky and poorly coordinated. Building a sustainable tour without an established network is nearly impossible.",
-  },
-  {
-    n: "03",
-    title: "The market is gatekept",
-    body: "Opportunities sit with a few players. Emerging artists, independent promoters and new venues have no structured way to get discovered and build credibility.",
-  },
-  {
-    n: "04",
-    title: "No path from search to signed deal",
-    body: "No single tool handles the full booking process — discovery, proposal, negotiation, contract, documents and payment.",
-  },
-];
+const INFRARED = "#FF3366";
+const GHOST = "rgba(255,255,255,0.45)";
 
-const ROLES = [
+// Role labels stay in English to match the pills shown inside the app screenshots.
+const ROLE_LABELS = ["Artist", "Agent", "Promoter", "Venue"] as const;
+
+// Non-translatable role visuals (id, accent, icon). Copy comes from content.roles.
+const ROLE_META = [
   {
     id: "artist",
-    label: "Artist",
     color: ROLE.artist,
-    body: "DJs, live acts and producers looking for global bookings and professional representation.",
     icon: (c: string) => (
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
@@ -60,9 +49,7 @@ const ROLES = [
   },
   {
     id: "agent",
-    label: "Agent",
     color: ROLE.agent,
-    body: "Talent agencies managing artist rosters, tours, deals and international opportunities.",
     icon: (c: string) => (
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="9" cy="8" r="3" />
@@ -74,9 +61,7 @@ const ROLES = [
   },
   {
     id: "promoter",
-    label: "Promoter",
     color: ROLE.promoter,
-    body: "Event organisers who book talent, build lineups and manage venue partnerships globally.",
     icon: (c: string) => (
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17.5 4 6.8 8.6H4.2a1.7 1.7 0 0 0-1.7 1.7v3.4a1.7 1.7 0 0 0 1.7 1.7h2.6L17.5 20z" />
@@ -87,9 +72,7 @@ const ROLES = [
   },
   {
     id: "venue",
-    label: "Venue",
     color: ROLE.venue,
-    body: "Clubs and event spaces that want to attract the right artists and fill their calendar.",
     icon: (c: string) => (
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 20V9l8-5 8 5v11" />
@@ -99,89 +82,59 @@ const ROLES = [
   },
 ] as const;
 
-const DEEPDIVES = [
-  {
-    role: "Artist",
-    color: ROLE.artist,
-    shot: "/founding/shots/artist-full.png",
-    headline: ["Get discovered.", "Book globally."],
-    body: "A verified profile that represents you professionally — genres, socials, availability, press kit. Visible to promoters and venues worldwide, not just in your city.",
-    points: [
-      "Global search & discovery",
-      "Calendar & availability sharing",
-      "Direct booking proposals",
-      "Contract & payment workflow",
-      "Agent connection & management",
-    ],
-  },
-  {
-    role: "Agent",
-    color: ROLE.agent,
-    shot: "/founding/shots/agent-full.png",
-    headline: ["Manage your roster.", "Close deals."],
-    body: "One dashboard for your entire artist roster. Track every deal, calendar, contract and payment across all your artists — without losing your mind.",
-    points: [
-      "Multi-artist roster management",
-      "Deal & negotiation tracking",
-      "Tier pricing: Solo to Unlimited",
-      "Per-artist financial overview",
-      "Book gigs directly on their behalf",
-    ],
-  },
-  {
-    role: "Promoter",
-    color: ROLE.promoter,
-    shot: "/founding/shots/promoter-full.png",
-    headline: ["Find the right act.", "Build the right lineup."],
-    body: "Search artists by genre, location and availability. Find venues to host your events. Send booking proposals directly — no intermediary required, unless you want one.",
-    points: [
-      "Genre + location + availability filters",
-      "Direct proposals to artists or agents",
-      "Tour Kickstart: share booking costs",
-      "Calendar-based matching",
-      "Contract & payment in-platform",
-    ],
-  },
-  {
-    role: "Venue",
-    color: ROLE.venue,
-    shot: "/founding/shots/venue-full.png",
-    headline: ["Get seen.", "Fill your calendar."],
-    body: "Your venue profile is visible to artists and agents planning tours. Set your dates, capacity and genres — TORA surfaces you to the right people at the right time.",
-    points: [
-      "Venue profile with capacity & specs",
-      "Date availability calendar",
-      "Advance notice for touring artists",
-      "Inbound booking proposals",
-      "Tour Kickstart: co-host touring acts",
-    ],
-  },
+const DEEPDIVE_META = [
+  { color: ROLE.artist, shot: "/founding/shots/artist-full.png" },
+  { color: ROLE.agent, shot: "/founding/shots/agent-full.png" },
+  { color: ROLE.promoter, shot: "/founding/shots/promoter-full.png" },
+  { color: ROLE.venue, shot: "/founding/shots/venue-full.png" },
 ] as const;
 
-const CALENDAR_POINTS = [
-  { k: "Set your dates", t: "Travel Schedule", b: "Mark the cities you'll be in and when. Artists set tour dates, agents plan routing, promoters see who's incoming to their market." },
-  { k: "Find overlaps", t: "Calendar Matching", b: "TORA cross-references availability across all roles — artists matched with open venues, promoters matched with artists passing through their city." },
-  { k: "Stay informed", t: "Smart Notifications", b: "Get notified when a relevant professional is available in your market. The platform surfaces the right match at the right time." },
-];
+const JOURNEY_IDS = ["discover", "connect", "offer", "contract", "confirmed"] as const;
 
-const KICKSTART = [
-  { t: "Lower cost", b: "Expenses split between multiple venues on the same tour route." },
-  { t: "Less risk", b: "No single venue carries the full financial exposure of an international booking." },
-  { t: "More artists", b: "Acts that were unaffordable for a single market become accessible." },
-];
+/* Line icons in the /features language — ghost-white base, one infrared accent. */
+const IconBell = (
+  <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.8 8.6a5.8 5.8 0 0 0-11.6 0c0 6.2-2.4 7.8-2.4 7.8h16.4s-2.4-1.6-2.4-7.8" stroke={GHOST} />
+    <path d="M10.4 19.8a1.9 1.9 0 0 0 3.2 0" stroke={GHOST} />
+    <circle cx="18.6" cy="4.6" r="1.7" fill="#FF3366" stroke="none" />
+  </svg>
+);
+const IconPlane = (
+  <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" stroke={GHOST} />
+    <circle cx="19.4" cy="4.6" r="1.5" fill="#FF3366" stroke="none" />
+  </svg>
+);
+const TOURING_META = [
+  { id: "travel", icon: IconBell },
+  { id: "tour", icon: IconPlane },
+] as const;
 
-const STEPS = [
-  { n: "1", t: "Discover", b: "Search by genre, location and availability. Find the right match." },
-  { n: "2", t: "Connect", b: "Send a connection request with a message. Start the conversation." },
-  { n: "3", t: "Offer", b: "Submit a booking offer with dates, fee and additional terms." },
-  { n: "4", t: "Negotiate", b: "Counter-offer and refine until both parties agree on all terms." },
-  { n: "5", t: "Contract", b: "Generate and sign a digital booking contract within the platform." },
-  { n: "6", t: "Payment", b: "Share the invoice and confirm payment. Full transaction history on record." },
-];
+/* --------------------------------------------------------------- content ctx */
+
+const Cx = createContext<FoundingContent | null>(null);
+const useC = () => {
+  const c = useContext(Cx);
+  if (!c) throw new Error("FoundingContent missing");
+  return c;
+};
+
+/** Merge translated title/body/label over the English drawer base (keeps shot/video/color). */
+function buildDrawer(content: FoundingContent) {
+  const map: Record<string, DrawerItem> = {};
+  (Object.keys(content.drawer.items) as DrawerId[]).forEach((id) => {
+    map[id] = { ...DRAWER_CONTENT[id], ...content.drawer.items[id] };
+  });
+  const labels = {
+    role: content.drawer.role,
+    feature: content.drawer.feature,
+    join: content.drawer.join,
+    scroll: content.drawer.scroll,
+  };
+  return { map, labels };
+}
 
 /* --------------------------------------------------------------- utilities */
-
-const INFRARED = "#FF3366";
 
 function Bullet({ text, color }: { text: string; color: string }) {
   return (
@@ -197,6 +150,7 @@ function Bullet({ text, color }: { text: string; color: string }) {
 /* ---------------------------------------------------------------- sections */
 
 function Hero() {
+  const c = useC();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
@@ -205,7 +159,6 @@ function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
-      {/* cinematic layer behind the wordmark — radial pulse + faint rotating orb */}
       <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
         <motion.div
           className="absolute h-[62vh] max-h-[560px] w-[62vh] max-w-[560px] rounded-full"
@@ -218,10 +171,7 @@ function Hero() {
           className="absolute h-[46vh] max-h-[420px] w-[46vh] max-w-[420px] opacity-[0.06]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.07, rotate: reduce ? 0 : 360 }}
-          transition={{
-            opacity: { duration: 1.4, ease: EASE },
-            rotate: { duration: 90, repeat: Infinity, ease: "linear" },
-          }}
+          transition={{ opacity: { duration: 1.4, ease: EASE }, rotate: { duration: 90, repeat: Infinity, ease: "linear" } }}
         >
           <Image src="/loading-globe.png" alt="" width={420} height={420} className="h-full w-full object-contain" />
         </motion.div>
@@ -243,7 +193,7 @@ function Hero() {
           className="mt-8 text-[11px] md:text-xs uppercase tracking-[0.34em] text-infrared"
           style={{ ...supreme, fontWeight: 500 }}
         >
-          Founding Members · Applications open
+          {c.hero.eyebrow}
         </motion.span>
 
         <motion.h1
@@ -253,7 +203,7 @@ function Hero() {
           className="mt-5 max-w-3xl text-3xl font-semibold leading-tight text-white text-balance md:text-5xl"
           style={supreme}
         >
-          The club music industry, finally in one place
+          {c.hero.title}
         </motion.h1>
 
         <motion.p
@@ -263,8 +213,7 @@ function Hero() {
           className="mt-5 max-w-xl text-white/55 text-sm leading-relaxed md:text-base"
           style={grotesk}
         >
-          Artists, agents, promoters and venues — connected in a single professional
-          network. From first contact to final payment, every booking in one platform.
+          {c.hero.subline}
         </motion.p>
 
         <motion.div
@@ -274,16 +223,16 @@ function Hero() {
           className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
           <Link href="/apply" className="rounded-full bg-infrared px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] hover:brightness-110" style={supreme}>
-            Become a Founding Member
+            {c.hero.ctaPrimary}
           </Link>
           <a href="#problem" className="rounded-full border border-white/30 px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10" style={supreme}>
-            See how it works
+            {c.hero.ctaSecondary}
           </a>
         </motion.div>
       </motion.div>
 
       <motion.div style={{ opacity }} className="absolute bottom-10 flex flex-col items-center gap-2 text-white/50">
-        <span className="text-[10px] uppercase tracking-[0.3em]" style={supreme}>Where music meets</span>
+        <span className="text-[10px] uppercase tracking-[0.3em]" style={supreme}>{c.hero.footer}</span>
         <motion.svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}>
           <path d="M12 5v14" /><path d="M19 12l-7 7-7-7" />
         </motion.svg>
@@ -292,25 +241,26 @@ function Hero() {
   );
 }
 
-/* Chapter 2 — Problem flowing directly into Solution, one continuous argument. */
+/* Problem flowing directly into Solution, one continuous argument. */
 function ProblemSolution() {
+  const c = useC();
   return (
     <Section id="problem">
-      <Reveal><Eyebrow>The Problem</Eyebrow></Reveal>
+      <Reveal><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
         <h2 className="mt-5 max-w-2xl text-3xl font-black uppercase leading-[1.05] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-          The club music industry runs on outdated processes and tools
+          {c.problem.heading}
         </h2>
       </Reveal>
 
       <div className="mt-14 grid gap-x-10 gap-y-12 md:grid-cols-2">
-        {PROBLEMS.map((p, i) => (
-          <Reveal key={p.n} delay={i * 0.06}>
+        {c.problem.items.map((p, i) => (
+          <Reveal key={i} delay={i * 0.06}>
             <motion.div
               className="border-t border-white/10 pt-5 transition-colors"
               whileHover={{ borderColor: "rgba(255,51,102,0.5)" }}
             >
-              <span className="text-2xl font-black text-infrared" style={rajdhani}>{p.n}</span>
+              <span className="text-2xl font-black text-infrared" style={rajdhani}>{String(i + 1).padStart(2, "0")}</span>
               <h3 className="mt-2 text-lg font-semibold text-white" style={supreme}>{p.title}</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-white/55" style={grotesk}>{p.body}</p>
             </motion.div>
@@ -318,24 +268,21 @@ function ProblemSolution() {
         ))}
       </div>
 
-      {/* transition seam — the argument resolves */}
       <Reveal delay={0.1}>
         <div className="mx-auto mt-24 flex flex-col items-center">
           <span className="h-16 w-px bg-gradient-to-b from-transparent to-infrared/60" />
-          <div className="mt-8 flex justify-center"><Eyebrow>The Solution</Eyebrow></div>
+          <div className="mt-8 flex justify-center"><Eyebrow>{c.solution.eyebrow}</Eyebrow></div>
         </div>
       </Reveal>
       <Reveal delay={0.05}>
         <h2 className="mx-auto mt-6 max-w-4xl text-center text-4xl font-black uppercase leading-[1.02] tracking-tight text-white md:text-7xl" style={rajdhani}>
-          One platform,{" "}
-          <span className="text-infrared">every booking</span>
+          {c.solution.headingLead}{" "}
+          <span className="text-infrared">{c.solution.headingAccent}</span>
         </h2>
       </Reveal>
       <Reveal delay={0.12}>
         <p className="mx-auto mt-8 max-w-2xl text-center text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
-          TORA connects the four pillars of the club music industry — Artists, Agents,
-          Promoters and Venues — in a single professional network. From first contact to
-          final payment confirmation, everything happens in one seamless platform.
+          {c.solution.body}
         </p>
       </Reveal>
       <RolePicker />
@@ -343,9 +290,11 @@ function ProblemSolution() {
   );
 }
 
-/* Chapter 3 — Choose your role. Picker → deep-dive, swapped with AnimatePresence. */
 function RoleDetail({ index, onPick, onBack, reduce }: { index: number; onPick: (i: number) => void; onBack: () => void; reduce: boolean | null; }) {
-  const d = DEEPDIVES[index];
+  const c = useC();
+  const meta = DEEPDIVE_META[index];
+  const d = c.deepdives[index];
+  const label = ROLE_LABELS[index];
   return (
     <motion.div
       initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
@@ -356,38 +305,39 @@ function RoleDetail({ index, onPick, onBack, reduce }: { index: number; onPick: 
       <div className="mb-10 flex flex-wrap items-center justify-center gap-2">
         <button onClick={onBack} className="mr-2 flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-white/70 transition-colors hover:bg-white/10" style={supreme}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
-          All roles
+          {c.solution.allRoles}
         </button>
-        {ROLES.map((r, i) => (
+        {ROLE_META.map((r, i) => (
           <button key={r.id} onClick={() => onPick(i)}
             className="flex items-center gap-2 rounded-full px-4 py-2 text-[11px] uppercase tracking-[0.18em] transition-colors [&_svg]:h-4 [&_svg]:w-4"
             style={i === index ? { background: `${r.color}22`, border: `1px solid ${r.color}`, color: r.color } : { border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.55)" }}>
             {r.icon(i === index ? r.color : "currentColor")}
-            <span style={supreme}>{r.label}</span>
+            <span style={supreme}>{ROLE_LABELS[i]}</span>
           </button>
         ))}
       </div>
       <div className="grid items-center gap-12 md:grid-cols-2">
         <div>
-          <Eyebrow color={d.color}>{d.role}</Eyebrow>
+          <Eyebrow color={meta.color}>{label}</Eyebrow>
           <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-balance md:text-4xl" style={rajdhani}>
-            <span className="text-white">{d.headline[0]}</span> <span style={{ color: d.color }}>{d.headline[1]}</span>
+            <span className="text-white">{d.headline[0]}</span> <span style={{ color: meta.color }}>{d.headline[1]}</span>
           </h2>
           <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
-          <ul className="mt-6 space-y-3">{d.points.map((p) => <Bullet key={p} text={p} color={d.color} />)}</ul>
+          <ul className="mt-6 space-y-3">{d.points.map((p) => <Bullet key={p} text={p} color={meta.color} />)}</ul>
         </div>
-        <ScrollInsidePhone src={d.shot} alt={`${d.role} profile in the TORA app`} glow={d.color} className="md:order-2" />
+        <ScrollInsidePhone src={meta.shot} alt={`${label} profile in the TORA app`} glow={meta.color} scrollLabel={c.drawer.scroll} className="md:order-2" />
       </div>
     </motion.div>
   );
 }
 
 function RolePicker() {
+  const c = useC();
   const reduce = useReducedMotion();
   const [selected, setSelected] = useState<number | null>(null);
   useEffect(() => {
     const r = new URLSearchParams(window.location.search).get("role");
-    const i = DEEPDIVES.findIndex((d) => d.role.toLowerCase() === (r || "").toLowerCase());
+    const i = ROLE_META.findIndex((m) => m.id === (r || "").toLowerCase());
     // Deep-link must run post-mount (window read) to avoid an SSR hydration mismatch.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (i >= 0) setSelected(i);
@@ -398,17 +348,18 @@ function RolePicker() {
         {selected === null ? (
           <motion.div key="picker"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}>
-            <p className="mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>Choose your role</p>
+            <p className="mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {ROLES.map((r, i) => (
+              {ROLE_META.map((r, i) => (
                 <button key={r.id} onClick={() => setSelected(i)}
                   className="group flex flex-col items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.04]">
                   <span className="flex h-24 w-24 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-12 [&_svg]:w-12" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
                     {r.icon(r.color)}
                   </span>
-                  <span className="text-xl font-bold uppercase tracking-wide" style={{ ...rajdhani, color: r.color }}>{r.label}</span>
+                  <span className="text-xl font-bold uppercase tracking-wide" style={{ ...rajdhani, color: r.color }}>{ROLE_LABELS[i]}</span>
+                  <span className="mt-1 max-w-[16rem] text-[13px] leading-relaxed text-white/45" style={grotesk}>{c.roles[i].body}</span>
                   <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70" style={supreme}>
-                    Tap to explore
+                    {c.solution.tapToExplore}
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </span>
                 </button>
@@ -423,207 +374,121 @@ function RolePicker() {
   );
 }
 
-/* Chapter 4 — Discovery / the global network globe. */
-function Discovery() {
+/* Shared tappable card — opens the (localized) homepage drawer for `id`. */
+function ExploreTile({ n, icon, title, body, onOpen }: { n?: string; icon?: ReactNode; title: string; body: string; onOpen: () => void; }) {
+  const c = useC();
   return (
-    <Section id="discovery">
-      <div className="grid items-center gap-12 md:grid-cols-2">
-        <div>
-          <Reveal><Eyebrow>Search &amp; Discovery</Eyebrow></Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-              Your profile, seen{" "}
-              <span className="text-infrared">worldwide</span>
-            </h2>
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-infrared/60 hover:bg-white/[0.04] hover:shadow-[0_18px_50px_-24px_rgba(255,51,102,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infrared/70"
+    >
+      {n ? (
+        <span className="text-4xl font-black leading-none text-infrared md:text-5xl" style={rajdhani}>{n}</span>
+      ) : null}
+      {icon ? (
+        <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-infrared/40 bg-infrared/10 [&>svg]:h-6 [&>svg]:w-6">{icon}</span>
+      ) : null}
+      <h3 className={`text-lg font-bold uppercase tracking-wide text-white ${n || icon ? "mt-4" : ""}`} style={rajdhani}>{title}</h3>
+      <p className="mt-2 flex-1 text-[15px] leading-relaxed text-white/55" style={grotesk}>{body}</p>
+      <span className="mt-5 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-infrared" style={supreme}>
+        {c.solution.tapToExplore}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </span>
+    </button>
+  );
+}
+
+function Journey() {
+  const c = useC();
+  const { open } = useHomeDrawer();
+  return (
+    <Section id="journey">
+      <Reveal className="text-center"><div className="flex justify-center"><Eyebrow>{c.journey.eyebrow}</Eyebrow></div></Reveal>
+      <Reveal delay={0.05}>
+        <h2 className="mt-5 text-center text-3xl font-black uppercase leading-[1.05] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
+          {c.journey.heading}
+        </h2>
+      </Reveal>
+      <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        {c.journey.steps.map((s, i) => (
+          <Reveal key={i} delay={i * 0.06}>
+            <ExploreTile n={String(i + 1)} title={s.title} body={s.body} onOpen={() => open(JOURNEY_IDS[i])} />
           </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-6 text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
-              TORA maps the industry across the globe. Filter by role, genre, location and
-              availability, and find the right professional in seconds — wherever they are.
-            </p>
-          </Reveal>
-          <Reveal delay={0.16}>
-            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
-              {ROLES.map((r) => (
-                <span key={r.id} className="flex items-center gap-2 text-[13px] text-white/60" style={grotesk}>
-                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: r.color, boxShadow: `0 0 10px ${r.color}88` }} />
-                  {r.label}
-                </span>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-        <Reveal className="md:order-2">
-          <div className="relative mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
-            <div aria-hidden className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl" style={{ background: "#FF3366", opacity: 0.16 }} />
-            <div className="overflow-hidden rounded-[1.9rem]">
-              <video src="/founding/globe.mp4" autoPlay muted loop playsInline className="block w-full" />
-            </div>
-          </div>
-        </Reveal>
+        ))}
       </div>
     </Section>
   );
 }
 
-/* Chapter 5 — Booking flow. Pinned phone (desktop) while the 6 steps advance. */
-function StepRow({ step, reduce }: { step: (typeof STEPS)[number]; reduce: boolean | null }) {
+function Touring() {
+  const c = useC();
+  const { open } = useHomeDrawer();
   return (
-    <motion.div
-      className="rounded-2xl border p-6 md:p-7"
-      style={{ background: "rgba(255,255,255,0.02)" }}
-      initial={reduce ? { opacity: 1, borderColor: "rgba(255,51,102,0.4)" } : { opacity: 0.4, borderColor: "rgba(255,255,255,0.08)" }}
-      whileInView={{
-        opacity: 1,
-        borderColor: "rgba(255,51,102,0.7)",
-        boxShadow: "0 18px 50px -22px rgba(255,51,102,0.45)",
-      }}
-      viewport={{ once: false, margin: "-45% 0px -45% 0px" }}
-      transition={{ duration: 0.45, ease: EASE }}
-    >
-      <div className="flex items-start gap-5">
-        <span
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-infrared/60 bg-black text-base font-bold text-infrared"
-          style={rajdhani}
-        >
-          {step.n}
-        </span>
-        <div className="pt-1">
-          <h3 className="text-lg font-bold uppercase tracking-wide text-white" style={rajdhani}>{step.t}</h3>
-          <p className="mt-1 text-[15px] leading-relaxed text-white/55" style={grotesk}>{step.b}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function BookingFlow() {
-  const reduce = useReducedMotion();
-  return (
-    <Section id="booking">
-      <Reveal className="text-center"><div className="flex justify-center"><Eyebrow>How it works</Eyebrow></div></Reveal>
+    <Section id="touring">
+      <Reveal><Eyebrow>{c.touring.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
-        <h2 className="mt-5 text-center text-3xl font-black uppercase leading-[1.05] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-          From first contact to payment
+        <h2 className="mt-5 max-w-2xl text-3xl font-black uppercase leading-[1.03] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
+          {c.touring.heading}
         </h2>
       </Reveal>
       <Reveal delay={0.1}>
-        <p className="mx-auto mt-6 max-w-xl text-center text-[15px] leading-relaxed text-white/55 md:text-base" style={grotesk}>
-          One continuous flow — discover, agree, sign and get paid. These are real accepted
-          deals, fees and all.
+        <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
+          {c.touring.body}
         </p>
       </Reveal>
-
-      {/* the 6 steps as a centered vertical timeline */}
-      <div className="mx-auto mt-16 max-w-xl space-y-6 md:space-y-8">
-        {STEPS.map((s) => (
-          <StepRow key={s.n} step={s} reduce={reduce} />
+      <div className="mt-14 grid gap-5 md:grid-cols-2">
+        {c.touring.tiles.map((t, i) => (
+          <Reveal key={i} delay={i * 0.08}>
+            <ExploreTile icon={TOURING_META[i].icon} title={t.title} body={t.body} onOpen={() => open(TOURING_META[i].id)} />
+          </Reveal>
         ))}
       </div>
-
-      {/* the real Offer → Contract → Documents → Payment tracker */}
-      <div className="mt-16 flex justify-center">
-        <PhoneFrame src="/founding/shots/bookings.png" alt="A booking in TORA, step by step" glow={INFRARED} />
-      </div>
     </Section>
   );
 }
 
-function CalendarSpotlight() {
+function WhyTora() {
+  const c = useC();
   return (
-    <Section id="spotlights">
-      <div className="grid items-center gap-12 md:grid-cols-2">
-        <div>
-          <Reveal><Eyebrow>Feature Spotlight</Eyebrow></Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-white text-balance md:text-4xl" style={rajdhani}>
-              Calendar matching &amp; travel schedule
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>
-              Set where you&rsquo;ll be and when. TORA matches you automatically with the
-              right professionals across roles, genres and time zones.
-            </p>
-          </Reveal>
-          <div className="mt-8 space-y-6">
-            {CALENDAR_POINTS.map((c, i) => (
-              <Reveal key={c.k} delay={0.1 + i * 0.06}>
-                <div className="border-l border-white/10 pl-5">
-                  <span className="text-[10px] uppercase tracking-[0.24em] text-infrared" style={supreme}>{c.k}</span>
-                  <h3 className="mt-1 text-base font-semibold text-white" style={supreme}>{c.t}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-white/55" style={grotesk}>{c.b}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-        <PhoneFrame src="/founding/shots/calendar.png" alt="Availability calendar in TORA" glow={INFRARED} className="md:order-2" />
-      </div>
-    </Section>
-  );
-}
-
-function TourKickstart() {
-  return (
-    <Section>
-      <div className="grid items-center gap-12 md:grid-cols-2">
-          <div>
-            <Reveal><Eyebrow>Feature Spotlight</Eyebrow></Reveal>
-            <Reveal delay={0.05}>
-              <h2 className="mt-5 text-3xl font-black uppercase leading-[1.03] tracking-tight text-white md:text-5xl" style={rajdhani}>
-                Tour Kickstart
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
-                Bringing international artists on tour is expensive — flights, accommodation
-                and fees make single-night bookings unviable for most venues. Tour Kickstart
-                lets promoters and venues co-host the same touring artist: splitting travel
-                costs, sharing risk, and making previously impossible bookings viable.
-              </p>
-            </Reveal>
-          </div>
-          <PhoneFrame src="/founding/shots/tour.png" alt="A tour in TORA — Tour Kickstart" glow={INFRARED} className="md:order-2" />
-        </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {KICKSTART.map((k, i) => (
-            <Reveal key={k.t} delay={i * 0.08}>
-              <div className="rounded-2xl border border-white/10 bg-black/40 p-6">
-                <h3 className="text-lg font-bold uppercase tracking-wide text-infrared" style={rajdhani}>{k.t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/60" style={grotesk}>{k.b}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+    <Section id="why" className="text-center">
+      <Reveal className="flex justify-center"><Eyebrow>{c.why.eyebrow}</Eyebrow></Reveal>
+      <Reveal delay={0.05}>
+        <h2 className="mx-auto mt-6 max-w-4xl text-4xl font-black uppercase leading-[1.02] tracking-tight text-white md:text-6xl" style={rajdhani}>
+          {c.why.headingLead}{" "}
+          <span className="text-infrared">{c.why.headingAccent}</span>
+        </h2>
+      </Reveal>
+      <Reveal delay={0.12}>
+        <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
+          {c.why.body}
+        </p>
+      </Reveal>
     </Section>
   );
 }
 
 function FoundingCTA() {
+  const c = useC();
   return (
     <Section id="join" className="text-center">
-      <Reveal className="flex justify-center"><Eyebrow>Join TORA</Eyebrow></Reveal>
+      <Reveal className="flex justify-center"><Eyebrow>{c.cta.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
         <h2 className="mx-auto mt-6 max-w-3xl text-4xl font-black uppercase leading-[1.0] tracking-tight text-white md:text-7xl" style={rajdhani}>
-          Become a<br />Founding Member
+          {c.cta.headingLine1}<br />{c.cta.headingLine2}
         </h2>
       </Reveal>
       <Reveal delay={0.12}>
         <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
-          The first to join TORA — full access from launch, a direct line to the team,
-          and founding-member status as the network grows.
+          {c.cta.body}
         </p>
       </Reveal>
       <div className="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2">
-        {[
-          { t: "Full access", b: "Every feature from day one — calendar, bookings, messaging, contracts." },
-          { t: "Shape the product", b: "A direct line to the team. Your feedback influences what gets built next." },
-        ].map((f, i) => (
-          <Reveal key={f.t} delay={i * 0.08}>
+        {c.cta.cards.map((f, i) => (
+          <Reveal key={i} delay={i * 0.08}>
             <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left" style={{ borderTop: `2px solid ${INFRARED}` }}>
-              <h3 className="text-base font-semibold text-white" style={supreme}>{f.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/55" style={grotesk}>{f.b}</p>
+              <h3 className="text-base font-semibold text-white" style={supreme}>{f.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/55" style={grotesk}>{f.body}</p>
             </div>
           </Reveal>
         ))}
@@ -631,11 +496,9 @@ function FoundingCTA() {
       <Reveal delay={0.2}>
         <div className="mt-12 flex flex-col items-center gap-4">
           <Link href="/apply" className="rounded-full bg-infrared px-10 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(255,51,102,0.55)] hover:brightness-110" style={supreme}>
-            Apply now
+            {c.cta.button}
           </Link>
-          <span className="text-sm text-white/45" style={grotesk}>
-            torahub.io · expected launch October 2026
-          </span>
+          <span className="text-sm text-white/45" style={grotesk}>{c.cta.foot}</span>
         </div>
       </Reveal>
     </Section>
@@ -643,13 +506,14 @@ function FoundingCTA() {
 }
 
 function Closing() {
+  const c = useC();
   return (
     <section className="flex flex-col items-center justify-center gap-6 px-6 py-28 text-center">
       <Reveal>
         <Image src="/tora_logo_transparent.png" alt="TORA" width={400} height={133} className="h-auto w-[150px] opacity-90" />
       </Reveal>
       <Reveal delay={0.08}>
-        <span className="text-[11px] uppercase tracking-[0.4em] text-white/45" style={supreme}>Where music meets</span>
+        <span className="text-[11px] uppercase tracking-[0.4em] text-white/45" style={supreme}>{c.hero.footer}</span>
       </Reveal>
     </section>
   );
@@ -657,43 +521,54 @@ function Closing() {
 
 /* ------------------------------------------------------------------- shell */
 
-const CHAPTERS = [
-  { id: "top", label: "Intro" }, { id: "problem", label: "The pitch" },
-  { id: "discovery", label: "Network" }, { id: "booking", label: "Bookings" }, { id: "spotlights", label: "Features" }, { id: "join", label: "Join" },
-];
 function ChapterNav() {
+  const c = useC();
+  const chapters = [
+    { id: "top", label: c.chapters.intro },
+    { id: "problem", label: c.chapters.pitch },
+    { id: "journey", label: c.chapters.how },
+    { id: "touring", label: c.chapters.touring },
+    { id: "why", label: c.chapters.why },
+    { id: "join", label: c.chapters.join },
+  ];
   const [active, setActive] = useState("top");
   useEffect(() => {
     const obs = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); }); }, { rootMargin: "-45% 0px -45% 0px" });
-    CHAPTERS.forEach((c) => { const el = document.getElementById(c.id); if (el) obs.observe(el); });
+    chapters.forEach((c2) => { const el = document.getElementById(c2.id); if (el) obs.observe(el); });
     return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <nav aria-label="Chapters" className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 lg:flex">
-      {CHAPTERS.map((c) => (
-        <a key={c.id} href={`#${c.id}`} aria-label={c.label} className="group flex items-center justify-end gap-2">
-          <span className="pointer-events-none rounded-full bg-black/70 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-white/70 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100" style={supreme}>{c.label}</span>
-          <span className={`h-2.5 w-2.5 rounded-full border transition-all ${active === c.id ? "scale-110 border-infrared bg-infrared" : "border-white/30 group-hover:border-white/60"}`} />
+      {chapters.map((c2) => (
+        <a key={c2.id} href={`#${c2.id}`} aria-label={c2.label} className="group flex items-center justify-end gap-2">
+          <span className="pointer-events-none rounded-full bg-black/70 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-white/70 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100" style={supreme}>{c2.label}</span>
+          <span className={`h-2.5 w-2.5 rounded-full border transition-all ${active === c2.id ? "scale-110 border-infrared bg-infrared" : "border-white/30 group-hover:border-white/60"}`} />
         </a>
       ))}
     </nav>
   );
 }
 
-export function FoundingExperience() {
+export function FoundingExperience({ content, lang }: { content: FoundingContent; lang: LangCode }) {
+  const { map, labels } = buildDrawer(content);
   return (
-    <main className="relative overflow-x-clip font-sans text-white selection:bg-infrared/30">
-      <ScrollProgress />
-      <ChapterNav />
-      <FoundingBackdrop />
-      <Hero />
-      <ProblemSolution />
-      <Discovery />
-      <BookingFlow />
-      <CalendarSpotlight />
-      <TourKickstart />
-      <FoundingCTA />
-      <Closing />
-    </main>
+    <Cx.Provider value={content}>
+      <HomeDrawerProvider content={map} labels={labels}>
+        <LangMenu current={lang} label={content.ui.language} />
+        <main className="relative overflow-x-clip font-sans text-white selection:bg-infrared/30">
+          <ScrollProgress />
+          <ChapterNav />
+          <FoundingBackdrop />
+          <Hero />
+          <ProblemSolution />
+          <Journey />
+          <Touring />
+          <WhyTora />
+          <FoundingCTA />
+          <Closing />
+        </main>
+      </HomeDrawerProvider>
+    </Cx.Provider>
   );
 }

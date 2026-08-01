@@ -20,7 +20,7 @@ const ROLE_COLOR: Record<string, string> = {
   venue: "#FF5757",
 };
 
-type DrawerItem = {
+export type DrawerItem = {
   kind: "role" | "feature";
   label: string;
   color: string;
@@ -28,6 +28,15 @@ type DrawerItem = {
   video?: string;
   title: string;
   body: string;
+};
+
+/** Localizable drawer chrome. Defaults keep the untranslated homepage in English. */
+export type DrawerLabels = { role: string; feature: string; join: string; scroll: string };
+const DEFAULT_LABELS: DrawerLabels = {
+  role: "Role",
+  feature: "Feature",
+  join: "Join TORA",
+  scroll: "Scroll",
 };
 
 export const DRAWER_CONTENT: Record<string, DrawerItem> = {
@@ -78,6 +87,22 @@ export const DRAWER_CONTENT: Record<string, DrawerItem> = {
     title: "Tour Kickstart",
     body: "Promoters and venues co-host the same touring artist — splitting travel costs and sharing risk, making previously impossible bookings viable.",
   },
+  // journey steps + touring (used by /foundingmembers)
+  offer: {
+    kind: "feature", label: "Offer & negotiate", color: INFRARED, shot: "/home/offer.png",
+    title: "Make an offer. Agree the terms.",
+    body: "Submit a booking offer with dates, fee and terms, then counter and refine until both sides agree — every step tracked, right up to a signed deal.",
+  },
+  confirmed: {
+    kind: "feature", label: "Confirmed", color: INFRARED, shot: "/home/book.png",
+    title: "Booking confirmed.",
+    body: "Contract signed, payment confirmed — the deal is done. Offer, contract, documents and payment status all live in one place, with multi-currency support, from first contact to final settlement.",
+  },
+  travel: {
+    kind: "feature", label: "Travel & alerts", color: INFRARED, shot: "/home/calendar.png",
+    title: "Travel schedule & smart alerts",
+    body: "Publish where you'll be and when. TORA surfaces you to the right market and notifies venues and promoters in advance when a relevant artist is coming to their city.",
+  },
 };
 
 /* ---------------------------------------------------------------- context */
@@ -86,7 +111,16 @@ type Ctx = { open: (id: string) => void };
 const HomeDrawerCtx = createContext<Ctx>({ open: () => {} });
 export const useHomeDrawer = () => useContext(HomeDrawerCtx);
 
-export function HomeDrawerProvider({ children }: { children: ReactNode }) {
+export function HomeDrawerProvider({
+  children,
+  content,
+  labels,
+}: {
+  children: ReactNode;
+  /** Override the English DRAWER_CONTENT map (e.g. a translated /founding). */
+  content?: Record<string, DrawerItem>;
+  labels?: DrawerLabels;
+}) {
   const [id, setId] = useState<string | null>(null);
   const open = useCallback((next: string) => setId(next), []);
   const close = useCallback(() => setId(null), []);
@@ -105,7 +139,7 @@ export function HomeDrawerProvider({ children }: { children: ReactNode }) {
   return (
     <HomeDrawerCtx.Provider value={{ open }}>
       {children}
-      <HomeDrawer id={id} onClose={close} />
+      <HomeDrawer id={id} onClose={close} content={content} labels={labels} />
     </HomeDrawerCtx.Provider>
   );
 }
@@ -115,9 +149,21 @@ export function HomeDrawerProvider({ children }: { children: ReactNode }) {
 const rajdhani = { fontFamily: "var(--font-rajdhani), sans-serif" };
 const grotesk = { fontFamily: "var(--font-space-grotesk), sans-serif" };
 
-function HomeDrawer({ id, onClose }: { id: string | null; onClose: () => void }) {
+function HomeDrawer({
+  id,
+  onClose,
+  content,
+  labels,
+}: {
+  id: string | null;
+  onClose: () => void;
+  content?: Record<string, DrawerItem>;
+  labels?: DrawerLabels;
+}) {
   const reduce = useReducedMotion();
-  const item = id ? DRAWER_CONTENT[id] : null;
+  const map = content ?? DRAWER_CONTENT;
+  const lbl = labels ?? DEFAULT_LABELS;
+  const item = id ? map[id] : null;
 
   return (
     <AnimatePresence>
@@ -178,7 +224,7 @@ function HomeDrawer({ id, onClose }: { id: string | null; onClose: () => void })
                       <img src={item.shot} alt={`${item.label} screen`} className="block w-full" />
                     </div>
                     <span className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/75 px-3 py-1 text-[9px] uppercase tracking-[0.2em] text-white/75 backdrop-blur-sm">
-                      Scroll
+                      {lbl.scroll}
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 9l4-4 4 4" /><path d="M8 15l4 4 4-4" /></svg>
                     </span>
                   </>
@@ -201,7 +247,7 @@ function HomeDrawer({ id, onClose }: { id: string | null; onClose: () => void })
                   className="text-[11px] uppercase tracking-[0.3em]"
                   style={{ ...grotesk, color: item.color, fontWeight: 600 }}
                 >
-                  {item.kind === "role" ? "Role" : "Feature"} · {item.label}
+                  {item.kind === "role" ? lbl.role : lbl.feature} · {item.label}
                 </span>
               </div>
               <h3
@@ -218,7 +264,7 @@ function HomeDrawer({ id, onClose }: { id: string | null; onClose: () => void })
                 className="mt-7 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-transform hover:-translate-y-0.5"
                 style={{ background: item.color }}
               >
-                Join TORA
+                {lbl.join}
               </a>
             </div>
           </motion.div>

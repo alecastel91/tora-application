@@ -45,6 +45,13 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Lean base link + old name both land on the default-language founding page.
+      { source: "/founding", destination: "/founding/en", permanent: false },
+      { source: "/foundingmembers", destination: "/founding/en", permanent: false },
+    ];
+  },
 };
 
 // Tunnel Sentry events through /monitoring to bypass ad-blockers and

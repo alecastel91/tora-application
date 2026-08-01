@@ -248,12 +248,14 @@ export function ScrollInsidePhone({
   glow = "#FF3366",
   className = "",
   frameRatio = 2.05,
+  scrollLabel = "Scroll",
 }: {
   src: string;
   alt: string;
   glow?: string;
   className?: string;
   frameRatio?: number;
+  scrollLabel?: string;
 }) {
   const reduce = useReducedMotion();
   return (
@@ -288,7 +290,7 @@ export function ScrollInsidePhone({
             aria-hidden
             className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-2.5 py-0.5 text-[9px] uppercase tracking-[0.2em] text-white/55 backdrop-blur-sm"
           >
-            Scroll ↕
+            {scrollLabel} ↕
           </span>
         </div>
       </div>
