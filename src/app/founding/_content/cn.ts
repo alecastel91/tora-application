@@ -4,8 +4,7 @@ export const cn: FoundingContent = {
   hero: {
     eyebrow: "创始会员 · 申请开放中",
     title: "俱乐部音乐产业，终于汇聚一处",
-    subline:
-      "机会源于才华，而非被地域或人脉所把持。Artist、Agent、Promoter 与 Venue，连接于同一个专业网络。",
+    subline: "Artist、Agent、Promoter 与 Venue，连接于同一个专业网络。",
     ctaPrimary: "成为创始会员",
     ctaSecondary: "了解运作方式",
     footer: "Where music meets",

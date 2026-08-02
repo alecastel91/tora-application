@@ -4,8 +4,7 @@ export const en: FoundingContent = {
   hero: {
     eyebrow: "Founding Members · Applications open",
     title: "The club music industry, finally in one place",
-    subline:
-      "Where opportunity is earned through talent — not gatekept by geography or connections. Artists, agents, promoters and venues, connected in one professional network.",
+    subline: "Artists, Agents, Promoters and Venues, connected in one professional network.",
     ctaPrimary: "Become a Founding Member",
     ctaSecondary: "See how it works",
     footer: "Where music meets",
@@ -16,15 +15,15 @@ export const en: FoundingContent = {
     items: [
       {
         title: "No central directory",
-        body: "Artists, agents, promoters and venues have no shared platform. Most booking requests still start with cold DMs and unanswered emails.",
+        body: "Artists, Agents, Promoters and Venues have no shared platform. Most booking requests still start with cold DMs and unanswered emails.",
       },
       {
         title: "International bookings are inaccessible",
-        body: "Bringing artists across markets is expensive, risky and poorly coordinated. Building a sustainable tour without an established network is nearly impossible.",
+        body: "Bringing Artists across markets is expensive, risky and poorly coordinated. Building a sustainable tour without an established network is nearly impossible.",
       },
       {
         title: "The market is gatekept",
-        body: "Opportunities sit with a few players. Emerging artists, independent promoters and new venues have no structured way to get discovered and build credibility.",
+        body: "Opportunities sit with a few players. Emerging Artists, independent Promoters and new Venues have no structured way to get discovered and build credibility.",
       },
       {
         title: "No path from search to signed deal",
@@ -43,14 +42,14 @@ export const en: FoundingContent = {
   },
   roles: [
     { body: "DJs, live acts and producers looking for global bookings and professional representation." },
-    { body: "Talent agencies managing artist rosters, tours, deals and international opportunities." },
-    { body: "Event organisers who book talent, build lineups and manage venue partnerships globally." },
-    { body: "Clubs and event spaces that want to attract the right artists and fill their calendar." },
+    { body: "Talent agencies managing Artist rosters, tours, deals and international opportunities." },
+    { body: "Event organisers who book talent, build lineups and manage Venue partnerships globally." },
+    { body: "Clubs and event spaces that want to attract the right Artists and fill their calendar." },
   ],
   deepdives: [
     {
       headline: ["Get discovered.", "Book globally."],
-      body: "A verified profile that represents you professionally — genres, socials, availability, press kit. Visible to promoters and venues worldwide, not just in your city.",
+      body: "A verified profile that represents you professionally — genres, socials, availability, press kit. Visible to Promoters and Venues worldwide, not just in your city.",
       points: [
         "Global search & discovery",
         "Calendar & availability sharing",
@@ -61,21 +60,21 @@ export const en: FoundingContent = {
     },
     {
       headline: ["Manage your roster.", "Close deals."],
-      body: "One dashboard for your entire artist roster. Track every deal, calendar, contract and payment across all your artists — without losing your mind.",
+      body: "One dashboard for your entire Artist roster. Track every deal, calendar, contract and payment across all your Artists — without losing your mind.",
       points: [
-        "Multi-artist roster management",
+        "Multi-Artist roster management",
         "Deal & negotiation tracking",
         "Tier pricing: Solo to Unlimited",
-        "Per-artist financial overview",
+        "Per-Artist financial overview",
         "Book gigs directly on their behalf",
       ],
     },
     {
       headline: ["Find the right act.", "Build the right lineup."],
-      body: "Search artists by genre, location and availability. Find venues to host your events. Send booking proposals directly — no intermediary required, unless you want one.",
+      body: "Search Artists by genre, location and availability. Find Venues to host your events. Send booking proposals directly — no intermediary required, unless you want one.",
       points: [
         "Genre + location + availability filters",
-        "Direct proposals to artists or agents",
+        "Direct proposals to Artists or Agents",
         "Tour Kickstart: share booking costs",
         "Calendar-based matching",
         "Contract & payment confirmation in-platform",
@@ -83,11 +82,11 @@ export const en: FoundingContent = {
     },
     {
       headline: ["Get seen.", "Fill your calendar."],
-      body: "Your venue profile is visible to artists and agents planning tours. Set your dates, capacity and genres — TORA surfaces you to the right people at the right time.",
+      body: "Your Venue profile is visible to Artists and Agents planning tours. Set your dates, capacity and genres — TORA surfaces you to the right people at the right time.",
       points: [
         "Venue profile with capacity & specs",
         "Date availability calendar",
-        "Advance notice for touring artists",
+        "Advance notice for touring Artists",
         "Inbound booking proposals",
         "Tour Kickstart: co-host touring acts",
       ],
@@ -109,8 +108,8 @@ export const en: FoundingContent = {
     heading: "Make the world your circuit",
     body: "Plan routes, get seen by the right markets and share the cost of bringing international acts across borders.",
     tiles: [
-      { title: "Travel schedule & alerts", body: "Publish where you'll be; the right people get notified in advance when a relevant artist is coming to their area." },
-      { title: "Tour Kickstart", body: "Co-host a touring artist across venues and split the costs." },
+      { title: "Travel schedule & alerts", body: "Publish where you'll be; the right people get notified in advance when a relevant Artist is coming to their area." },
+      { title: "Tour Kickstart", body: "Co-host a touring Artist across Venues and split the costs." },
     ],
   },
   why: {
@@ -165,12 +164,12 @@ export const en: FoundingContent = {
       travel: {
         label: "Travel & alerts",
         title: "Travel schedule & smart alerts",
-        body: "Publish where you'll be and when. TORA surfaces you to the right market and notifies venues and promoters in advance when a relevant artist is coming to their city.",
+        body: "Publish where you'll be and when. TORA surfaces you to the right market and notifies Venues and Promoters in advance when a relevant Artist is coming to their city.",
       },
       tour: {
         label: "Tour",
         title: "Tour Kickstart",
-        body: "Promoters and venues co-host the same touring artist — splitting travel costs and sharing risk, making previously impossible bookings viable.",
+        body: "Promoters and Venues co-host the same touring Artist — splitting travel costs and sharing risk, making previously impossible bookings viable.",
       },
     },
   },

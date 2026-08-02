@@ -4,8 +4,7 @@ export const fr: FoundingContent = {
   hero: {
     eyebrow: "Membres Fondateurs · Candidatures ouvertes",
     title: "L'industrie de la musique club, enfin réunie en un seul endroit",
-    subline:
-      "Là où les opportunités se méritent par le talent — sans barrières de géographie ni de relations. Artistes, agents, promoteurs et lieux, réunis dans un seul réseau professionnel.",
+    subline: "Artistes, Agents, Promoteurs et Lieux, réunis dans un seul réseau professionnel.",
     ctaPrimary: "Devenir Membre Fondateur",
     ctaSecondary: "Découvrir le fonctionnement",
     footer: "Where music meets",

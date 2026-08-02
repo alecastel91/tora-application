@@ -4,8 +4,7 @@ export const kr: FoundingContent = {
   hero: {
     eyebrow: "파운딩 멤버 · 신청 접수 중",
     title: "클럽 음악 산업, 마침내 한곳에서",
-    subline:
-      "기회가 지역이나 인맥에 가로막히지 않고 오직 실력으로 주어지는 곳. Artist, Agent, Promoter, Venue가 하나의 전문 네트워크로 연결됩니다.",
+    subline: "Artist, Agent, Promoter, Venue가 하나의 전문 네트워크로 연결됩니다.",
     ctaPrimary: "파운딩 멤버 되기",
     ctaSecondary: "작동 방식 보기",
     footer: "Where music meets",

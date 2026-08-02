@@ -190,10 +190,12 @@ function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-8 text-[11px] md:text-xs uppercase tracking-[0.34em] text-infrared"
+          className="mt-8 text-[11px] leading-[1.9] md:text-xs uppercase tracking-[0.34em] text-infrared"
           style={{ ...supreme, fontWeight: 500 }}
         >
-          {c.hero.eyebrow}
+          {c.hero.eyebrow.split("·").map((part, i) => (
+            <span key={i} className="block">{part.trim()}</span>
+          ))}
         </motion.span>
 
         <motion.h1
@@ -324,6 +326,9 @@ function RoleDetail({ index, onPick, onBack, reduce }: { index: number; onPick: 
           </h2>
           <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
           <ul className="mt-6 space-y-3">{d.points.map((p) => <Bullet key={p} text={p} color={meta.color} />)}</ul>
+          <Link href="/apply" className="mt-8 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-transform hover:-translate-y-0.5" style={{ background: meta.color }}>
+            {c.drawer.join}
+          </Link>
         </div>
         <ScrollInsidePhone src={meta.shot} alt={`${label} profile in the TORA app`} glow={meta.color} scrollLabel={c.drawer.scroll} className="md:order-2" />
       </div>
