@@ -68,7 +68,7 @@ export function HeroSection() {
           className="mt-16"
         >
           <Link
-            href="/apply"
+            href="/apply?start=role"
             className="px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300"
             style={supremeFont}
           >

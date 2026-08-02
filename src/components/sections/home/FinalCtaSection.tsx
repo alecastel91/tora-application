@@ -34,7 +34,7 @@ export function FinalCtaSection() {
 
       <SectionReveal delay={0.2}>
         <Link
-          href="/apply"
+          href="/apply?start=role"
           className="inline-block mt-12 px-12 py-4 rounded-full border border-white/60 text-white text-xs font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300"
           style={supremeFont}
         >

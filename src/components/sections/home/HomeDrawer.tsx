@@ -260,7 +260,7 @@ function HomeDrawer({
                 {item.body}
               </p>
               <a
-                href="/apply"
+                href="/apply?start=role"
                 className="mt-7 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-transform hover:-translate-y-0.5"
                 style={{ background: item.color }}
               >

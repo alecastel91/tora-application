@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
@@ -10,8 +11,11 @@ import { ParallaxBackdrop } from "@/components/sections/home/ParallaxBackdrop";
 
 type FlowState = "globe" | "form" | "confirmation";
 
-export default function Apply() {
-  const [view, setView] = useState<FlowState>("globe");
+function ApplyFlow() {
+  // CTAs link to /apply?start=role to skip the globe intro and land straight
+  // on the form's role-selection step; a bare /apply still shows the intro.
+  const startAtForm = useSearchParams().get("start") === "role";
+  const [view, setView] = useState<FlowState>(startAtForm ? "form" : "globe");
   const [formStep, setFormStep] = useState(0);
   const [showIntroContent, setShowIntroContent] = useState(false);
 
@@ -70,5 +74,14 @@ export default function Apply() {
         )}
       </AnimatePresence>
     </main>
+  );
+}
+
+export default function Apply() {
+  // useSearchParams requires a Suspense boundary during prerender.
+  return (
+    <Suspense fallback={<main className="min-h-screen" />}>
+      <ApplyFlow />
+    </Suspense>
   );
 }

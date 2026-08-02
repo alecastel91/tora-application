@@ -48,7 +48,7 @@ export function DetailPageShell({
 
         <div className="text-center">
           <Link
-            href="/apply"
+            href="/apply?start=role"
             className="inline-block px-10 py-3 rounded-full border border-white/60 text-white text-[11px] font-semibold uppercase tracking-[0.25em] hover:bg-infrared hover:border-infrared hover:text-white transition-all duration-300 mb-8"
             style={supremeFont}
           >
