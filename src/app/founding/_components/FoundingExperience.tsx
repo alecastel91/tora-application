@@ -349,19 +349,21 @@ function RolePicker() {
           <motion.div key="picker"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}>
             <p className="mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-4">
               {ROLE_META.map((r, i) => (
                 <button key={r.id} onClick={() => setSelected(i)}
-                  className="group flex flex-col items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-10 text-center transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.04]">
-                  <span className="flex h-24 w-24 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-12 [&_svg]:w-12" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
+                  className="group flex flex-row items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.04] md:flex-col md:items-center md:gap-5 md:px-6 md:py-10 md:text-center">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-8 [&_svg]:w-8 md:h-24 md:w-24 md:[&_svg]:h-12 md:[&_svg]:w-12" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
                     {r.icon(r.color)}
                   </span>
-                  <span className="text-xl font-bold uppercase tracking-wide" style={{ ...rajdhani, color: r.color }}>{ROLE_LABELS[i]}</span>
-                  <span className="mt-1 max-w-[16rem] text-[13px] leading-relaxed text-white/45" style={grotesk}>{c.roles[i].body}</span>
-                  <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70" style={supreme}>
-                    {c.solution.tapToExplore}
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-                  </span>
+                  <div className="flex min-w-0 flex-1 flex-col items-start md:items-center">
+                    <span className="text-lg font-bold uppercase tracking-wide md:text-xl" style={{ ...rajdhani, color: r.color }}>{ROLE_LABELS[i]}</span>
+                    <span className="mt-1 text-[13px] leading-relaxed text-white/45 md:max-w-[16rem]" style={grotesk}>{c.roles[i].body}</span>
+                    <span className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70 md:mt-3" style={supreme}>
+                      {c.solution.tapToExplore}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                    </span>
+                  </div>
                 </button>
               ))}
             </div>
@@ -381,20 +383,24 @@ function ExploreTile({ n, icon, title, body, onOpen }: { n?: string; icon?: Reac
     <button
       type="button"
       onClick={onOpen}
-      className="group relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-infrared/60 hover:bg-white/[0.04] hover:shadow-[0_18px_50px_-24px_rgba(255,51,102,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infrared/70"
+      className="group relative flex h-full flex-row items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-infrared/60 hover:bg-white/[0.04] hover:shadow-[0_18px_50px_-24px_rgba(255,51,102,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infrared/70 md:flex-col md:gap-0 md:p-6"
     >
-      {n ? (
-        <span className="text-4xl font-black leading-none text-infrared md:text-5xl" style={rajdhani}>{n}</span>
-      ) : null}
-      {icon ? (
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-infrared/40 bg-infrared/10 [&>svg]:h-6 [&>svg]:w-6">{icon}</span>
-      ) : null}
-      <h3 className={`text-lg font-bold uppercase tracking-wide text-white ${n || icon ? "mt-4" : ""}`} style={rajdhani}>{title}</h3>
-      <p className="mt-2 flex-1 text-[15px] leading-relaxed text-white/55" style={grotesk}>{body}</p>
-      <span className="mt-5 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-infrared" style={supreme}>
-        {c.solution.tapToExplore}
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-      </span>
+      <div className="shrink-0">
+        {n ? (
+          <span className="text-3xl font-black leading-none text-infrared md:text-4xl lg:text-5xl" style={rajdhani}>{n}</span>
+        ) : null}
+        {icon ? (
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-infrared/40 bg-infrared/10 [&>svg]:h-6 [&>svg]:w-6 md:h-12 md:w-12">{icon}</span>
+        ) : null}
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col md:mt-4">
+        <h3 className="text-base font-bold uppercase tracking-wide text-white md:text-lg" style={rajdhani}>{title}</h3>
+        <p className="mt-1.5 flex-1 text-[14px] leading-relaxed text-white/55 md:mt-2 md:text-[15px]" style={grotesk}>{body}</p>
+        <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-infrared md:mt-5" style={supreme}>
+          {c.solution.tapToExplore}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </span>
+      </div>
     </button>
   );
 }
@@ -410,7 +416,7 @@ function Journey() {
           {c.journey.heading}
         </h2>
       </Reveal>
-      <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-16 grid gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-5">
         {c.journey.steps.map((s, i) => (
           <Reveal key={i} delay={i * 0.06}>
             <ExploreTile n={String(i + 1)} title={s.title} body={s.body} onOpen={() => open(JOURNEY_IDS[i])} />
@@ -437,7 +443,7 @@ function Touring() {
           {c.touring.body}
         </p>
       </Reveal>
-      <div className="mt-14 grid gap-5 md:grid-cols-2">
+      <div className="mt-14 grid gap-3 md:grid-cols-2 md:gap-5">
         {c.touring.tiles.map((t, i) => (
           <Reveal key={i} delay={i * 0.08}>
             <ExploreTile icon={TOURING_META[i].icon} title={t.title} body={t.body} onOpen={() => open(TOURING_META[i].id)} />
