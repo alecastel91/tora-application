@@ -11,11 +11,11 @@ import { withSentryConfig } from "@sentry/nextjs";
 // - frame-ancestors 'none' prevents clickjacking (no one can iframe us).
 const cspDirectives = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://plausible.io",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://resend-attachments.s3.amazonaws.com https://cdn-icons-png.flaticon.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tora-backend-production.up.railway.app",
+  "connect-src 'self' https://*.supabase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tora-backend-production.up.railway.app https://plausible.io",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Rajdhani, Inter, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -76,6 +77,12 @@ export default function RootLayout({
           {children}
         </LanguageProvider>
         <Analytics />
+        <Script
+          defer
+          data-domain="torahub.io"
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
