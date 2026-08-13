@@ -3,8 +3,8 @@ import type { FoundingContent } from "./types";
 export const fr: FoundingContent = {
   hero: {
     eyebrow: "Membres Fondateurs · Candidatures ouvertes",
-    title: "L'industrie de la musique club, enfin réunie en un seul endroit",
-    subline: "Artistes, Agents, Promoteurs et Lieux, réunis dans un seul réseau professionnel.",
+    title: "L'industrie de la musique club, enfin réunie au même endroit",
+    subline: "Artistes, agents, promoteurs et lieux, rassemblés au sein d'un même réseau professionnel.",
     ctaPrimary: "Devenir Membre Fondateur",
     ctaSecondary: "Découvrir le fonctionnement",
     footer: "Where music meets",
@@ -15,18 +15,18 @@ export const fr: FoundingContent = {
     items: [
       {
         title: "Aucun annuaire central",
-        body: "Artistes, agents, promoteurs et lieux n'ont aucune plateforme commune. La plupart des demandes de booking commencent encore par des DM à froid et des e-mails sans réponse.",
+        body: "Artistes, agents, promoteurs et lieux n'ont aucune plateforme commune. La plupart des demandes de booking commencent encore par des DM envoyés à l'aveugle et des e-mails restés sans réponse.",
       },
       {
-        title: "Les bookings internationaux sont inaccessibles",
-        body: "Faire venir des artistes d'un marché à l'autre coûte cher, comporte des risques et reste mal coordonné. Bâtir une tournée durable sans réseau établi est presque impossible.",
+        title: "Les bookings internationaux sont hors de portée",
+        body: "Faire venir des artistes d'un marché à l'autre coûte cher, comporte des risques et reste mal coordonné. Sans réseau établi, bâtir une tournée durable est quasi impossible.",
       },
       {
         title: "Le marché est verrouillé",
-        body: "Les opportunités restent aux mains de quelques acteurs. Les artistes émergents, les promoteurs indépendants et les nouveaux lieux n'ont aucun moyen structuré de se faire découvrir et de gagner en crédibilité.",
+        body: "Les opportunités restent aux mains de quelques acteurs. Les artistes émergents, les promoteurs indépendants et les nouveaux lieux n'ont aucun moyen structuré de se faire connaître et de gagner en crédibilité.",
       },
       {
-        title: "Aucun parcours de la recherche à l'accord signé",
+        title: "Aucun parcours continu de la recherche à la signature",
         body: "Aucun outil unique ne prend en charge l'ensemble du processus de booking — découverte, proposition, négociation, contrat, documents et paiement.",
       },
     ],
@@ -35,7 +35,7 @@ export const fr: FoundingContent = {
     eyebrow: "La Solution",
     headingLead: "Une seule plateforme,",
     headingAccent: "chaque booking",
-    body: "TORA relie les quatre piliers de l'industrie de la musique club — Artist, Agent, Promoter et Venue — au sein d'un seul réseau professionnel. Du premier contact à la confirmation du paiement final, tout se passe sur une plateforme fluide et unique.",
+    body: "TORA relie les quatre piliers de l'industrie de la musique club — Artist, Agent, Promoter et Venue — au sein d'un seul réseau professionnel. Du premier contact à la confirmation du paiement final, tout se passe sur une seule et même plateforme, sans friction.",
     chooseRole: "Choisissez votre rôle",
     tapToExplore: "Touchez pour explorer",
     allRoles: "Tous les rôles",
@@ -60,11 +60,11 @@ export const fr: FoundingContent = {
     },
     {
       headline: ["Gérez votre roster.", "Concluez vos accords."],
-      body: "Un seul tableau de bord pour l'ensemble de votre roster d'artistes. Suivez chaque accord, calendrier, contrat et paiement pour tous vos artistes — sans y perdre la tête.",
+      body: "Un seul tableau de bord pour l'ensemble de votre roster d'artistes. Suivez chaque accord, calendrier, contrat et paiement pour tous vos artistes — sans jamais perdre le fil.",
       points: [
         "Gestion d'un roster multi-artistes",
         "Suivi des accords et des négociations",
-        "Tarification par palier : Solo to Unlimited",
+        "Tarification par paliers : Solo to Unlimited",
         "Vue financière par artiste",
         "Bookez des dates directement en leur nom",
       ],
@@ -81,14 +81,14 @@ export const fr: FoundingContent = {
       ],
     },
     {
-      headline: ["Faites-vous voir.", "Remplissez votre calendrier."],
+      headline: ["Faites-vous remarquer.", "Remplissez votre calendrier."],
       body: "Votre profil de lieu est visible par les artistes et les agents qui planifient des tournées. Renseignez vos dates, votre capacité et vos genres — TORA vous met en avant auprès des bonnes personnes au bon moment.",
       points: [
         "Profil de lieu avec capacité et caractéristiques",
         "Calendrier de disponibilité des dates",
-        "Préavis pour les artistes en tournée",
+        "Alertes en amont sur les artistes en tournée",
         "Propositions de booking entrantes",
-        "Tour Kickstart : co-accueillez des artistes en tournée",
+        "Tour Kickstart : accueillez ensemble des artistes en tournée",
       ],
     },
   ],
@@ -96,8 +96,8 @@ export const fr: FoundingContent = {
     eyebrow: "Comment ça marche",
     heading: "Du premier contact au paiement",
     steps: [
-      { title: "Découvrir", body: "Explorez le réseau, faites correspondre les calendriers, trouvez le bon artiste — où qu'il soit." },
-      { title: "Se connecter", body: "Échangez directement par message et lancez la conversation." },
+      { title: "Découvrir", body: "Explorez le réseau, croisez les calendriers, trouvez le bon artiste — où qu'il soit." },
+      { title: "Se connecter", body: "Entrez en contact par message direct et lancez la conversation." },
       { title: "Proposer et négocier", body: "Proposez des dates et un cachet, puis négociez jusqu'au oui." },
       { title: "Signer le contrat", body: "Générez et signez électroniquement — fini les PDF par e-mail." },
       { title: "Confirmé", body: "Contrat signé, paiement confirmé. Accord conclu." },
@@ -106,17 +106,17 @@ export const fr: FoundingContent = {
   touring: {
     eyebrow: "Conçu pour la tournée",
     heading: "Faites du monde votre circuit",
-    body: "Planifiez vos itinéraires, faites-vous repérer par les bons marchés et partagez le coût de faire voyager des artistes internationaux au-delà des frontières.",
+    body: "Planifiez vos itinéraires, faites-vous repérer sur les bons marchés et partagez les frais de déplacement des artistes internationaux d'un pays à l'autre.",
     tiles: [
-      { title: "Agenda de voyage et alertes", body: "Publiez où vous serez ; les bonnes personnes sont prévenues à l'avance lorsqu'un artiste pertinent arrive dans leur région." },
-      { title: "Tour Kickstart", body: "Co-accueillez un artiste en tournée entre plusieurs lieux et partagez les coûts." },
+      { title: "Agenda de voyage et alertes", body: "Publiez où vous serez ; les bonnes personnes sont prévenues à l'avance lorsqu'un artiste qui les intéresse passe dans leur région." },
+      { title: "Tour Kickstart", body: "Accueillez un même artiste en tournée à plusieurs lieux et partagez les coûts." },
     ],
   },
   why: {
     eyebrow: "Pourquoi TORA",
     headingLead: "Une industrie musicale plus connectée,",
     headingAccent: "plus ouverte",
-    body: "Pas seulement une portée mondiale — TORA renforce aussi les scènes locales : découvrez les talents émergents près de chez vous, soutenez votre ville et ouvrez la tournée à quiconque en a le talent. Des opportunités méritées, pas verrouillées.",
+    body: "Pas seulement une portée mondiale — TORA renforce aussi les scènes locales : découvrez les talents émergents près de chez vous, soutenez votre ville et rendez la tournée accessible à tous ceux qui en ont le talent. Des opportunités qui se méritent, sans chasse gardée.",
   },
   cta: {
     eyebrow: "Rejoindre TORA",
@@ -125,7 +125,7 @@ export const fr: FoundingContent = {
     body: "Les premiers à rejoindre TORA — accès complet dès le lancement, une ligne directe avec l'équipe et le statut de membre fondateur à mesure que le réseau grandit.",
     cards: [
       { title: "Accès complet", body: "Toutes les fonctionnalités dès le premier jour — calendrier, bookings, messagerie, contrats." },
-      { title: "Façonnez le produit", body: "Une ligne directe avec l'équipe. Vos retours influencent ce qui sera construit ensuite." },
+      { title: "Façonnez le produit", body: "Une ligne directe avec l'équipe. Vos retours orientent les prochaines évolutions." },
     ],
     button: "Postuler maintenant",
     foot: "torahub.io · lancement prévu octobre 2026",
@@ -139,7 +139,7 @@ export const fr: FoundingContent = {
       discover: {
         label: "Découvrir",
         title: "Recherche et découverte",
-        body: "Explorez tout le réseau sur un globe en direct. Filtrez par rôle, genre, localisation et disponibilité et trouvez le bon professionnel en quelques secondes — où qu'il soit.",
+        body: "Explorez tout le réseau sur un globe en direct. Filtrez par rôle, genre, localisation et disponibilité pour trouver le bon professionnel en quelques secondes — où qu'il soit.",
       },
       connect: {
         label: "Se connecter",
@@ -148,8 +148,8 @@ export const fr: FoundingContent = {
       },
       offer: {
         label: "Proposer et négocier",
-        title: "Faites une offre. Convenez des conditions.",
-        body: "Soumettez une offre de booking avec dates, cachet et conditions, puis contrez et affinez jusqu'à l'accord des deux parties — chaque étape suivie, jusqu'à l'accord signé.",
+        title: "Faites une offre. Accordez-vous sur les conditions.",
+        body: "Soumettez une offre de booking avec dates, cachet et conditions, puis contre-proposez et ajustez jusqu'à ce que les deux parties se disent oui — chaque étape est tracée, jusqu'à la signature.",
       },
       contract: {
         label: "Contrat",
@@ -164,12 +164,12 @@ export const fr: FoundingContent = {
       travel: {
         label: "Voyage et alertes",
         title: "Agenda de voyage et alertes intelligentes",
-        body: "Publiez où et quand vous serez. TORA vous met en avant auprès du bon marché et prévient les lieux et les promoteurs à l'avance lorsqu'un artiste pertinent arrive dans leur ville.",
+        body: "Publiez où et quand vous serez. TORA vous met en avant sur le bon marché et prévient à l'avance les lieux et les promoteurs lorsqu'un artiste qui les intéresse passe dans leur ville.",
       },
       tour: {
         label: "Tournée",
         title: "Tour Kickstart",
-        body: "Promoteurs et lieux co-accueillent le même artiste en tournée — en partageant les frais de voyage et le risque, rendant viables des bookings jusqu'ici impossibles.",
+        body: "Promoteurs et lieux accueillent ensemble le même artiste en tournée — frais de voyage et risques partagés, pour rendre viables des bookings jusqu'ici impossibles.",
       },
     },
   },

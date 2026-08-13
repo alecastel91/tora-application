@@ -4,7 +4,7 @@ export const es: FoundingContent = {
   hero: {
     eyebrow: "Miembros Fundadores · Solicitudes abiertas",
     title: "La industria de la música de club, por fin en un solo lugar",
-    subline: "Artistas, Agentes, Promotores y Salas, conectados en una única red profesional.",
+    subline: "Artistas, agentes, promotores y salas, conectados en una única red profesional.",
     ctaPrimary: "Hazte Miembro Fundador",
     ctaSecondary: "Descubre cómo funciona",
     footer: "Where music meets",
@@ -18,7 +18,7 @@ export const es: FoundingContent = {
         body: "Artistas, agentes, promotores y salas no tienen una plataforma común. La mayoría de las solicitudes de contratación aún empiezan con DMs en frío y correos sin respuesta.",
       },
       {
-        title: "Las contrataciones internacionales son inaccesibles",
+        title: "Contratar a nivel internacional está al alcance de muy pocos",
         body: "Traer artistas de un mercado a otro es caro, arriesgado y está mal coordinado. Construir una gira sostenible sin una red consolidada es casi imposible.",
       },
       {
@@ -34,28 +34,28 @@ export const es: FoundingContent = {
   solution: {
     eyebrow: "La Solución",
     headingLead: "Una plataforma,",
-    headingAccent: "cada contratación",
-    body: "TORA conecta los cuatro pilares de la industria de la música de club — Artist, Agent, Promoter y Venue — en una única red profesional. Desde el primer contacto hasta la confirmación final del pago, todo ocurre en una plataforma fluida.",
+    headingAccent: "todas las contrataciones",
+    body: "TORA conecta los cuatro pilares de la industria de la música de club — Artist, Agent, Promoter y Venue — en una única red profesional. Desde el primer contacto hasta la confirmación del pago, todo sucede en una sola plataforma, sin fricciones.",
     chooseRole: "Elige tu rol",
     tapToExplore: "Toca para explorar",
     allRoles: "Todos los roles",
   },
   roles: [
-    { body: "DJs, actos en directo y productores que buscan contrataciones globales y representación profesional." },
+    { body: "DJs, artistas de directo y productores que buscan fechas internacionales y representación profesional." },
     { body: "Agencias de talento que gestionan rosters de artistas, giras, acuerdos y oportunidades internacionales." },
-    { body: "Organizadores de eventos que contratan talento, arman lineups y gestionan alianzas con salas en todo el mundo." },
+    { body: "Organizadores de eventos que contratan talento, montan line-ups y gestionan alianzas con salas en todo el mundo." },
     { body: "Clubes y espacios de eventos que quieren atraer a los artistas adecuados y llenar su calendario." },
   ],
   deepdives: [
     {
-      headline: ["Date a conocer.", "Contrata en todo el mundo."],
+      headline: ["Date a conocer.", "Consigue fechas en todo el mundo."],
       body: "Un perfil verificado que te representa profesionalmente — géneros, redes, disponibilidad, press kit. Visible para promotores y salas de todo el mundo, no solo de tu ciudad.",
       points: [
         "Búsqueda y descubrimiento global",
         "Calendario y disponibilidad compartidos",
         "Propuestas de contratación directas",
         "Flujo de contrato y pago",
-        "Conexión y gestión con agentes",
+        "Conexión y gestión con tu agente",
       ],
     },
     {
@@ -64,31 +64,31 @@ export const es: FoundingContent = {
       points: [
         "Gestión de roster multi-artista",
         "Seguimiento de acuerdos y negociaciones",
-        "Precios por nivel: Solo to Unlimited",
+        "Planes por niveles: Solo to Unlimited",
         "Visión financiera por artista",
-        "Contrata directamente en su nombre",
+        "Contrata directamente en nombre de tus artistas",
       ],
     },
     {
-      headline: ["Encuentra el acto ideal.", "Arma el lineup perfecto."],
+      headline: ["Encuentra al artista ideal.", "Monta el line-up perfecto."],
       body: "Busca artistas por género, ubicación y disponibilidad. Encuentra salas para tus eventos. Envía propuestas de contratación directamente — sin intermediarios, salvo que quieras uno.",
       points: [
         "Filtros de género + ubicación + disponibilidad",
         "Propuestas directas a artistas o agentes",
         "Tour Kickstart: comparte los costes de contratación",
-        "Emparejamiento por calendario",
+        "Cruce de calendarios y fechas",
         "Confirmación de contrato y pago en la plataforma",
       ],
     },
     {
       headline: ["Hazte visible.", "Llena tu calendario."],
-      body: "Tu perfil de sala es visible para artistas y agentes que planifican giras. Fija tus fechas, aforo y géneros — TORA te presenta a las personas adecuadas en el momento oportuno.",
+      body: "Tu perfil de sala es visible para artistas y agentes que planifican giras. Publica tus fechas libres, aforo y géneros — TORA te presenta a las personas adecuadas en el momento oportuno.",
       points: [
         "Perfil de sala con aforo y especificaciones",
-        "Calendario de disponibilidad de fechas",
-        "Aviso anticipado para artistas de gira",
-        "Propuestas de contratación entrantes",
-        "Tour Kickstart: coorganiza actos de gira",
+        "Calendario de fechas disponibles",
+        "Aviso anticipado de artistas en gira",
+        "Recibe propuestas de contratación directas",
+        "Tour Kickstart: coorganiza artistas en gira",
       ],
     },
   ],
@@ -96,7 +96,7 @@ export const es: FoundingContent = {
     eyebrow: "Cómo funciona",
     heading: "Del primer contacto al pago",
     steps: [
-      { title: "Descubre", body: "Explora la red, cuadra calendarios, encuentra el acto ideal — en cualquier lugar." },
+      { title: "Descubre", body: "Explora la red, cuadra calendarios, encuentra al artista ideal — en cualquier lugar." },
       { title: "Conecta", body: "Escribe directamente y abre la conversación." },
       { title: "Oferta y negocia", body: "Propón fechas y caché, y negocia hasta el sí." },
       { title: "Firma el contrato", body: "Genera y firma digitalmente — sin PDFs por correo." },
@@ -106,17 +106,17 @@ export const es: FoundingContent = {
   touring: {
     eyebrow: "Diseñado para las giras",
     heading: "Haz del mundo tu circuito",
-    body: "Planifica rutas, hazte ver por los mercados adecuados y comparte el coste de traer actos internacionales a través de las fronteras.",
+    body: "Planifica rutas, gana visibilidad en los mercados adecuados y comparte el coste de traer artistas internacionales a tu ciudad.",
     tiles: [
-      { title: "Agenda de viajes y alertas", body: "Publica dónde estarás; las personas adecuadas reciben aviso por adelantado cuando un artista relevante va a su zona." },
-      { title: "Tour Kickstart", body: "Coorganiza a un artista de gira entre varias salas y repartid los costes." },
+      { title: "Agenda de viajes y alertas", body: "Publica dónde estarás; las personas adecuadas reciben aviso por adelantado cuando un artista relevante va a pasar por su zona." },
+      { title: "Tour Kickstart", body: "Varias salas coorganizan al mismo artista en gira y se reparten los costes." },
     ],
   },
   why: {
     eyebrow: "Por qué TORA",
     headingLead: "Una industria musical más conectada",
     headingAccent: "y más abierta",
-    body: "No solo alcance global — TORA también fortalece las escenas locales: descubre talento emergente cerca de ti, apoya a tu ciudad y abre las giras a cualquiera con talento para ello. Oportunidad ganada, no controlada por unos pocos.",
+    body: "No solo alcance global — TORA también fortalece las escenas locales: descubre talento emergente cerca de ti, apoya a tu ciudad y abre las giras a cualquiera con el talento necesario. Oportunidades que se ganan, no que reparten unos pocos.",
   },
   cta: {
     eyebrow: "Únete a TORA",
@@ -125,9 +125,9 @@ export const es: FoundingContent = {
     body: "Los primeros en unirse a TORA — acceso completo desde el lanzamiento, línea directa con el equipo y estatus de miembro fundador a medida que crece la red.",
     cards: [
       { title: "Acceso completo", body: "Todas las funciones desde el primer día — calendario, contrataciones, mensajería, contratos." },
-      { title: "Da forma al producto", body: "Una línea directa con el equipo. Tu feedback influye en lo que se construye a continuación." },
+      { title: "Da forma al producto", body: "Una línea directa con el equipo. Tu feedback marca lo próximo que construimos." },
     ],
-    button: "Solicítalo ahora",
+    button: "Envía tu solicitud",
     foot: "torahub.io · lanzamiento previsto octubre 2026",
   },
   drawer: {
@@ -139,7 +139,7 @@ export const es: FoundingContent = {
       discover: {
         label: "Descubre",
         title: "Búsqueda y descubrimiento",
-        body: "Explora toda la red en un globo en vivo. Filtra por rol, género, ubicación y disponibilidad y encuentra al profesional adecuado en segundos — dondequiera que esté.",
+        body: "Explora toda la red sobre un globo terráqueo en tiempo real. Filtra por rol, género, ubicación y disponibilidad y encuentra al profesional adecuado en segundos — dondequiera que esté.",
       },
       connect: {
         label: "Conecta",
@@ -148,8 +148,8 @@ export const es: FoundingContent = {
       },
       offer: {
         label: "Oferta y negocia",
-        title: "Haz una oferta. Acordad las condiciones.",
-        body: "Envía una oferta de contratación con fechas, caché y condiciones, y luego contraofertad y ajustad hasta que ambas partes estén de acuerdo — cada paso registrado, hasta el acuerdo firmado.",
+        title: "Haz una oferta. Cierra las condiciones.",
+        body: "Envía una oferta de contratación con fechas, caché y condiciones, contraoferta y ajusta hasta que ambas partes estén de acuerdo — cada paso queda registrado, hasta el acuerdo firmado.",
       },
       contract: {
         label: "Contrato",
@@ -169,7 +169,7 @@ export const es: FoundingContent = {
       tour: {
         label: "Gira",
         title: "Tour Kickstart",
-        body: "Promotores y salas coorganizan al mismo artista de gira — repartiendo los costes de viaje y compartiendo el riesgo, haciendo viables contrataciones antes imposibles.",
+        body: "Promotores y salas coorganizan al mismo artista en gira — se reparten los costes de viaje, comparten el riesgo y hacen viables contrataciones que antes eran imposibles.",
       },
     },
   },

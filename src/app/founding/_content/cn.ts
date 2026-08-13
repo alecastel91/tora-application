@@ -4,7 +4,7 @@ export const cn: FoundingContent = {
   hero: {
     eyebrow: "创始会员 · 申请开放中",
     title: "俱乐部音乐产业，终于汇聚一处",
-    subline: "Artist、Agent、Promoter 与 Venue，连接于同一个专业网络。",
+    subline: "艺人、经纪人、主办方与场地，汇聚在同一个专业网络。",
     ctaPrimary: "成为创始会员",
     ctaSecondary: "了解运作方式",
     footer: "Where music meets",
@@ -15,18 +15,18 @@ export const cn: FoundingContent = {
     items: [
       {
         title: "没有统一的名录",
-        body: "Artist、Agent、Promoter 与 Venue 之间没有共享平台。多数预订请求至今仍始于冷冰冰的私信和石沉大海的邮件。",
+        body: "艺人、经纪人、主办方与场地之间没有一个共享的平台。多数预订至今仍从陌生私信和石沉大海的邮件开始。",
       },
       {
-        title: "跨国预订难以企及",
-        body: "跨市场引进艺人成本高、风险大、协调差。没有成熟的人脉网络，几乎无法打造一场可持续的巡演。",
+        title: "跨国预订遥不可及",
+        body: "跨市场引进艺人成本高、风险大、协调难。没有成熟的人脉网络，可持续的巡演几乎无从谈起。",
       },
       {
         title: "市场被少数人把持",
         body: "机会集中在少数玩家手中。新兴艺人、独立主办方和新场地缺乏一条有章可循的路径来被发现、建立信誉。",
       },
       {
-        title: "从搜索到签约缺乏通路",
+        title: "从搜索到签约缺乏完整路径",
         body: "没有任何一款工具能覆盖完整的预订流程——发现、提案、谈判、合同、文件与付款。",
       },
     ],
@@ -35,7 +35,7 @@ export const cn: FoundingContent = {
     eyebrow: "解决之道",
     headingLead: "一个平台，",
     headingAccent: "承载每一次预订",
-    body: "TORA 将俱乐部音乐产业的四大支柱——Artist、Agent、Promoter 与 Venue——连接进同一个专业网络。从初次接洽到最终付款确认，一切都在一个无缝的平台中完成。",
+    body: "TORA 将俱乐部音乐产业的四大支柱——艺人、经纪人、主办方与场地——汇入同一个专业网络。从初次接洽到最终付款确认，全程在同一个平台上无缝完成。",
     chooseRole: "选择你的角色",
     tapToExplore: "点击探索",
     allRoles: "全部角色",
@@ -86,7 +86,7 @@ export const cn: FoundingContent = {
       points: [
         "含容量与规格的场地档案",
         "档期可预订日历",
-        "为巡演艺人提供提前预告",
+        "提前获知巡演艺人动向",
         "接收预订提案",
         "Tour Kickstart：联合承办巡演演出",
       ],
@@ -108,7 +108,7 @@ export const cn: FoundingContent = {
     heading: "让世界成为你的巡演线路",
     body: "规划路线，被对的市场看见，并分摊跨境引进国际演出的成本。",
     tiles: [
-      { title: "行程安排与提醒", body: "发布你的行踪；当相关艺人即将到访某地时，对的人会提前收到通知。" },
+      { title: "行程安排与提醒", body: "发布你的行程；当相关艺人即将到访某地时，对的人会提前收到通知。" },
       { title: "Tour Kickstart", body: "跨多个场地联合承办同一位巡演艺人，分摊成本。" },
     ],
   },
@@ -116,7 +116,7 @@ export const cn: FoundingContent = {
     eyebrow: "为何选择 TORA",
     headingLead: "一个更互联、更开放的",
     headingAccent: "音乐产业",
-    body: "不仅是全球触达——TORA 同样壮大本地场景：发现身边的新兴才华，支持你的城市，让每一位有才华的人都能踏上巡演之路。机会靠才华赢得，而非被把持。",
+    body: "不仅是全球触达——TORA 同样壮大本地场景：发现身边的新兴才华，支持你的城市，让每一位有才华的人都能踏上巡演之路。机会靠才华赢得，而非被少数人把持。",
   },
   cta: {
     eyebrow: "加入 TORA",
@@ -154,7 +154,7 @@ export const cn: FoundingContent = {
       contract: {
         label: "合同",
         title: "签署合同",
-        body: "在线生成、发送并签署预订合同——真正的电子签名，就在平台内完成。无需再来回邮寄 PDF。",
+        body: "在线生成、发送并签署预订合同——真正的电子签名，就在平台内完成。无需再用邮件来回传 PDF。",
       },
       confirmed: {
         label: "确认完成",
@@ -164,7 +164,7 @@ export const cn: FoundingContent = {
       travel: {
         label: "行程与提醒",
         title: "行程安排与智能提醒",
-        body: "发布你何时何地出现。TORA 将你呈现给对的市场，并在相关艺人即将到访某城市时提前通知场地与主办方。",
+        body: "发布你将于何时身在何处。TORA 将你呈现给对的市场，并在相关艺人即将到访某城市时提前通知场地与主办方。",
       },
       tour: {
         label: "巡演",
