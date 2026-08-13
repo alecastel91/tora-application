@@ -1,9 +1,8 @@
 "use client";
 
-import { GlassCard } from "@/components/ui/GlassCard";
 import { SectionReveal } from "@/components/ui/SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SOLUTIONS } from "./home.data";
+import { JOURNEY } from "./home.data";
 import { useHomeDrawer } from "./HomeDrawer";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
@@ -26,30 +25,32 @@ export function SolutionsGrid() {
           </h2>
         </SectionReveal>
 
-        {/* One solution per row on phones — the 5 steps read as a sequence */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={bodyFont}>
-          {SOLUTIONS.map((s, i) => (
+        {/* One step per row on phones — founding-page journey rows: number
+            left, copy right, in sequence. */}
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3" style={bodyFont}>
+          {JOURNEY.map((s, i) => (
             <SectionReveal key={s.id} delay={i * 0.05}>
               <div
                 onClick={() => open(s.id)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(s.id); } }}
-                className="group h-full cursor-pointer"
+                className="group relative flex h-full cursor-pointer flex-row items-start gap-4 rounded-2xl border border-white/10 bg-[#0d0d12]/50 backdrop-blur-md p-5 transition-all duration-300 hover:-translate-y-1 hover:border-infrared/60"
               >
-                <GlassCard className="border-white/5 h-full transition-colors group-hover:border-infrared/40">
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
-                      {s.icon}
-                    </div>
-                    <span className="text-infrared text-sm font-bold uppercase tracking-widest">{t(s.titleKey)}</span>
+                <span className="shrink-0 text-3xl font-black leading-none text-infrared" style={headingFont}>
+                  {i + 1}
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="text-base font-bold uppercase tracking-wide text-white" style={headingFont}>{t(s.titleKey)}</h3>
+                    <span className="shrink-0 opacity-80 [&>svg]:h-[22px] [&>svg]:w-[22px]">{s.icon}</span>
                   </div>
-                  <p className="text-white/70 text-sm leading-relaxed mt-4">{t(s.descKey)}</p>
-                  <span className="mt-4 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-white/35 transition-colors group-hover:text-white/70">
-                    Tap to explore
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                  <p className="mt-1.5 flex-1 text-[14px] leading-relaxed text-white/55">{t(s.descKey)}</p>
+                  <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-infrared">
+                    {t("home_tap_explore")}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </span>
-                </GlassCard>
+                </div>
               </div>
             </SectionReveal>
           ))}

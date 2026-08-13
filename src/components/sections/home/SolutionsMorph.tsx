@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { SOLUTIONS } from "./home.data";
+import { JOURNEY } from "./home.data";
 import { useHomeDrawer } from "./HomeDrawer";
 import { solutionBoxes, type Box } from "./morphLayout";
 
@@ -46,64 +46,42 @@ export function SolutionsMorph() {
         </motion.div>
 
         {boxes.map((b, i) => {
-          const s = SOLUTIONS[i];
+          const s = JOURNEY[i];
           if (!s) return null;
           return (
             <motion.div
               key={s.id}
               style={{ opacity, position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h }}
-              className="group pointer-events-auto flex cursor-pointer flex-col overflow-hidden rounded-2xl p-4 transition-transform hover:scale-[1.02]"
+              className="group pointer-events-auto flex cursor-pointer flex-col rounded-2xl p-5 text-left transition-transform hover:-translate-y-1"
               onClick={() => open(s.id)}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(s.id); } }}
             >
-              {/* Dark glass, same family as the role cards */}
+              {/* Founding-page journey card: neutral glass, numbered step. */}
               <div
-                className="absolute inset-0 rounded-2xl backdrop-blur-md"
+                className="absolute inset-0 rounded-2xl backdrop-blur-md transition-colors duration-300 group-hover:border-infrared/60"
                 style={{
-                  background: "rgba(255,255,255,0.02)", // founding-page glass — let the backdrop show through
+                  background: "rgba(13,13,18,0.5)", // half-glass: blurred dots read as bokeh, copy stays legible
                   border: "1px solid rgba(255,255,255,0.1)",
-                  boxShadow: "0 0 60px -26px rgba(255,51,102,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                 }}
               />
-              <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-infrared/50" />
-
-              <div
-                className="absolute top-4 right-4 text-white/[0.13] text-3xl font-black tabular-nums leading-none"
-                style={headingFont}
-              >
-                {String(i + 1).padStart(2, "0")}
+              <div className="relative flex items-start justify-between">
+                <span className="text-4xl font-black leading-none text-infrared" style={headingFont}>
+                  {i + 1}
+                </span>
+                <span className="mt-0.5 opacity-80 [&>svg]:h-[26px] [&>svg]:w-[26px]">{s.icon}</span>
               </div>
-
-              {/* Hero icon, centred — [&>svg] scales the shared SVG up on
-                  desktop only; the mobile grid renders it at intrinsic size */}
-              <div className="relative flex-1 flex items-center justify-center [&>svg]:w-24 [&>svg]:h-24">
-                <div
-                  aria-hidden="true"
-                  className="absolute w-36 h-36 rounded-full"
-                  style={{ background: "radial-gradient(circle, rgba(255,51,102,0.13), transparent 70%)" }}
-                />
-                {s.icon}
-              </div>
-
-              <div className="relative">
-                <div className="text-infrared text-sm md:text-[15px] font-bold uppercase tracking-[0.18em] mb-2">{t(s.titleKey)}</div>
-                {/* Fixed desc height so the five titles sit on one line across the row */}
-                <p className="text-white/55 text-xs leading-snug h-12 overflow-hidden" style={bodyFont}>
-                  {t(s.descKey)}
-                </p>
-                {/* Step indicator — the five solutions are the booking pipeline, in order */}
-                <div className="flex items-center gap-1.5 mt-2.5">
-                  {SOLUTIONS.map((_, d) => (
-                    <span
-                      key={d}
-                      className={`h-[3px] rounded-full transition-none ${d === i ? "w-5 bg-infrared" : "w-[3px] bg-white/20"}`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <svg aria-hidden className="absolute bottom-4 right-4 text-white/40 opacity-0 transition-opacity group-hover:opacity-100" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+              <h3 className="relative mt-4 text-base font-bold uppercase tracking-wide text-white lg:text-lg" style={headingFont}>
+                {t(s.titleKey)}
+              </h3>
+              <p className="relative mt-2 flex-1 text-[13px] leading-relaxed text-white/55" style={bodyFont}>
+                {t(s.descKey)}
+              </p>
+              <span className="relative mt-4 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-infrared">
+                {t("home_tap_explore")}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </span>
             </motion.div>
           );
         })}

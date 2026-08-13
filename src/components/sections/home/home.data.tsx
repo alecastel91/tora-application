@@ -14,8 +14,11 @@ import type { ReactNode } from "react";
 
 export type Role = {
   id: string;
+  /** Role name shown on the card — English brand term, same as /founding. */
+  label: string;
   labelKey: string; // existing key, e.g. role_artists_title
   valueKey: string; // new key, e.g. home_role_artist_value
+  descKey: string; // founding-page role sentence, e.g. home_role_artist_desc
   color: string;
   icon: ReactNode;
 };
@@ -27,14 +30,23 @@ export type Solution = {
   icon: ReactNode;
 };
 
+export type JourneyStep = {
+  id: string; // HomeDrawer entry id
+  titleKey: string;
+  descKey: string;
+  icon: ReactNode;
+};
+
 const stroke = (color: string, width = 1.25) =>
   ({ fill: "none", stroke: color, strokeWidth: width, strokeLinecap: "round", strokeLinejoin: "round" } as const);
 
 export const ROLES: Role[] = [
   {
     id: "artist",
+    label: "Artist",
     labelKey: "role_artists_title",
     valueKey: "home_role_artist_value",
+    descKey: "home_role_artist_desc",
     color: "#6B5FFF",
     icon: (
       // The artist — headphones (standardized icon)
@@ -47,8 +59,10 @@ export const ROLES: Role[] = [
   },
   {
     id: "agent",
+    label: "Agent",
     labelKey: "role_agents_title",
     valueKey: "home_role_agent_value",
+    descKey: "home_role_agent_desc",
     color: "#00C875",
     icon: (
       // The agent — one person representing another
@@ -62,8 +76,10 @@ export const ROLES: Role[] = [
   },
   {
     id: "promoter",
+    label: "Promoter",
     labelKey: "role_promoters_title",
     valueKey: "home_role_promoter_value",
+    descKey: "home_role_promoter_desc",
     color: "#FFB800",
     icon: (
       // The promoter — a megaphone, sound leaving the horn
@@ -76,8 +92,10 @@ export const ROLES: Role[] = [
   },
   {
     id: "venue",
+    label: "Venue",
     labelKey: "role_venues_title",
     valueKey: "home_role_venue_value",
+    descKey: "home_role_venue_desc",
     color: "#FF5757",
     icon: (
       // The venue — house / entrance (standardized icon)
@@ -162,4 +180,33 @@ export const SOLUTIONS: Solution[] = [
       </svg>
     ),
   },
+];
+
+const solutionIcon = (id: string) => SOLUTIONS.find((s) => s.id === id)!.icon;
+
+/**
+ * The 5-step booking journey, mirrored from /founding (Discover → Connect →
+ * Offer & negotiate → Sign the contract → Confirmed). Icons stay in the same
+ * 26px line language as SOLUTIONS / the /features page; "offer" gets the
+ * exchange mark (offer out, counter back) from the features set.
+ */
+export const JOURNEY: JourneyStep[] = [
+  { id: "discover", titleKey: "home_journey_discover_title", descKey: "home_journey_discover_desc", icon: solutionIcon("discover") },
+  { id: "connect", titleKey: "home_journey_connect_title", descKey: "home_journey_connect_desc", icon: solutionIcon("connect") },
+  {
+    id: "offer",
+    titleKey: "home_journey_offer_title",
+    descKey: "home_journey_offer_desc",
+    icon: (
+      // Exchange — offer out, counter back
+      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
+        <path d="M19.8 10.5a8 8 0 0 0-14.4-3" stroke={GHOST} />
+        <path d="M5.4 4.6v3h3" stroke={GHOST} />
+        <path d="M4.2 13.5a8 8 0 0 0 14.4 3" />
+        <path d="M18.6 19.4v-3h-3" />
+      </svg>
+    ),
+  },
+  { id: "contract", titleKey: "home_journey_contract_title", descKey: "home_journey_contract_desc", icon: solutionIcon("contract") },
+  { id: "confirmed", titleKey: "home_journey_confirmed_title", descKey: "home_journey_confirmed_desc", icon: solutionIcon("book") },
 ];

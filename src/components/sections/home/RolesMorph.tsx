@@ -58,35 +58,29 @@ export function RolesMorph() {
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(role.id); } }}
             >
-              {/* Dark glass: gathered dots behind read as soft bokeh, dots around
-                  the edges stay sharp — and the copy stays legible. */}
+              {/* Founding-page card: neutral glass surface, colored icon badge. */}
               <div
-                className="absolute inset-0 rounded-2xl backdrop-blur-md"
+                className="absolute inset-0 rounded-2xl backdrop-blur-md transition-colors duration-300 group-hover:border-white/25"
                 style={{
-                  background: "rgba(255,255,255,0.02)", // founding-page glass — let the backdrop show through
-                  border: `1px solid ${role.color}3d`,
-                  boxShadow: `0 0 60px -24px ${role.color}80, inset 0 1px 0 rgba(255,255,255,0.06)`,
+                  background: "rgba(13,13,18,0.5)", // half-glass: blurred dots read as bokeh, copy stays legible
+                  border: "1px solid rgba(255,255,255,0.1)",
                 }}
               />
-              {/* [&>svg] sizing scales the shared icon up on desktop only — the
-                  mobile stack renders the same SVGs at their intrinsic size */}
-              <div className="relative flex items-center justify-center mb-5 [&>svg]:w-24 [&>svg]:h-24">
-                <div
-                  aria-hidden="true"
-                  className="absolute w-36 h-36 rounded-full"
-                  style={{ background: `radial-gradient(circle, ${role.color}22, transparent 70%)` }}
-                />
+              <span
+                className="relative mb-5 flex h-20 w-20 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-10 [&_svg]:w-10"
+                style={{ background: `${role.color}18`, border: `1px solid ${role.color}55` }}
+              >
                 {role.icon}
+              </span>
+              <div className="relative text-xl font-bold uppercase tracking-wide" style={{ ...headingFont, color: role.color }}>
+                {role.label}
               </div>
-              <div className="relative text-[11px] font-bold uppercase tracking-[0.3em] mb-2.5" style={{ color: role.color }}>
-                {t(role.labelKey)}
-              </div>
-              <div className="relative text-white text-lg md:text-xl font-black uppercase tracking-tight leading-tight whitespace-pre-line" style={headingFont}>
-                {t(role.valueKey)}
-              </div>
-              <span className="relative mt-4 flex items-center gap-1 text-[9px] uppercase tracking-[0.22em] text-white/30 transition-colors group-hover:text-white/70">
-                Tap to explore
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              <p className="relative mt-2 max-w-[15rem] text-[13px] leading-relaxed text-white/45">
+                {t(role.descKey)}
+              </p>
+              <span className="relative mt-4 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70">
+                {t("home_tap_explore")}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
               </span>
             </motion.div>
           );
