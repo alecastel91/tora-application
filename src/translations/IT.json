@@ -56,6 +56,7 @@
   "agency_name": "Nome dell'agenzia",
   "website_optional": "Sito web (facoltativo)",
   "agency_website": "Sito web dell'agenzia",
+  "agency_website_required": "Il sito dell'agenzia è obbligatorio: è così che la tua agenzia viene verificata su TORA.",
   "linkedin_optional": "Nome LinkedIn (facoltativo)",
   "venue_capacity": "Capienza del locale",
   "submit_application": "INVIA CANDIDATURA",
@@ -519,7 +520,6 @@
   "city_wroclaw": "Breslavia",
   "city_yokohama": "Yokohama",
   "city_zurich": "Zurigo",
-
   "home_nav_network": "Rete",
   "home_nav_solutions": "Soluzioni",
   "home_problem": "L'industria della club music è globale, ma disconnessa",

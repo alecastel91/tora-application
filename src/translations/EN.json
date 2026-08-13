@@ -3,14 +3,12 @@
   "main_heading": "THE PROFESSIONAL NETWORK<br />FOR CLUB MUSIC INDUSTRY",
   "description": "Connect with artists, agents, venues, and promoters worldwide. Discover opportunities, manage bookings, and grow your network in one seamless platform",
   "apply_now": "APPLY NOW",
-
   "access_request": "ACCESS REQUEST",
   "select_your_role": "Select Your Role",
   "role_artist": "Artist",
   "role_promoter": "Promoter",
   "role_venue": "Venue",
   "role_agent": "Agent",
-
   "identification": "Identification",
   "first_name": "First name",
   "last_name": "Last name",
@@ -22,7 +20,6 @@
   "agent_name_hint": "Your agency name is collected later, either way",
   "back": "BACK",
   "next": "NEXT",
-
   "contacts": "Contacts",
   "email_address": "Email address",
   "confirm_email_address": "Confirm email address",
@@ -30,7 +27,6 @@
   "phone_number": "Phone number",
   "email_validation_error": "Please enter a valid email address (e.g., name@example.com)",
   "email_mismatch_error": "Email addresses do not match",
-
   "location": "Location",
   "select_zone": "Select zone",
   "select_country": "Select country",
@@ -40,13 +36,11 @@
   "add_other": "Add",
   "add_other_hint": "Type a genre and press + to add it",
   "remove": "Remove",
-
   "genres": "Genres",
   "select_at_least_one": "Select at least one genre",
   "genres_selected": "genre",
   "genres_selected_plural": "genres",
   "genres_selected_text": "selected",
-
   "social_music_profiles_artist": "Social & Music Profiles",
   "instagram_agency_details_agent": "Instagram & Agency Details",
   "instagram_venue_details_venue": "Instagram & Venue Details",
@@ -62,11 +56,11 @@
   "agency_name": "Agency name",
   "website_optional": "Website (optional)",
   "agency_website": "Agency website",
+  "agency_website_required": "An agency website is required — it's how your agency gets verified on TORA.",
   "linkedin_optional": "LinkedIn name (optional)",
   "venue_capacity": "Venue capacity",
   "submit_application": "SUBMIT APPLICATION",
   "submitting": "SUBMITTING...",
-
   "application_received": "APPLICATION RECEIVED",
   "thank_you": "Thank you for applying to TORA!",
   "application_received_message": "Your application has been received and will be carefully reviewed. TORA is currently in pre-launch phase – we're building an exclusive community of verified professionals before opening the platform later this year. Follow @tora.hub on Instagram for launch updates.",
@@ -93,9 +87,7 @@
   "terms_title": "Terms of Service",
   "prelaunch_title": "Pre-Launch Notice",
   "prelaunch_text": "TORA is currently in pre-launch phase. Early applicants may receive priority consideration and special membership benefits when we launch.",
-
   "error_generic": "Something went wrong. Please try again.",
-
   "nav_apply": "Apply",
   "nav_about": "About",
   "nav_roles": "Roles",
@@ -107,7 +99,6 @@
   "apply_for_membership": "Apply to Join",
   "where_music_meets": "WHERE MUSIC MEETS",
   "scroll_explore": "EXPLORE",
-
   "about_title": "About",
   "about_subtitle": "Our mission and vision",
   "about_p1": "TORA was born from a simple observation: the club music industry still runs on fragmented connections, informal networks, and uneven access to opportunity. Talented artists struggle to get visibility beyond their local scene. Promoters and venues face rising costs with no efficient way to discover emerging talent. Touring remains a privilege reserved for those with the right contacts.",
@@ -115,7 +106,6 @@
   "about_p3": "But TORA is not only about global reach. It's equally about nurturing local scenes — making it easy to search for upcoming talent nearby, support emerging artists, and strengthen the cultural fabric of each city from within.",
   "about_p4": "The booking process has never been optimized for this industry. TORA brings discovery, negotiation, contracts, and payments into one seamless platform — giving artists, promoters, venues, and agents a single space to manage the entire journey from first contact to final settlement.",
   "about_p5": "At its core, TORA is a manifesto for a more connected, more transparent, and more accessible music industry — one where opportunity is earned through talent and dedication, not gatekept by geography or connections.",
-
   "roles_title": "Roles",
   "roles_subtitle": "A curated network of music professionals",
   "role_artists_title": "Artists",
@@ -126,7 +116,6 @@
   "role_venues_desc": "Clubs, festivals, and event spaces. Connect with international artists touring your city, discover local scene talent and promoters, and fill your calendar with quality events.",
   "role_agents_title": "Agents",
   "role_agents_desc": "Artist managers and booking agents. Manage your roster, handle bookings, contracts, and payments for your artists — the full process in one seamless platform.",
-
   "features_title": "Features",
   "features_subtitle": "Tools built for music professionals",
   "feature_search_title": "Search & Discovery",
@@ -149,7 +138,6 @@
   "feature_agent_desc": "Full roster management for agents. Handle schedules, bookings, finances, and contracts for all your artists from one place.",
   "feature_multirole_title": "Multi-Role Support",
   "feature_multirole_desc": "Manage multiple profiles under one account. Be an artist and an agent, or a promoter and a venue — switch roles seamlessly.",
-
   "privacy_title": "Privacy Policy",
   "privacy_subtitle": "Updated and effective July 2026",
   "privacy_intro_title": "Introduction",
@@ -202,8 +190,6 @@
   "privacy_age_text": "The Service is restricted to people who are 18 years of age and older. We do not knowingly collect, maintain, or use information from anyone under the age of 18. Should we become aware of a user who does not meet this requirement, we will immediately remove that user from our Service.",
   "privacy_contact_title": "Contact",
   "privacy_contact_text": "If you have questions regarding this Privacy Policy, please contact us at",
-
-  "terms_title": "Terms of Service",
   "terms_subtitle": "Updated and effective July 2026",
   "terms_acceptance_title": "Acceptance of Terms",
   "terms_acceptance_text": "By accessing or using the TORA platform at torahub.io, including the application form, web application, and any related services (collectively, the \"Service\"), you agree to be bound by these Terms of Service (the \"Terms\"). If you do not agree to these Terms, do not use the Service. We may modify these Terms at any time. Changes will be posted on this page with an updated effective date. Your continued use of the Service following any modifications constitutes acceptance of the revised Terms.",
@@ -255,7 +241,6 @@
   "terms_severability_text": "If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect. The invalid or unenforceable provision shall be modified to the minimum extent necessary to make it valid and enforceable.",
   "terms_contact_title": "Contact",
   "terms_contact_text": "If you have questions regarding these Terms of Service, please contact us at",
-
   "deletion_title": "Data Deletion",
   "deletion_subtitle": "Your data, your control",
   "deletion_intro": "You have the right to request deletion of your personal data from TORA at any time.",
@@ -275,13 +260,11 @@
   "deletion_what_item3": "All messages and connection history",
   "deletion_what_item4": "Any uploaded media or documents",
   "deletion_what_note": "Note: We may retain anonymized, non-identifiable data for analytics purposes in accordance with GDPR guidelines.",
-
   "zone_africa": "Africa",
   "zone_americas": "Americas",
   "zone_asia": "Asia",
   "zone_europe": "Europe",
   "zone_oceania": "Oceania",
-
   "country_argentina": "Argentina",
   "country_australia": "Australia",
   "country_austria": "Austria",
@@ -327,7 +310,6 @@
   "country_united_kingdom": "United Kingdom",
   "country_united_states": "United States",
   "country_vietnam": "Vietnam",
-
   "city_aarhus": "Aarhus",
   "city_abuja": "Abuja",
   "city_adelaide": "Adelaide",
@@ -538,7 +520,6 @@
   "city_wroclaw": "Wrocław",
   "city_yokohama": "Yokohama",
   "city_zurich": "Zurich",
-
   "home_nav_network": "Network",
   "home_nav_solutions": "Solutions",
   "home_problem": "The club music industry is global, but disconnected",

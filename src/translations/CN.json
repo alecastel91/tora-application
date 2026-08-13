@@ -56,6 +56,7 @@
   "agency_name": "经纪公司名称",
   "website_optional": "网站（可选）",
   "agency_website": "经纪公司网站",
+  "agency_website_required": "必须填写公司网站——这是你的公司在 TORA 完成认证的方式。",
   "linkedin_optional": "LinkedIn名称（可选）",
   "venue_capacity": "场地容量",
   "submit_application": "提交申请",
@@ -519,7 +520,6 @@
   "city_wroclaw": "弗罗茨瓦夫",
   "city_yokohama": "横滨",
   "city_zurich": "苏黎世",
-
   "home_nav_network": "网络",
   "home_nav_solutions": "解决方案",
   "home_problem": "俱乐部音乐产业是全球的，却彼此割裂",

@@ -370,6 +370,15 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         setLoading(true);
         setError(null);
 
+        // The agency site is what agent verification is checked against, so a
+        // missing one leaves the applicant with no way through the primary
+        // path. HTML `required` alone can be bypassed.
+        if (role === 'Agent' && !website.trim()) {
+            setError(t('agency_website_required'));
+            setLoading(false);
+            return;
+        }
+
         // Simulate loading delay for better UX
         setTimeout(async () => {
             try {
