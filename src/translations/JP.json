@@ -67,7 +67,7 @@
   "step_review": "審査：",
   "step_review_text": "当チームが申請を慎重に審査します",
   "step_approval": "承認：",
-  "step_approval_text": "承認された場合、招待コードをメールでお送りします",
+  "step_approval_text": "承認された場合、TORAの正式ローンチ時に招待コードをメールでお送りします",
   "step_launch_access": "ローンチアクセス：",
   "step_launch_access_text": "TORAは今年後半にローンチします。プラットフォーム公開時に、招待コードを使ってアカウントを作成してください。",
   "check_email": "最新情報は、受信トレイ（および迷惑メールフォルダ）をご確認ください。",

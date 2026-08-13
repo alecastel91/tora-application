@@ -77,7 +77,7 @@ export const ApplicationReceivedEmail = ({
 
           <Text style={stepTitle}>2. Approval</Text>
           <Text style={stepText}>
-            If approved, you'll receive a confirmation email with a unique invitation code to join TORA.
+            If approved, you'll receive your unique invitation code by email when TORA officially launches.
           </Text>
 
           <Text style={stepTitle}>3. Launch Access</Text>
