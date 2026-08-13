@@ -55,6 +55,7 @@
   "soundcloud_helper": "输入您的SoundCloud用户名（例如，如果您的个人资料是soundcloud.com/username，请输入\"username\"）",
   "agency_name": "经纪公司名称",
   "website_optional": "网站（可选）",
+  "agency_website": "经纪公司网站",
   "linkedin_optional": "LinkedIn名称（可选）",
   "venue_capacity": "场地容量",
   "submit_application": "提交申请",

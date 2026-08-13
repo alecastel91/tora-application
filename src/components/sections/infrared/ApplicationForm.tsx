@@ -395,7 +395,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             country,
                             city,
                             genres: collectGenres().join(', '),
-                            instagram,
+                            instagram: instagram || null,
                             resident_advisor: residentAdvisor || null,
                             soundcloud: soundcloud || null,
                             agency_name: agencyName || null,
@@ -1076,17 +1076,19 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                                 className="text-sm md:text-base py-5 font-tech pl-10"
                                             />
                                         </div>
-                                        <motion.p
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            transition={{ delay: 0.2 }}
-                                            className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
-                                            style={{ marginTop: '-16px' }}
-                                        >
-                                            {role === 'Venue' ? t('instagram_notice_venue')
-                                                : role === 'Promoter' ? t('instagram_notice_promoter')
-                                                : t('instagram_verification_notice')}
-                                        </motion.p>
+                                        {role !== 'Agent' && (
+                                            <motion.p
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ delay: 0.2 }}
+                                                className="text-left text-xs text-white/40 tracking-wide leading-relaxed"
+                                                style={{ marginTop: '-16px' }}
+                                            >
+                                                {role === 'Venue' ? t('instagram_notice_venue')
+                                                    : role === 'Promoter' ? t('instagram_notice_promoter')
+                                                    : t('instagram_verification_notice')}
+                                            </motion.p>
+                                        )}
 
                                         {/* Artist: RA + SoundCloud */}
                                         {role === 'Artist' && (
@@ -1137,9 +1139,12 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                                     onChange={(e) => setAgencyName(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"
                                                 />
+                                                {/* Mandatory: the agency site anchors agent verification
+                                                    (email-domain match at verify time). */}
                                                 <InfraredInput
                                                     label=""
-                                                    placeholder={t('website_optional')}
+                                                    placeholder={t('agency_website')}
+                                                    required
                                                     value={website}
                                                     onChange={(e) => setWebsite(e.target.value)}
                                                     className="text-center text-sm md:text-base py-5 font-tech"

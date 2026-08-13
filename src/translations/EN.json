@@ -61,6 +61,7 @@
   "soundcloud_helper": "Enter your SoundCloud username (e.g., if your profile is soundcloud.com/username, enter \"username\")",
   "agency_name": "Agency name",
   "website_optional": "Website (optional)",
+  "agency_website": "Agency website",
   "linkedin_optional": "LinkedIn name (optional)",
   "venue_capacity": "Venue capacity",
   "submit_application": "SUBMIT APPLICATION",

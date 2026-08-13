@@ -55,6 +55,7 @@
   "soundcloud_helper": "SoundCloudユーザー名を入力してください（例：プロフィールがsoundcloud.com/usernameの場合、\"username\"と入力）",
   "agency_name": "エージェンシー名",
   "website_optional": "ウェブサイト（任意）",
+  "agency_website": "エージェンシーのウェブサイト",
   "linkedin_optional": "LinkedIn名（任意）",
   "venue_capacity": "ベニューの収容人数",
   "submit_application": "申請を送信",

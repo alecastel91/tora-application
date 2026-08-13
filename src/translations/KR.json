@@ -55,6 +55,7 @@
   "soundcloud_helper": "SoundCloud 사용자 이름을 입력하세요 (예: 프로필이 soundcloud.com/username인 경우 \"username\" 입력)",
   "agency_name": "에이전시 이름",
   "website_optional": "웹사이트 (선택사항)",
+  "agency_website": "에이전시 웹사이트",
   "linkedin_optional": "LinkedIn 이름 (선택사항)",
   "venue_capacity": "베뉴 수용 인원",
   "submit_application": "신청서 제출",

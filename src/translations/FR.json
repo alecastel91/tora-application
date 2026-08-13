@@ -55,6 +55,7 @@
   "soundcloud_helper": "Entrez votre nom d'utilisateur SoundCloud (par ex. si votre profil est soundcloud.com/utilisateur, entrez \"utilisateur\")",
   "agency_name": "Nom de l'agence",
   "website_optional": "Site web (optionnel)",
+  "agency_website": "Site web de l'agence",
   "linkedin_optional": "Nom LinkedIn (optionnel)",
   "venue_capacity": "Capacité du lieu",
   "submit_application": "SOUMETTRE LA CANDIDATURE",
