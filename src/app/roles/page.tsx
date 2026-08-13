@@ -34,7 +34,7 @@ export default function Roles() {
               <div
                 className="absolute inset-0 rounded-2xl backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
+                  background: "rgba(255,255,255,0.02)", // founding-page glass — let the backdrop show through
                   border: `1px solid ${role.color}38`,
                   boxShadow: `0 0 50px -22px ${role.color}70, inset 0 1px 0 rgba(255,255,255,0.05)`,
                 }}

@@ -63,7 +63,7 @@ export function RolesMorph() {
               <div
                 className="absolute inset-0 rounded-2xl backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(165deg, rgba(13,13,18,0.85), rgba(13,13,18,0.55))",
+                  background: "rgba(255,255,255,0.02)", // founding-page glass — let the backdrop show through
                   border: `1px solid ${role.color}3d`,
                   boxShadow: `0 0 60px -24px ${role.color}80, inset 0 1px 0 rgba(255,255,255,0.06)`,
                 }}
