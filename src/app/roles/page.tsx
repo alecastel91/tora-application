@@ -12,10 +12,10 @@ const sgFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
 // keeps its own order and long-form descriptions.
 const roleById = Object.fromEntries(ROLES.map((r) => [r.id, r]));
 const PAGE_ROLES = [
-  { ...roleById.artist, descKey: "role_artists_desc" },
-  { ...roleById.promoter, descKey: "role_promoters_desc" },
-  { ...roleById.venue, descKey: "role_venues_desc" },
-  { ...roleById.agent, descKey: "role_agents_desc" },
+  { ...roleById.artist, labelKey: "role_artists_title", descKey: "role_artists_desc" },
+  { ...roleById.promoter, labelKey: "role_promoters_title", descKey: "role_promoters_desc" },
+  { ...roleById.venue, labelKey: "role_venues_title", descKey: "role_venues_desc" },
+  { ...roleById.agent, labelKey: "role_agents_title", descKey: "role_agents_desc" },
 ];
 
 export default function Roles() {

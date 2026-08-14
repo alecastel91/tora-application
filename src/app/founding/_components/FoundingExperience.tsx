@@ -119,6 +119,10 @@ const useC = () => {
   return c;
 };
 
+/** Page language — CTAs carry it to /apply so the form opens pre-translated. */
+const LangCx = createContext<LangCode>("en");
+const useApplyHref = () => `/apply?start=role&lang=${useContext(LangCx)}`;
+
 /** Merge translated title/body/label over the English drawer base (keeps shot/video/color). */
 function buildDrawer(content: FoundingContent) {
   const map: Record<string, DrawerItem> = {};
@@ -224,7 +228,7 @@ function Hero() {
           transition={{ delay: 0.9, duration: 0.7 }}
           className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
-          <Link href="/apply?start=role" className="rounded-full bg-infrared px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] hover:brightness-110" style={supreme}>
+          <Link href={useApplyHref()} className="rounded-full bg-infrared px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] hover:brightness-110" style={supreme}>
             {c.hero.ctaPrimary}
           </Link>
           <a href="#problem" className="rounded-full border border-white/30 px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10" style={supreme}>
@@ -326,7 +330,7 @@ function RoleDetail({ index, onPick, onBack, reduce }: { index: number; onPick: 
           </h2>
           <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{d.body}</p>
           <ul className="mt-6 space-y-3">{d.points.map((p) => <Bullet key={p} text={p} color={meta.color} />)}</ul>
-          <Link href="/apply?start=role" className="mt-8 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-transform hover:-translate-y-0.5" style={{ background: meta.color }}>
+          <Link href={useApplyHref()} className="mt-8 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white transition-transform hover:-translate-y-0.5" style={{ background: meta.color }}>
             {c.drawer.join}
           </Link>
         </div>
@@ -506,7 +510,7 @@ function FoundingCTA() {
       </div>
       <Reveal delay={0.2}>
         <div className="mt-12 flex flex-col items-center gap-4">
-          <Link href="/apply?start=role" className="rounded-full bg-infrared px-10 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(255,51,102,0.55)] hover:brightness-110" style={supreme}>
+          <Link href={useApplyHref()} className="rounded-full bg-infrared px-10 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(255,51,102,0.55)] hover:brightness-110" style={supreme}>
             {c.cta.button}
           </Link>
           <span className="text-sm text-white/45" style={grotesk}>{c.cta.foot}</span>
@@ -565,6 +569,7 @@ export function FoundingExperience({ content, lang }: { content: FoundingContent
   const { map, labels } = buildDrawer(content);
   return (
     <Cx.Provider value={content}>
+      <LangCx.Provider value={lang}>
       <HomeDrawerProvider content={map} labels={labels}>
         <LangMenu current={lang} label={content.ui.language} />
         <main className="relative overflow-x-clip font-sans text-white selection:bg-infrared/30">
@@ -580,6 +585,7 @@ export function FoundingExperience({ content, lang }: { content: FoundingContent
           <Closing />
         </main>
       </HomeDrawerProvider>
+      </LangCx.Provider>
     </Cx.Provider>
   );
 }

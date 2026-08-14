@@ -16,17 +16,14 @@ export type Role = {
   id: string;
   /** Role name shown on the card — English brand term, same as /founding. */
   label: string;
-  labelKey: string; // existing key, e.g. role_artists_title
-  valueKey: string; // new key, e.g. home_role_artist_value
   descKey: string; // founding-page role sentence, e.g. home_role_artist_desc
   color: string;
   icon: ReactNode;
 };
 
+/** Icon-only now — /features consumes these marks via solutionIcon(). */
 export type Solution = {
   id: string;
-  titleKey: string;
-  descKey: string;
   icon: ReactNode;
 };
 
@@ -44,8 +41,6 @@ export const ROLES: Role[] = [
   {
     id: "artist",
     label: "Artist",
-    labelKey: "role_artists_title",
-    valueKey: "home_role_artist_value",
     descKey: "home_role_artist_desc",
     color: "#6B5FFF",
     icon: (
@@ -60,8 +55,6 @@ export const ROLES: Role[] = [
   {
     id: "agent",
     label: "Agent",
-    labelKey: "role_agents_title",
-    valueKey: "home_role_agent_value",
     descKey: "home_role_agent_desc",
     color: "#00C875",
     icon: (
@@ -77,8 +70,6 @@ export const ROLES: Role[] = [
   {
     id: "promoter",
     label: "Promoter",
-    labelKey: "role_promoters_title",
-    valueKey: "home_role_promoter_value",
     descKey: "home_role_promoter_desc",
     color: "#FFB800",
     icon: (
@@ -93,8 +84,6 @@ export const ROLES: Role[] = [
   {
     id: "venue",
     label: "Venue",
-    labelKey: "role_venues_title",
-    valueKey: "home_role_venue_value",
     descKey: "home_role_venue_desc",
     color: "#FF5757",
     icon: (
@@ -113,8 +102,6 @@ const GHOST = "rgba(255,255,255,0.45)";
 export const SOLUTIONS: Solution[] = [
   {
     id: "discover",
-    titleKey: "home_solution_discover_title",
-    descKey: "home_solution_discover_desc",
     icon: (
       // Search — a magnifier with a live result inside the lens
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
@@ -127,8 +114,6 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     id: "connect",
-    titleKey: "home_solution_connect_title",
-    descKey: "home_solution_connect_desc",
     icon: (
       // Messaging — a chat bubble, conversation live
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
@@ -141,8 +126,6 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     id: "book",
-    titleKey: "home_solution_book_title",
-    descKey: "home_solution_book_desc",
     icon: (
       // Calendar — the date confirmed
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
@@ -155,8 +138,6 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     id: "contract",
-    titleKey: "home_solution_contract_title",
-    descKey: "home_solution_contract_desc",
     icon: (
       // Document — signed
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>
@@ -168,8 +149,6 @@ export const SOLUTIONS: Solution[] = [
   },
   {
     id: "tour",
-    titleKey: "home_solution_tour_title",
-    descKey: "home_solution_tour_desc",
     icon: (
       // Map pin + route — city to city
       <svg width="26" height="26" viewBox="0 0 24 24" {...stroke(INFRARED)}>

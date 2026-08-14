@@ -1,7 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useLanguage, type LanguageCode } from "@/contexts/LanguageContext";
+
+const LANG_CODES = ["EN", "ES", "FR", "IT", "PT", "JP", "CN", "KR"] as const;
 import { AnimatePresence, motion } from "framer-motion";
 import { IntroSplash } from "@/components/sections/infrared/IntroSplash";
 import { ApplicationForm } from "@/components/sections/infrared/ApplicationForm";
@@ -14,10 +17,24 @@ type FlowState = "globe" | "form" | "confirmation";
 function ApplyFlow() {
   // CTAs link to /apply?start=role to skip the globe intro and land straight
   // on the form's role-selection step; a bare /apply still shows the intro.
-  const startAtForm = useSearchParams().get("start") === "role";
+  const params = useSearchParams();
+  const startAtForm = params.get("start") === "role";
+  const langParam = (params.get("lang") || "").toUpperCase();
+  const { setLanguage } = useLanguage();
   const [view, setView] = useState<FlowState>(startAtForm ? "form" : "globe");
   const [formStep, setFormStep] = useState(0);
   const [showIntroContent, setShowIntroContent] = useState(false);
+
+  // ?lang=jp (from the multilingual /founding CTAs) preselects the form
+  // language. Write localStorage first: the provider's own restore effect runs
+  // AFTER this child effect and re-reads it, so both land on the same value.
+  useEffect(() => {
+    if ((LANG_CODES as readonly string[]).includes(langParam)) {
+      try { localStorage.setItem("tora-language", langParam); } catch { /* non-fatal */ }
+      setLanguage(langParam as LanguageCode);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     // no bg-black on main: the body is already black, and the fixed ambient
