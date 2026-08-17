@@ -489,7 +489,7 @@ function FoundingCTA() {
     <Section id="join" className="text-center">
       <Reveal className="flex justify-center"><Eyebrow>{c.cta.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-6 max-w-3xl text-4xl font-black uppercase leading-[1.0] tracking-tight text-white md:text-7xl" style={rajdhani}>
+        <h2 className="mx-auto mt-6 max-w-3xl break-keep text-4xl font-black uppercase leading-[1.0] tracking-tight text-white md:text-7xl" style={rajdhani}>
           {c.cta.headingLine1}<br />{c.cta.headingLine2}
         </h2>
       </Reveal>
@@ -508,8 +508,13 @@ function FoundingCTA() {
           </Reveal>
         ))}
       </div>
+      <Reveal delay={0.16}>
+        <p className="mx-auto mt-9 max-w-2xl text-sm leading-relaxed text-white/50" style={grotesk}>
+          {c.cta.pricingNote}
+        </p>
+      </Reveal>
       <Reveal delay={0.2}>
-        <div className="mt-12 flex flex-col items-center gap-4">
+        <div className="mt-10 flex flex-col items-center gap-4">
           <Link href={useApplyHref()} className="rounded-full bg-infrared px-10 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(255,51,102,0.55)] hover:brightness-110" style={supreme}>
             {c.cta.button}
           </Link>

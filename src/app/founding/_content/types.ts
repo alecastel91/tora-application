@@ -90,6 +90,8 @@ export interface FoundingContent {
     headingLine2: string;
     body: string;
     cards: TitleBody[]; // 2
+    /** Free-to-join / Premium / founding 3-months note shown above the button. */
+    pricingNote: string;
     button: string;
     foot: string;
   };

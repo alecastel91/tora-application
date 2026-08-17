@@ -127,6 +127,7 @@ export const pt: FoundingContent = {
       { title: "Acesso total", body: "Todas as funcionalidades desde o primeiro dia — agenda, bookings, mensagens, contratos." },
       { title: "Molde o produto", body: "Uma linha direta com a equipe. Seu feedback influencia o que construímos a seguir." },
     ],
+    pricingNote: "Participar da TORA é grátis, e cada candidatura é avaliada para manter alta a qualidade da rede. O plano Premium desbloqueia os recursos mais avançados — e os Membros Fundadores (quem se candidata antes do lançamento) recebem tudo grátis nos três primeiros meses após o lançamento, sem nenhuma obrigação de continuar.",
     button: "Candidate-se agora",
     foot: "torahub.io · lançamento previsto para outubro de 2026",
   },
