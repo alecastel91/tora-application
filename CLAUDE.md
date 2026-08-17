@@ -4,7 +4,8 @@
 TORA Landing Page is a Next.js application for collecting pre-launch applications for the TORA platform. The application uses Supabase for database storage, Resend for email notifications, and supports multi-language translations. It's designed to collect applications from Artists, Agents, Promoters, and Venues interested in joining the TORA network.
 
 - **Production URL**: https://tora-application.vercel.app
-- **Admin URL**: https://tora-application.vercel.app/admin (password: `tora2026admin`)
+- **Admin URL**: https://tora-application.vercel.app/admin
+  (password: set as `ADMIN_PASSWORD` in Vercel — never record the value here)
 - **Tech**: Next.js 16, TypeScript, Tailwind, Framer Motion, Supabase, Resend, Vercel
 
 ## Deployment Topology (as of April 12, 2026)
