@@ -127,7 +127,7 @@ export const en: FoundingContent = {
       { title: "Full access", body: "Every feature from day one — calendar, bookings, messaging, contracts." },
       { title: "Shape the product", body: "A direct line to the team. Your feedback influences what gets built next." },
     ],
-    pricingNote: "Joining TORA is free, and every application is reviewed to keep the quality of the network high. A Premium tier unlocks the most advanced features — and Founding Members (everyone who applies before launch) get all of it free for the first three months after launch, with no obligation to continue.",
+    pricingNote: "Joining TORA is free, and every application is reviewed to keep the quality of the network high. A Premium tier unlocks the most advanced features — and Founding Members (everyone who applies before launch) get all of it free for their first three months on the platform, with no obligation to continue.",
     button: "Apply now",
     foot: "torahub.io · expected launch October 2026",
   },

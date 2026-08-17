@@ -127,7 +127,7 @@ export const fr: FoundingContent = {
       { title: "Accès complet", body: "Toutes les fonctionnalités dès le premier jour — calendrier, bookings, messagerie, contrats." },
       { title: "Façonnez le produit", body: "Une ligne directe avec l'équipe. Vos retours orientent les prochaines évolutions." },
     ],
-    pricingNote: "Rejoindre TORA est gratuit, et chaque candidature est examinée pour préserver la qualité du réseau. L'offre Premium débloque les fonctionnalités les plus avancées — et les Membres Fondateurs (tous ceux qui candidatent avant le lancement) en profitent gratuitement pendant les trois premiers mois après le lancement, sans aucune obligation de continuer.",
+    pricingNote: "Rejoindre TORA est gratuit, et chaque candidature est examinée pour préserver la qualité du réseau. L'offre Premium débloque les fonctionnalités les plus avancées — et les Membres Fondateurs (tous ceux qui candidatent avant le lancement) en profitent gratuitement pendant leurs trois premiers mois sur la plateforme, sans aucune obligation de continuer.",
     button: "Postuler maintenant",
     foot: "torahub.io · lancement prévu octobre 2026",
   },
