@@ -206,7 +206,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.8, ease: EASE }}
-          className="mt-5 max-w-3xl text-3xl font-semibold leading-tight text-white text-balance md:text-5xl"
+          className="mt-5 max-w-3xl text-3xl font-semibold uppercase leading-tight text-white text-balance md:text-5xl"
           style={supreme}
         >
           {c.hero.title}
