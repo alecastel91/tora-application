@@ -160,7 +160,7 @@ export const pt: FoundingContent = {
       confirmed: {
         label: "Confirmado",
         title: "Booking confirmado.",
-        body: "Contrato assinado, pagamento confirmado — acordo fechado. E todo booking tem um desfecho limpo: marcado como concluído depois do show, ou cancelado com o motivo registrado se os planos mudarem — quem, quando e por quê, visível para os dois lados. O registro completo fica em um só lugar, incluindo depósitos e acompanhamento de pagamentos, mesmo quando um booking é cancelado.",
+        body: "Contrato assinado, pagamento confirmado — acordo fechado. Proposta, contrato, documentos e status do pagamento ficam todos em um só lugar, do primeiro contato à conclusão.",
       },
       travel: {
         label: "Viagens e alertas",

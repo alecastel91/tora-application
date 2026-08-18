@@ -160,7 +160,7 @@ export const en: FoundingContent = {
       confirmed: {
         label: "Confirmed",
         title: "Booking confirmed.",
-        body: "Contract signed, payment confirmed — the deal is done. And every booking gets a clean ending: marked completed once the gig is played, or cancelled with a recorded reason if plans change — who, when and why, visible to both sides. The full record stays in one place, deposits and payment tracking included, even when a booking is called off.",
+        body: "Contract signed, payment confirmed — the deal is done. Offer, contract, documents and payment status all live in one place, from first contact to completion.",
       },
       travel: {
         label: "Travel & alerts",

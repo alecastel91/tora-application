@@ -160,7 +160,7 @@ export const es: FoundingContent = {
       confirmed: {
         label: "Confirmado",
         title: "Contratación confirmada.",
-        body: "Contrato firmado, pago confirmado — el trato está hecho. Y cada contratación tiene un final limpio: se marca como completada una vez tocado el bolo, o se cancela con un motivo registrado si los planes cambian — quién, cuándo y por qué, visible para ambas partes. El registro completo queda en un solo lugar, depósitos y seguimiento de pagos incluidos, incluso cuando una contratación se cancela.",
+        body: "Contrato firmado, pago confirmado — el trato está hecho. Oferta, contrato, documentos y estado del pago, todo en un solo lugar, desde el primer contacto hasta el cierre.",
       },
       travel: {
         label: "Viajes y alertas",

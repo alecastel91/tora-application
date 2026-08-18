@@ -54,18 +54,6 @@ const FEATURES = [
   { titleKey: "feature_messaging_title", descKey: "feature_messaging_desc", icon: solutionIcon("connect") },
   { titleKey: "feature_contracts_title", descKey: "feature_contracts_desc", icon: solutionIcon("contract") },
   {
-    titleKey: "feature_lifecycle_title",
-    descKey: "feature_lifecycle_desc",
-    icon: (
-      // Finish flag — every booking reaches an end
-      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke}>
-        <path d="M5.5 21V3.8" stroke={GHOST} />
-        <path d="M5.5 4.4h11.6l-2.6 3.6 2.6 3.6H5.5" stroke={GHOST} />
-        <circle cx="17.9" cy="4.4" r="1.1" fill={INFRARED} stroke="none" />
-      </svg>
-    ),
-  },
-  {
     titleKey: "feature_profiles_title",
     descKey: "feature_profiles_desc",
     icon: (
@@ -100,20 +88,6 @@ const FEATURES = [
         <circle cx="9.4" cy="12" r="5.2" stroke={GHOST} />
         <circle cx="14.6" cy="12" r="5.2" />
         <circle cx="12" cy="12" r="1" fill={INFRARED} stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    titleKey: "feature_record_title",
-    descKey: "feature_record_desc",
-    icon: (
-      // Sealed document — the record you keep
-      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke}>
-        <path d="M14 3.3H7a2 2 0 0 0-2 2v13.4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.3z" stroke={GHOST} />
-        <path d="M14 3.3v5h5" stroke={GHOST} opacity="0.6" />
-        <path d="M8.4 11.4h5M8.4 14h3.4" stroke={GHOST} opacity="0.6" />
-        <circle cx="15.2" cy="16.2" r="2.1" />
-        <path d="M14.4 18l-.7 2.4 1.5-.8 1.5.8-.7-2.4" />
       </svg>
     ),
   },
