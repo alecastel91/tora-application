@@ -54,7 +54,7 @@ export const pt: FoundingContent = {
         "Busca e descoberta global",
         "Compartilhamento de agenda e disponibilidade",
         "Propostas de booking diretas",
-        "Fluxo de contrato e pagamento",
+        "Contrato e acompanhamento de pagamentos",
         "Vínculo com seu agente e gestão compartilhada",
       ],
     },
@@ -160,7 +160,7 @@ export const pt: FoundingContent = {
       confirmed: {
         label: "Confirmado",
         title: "Booking confirmado.",
-        body: "Contrato assinado, pagamento confirmado — acordo fechado. Proposta, contrato, documentos e status do pagamento ficam todos em um só lugar, com suporte a várias moedas, do primeiro contato à quitação final.",
+        body: "Contrato assinado, pagamento confirmado — acordo fechado. E todo booking tem um desfecho limpo: marcado como concluído depois do show, ou cancelado com o motivo registrado se os planos mudarem — quem, quando e por quê, visível para os dois lados. O registro completo fica em um só lugar, incluindo depósitos e acompanhamento de pagamentos, mesmo quando um booking é cancelado.",
       },
       travel: {
         label: "Viagens e alertas",

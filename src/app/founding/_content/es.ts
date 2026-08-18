@@ -54,7 +54,7 @@ export const es: FoundingContent = {
         "Búsqueda y descubrimiento global",
         "Calendario y disponibilidad compartidos",
         "Propuestas de contratación directas",
-        "Flujo de contrato y pago",
+        "Contrato y seguimiento de pagos",
         "Conexión y gestión con tu agente",
       ],
     },
@@ -160,7 +160,7 @@ export const es: FoundingContent = {
       confirmed: {
         label: "Confirmado",
         title: "Contratación confirmada.",
-        body: "Contrato firmado, pago confirmado — el trato está hecho. Oferta, contrato, documentos y estado del pago, todo en un solo lugar, con soporte multidivisa, desde el primer contacto hasta la liquidación final.",
+        body: "Contrato firmado, pago confirmado — el trato está hecho. Y cada contratación tiene un final limpio: se marca como completada una vez tocado el bolo, o se cancela con un motivo registrado si los planes cambian — quién, cuándo y por qué, visible para ambas partes. El registro completo queda en un solo lugar, depósitos y seguimiento de pagos incluidos, incluso cuando una contratación se cancela.",
       },
       travel: {
         label: "Viajes y alertas",

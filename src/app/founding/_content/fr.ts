@@ -54,7 +54,7 @@ export const fr: FoundingContent = {
         "Recherche et découverte à l'échelle mondiale",
         "Partage de calendrier et de disponibilités",
         "Propositions de booking directes",
-        "Flux contrat et paiement",
+        "Contrat et suivi des paiements",
         "Connexion et gestion avec un agent",
       ],
     },
@@ -160,7 +160,7 @@ export const fr: FoundingContent = {
       confirmed: {
         label: "Confirmé",
         title: "Booking confirmé.",
-        body: "Contrat signé, paiement confirmé — l'accord est conclu. Offre, contrat, documents et statut de paiement réunis au même endroit, avec prise en charge multi-devises, du premier contact au règlement final.",
+        body: "Contrat signé, paiement confirmé — l'accord est conclu. Et chaque booking a une fin nette : marqué comme effectué une fois la date jouée, ou annulé avec un motif enregistré si les plans changent — qui, quand et pourquoi, visible des deux côtés. L'ensemble du dossier reste au même endroit, acomptes et suivi des paiements compris, même quand un booking est annulé.",
       },
       travel: {
         label: "Voyage et alertes",

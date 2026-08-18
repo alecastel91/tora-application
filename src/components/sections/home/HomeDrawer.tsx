@@ -75,7 +75,7 @@ export const DRAWER_CONTENT: Record<string, DrawerItem> = {
   book: {
     kind: "feature", label: "Book", color: INFRARED, shot: "/home/book.png",
     title: "The full booking workflow",
-    body: "Offer, negotiate, accept — every step tracked. Real deals with fees, dates and status, from first contact all the way to payment received.",
+    body: "Offer, negotiate, accept — every step tracked. Real deals with fees, dates and status, from first contact all the way to payment recorded.",
   },
   contract: {
     kind: "feature", label: "Contract", color: INFRARED, shot: "/home/contract.png",
@@ -96,7 +96,7 @@ export const DRAWER_CONTENT: Record<string, DrawerItem> = {
   confirmed: {
     kind: "feature", label: "Confirmed", color: INFRARED, shot: "/home/book.png",
     title: "Booking confirmed.",
-    body: "Contract signed, payment confirmed — the deal is done. Offer, contract, documents and payment status all live in one place, with multi-currency support, from first contact to final settlement.",
+    body: "Contract signed, payment confirmed — the deal is done. And every booking gets a clean ending: marked completed once the gig is played, or cancelled with a recorded reason if plans change — who, when and why, visible to both sides. The full record stays in one place, deposits and payment tracking included, even when a booking is called off.",
   },
   travel: {
     kind: "feature", label: "Travel & alerts", color: INFRARED, shot: "/home/calendar.png",

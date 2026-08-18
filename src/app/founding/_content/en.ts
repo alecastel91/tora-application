@@ -54,7 +54,7 @@ export const en: FoundingContent = {
         "Global search & discovery",
         "Calendar & availability sharing",
         "Direct booking proposals",
-        "Contract & payment workflow",
+        "Contract & payment tracking",
         "Agent connection & management",
       ],
     },
@@ -160,7 +160,7 @@ export const en: FoundingContent = {
       confirmed: {
         label: "Confirmed",
         title: "Booking confirmed.",
-        body: "Contract signed, payment confirmed — the deal is done. Offer, contract, documents and payment status all live in one place, with multi-currency support, from first contact to final settlement.",
+        body: "Contract signed, payment confirmed — the deal is done. And every booking gets a clean ending: marked completed once the gig is played, or cancelled with a recorded reason if plans change — who, when and why, visible to both sides. The full record stays in one place, deposits and payment tracking included, even when a booking is called off.",
       },
       travel: {
         label: "Travel & alerts",
