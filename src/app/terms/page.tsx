@@ -75,6 +75,13 @@ export default function Terms() {
                     <p>
                         {t('terms_bookings_text')}
                     </p>
+                    <p><strong className="text-white">{t('terms_bookings_sub1')}</strong> {t('terms_bookings_sub1_text')}</p>
+                    <p><strong className="text-white">{t('terms_bookings_sub2')}</strong> {t('terms_bookings_sub2_text')}</p>
+                    <p><strong className="text-white">{t('terms_bookings_sub3')}</strong> {t('terms_bookings_sub3_text')}</p>
+                    <p><strong className="text-white">{t('terms_bookings_sub4')}</strong> {t('terms_bookings_sub4_text')}</p>
+                    <p>
+                        {t('terms_bookings_close')}
+                    </p>
 
                     <h3 className="text-white font-semibold text-lg mt-8 font-tech">{t('terms_ip_title')}</h3>
                     <p>
