@@ -474,7 +474,8 @@ http://192.168.2.101:3000 (network)
 
 ## Admin Access
 - **URL**: /admin
-- **Password**: tora2026admin
+- **Password**: set via the `ADMIN_PASSWORD` env var in Vercel (never documented here).
+  The old literal was rotated; do not commit a password to this file.
 - **Features**: View, filter, approve, decline, send invitations
 
 ## Common Tasks

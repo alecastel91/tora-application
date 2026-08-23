@@ -382,28 +382,43 @@ export default function AdminDashboard() {
 
                 alert(`✅ Profile approved for ${displayName}!`);
             } else {
-                // New user: send invitation email with code
-                fetch('/api/send-invitation', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        firstName: application.profile_name || application.first_name,
-                        email: application.email,
-                        role: application.role,
-                        couponCode: couponCode,
-                        couponPackage: invitationPackages[application.id] || 'STANDARD',
-                    }),
-                })
-                    .then(res => {
-                        if (res.ok) {
-                            console.log('Invitation email sent successfully!');
-                        } else {
-                            console.log('Email failed (invitation saved):', res.status);
-                        }
-                    })
-                    .catch(err => console.log('Email error (invitation saved):', err));
+                // New user: send invitation email with code. AWAIT it and
+                // surface the result (F8-01) — the invitation + code are already
+                // saved in the backend, so a silent email failure would leave a
+                // founding member with a code that never arrives and the admin
+                // believing it sent. On failure, show the code to relay by hand.
+                let emailOk = false;
+                let emailDetail = '';
+                try {
+                    const emailRes = await fetch('/api/send-invitation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            firstName: application.profile_name || application.first_name,
+                            email: application.email,
+                            role: application.role,
+                            couponCode: couponCode,
+                            couponPackage: invitationPackages[application.id] || 'STANDARD',
+                        }),
+                    });
+                    emailOk = emailRes.ok;
+                    if (!emailOk) {
+                        const b = await emailRes.json().catch(() => ({}));
+                        emailDetail = b?.error || `HTTP ${emailRes.status}`;
+                    }
+                } catch (e) {
+                    emailDetail = e instanceof Error ? e.message : String(e);
+                }
 
-                alert(`✅ Invitation sent to ${displayName}!\nCoupon Code: ${couponCode}`);
+                if (emailOk) {
+                    alert(`✅ Invitation sent to ${displayName}!\nCoupon Code: ${couponCode}`);
+                } else {
+                    alert(
+                        `⚠️ ${displayName} is invited and the code is SAVED — but the EMAIL FAILED to send.\n\n` +
+                        `Code: ${couponCode}\nReason: ${emailDetail}\n\n` +
+                        `Relay the code to ${application.email} manually, or retry the send.`
+                    );
+                }
             }
             await loadApplications();
         } catch (err) {
