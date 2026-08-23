@@ -55,10 +55,23 @@ const nextConfig: NextConfig = {
 };
 
 // Tunnel Sentry events through /monitoring to bypass ad-blockers and
-// corporate firewalls that drop direct sentry.io calls. Source-map upload
-// is intentionally not configured — requires SENTRY_AUTH_TOKEN, accept
-// minified stack traces in exchange for one less secret to manage.
+// corporate firewalls that drop direct sentry.io calls. Source-map upload is
+// enabled (F9-04) ONLY when the Sentry env vars are present (Vercel prod) — so
+// landing-page stack traces become readable — and is a no-op without them, so
+// local/tokenless builds are unaffected and no extra secret is required there.
+const sentryUpload = Boolean(
+  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_ORG && process.env.SENTRY_PROJECT
+);
+
 export default withSentryConfig(nextConfig, {
   silent: true,
   tunnelRoute: "/monitoring",
+  ...(sentryUpload
+    ? {
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        sourcemaps: { deleteSourcemapsAfterUpload: true },
+      }
+    : {}),
 });
