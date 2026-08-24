@@ -487,10 +487,9 @@ http://192.168.2.101:3000 (network)
 4. Commit and push
 
 ### Change Admin Password
-1. Edit \`src/app/admin/page.tsx\`
-2. Find line 71: \`password === "tora2026admin"\`
-3. Update password string
-4. Commit and push
+Admin auth is server-side (JWT via `src/lib/adminAuth.ts`); there is no password
+literal in the code. Rotate the `ADMIN_PASSWORD` env var in the Vercel project
+(Production scope) — no code change or deploy needed.
 
 ### Database Migrations
 1. Write SQL migration file
