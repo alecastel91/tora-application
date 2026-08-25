@@ -3,10 +3,11 @@
 ## Overview
 TORA Landing Page is a Next.js application for collecting pre-launch applications for the TORA platform. The application uses Supabase for database storage, Resend for email notifications, and supports multi-language translations. It's designed to collect applications from Artists, Agents, Promoters, and Venues interested in joining the TORA network.
 
-- **Production URL**: https://tora-application.vercel.app
-- **Admin URL**: https://tora-application.vercel.app/admin
+- **Production URL**: https://torahub.io (Vercel deployment: tora-application.vercel.app)
+- **Admin URL**: https://torahub.io/admin
   (password: set as `ADMIN_PASSWORD` in Vercel — never record the value here)
-- **Tech**: Next.js 16, TypeScript, Tailwind, Framer Motion, Supabase, Resend, Vercel
+- **Tech**: Next.js 16, TypeScript, Tailwind v4, Framer Motion, Supabase, Resend, Vercel, Plausible
+- **i18n**: 8 languages (EN/ES/FR/IT/PT-BR/JP/CN/KR), 557-key catalogs in `src/translations/`, all natively reviewed (Aug 2026). Separate typed content system for `/founding` in `src/app/founding/_content/`.
 
 ## Deployment Topology (as of April 12, 2026)
 
@@ -24,6 +25,86 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   - `INVITATION_API_KEY` = Railway's value (server-side only — never `NEXT_PUBLIC_`)
   - `NEXT_PUBLIC_ENV_MODE` = `production`
   - `RESEND_API_KEY` = Resend key
+
+## Recent Updates (August 2026)
+
+### /founding — multilingual founding-members page (replaces /foundingmembers)
+- Route is **`/founding/[lang]`**, statically generated for en/es/fr/it/pt/jp/cn/kr;
+  `/founding` and `/foundingmembers` redirect to `/founding/en` (next.config).
+  Unlisted: noindex + robots disallow; `dynamicParams=false` (unknown lang → 404).
+- Content lives in **`src/app/founding/_content/`** — one typed `FoundingContent`
+  object per language + `types.ts`; **tsc enforces translation parity** (build fails
+  on a missing key). NOT the global `src/translations/*.json` system.
+- Language dropdown (`LangMenu`, top-left) links to `/founding/<code>` so language is
+  shareable in the URL. CTAs carry it to the form: `/apply?start=role&lang=<code>`.
+- Tap-to-explore drawers reuse the homepage `HomeDrawer`, which accepts optional
+  `content`/`labels` override props (defaults keep the English homepage unchanged).
+- Structure: hero (uppercase title) → Problem+Solution → role picker/deep-dives →
+  5-step journey (Discover→Connect→Offer→Contract→Confirmed) → Touring → Why →
+  CTA with **pricing note** (free to join, applications reviewed; Premium tier;
+  founding = 3 free months **from signup**, not from launch).
+- Screenshots in `public/home/` + `public/founding/shots/` are real app captures
+  with a composited iOS status bar (9:41) — script pattern in session scratchpad;
+  `discover` is a video (`discover.mp4`), no status bar by design.
+
+### Translation program — all 8 languages natively reviewed
+- A native JP reviewer's PDF set the bar; every language then got a native pass
+  (founding + website catalogs), CN/KR got adversarial second opinions, and a
+  full 8-language transcript PDF went to external reviewers (3 deltas came back).
+- **PT is Brazilian Portuguese** (você, turnê, gerenciar; venue = **"casa"**; BR
+  city names). Terminology rules: JP venue = **ベニュー** (never 会場) in marketing;
+  CN roles in prose = 艺人/经纪人/主办方/场地; KR = 아티스트/에이전트/프로모터/베뉴;
+  IT/FR marketing use booking/cachet loanwords (legal pages keep formal native terms).
+- Brand terms stay English everywhere: TORA, Tour Kickstart (NOT "Kickstarter"),
+  "WHERE MUSIC MEETS" (incl. the `tagline` key), Solo to Unlimited, torahub.io,
+  role names as labels. `where_music_meets` and `tagline` are both English in all 8.
+
+### Homepage cards = founding cards
+- The role and process sections render the founding-page card anatomy and wording.
+  Data: `home.data.tsx` — `ROLES` (label/descKey/color/icon) and **`JOURNEY`**
+  (discover/connect/offer/contract/confirmed → HomeDrawer ids). `SOLUTIONS` is now
+  **icon-only** and exists solely as the `/features` page icon source.
+- Card copy keys (`home_journey_*`, `home_role_*_desc`, `home_tap_explore`) were
+  extracted from the founding content, so `/` and `/founding` share sentences.
+- Card surface: half-glass `rgba(13,13,18,0.5)` + blur (NodeField dots read as
+  bokeh); mobile uses founding-style horizontal rows.
+
+### Apply flow
+- All apply CTAs link **`/apply?start=role`** (skips the globe intro, lands on the
+  role step); optional `&lang=XX` preselects the form language (writes
+  `tora-language` localStorage before the provider's restore effect re-reads it).
+- **Agent step**: agency website is mandatory (it anchors agent verification's
+  email-domain match — see tora-backend) with a JS submit guard; the Instagram
+  verification-notice is hidden for Agents (IG stays required). Empty optional
+  fields insert NULL.
+- Confirmation copy (all 8): invitation codes arrive **when TORA officially
+  launches** — supports the launch-day-invitations plan (waves via admin sends).
+- CTA wording is "Apply to Join" (never "membership" — read as pay-to-join);
+  homepage ethos line says invitations are sent to approved applicants.
+
+### Record-not-intermediary positioning + ToS rewrite (Aug 18)
+- Money NEVER moves through TORA — site copy says record/track/confirm payments,
+  never "manage payments"/"settlement"/"multi-currency". Feature card is
+  "Contracts & Payment Records".
+- **Terms of Service**: "Bookings and Deals" rebuilt as intro + four bolded
+  clauses (`terms_bookings_sub1..4` + `_text`, `terms_bookings_close`): no payment
+  processing / no enforcement / no responsibility for performance (cancellation
+  terms recorded-not-enforced) / records-not-legal-advice. Dispute section opens
+  scoped to you-vs-TORA. Effective August 2026, all 8 languages, legal register.
+  **Lawyer review still outstanding** — draft at `~/Desktop/TORA-ToS-bookings-draft.md`;
+  if counsel edits the EN, re-cascade translations (EN prevails per governing law).
+- PT legal unified to feminine **"a TORA"** throughout.
+
+### Gotchas (learned the hard way)
+- **`--breakpoint-sm` is 384px** in globals.css — `sm:` fires on every phone. Use
+  `md:` for phone/desktop layout switches.
+- Translation JSONs use **blank-line grouping** — never rewrite them with
+  `json.dump` (edit values line-wise; validate with `python3 -m json.tool`).
+- JP headings that must not break mid-word: zero-width space (U+200B) at the break
+  point + `break-keep` on the heading (used on the founding CTA heading).
+- Admin "SIGNED UP" tab reads waitlist `status='SIGNED_UP'` — the **writer lives in
+  tora-backend** (register should update the waitlist row on code redemption; was
+  missing as of Aug 25, fix spec handed to the backend workstream).
 
 ## Recent Updates (July 20, 2026)
 
@@ -516,7 +597,7 @@ literal in the code. Rotate the `ADMIN_PASSWORD` env var in the Vercel project
 
 ---
 
-**Last Updated**: July 20, 2026  
-**Version**: 2.1.0  
+**Last Updated**: August 25, 2026  
+**Version**: 2.2.0  
 **Repository**: https://github.com/alecastel91/tora-application  
 **Active local clone**: ~/Desktop/TORA_PROJECT/tora-application (not ~/Desktop/tora-application)
