@@ -95,6 +95,15 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   if counsel edits the EN, re-cascade translations (EN prevails per governing law).
 - PT legal unified to feminine **"a TORA"** throughout.
 
+### Security-audit deltas on this repo (from the app workstream, Aug 24-25)
+- **F8-01**: invitation-email failures now surface to the admin UI (were
+  fire-and-forget console logs); stale hardcoded admin password fully scrubbed
+  from docs (F0-01) — admin auth is the server-side JWT flow, rotate via the
+  `ADMIN_PASSWORD` env var.
+- **F9-04**: Sentry **source-map upload is now enabled when configured**
+  (SENTRY_AUTH_TOKEN present) — supersedes the May 9 note that maps were
+  intentionally skipped.
+
 ### Gotchas (learned the hard way)
 - **`--breakpoint-sm` is 384px** in globals.css — `sm:` fires on every phone. Use
   `md:` for phone/desktop layout switches.
@@ -103,8 +112,9 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
 - JP headings that must not break mid-word: zero-width space (U+200B) at the break
   point + `break-keep` on the heading (used on the founding CTA heading).
 - Admin "SIGNED UP" tab reads waitlist `status='SIGNED_UP'` — the **writer lives in
-  tora-backend** (register should update the waitlist row on code redemption; was
-  missing as of Aug 25, fix spec handed to the backend workstream).
+  tora-backend**: the register transaction promotes the INVITED waitlist row on code
+  redemption (fixed Aug 25, `a52ea5b`, + prod backfill of the 6 existing signups).
+  If the tab ever looks wrong again, look backend-side first.
 
 ## Recent Updates (July 20, 2026)
 
