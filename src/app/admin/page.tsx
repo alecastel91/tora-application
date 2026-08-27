@@ -87,6 +87,12 @@ export default function AdminDashboard() {
                 const res = await fetch("/api/admin/session", { credentials: "include" });
                 if (cancelled) return;
                 const data = await res.json();
+                // Beta-scoped sessions (Jenn) belong on the beta cockpit —
+                // this dashboard's APIs would all 403 for them anyway.
+                if (data?.authenticated && data?.scope === "beta") {
+                    window.location.href = "/admin/beta";
+                    return;
+                }
                 if (data?.authenticated) {
                     setIsAuthenticated(true);
                     loadApplications();

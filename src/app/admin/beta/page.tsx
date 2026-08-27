@@ -49,6 +49,7 @@ export default function AdminBetaPage() {
   const [testers, setTesters] = useState<TesterRow[] | null>(null);
   const [matrix, setMatrix] = useState<{ tasks: MatrixTask[]; rows: MatrixRow[]; footers: Record<string, { done: number; total: number }> } | null>(null);
   const [feedback, setFeedback] = useState<FeedbackRow[] | null>(null);
+  const [strays, setStrays] = useState<{ email: string; createdAt: string; lastLogin: string | null }[]>([]);
   const [fbStatus, setFbStatus] = useState("open");
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -73,23 +74,36 @@ export default function AdminBetaPage() {
     else setLoginError("Wrong password.");
   };
 
+  const [loadError, setLoadError] = useState<string | null>(null);
+  // Shared loader: a backend/proxy error must show as an ERROR, never as a
+  // false "all clear" empty state — outages are when the cockpit matters.
+  const getJson = useCallback(async (path: string) => {
+    const r = await fetch(path, { credentials: "include" });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
+    return d;
+  }, []);
   const loadQueue = useCallback(() => {
-    fetch("/api/admin/beta/queue", { credentials: "include" })
-      .then((r) => r.json()).then((d) => setQueue(d.rows || [])).catch(() => {});
-  }, []);
+    getJson("/api/admin/beta/queue")
+      .then((d) => { setQueue(d.rows || []); setLoadError(null); })
+      .catch((e) => setLoadError(String(e.message)));
+  }, [getJson]);
   const loadTesters = useCallback(() => {
-    fetch("/api/admin/beta/testers", { credentials: "include" })
-      .then((r) => r.json()).then((d) => setTesters(d.rows || [])).catch(() => {});
-  }, []);
+    getJson("/api/admin/beta/testers")
+      .then((d) => { setTesters(d.rows || []); setStrays(d.unexpected || []); setLoadError(null); })
+      .catch((e) => setLoadError(String(e.message)));
+  }, [getJson]);
   const loadMatrix = useCallback(() => {
-    fetch("/api/admin/beta/matrix", { credentials: "include" })
-      .then((r) => r.json()).then((d) => setMatrix(d.tasks ? d : null)).catch(() => {});
-  }, []);
+    getJson("/api/admin/beta/matrix")
+      .then((d) => { setMatrix(d.tasks ? d : null); setLoadError(null); })
+      .catch((e) => setLoadError(String(e.message)));
+  }, [getJson]);
   const loadFeedback = useCallback(() => {
     const qs = fbStatus === "all" ? "" : `?status=${fbStatus}`;
-    fetch(`/api/admin/beta/feedback${qs}`, { credentials: "include" })
-      .then((r) => r.json()).then((d) => setFeedback(d.rows || [])).catch(() => {});
-  }, [fbStatus]);
+    getJson(`/api/admin/beta/feedback${qs}`)
+      .then((d) => { setFeedback(d.rows || []); setLoadError(null); })
+      .catch((e) => setLoadError(String(e.message)));
+  }, [fbStatus, getJson]);
 
   useEffect(() => {
     if (!authed) return;
@@ -102,11 +116,15 @@ export default function AdminBetaPage() {
   useEffect(() => { if (authed && tab === "feedback") loadFeedback(); }, [authed, tab, loadFeedback]);
 
   const setFb = async (id: string, patch: Record<string, string>) => {
-    await fetch("/api/admin/beta/feedback", {
+    const res = await fetch("/api/admin/beta/feedback", {
       method: "PUT", credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, ...patch }),
     });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      window.alert(d.error || "Could not update feedback");
+    }
     loadFeedback();
   };
 
@@ -185,6 +203,12 @@ export default function AdminBetaPage() {
           ))}
         </div>
 
+        {loadError && (
+          <div className="mb-4 rounded-xl border p-3 text-sm" style={{ borderColor: "rgba(255,80,80,0.6)", background: "rgba(255,80,80,0.08)" }}>
+            Could not reach the beta backend: {loadError}
+          </div>
+        )}
+
         {tab === "queue" && (
           <div>
             <p className="mb-4 text-[13px] text-white/45">Everything waiting on a human, oldest first. Rows clear themselves when the action is taken in the app. Amber past 4h, red past 12h.</p>
@@ -257,6 +281,14 @@ export default function AdminBetaPage() {
                 </table>
               )}
             </div>
+            {strays.length > 0 && (
+              <div className="mt-4 rounded-xl border p-3 text-sm" style={{ borderColor: "rgba(255,184,0,0.5)", background: "rgba(255,184,0,0.07)" }}>
+                <Label>Signed up outside the roster</Label>
+                {strays.map((u) => (
+                  <div key={u.email} className="mt-1 text-white/70">{u.email} · {new Date(u.createdAt).toLocaleDateString()}</div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

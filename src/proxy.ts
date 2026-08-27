@@ -18,7 +18,9 @@ export async function proxy(request: NextRequest) {
   if (payload) {
     // Beta-scoped sessions (Jenn) reach ONLY the beta cockpit APIs.
     const scope = (payload as { scope?: string }).scope || "full";
-    if (scope === "beta" && pathname.startsWith("/api/") && !pathname.startsWith("/api/admin/beta")) {
+    // Segment match, not prefix — "/api/admin/beta-anything" must NOT pass.
+    if (scope === "beta" && pathname.startsWith("/api/")
+      && pathname !== "/api/admin/beta" && !pathname.startsWith("/api/admin/beta/")) {
       return NextResponse.json({ error: "Beta access only" }, { status: 403 });
     }
     return NextResponse.next();
