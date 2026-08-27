@@ -9,9 +9,13 @@ function getSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
-export async function createAdminSessionToken(): Promise<string> {
+// Two scopes: 'full' (Alessandro — everything under /admin) and 'beta'
+// (Jenn — /admin/beta and its APIs only). The proxy enforces the split.
+export type AdminScope = "full" | "beta";
+
+export async function createAdminSessionToken(scope: AdminScope = "full"): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
-  return new SignJWT({ role: "admin" })
+  return new SignJWT({ role: "admin", scope })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject("admin")
     .setIssuedAt(now)

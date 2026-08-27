@@ -22,13 +22,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Password required" }, { status: 400 });
   }
 
-  if (!constantTimeEquals(submitted, expected)) {
+  // Two credentials, one endpoint: ADMIN_PASSWORD grants the full scope,
+  // BETA_ADMIN_PASSWORD (Jenn) grants the beta-cockpit-only scope.
+  const betaExpected = process.env.BETA_ADMIN_PASSWORD;
+  let scope: "full" | "beta" | null = null;
+  if (constantTimeEquals(submitted, expected)) scope = "full";
+  else if (betaExpected && constantTimeEquals(submitted, betaExpected)) scope = "beta";
+
+  if (!scope) {
     await new Promise((r) => setTimeout(r, 400));
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
-  const token = await createAdminSessionToken();
-  const response = NextResponse.json({ ok: true });
+  const token = await createAdminSessionToken(scope);
+  const response = NextResponse.json({ ok: true, scope });
   response.cookies.set(adminSession.cookieName, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

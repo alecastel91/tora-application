@@ -8,5 +8,8 @@ export async function GET() {
   if (!token) return NextResponse.json({ authenticated: false });
 
   const payload = await verifyAdminSessionToken(token);
-  return NextResponse.json({ authenticated: payload !== null });
+  return NextResponse.json({
+    authenticated: payload !== null,
+    scope: payload ? ((payload as { scope?: string }).scope || "full") : null,
+  });
 }

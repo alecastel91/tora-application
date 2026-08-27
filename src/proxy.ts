@@ -15,7 +15,14 @@ export async function proxy(request: NextRequest) {
   const token = request.cookies.get(adminSession.cookieName)?.value;
   const payload = token ? await verifyAdminSessionToken(token) : null;
 
-  if (payload) return NextResponse.next();
+  if (payload) {
+    // Beta-scoped sessions (Jenn) reach ONLY the beta cockpit APIs.
+    const scope = (payload as { scope?: string }).scope || "full";
+    if (scope === "beta" && pathname.startsWith("/api/") && !pathname.startsWith("/api/admin/beta")) {
+      return NextResponse.json({ error: "Beta access only" }, { status: 403 });
+    }
+    return NextResponse.next();
+  }
 
   if (pathname.startsWith("/api/")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
