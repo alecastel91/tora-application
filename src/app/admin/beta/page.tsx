@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * /admin/beta — the daily beta cockpit (TORA_BETA_BRIEF Build Item 4).
@@ -13,7 +14,7 @@ import Link from "next/link";
  */
 
 interface QueueRow { kind: string; adminProfile: string; assignee: string; other: string; since: string; ageMs: number; ref: { dealId?: string; event?: string } }
-interface TesterRow { email: string; aliases: string[]; wave: number; signedUp: string; lastActive: string | null; tasksDone: number; tasksSkipped: number; feedback: number }
+interface TesterRow { trackerId: string; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; tierAtStart: string; code: string; email: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string }
 interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
 interface FeedbackRow { id: string; alias: string | null; role: string | null; tier: string | null; wave: number | null; taskCode: string | null; type: string; severity: string; body: string; attachments: string[] | null; route: string | null; screen: string | null; commit: string | null; device: { ua?: string; viewport?: string; standalone?: boolean } | null; sentryEventId: string | null; lastApiError: string | null; status: string; owner: string | null; createdAt: string }
@@ -109,6 +110,21 @@ export default function AdminBetaPage() {
     loadFeedback();
   };
 
+  const attachEmail = async (trackerId: string) => {
+    const email = window.prompt(`Email for ${trackerId}? (creates the invitation code mapping; sending the email stays manual)`);
+    if (!email) return;
+    const res = await fetch(`/api/admin/beta/testers/${trackerId}/email`, {
+      method: "POST", credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      window.alert(d.error || "Could not attach email");
+    }
+    loadTesters();
+  };
+
   const exportCsv = () => {
     if (!feedback) return;
     const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
@@ -127,7 +143,7 @@ export default function AdminBetaPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-6">
         <form onSubmit={login} className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-          <h1 className="mb-1 text-center text-2xl font-bold tracking-[0.08em] text-white">TORA</h1>
+          <Image src="/tora_logo_v2.png" alt="TORA" width={120} height={34} className="mx-auto mb-2" />
           <p className="mb-6 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40">Beta cockpit</p>
           <input
             type="password" value={password} onChange={(e) => setPassword(e.target.value)}
@@ -151,7 +167,7 @@ export default function AdminBetaPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-7 flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-[0.06em]">TORA <span style={{ color: INFRARED }}>BETA</span></h1>
+            <div className="flex items-center gap-3"><Image src="/tora_logo_v2.png" alt="TORA" width={110} height={31} /><span className="text-xl font-bold tracking-[0.14em]" style={{ color: INFRARED }}>BETA</span></div>
             <Label>Cockpit</Label>
           </div>
           <Link href="/admin" className="text-xs text-white/40 underline hover:text-white/70">/admin</Link>
@@ -193,32 +209,54 @@ export default function AdminBetaPage() {
         )}
 
         {tab === "testers" && (
-          <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02]">
-            {!testers && <p className="p-6 text-white/40">Loading…</p>}
-            {testers && testers.length === 0 && <p className="p-6 text-white/40">No tester accounts yet.</p>}
-            {testers && testers.length > 0 && (
-              <table className="w-full text-left text-[13px]">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    {["Profiles", "Wave", "Signed up", "Last active", "Tasks", "Feedback"].map((h) => (
-                      <th key={h} className="p-3"><Label>{h}</Label></th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {testers.map((t) => (
-                    <tr key={t.email} className="border-b border-white/5 last:border-0">
-                      <td className="p-3">{t.aliases.join(" · ")}<div className="text-[11px] text-white/30">{t.email}</div></td>
-                      <td className="p-3">{t.wave}</td>
-                      <td className="p-3 text-white/60">{new Date(t.signedUp).toLocaleDateString()}</td>
-                      <td className="p-3 text-white/60">{t.lastActive ? new Date(t.lastActive).toLocaleString() : "never"}</td>
-                      <td className="p-3">{t.tasksDone} done{t.tasksSkipped ? ` · ${t.tasksSkipped} skipped` : ""}</td>
-                      <td className="p-3">{t.feedback}</td>
+          <div>
+            <p className="mb-4 text-[13px] text-white/45">The full planned cohort from the tracker, mapped before anyone signs up. Attach an email to a row to bind its invitation code; the row then tracks sign-up and activity automatically. Sending the invitation email stays manual.</p>
+            <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02]">
+              {!testers && <p className="p-6 text-white/40">Loading…</p>}
+              {testers && testers.length > 0 && (
+                <table className="w-full text-left text-[13px]">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      {["ID", "Alias profiles (planned)", "Tier", "Code", "Email", "Status", "Last active", "Tasks", "FB"].map((h) => (
+                        <th key={h} className="p-3 whitespace-nowrap"><Label>{h}</Label></th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                  </thead>
+                  <tbody>
+                    {testers.map((t) => (
+                      <tr key={t.trackerId} className="border-b border-white/5 last:border-0 align-top">
+                        <td className="p-3 whitespace-nowrap font-mono text-[12px] text-white/60">
+                          {t.trackerId}
+                          <div className="text-[10px] text-white/30">W{t.wave}{t.kind === "ADMIN" ? " · admin" : ""}</div>
+                        </td>
+                        <td className="p-3">
+                          {(t.liveAliases || t.plannedAliases).join(" · ") || "—"}
+                          <div className="text-[10px] text-white/30">{t.plannedProfiles}{t.notes ? ` · ${t.notes}` : ""}</div>
+                        </td>
+                        <td className="p-3 text-white/60">{t.tierAtStart}</td>
+                        <td className="p-3 font-mono text-[11px] text-white/50">{t.code}</td>
+                        <td className="p-3">
+                          {t.email
+                            ? <span className="text-white/70">{t.email}</span>
+                            : <button className="text-[12px] underline" style={{ color: INFRARED }} onClick={() => attachEmail(t.trackerId)}>+ add email</button>}
+                        </td>
+                        <td className="p-3 whitespace-nowrap">
+                          <span className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                            style={t.status === "signed_up" ? { background: "rgba(67,233,123,0.2)", color: "#43E97B" }
+                              : t.status === "invited" ? { background: "rgba(255,184,0,0.18)", color: "#FFB800" }
+                              : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.45)" }}>
+                            {t.status === "signed_up" ? "Signed up" : t.status === "invited" ? "Invited" : "Awaiting email"}
+                          </span>
+                        </td>
+                        <td className="p-3 whitespace-nowrap text-white/60">{t.lastActive ? new Date(t.lastActive).toLocaleString() : "—"}</td>
+                        <td className="p-3 whitespace-nowrap">{t.status === "signed_up" ? `${t.tasksDone}✓${t.tasksSkipped ? ` ${t.tasksSkipped}–` : ""}` : "—"}</td>
+                        <td className="p-3">{t.status === "signed_up" ? t.feedback : "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         )}
 
