@@ -14,7 +14,7 @@ import Image from "next/image";
  */
 
 interface QueueRow { kind: string; adminProfile: string; assignee: string; other: string; since: string; ageMs: number; ref: { dealId?: string; event?: string } }
-interface TesterRow { trackerId: string; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
+interface TesterRow { trackerId: string; firstName: string | null; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string }
 interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
 interface FeedbackRow { id: string; alias: string | null; role: string | null; tier: string | null; wave: number | null; taskCode: string | null; type: string; severity: string; body: string; attachments: string[] | null; route: string | null; screen: string | null; commit: string | null; device: { ua?: string; viewport?: string; standalone?: boolean } | null; sentryEventId: string | null; lastApiError: string | null; status: string; owner: string | null; createdAt: string }
@@ -259,6 +259,7 @@ export default function AdminBetaPage() {
                       <tr key={t.trackerId} className="border-b border-white/5 last:border-0 align-top">
                         <td className="p-3 whitespace-nowrap font-mono text-[12px] text-white/60">
                           {t.trackerId}
+                          <div className="text-[12px] text-white/70">{t.firstName || "—"}</div>
                           <div className="text-[10px] text-white/30">W{t.wave}{t.kind === "ADMIN" ? " · admin" : ""}</div>
                         </td>
                         <td className="p-3">
