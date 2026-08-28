@@ -14,7 +14,7 @@ import Image from "next/image";
  */
 
 interface QueueRow { kind: string; adminProfile: string; assignee: string; other: string; since: string; ageMs: number; ref: { dealId?: string; event?: string } }
-interface TesterRow { trackerId: string; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; tierAtStart: string; code: string; email: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
+interface TesterRow { trackerId: string; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string }
 interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
 interface FeedbackRow { id: string; alias: string | null; role: string | null; tier: string | null; wave: number | null; taskCode: string | null; type: string; severity: string; body: string; attachments: string[] | null; route: string | null; screen: string | null; commit: string | null; device: { ua?: string; viewport?: string; standalone?: boolean } | null; sentryEventId: string | null; lastApiError: string | null; status: string; owner: string | null; createdAt: string }
@@ -143,6 +143,14 @@ export default function AdminBetaPage() {
     loadTesters();
   };
 
+  const sendInvite = async (trackerId: string, email: string, resend: boolean) => {
+    if (!window.confirm(`${resend ? "Resend" : "Send"} the beta invitation to ${email}?`)) return;
+    const res = await fetch(`/api/admin/beta/testers/${trackerId}/invite`, { method: "POST", credentials: "include" });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) window.alert(d.error || "Could not send the invitation");
+    loadTesters();
+  };
+
   const exportCsv = () => {
     if (!feedback) return;
     const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
@@ -188,7 +196,7 @@ export default function AdminBetaPage() {
             <div className="flex items-center gap-3"><Image src="/tora_logo_v2.png" alt="TORA" width={110} height={31} /><span className="text-xl font-bold tracking-[0.14em]" style={{ color: INFRARED }}>BETA</span></div>
             <Label>Cockpit</Label>
           </div>
-          <Link href="/admin" className="text-xs text-white/40 underline hover:text-white/70">/admin</Link>
+          <span />
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
@@ -255,14 +263,27 @@ export default function AdminBetaPage() {
                         </td>
                         <td className="p-3">
                           {(t.liveAliases || t.plannedAliases).join(" · ") || "—"}
-                          <div className="text-[10px] text-white/30">{t.plannedProfiles}{t.notes ? ` · ${t.notes}` : ""}</div>
+                          <div className="text-[10px] text-white/30">
+                            {t.plannedProfiles}
+                            {t.assignedAdmin ? ` · contact: ${t.assignedAdmin}` : ""}
+                            {t.notes ? ` · ${t.notes}` : ""}
+                          </div>
                         </td>
                         <td className="p-3 text-white/60">{t.tierAtStart}</td>
                         <td className="p-3 font-mono text-[11px] text-white/50">{t.code}</td>
                         <td className="p-3">
-                          {t.email
-                            ? <span className="text-white/70">{t.email}</span>
-                            : <button className="text-[12px] underline" style={{ color: INFRARED }} onClick={() => attachEmail(t.trackerId)}>+ add email</button>}
+                          {t.email ? (
+                            <>
+                              <span className="text-white/70">{t.email}</span>
+                              <div className="mt-0.5 text-[11px]">
+                                {t.inviteSentAt
+                                  ? <span className="text-white/35">sent {new Date(t.inviteSentAt).toLocaleDateString()} · <button className="underline" onClick={() => sendInvite(t.trackerId, t.email!, true)}>resend</button></span>
+                                  : <button className="underline" style={{ color: INFRARED }} onClick={() => sendInvite(t.trackerId, t.email!, false)}>send invitation</button>}
+                              </div>
+                            </>
+                          ) : (
+                            <button className="text-[12px] underline" style={{ color: INFRARED }} onClick={() => attachEmail(t.trackerId)}>+ add email</button>
+                          )}
                         </td>
                         <td className="p-3 whitespace-nowrap">
                           <span className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
