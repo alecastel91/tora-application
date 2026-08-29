@@ -443,9 +443,20 @@ export default function AdminBetaPage() {
                   <span className="text-[12px] text-white/60">{f.type}</span>
                   {f.taskCode && <span className="font-mono text-[11px] text-white/40">{f.taskCode}</span>}
                   <span className="text-white/75">{f.alias || "?"}</span>
+                  {f.screen && <span className="rounded-full border border-white/12 px-2 py-0.5 text-[11px] text-white/45">{f.screen}</span>}
                   <span className="ml-auto text-[12px] text-white/35">{new Date(f.createdAt).toLocaleString()}</span>
                 </div>
                 <p className="my-2 whitespace-pre-wrap text-white/90">{f.body}</p>
+                {(f.attachments || []).length > 0 && (
+                  <div className="mb-2 flex flex-wrap gap-2">
+                    {(f.attachments || []).map((a, i) => (
+                      <a key={i} href={a} target="_blank" rel="noreferrer" title="Open full size">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={a} alt={`screenshot ${i + 1}`} className="h-28 rounded-lg border border-white/15 object-cover" />
+                      </a>
+                    ))}
+                  </div>
+                )}
                 {expanded === f.id && (
                   <div className="mb-2 rounded-lg bg-black/50 p-2.5 font-mono text-[11.5px] leading-relaxed text-white/55">
                     <div>screen {f.screen} · route {f.route} · commit {f.commit} · W{f.wave} · {f.role} {f.tier}</div>
