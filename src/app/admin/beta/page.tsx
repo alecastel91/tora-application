@@ -13,7 +13,7 @@ import Image from "next/image";
  * only this page — the proxy blocks every other /api/admin route for it.
  */
 
-interface QueueRow { kind: string; adminProfile: string; assignee: string; other: string; since: string; ageMs: number; ref: { dealId?: string; event?: string } }
+interface QueueRow { kind: string; adminProfile: string; assignee: string; other: string; since: string; ageMs: number; ref: { dealId?: string; event?: string; applicationId?: string; profileId?: string } }
 interface TesterRow { trackerId: string; firstName: string | null; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string }
 interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
@@ -27,6 +27,8 @@ const KIND_LABEL: Record<string, string> = {
   message_unanswered: "Message > 4h",
   connection_pending: "Connection request",
   representation_pending: "Representation request",
+  add_profile_pending: "Profile application",
+  verification_pending: "Verification review",
 };
 
 const ROLE_COLORS: Record<string, string> = { ARTIST: "#6B5FFF", AGENT: "#00C875", PROMOTER: "#FFB800", VENUE: "#FF5757" };
@@ -114,6 +116,23 @@ export default function AdminBetaPage() {
   useEffect(() => { if (authed && tab === "testers") loadTesters(); }, [authed, tab, loadTesters]);
   useEffect(() => { if (authed && tab === "matrix") loadMatrix(); }, [authed, tab, loadMatrix]);
   useEffect(() => { if (authed && tab === "feedback") loadFeedback(); }, [authed, tab, loadFeedback]);
+
+  // One in-flight queue action at a time; errors surface in the banner.
+  const [acting, setActing] = useState<string | null>(null);
+  const queueAction = async (path: string) => {
+    if (acting) return;
+    setActing(path);
+    try {
+      const r = await fetch(path, { method: "POST", credentials: "include" });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
+      loadQueue();
+    } catch (e) {
+      setLoadError(String((e as Error).message));
+    } finally {
+      setActing(null);
+    }
+  };
 
   const setFb = async (id: string, patch: Record<string, string>) => {
     const res = await fetch("/api/admin/beta/feedback", {
@@ -235,6 +254,22 @@ export default function AdminBetaPage() {
                 {r.ref?.event && <span className="text-white/40">· {r.ref.event}</span>}
                 <span className="ml-auto font-mono text-white/60">{age(r.ageMs)}</span>
                 <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-[11px] text-white/60">{r.assignee}</span>
+                {r.kind === "add_profile_pending" && r.ref?.applicationId && (
+                  <span className="flex gap-2">
+                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/approve`)} disabled={acting === `/api/admin/beta/applications/${r.ref.applicationId}/approve`}
+                      className="rounded-lg border border-[#00C875]/50 bg-[#00C875]/10 px-3 py-1 text-[12px] font-semibold text-[#00C875] disabled:opacity-40">Approve</button>
+                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/decline`)} disabled={!!acting}
+                      className="rounded-lg border border-white/15 px-3 py-1 text-[12px] text-white/60 disabled:opacity-40">Decline</button>
+                  </span>
+                )}
+                {r.kind === "verification_pending" && r.ref?.profileId && (
+                  <span className="flex gap-2">
+                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/verify`)} disabled={acting === `/api/admin/beta/verification/${r.ref.profileId}/verify`}
+                      className="rounded-lg border border-[#00C875]/50 bg-[#00C875]/10 px-3 py-1 text-[12px] font-semibold text-[#00C875] disabled:opacity-40">Verify</button>
+                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/reject`)} disabled={!!acting}
+                      className="rounded-lg border border-white/15 px-3 py-1 text-[12px] text-white/60 disabled:opacity-40">Reject</button>
+                  </span>
+                )}
               </div>
             ))}
           </div>
