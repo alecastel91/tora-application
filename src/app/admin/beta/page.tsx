@@ -17,6 +17,9 @@ interface QueueRow { kind: string; adminProfile: string; assignee: string; other
 interface TesterRow { trackerId: string; firstName: string | null; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string }
 interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
+interface PreviewTask { code: string; group: string; counterparty: string | null; autoDetected: boolean; debrief: boolean; roleSpecific: boolean; title: string; hint: string }
+interface PreviewData { wave: number; role: string; tier: string; total: number; groups: { group: string; tasks: PreviewTask[] }[] }
+
 interface FeedbackRow { id: string; alias: string | null; role: string | null; tier: string | null; wave: number | null; taskCode: string | null; type: string; severity: string; body: string; attachments: string[] | null; route: string | null; screen: string | null; commit: string | null; device: { ua?: string; viewport?: string; standalone?: boolean } | null; sentryEventId: string | null; lastApiError: string | null; status: string; owner: string | null; createdAt: string }
 
 const KIND_LABEL: Record<string, string> = {
@@ -46,13 +49,17 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function AdminBetaPage() {
-  const [tab, setTab] = useState<"queue" | "testers" | "matrix" | "feedback">("queue");
+  const [tab, setTab] = useState<"queue" | "testers" | "matrix" | "preview" | "feedback">("queue");
   const [queue, setQueue] = useState<QueueRow[] | null>(null);
   const [testers, setTesters] = useState<TesterRow[] | null>(null);
   const [matrix, setMatrix] = useState<{ tasks: MatrixTask[]; rows: MatrixRow[]; footers: Record<string, { done: number; total: number }> } | null>(null);
   const [feedback, setFeedback] = useState<FeedbackRow[] | null>(null);
   const [strays, setStrays] = useState<{ email: string; createdAt: string; lastLogin: string | null }[]>([]);
   const [fbStatus, setFbStatus] = useState("open");
+  const [preview, setPreview] = useState<PreviewData | null>(null);
+  const [pvWave, setPvWave] = useState(2);
+  const [pvRole, setPvRole] = useState("ARTIST");
+  const [pvTier, setPvTier] = useState("YEARLY");
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -116,6 +123,14 @@ export default function AdminBetaPage() {
   useEffect(() => { if (authed && tab === "testers") loadTesters(); }, [authed, tab, loadTesters]);
   useEffect(() => { if (authed && tab === "matrix") loadMatrix(); }, [authed, tab, loadMatrix]);
   useEffect(() => { if (authed && tab === "feedback") loadFeedback(); }, [authed, tab, loadFeedback]);
+
+  const loadPreview = useCallback(() => {
+    setPreview(null);
+    getJson(`/api/admin/beta/preview?wave=${pvWave}&role=${pvRole}&tier=${pvTier}`)
+      .then((d) => { setPreview(d as PreviewData); setLoadError(null); })
+      .catch((e) => setLoadError(String(e.message)));
+  }, [getJson, pvWave, pvRole, pvTier]);
+  useEffect(() => { if (authed && tab === "preview") loadPreview(); }, [authed, tab, loadPreview]);
 
   // One in-flight queue action at a time; errors surface in the banner.
   const [acting, setActing] = useState<string | null>(null);
@@ -219,13 +234,13 @@ export default function AdminBetaPage() {
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
-          {(["queue", "testers", "matrix", "feedback"] as const).map((k) => (
+          {(["queue", "testers", "matrix", "preview", "feedback"] as const).map((k) => (
             <button key={k} onClick={() => setTab(k)}
               className="rounded-full border px-4 py-1.5 text-[13px] capitalize transition-colors"
               style={tab === k
                 ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" }
                 : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}>
-              {k === "queue" ? `Action queue${queue ? ` (${queue.length})` : ""}` : k === "matrix" ? "Task matrix" : k}
+              {k === "queue" ? `Action queue${queue ? ` (${queue.length})` : ""}` : k === "matrix" ? "Task matrix" : k === "preview" ? "Tester list preview" : k}
             </button>
           ))}
         </div>
@@ -416,6 +431,48 @@ export default function AdminBetaPage() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {tab === "preview" && (
+          <div>
+            <p className="mb-4 text-[13px] text-white/45">Exactly the checklist a tester of this wave and role sees in their Beta sheet — same filters, same order, no need to log in as them. Wave 2 starts on a paid plan, so its list skips the setup-and-paywall chores.</p>
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              {[1, 2].map((w) => (
+                <button key={w} onClick={() => setPvWave(w)} className="rounded-full border px-3.5 py-1 text-xs"
+                  style={pvWave === w ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>Wave {w}</button>
+              ))}
+              <span className="mx-1 h-4 w-px bg-white/10" />
+              {["ARTIST", "AGENT", "PROMOTER", "VENUE"].map((r) => (
+                <button key={r} onClick={() => setPvRole(r)} className="rounded-full border px-3.5 py-1 text-xs capitalize"
+                  style={pvRole === r
+                    ? { borderColor: ROLE_COLORS[r], background: `${ROLE_COLORS[r]}22`, color: ROLE_COLORS[r] }
+                    : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{r.toLowerCase()}</button>
+              ))}
+              <span className="mx-1 h-4 w-px bg-white/10" />
+              {["FREE", "YEARLY"].map((tr) => (
+                <button key={tr} onClick={() => setPvTier(tr)} className="rounded-full border px-3.5 py-1 text-xs"
+                  style={pvTier === tr ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{tr === "FREE" ? "starts free" : "starts paid"}</button>
+              ))}
+              {preview && <span className="ml-auto text-[13px] text-white/50">{preview.total} tasks</span>}
+            </div>
+
+            {!preview && <p className="text-white/40">Loading…</p>}
+            {preview?.groups.map((g) => (
+              <div key={g.group} className="mb-5">
+                <h3 className="m-0 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">{g.group}</h3>
+                {g.tasks.map((t) => (
+                  <div key={t.code} className="mb-1.5 flex flex-wrap items-start gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[13.5px]">
+                    <span className="font-mono text-[11px] text-white/35">{t.code}</span>
+                    <span className="min-w-0 flex-1 text-white/85">{t.title}</span>
+                    {t.roleSpecific && <span className="rounded-full px-2 py-0.5 text-[10px]" style={{ background: `${ROLE_COLORS[pvRole]}22`, color: ROLE_COLORS[pvRole] }}>{pvRole.toLowerCase()}</span>}
+                    <span className="rounded-full border border-white/12 px-2 py-0.5 text-[10px] text-white/40">
+                      {t.debrief ? "via feedback" : t.autoDetected ? "auto" : "self-report"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         )}
 
