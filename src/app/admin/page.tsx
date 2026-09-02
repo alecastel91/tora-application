@@ -90,7 +90,7 @@ export default function AdminDashboard() {
                 // Beta-scoped sessions (Jenn) belong on the beta cockpit —
                 // this dashboard's APIs would all 403 for them anyway.
                 if (data?.authenticated && data?.scope === "beta") {
-                    window.location.href = "/admin/beta";
+                    window.location.href = "/beta-admin";
                     return;
                 }
                 if (data?.authenticated) {

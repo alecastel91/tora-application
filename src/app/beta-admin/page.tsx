@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 /**
- * /admin/beta — the daily beta cockpit (TORA_BETA_BRIEF Build Item 4).
+ * /beta-admin — the daily beta cockpit (TORA_BETA_BRIEF Build Item 4).
  * Views: Action queue, Testers, Task matrix, Feedback inbox.
  *
  * Has its OWN login (same endpoint as /admin): ADMIN_PASSWORD gives the
@@ -56,6 +56,7 @@ export default function AdminBetaPage() {
   const [feedback, setFeedback] = useState<FeedbackRow[] | null>(null);
   const [strays, setStrays] = useState<{ email: string; createdAt: string; lastLogin: string | null }[]>([]);
   const [fbStatus, setFbStatus] = useState("open");
+  const [fbType, setFbType] = useState<"reports" | "debrief">("reports");
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [pvWave, setPvWave] = useState(2);
   const [pvRole, setPvRole] = useState("ARTIST");
@@ -484,20 +485,35 @@ export default function AdminBetaPage() {
                   className="rounded-full border px-3 py-1 text-xs capitalize"
                   style={fbStatus === s ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{s}</button>
               ))}
+              <span className="mx-1 text-white/20">|</span>
+              {(["reports", "debrief"] as const).map((k) => (
+                <button key={k} onClick={() => setFbType(k)}
+                  className="rounded-full border px-3 py-1 text-xs capitalize"
+                  style={fbType === k ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{k === "debrief" ? "Final check" : k}</button>
+              ))}
               <button onClick={exportCsv} className="ml-auto rounded-full border border-white/15 px-3 py-1 text-xs text-white/60 hover:text-white">Export CSV</button>
             </div>
             {!feedback && <p className="text-white/40">Loading…</p>}
-            {feedback && feedback.length === 0 && (
+            {feedback && feedback.filter((f) => (f.type === "Debrief") === (fbType === "debrief")).length === 0 && (
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">Nothing here.</div>
             )}
-            {feedback && feedback.map((f) => (
+            {feedback && feedback.filter((f) => (f.type === "Debrief") === (fbType === "debrief")).map((f) => (
               <div key={f.id} className="mb-2 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 text-sm">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-                    style={f.severity === "blocked" ? { background: "rgba(255,80,80,0.3)" } : f.severity === "annoyed" ? { background: "rgba(255,184,0,0.22)" } : { background: "rgba(255,255,255,0.1)" }}>
-                    {f.severity}
-                  </span>
-                  <span className="text-[12px] text-white/60">{f.type}</span>
+                  {f.type === "Debrief" ? (
+                    <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+                      style={{ background: f.body.startsWith("YES") ? "rgba(67,233,123,0.25)" : "rgba(255,80,80,0.3)" }}>
+                      {f.body.startsWith("YES") ? "would book: YES" : "would book: NO"}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+                        style={f.severity === "blocked" ? { background: "rgba(255,80,80,0.3)" } : f.severity === "annoyed" ? { background: "rgba(255,184,0,0.22)" } : { background: "rgba(255,255,255,0.1)" }}>
+                        {f.severity}
+                      </span>
+                      <span className="text-[12px] text-white/60">{f.type}</span>
+                    </>
+                  )}
                   {f.taskCode && <span className="font-mono text-[11px] text-white/40">{f.taskCode}</span>}
                   <span className="text-white/75">{f.alias || "?"}</span>
                   {f.screen && <span className="rounded-full border border-white/12 px-2 py-0.5 text-[11px] text-white/45">{f.screen}</span>}

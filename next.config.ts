@@ -50,6 +50,8 @@ const nextConfig: NextConfig = {
       // Lean base link + old name both land on the default-language founding page.
       { source: "/founding", destination: "/founding/en", permanent: false },
       { source: "/foundingmembers", destination: "/founding/en", permanent: false },
+      // Beta cockpit moved: /admin autocompleted to /admin/beta in the browser.
+      { source: "/admin/beta", destination: "/beta-admin", permanent: false },
     ];
   },
 };

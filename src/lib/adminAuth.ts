@@ -10,7 +10,7 @@ function getSecret(): Uint8Array {
 }
 
 // Two scopes: 'full' (Alessandro — everything under /admin) and 'beta'
-// (Jenn — /admin/beta and its APIs only). The proxy enforces the split.
+// (Jenn — /beta-admin and the /api/admin/beta APIs only). The proxy enforces the split.
 export type AdminScope = "full" | "beta";
 
 export async function createAdminSessionToken(scope: AdminScope = "full"): Promise<string> {
