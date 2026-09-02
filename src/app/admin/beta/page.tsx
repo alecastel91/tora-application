@@ -271,7 +271,7 @@ export default function AdminBetaPage() {
                 <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-[11px] text-white/60">{r.assignee}</span>
                 {r.kind === "add_profile_pending" && r.ref?.applicationId && (
                   <span className="flex gap-2">
-                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/approve`)} disabled={acting === `/api/admin/beta/applications/${r.ref.applicationId}/approve`}
+                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/approve`)} disabled={!!acting}
                       className="rounded-lg border border-[#00C875]/50 bg-[#00C875]/10 px-3 py-1 text-[12px] font-semibold text-[#00C875] disabled:opacity-40">Approve</button>
                     <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/decline`)} disabled={!!acting}
                       className="rounded-lg border border-white/15 px-3 py-1 text-[12px] text-white/60 disabled:opacity-40">Decline</button>
@@ -279,7 +279,7 @@ export default function AdminBetaPage() {
                 )}
                 {r.kind === "verification_pending" && r.ref?.profileId && (
                   <span className="flex gap-2">
-                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/verify`)} disabled={acting === `/api/admin/beta/verification/${r.ref.profileId}/verify`}
+                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/verify`)} disabled={!!acting}
                       className="rounded-lg border border-[#00C875]/50 bg-[#00C875]/10 px-3 py-1 text-[12px] font-semibold text-[#00C875] disabled:opacity-40">Verify</button>
                     <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/reject`)} disabled={!!acting}
                       className="rounded-lg border border-white/15 px-3 py-1 text-[12px] text-white/60 disabled:opacity-40">Reject</button>
