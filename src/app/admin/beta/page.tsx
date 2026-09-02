@@ -45,7 +45,7 @@ const age = (ms: number) => {
 };
 
 const Label = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">{children}</span>
+  <span className="font-tech text-[10.5px] font-semibold uppercase tracking-[0.2em] text-white/45">{children}</span>
 );
 
 export default function AdminBetaPage() {
@@ -236,7 +236,7 @@ export default function AdminBetaPage() {
         <div className="mb-6 flex flex-wrap gap-2">
           {(["queue", "testers", "matrix", "preview", "feedback"] as const).map((k) => (
             <button key={k} onClick={() => setTab(k)}
-              className="rounded-full border px-4 py-1.5 text-[13px] capitalize transition-colors"
+              className="font-tech rounded-full border px-4 py-1.5 text-[13px] uppercase tracking-[0.08em] transition-colors"
               style={tab === k
                 ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" }
                 : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}>
@@ -460,7 +460,7 @@ export default function AdminBetaPage() {
             {!preview && <p className="text-white/40">Loading…</p>}
             {preview?.groups.map((g) => (
               <div key={g.group} className="mb-5">
-                <h3 className="m-0 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">{g.group}</h3>
+                <h3 className="font-tech m-0 mb-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/45">{g.group}</h3>
                 {g.tasks.map((t) => (
                   <div key={t.code} className="mb-1.5 flex flex-wrap items-start gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-[13.5px]">
                     <span className="font-mono text-[11px] text-white/35">{t.code}</span>
