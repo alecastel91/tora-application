@@ -231,7 +231,14 @@ export default function AdminBetaPage() {
             <div className="flex items-center gap-3"><Image src="/tora_logo_v2.png" alt="TORA" width={110} height={31} /><span className="text-xl font-bold tracking-[0.14em]" style={{ color: INFRARED }}>BETA</span></div>
             <Label>Cockpit</Label>
           </div>
-          <span />
+          <button
+            onClick={async () => {
+              await fetch("/api/admin/logout", { method: "POST", credentials: "include" }).catch(() => {});
+              setAuthed(false);
+            }}
+            className="font-tech rounded-full border border-white/15 px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-white/50 hover:text-white">
+            Log out
+          </button>
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
