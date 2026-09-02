@@ -87,10 +87,13 @@ export default function AdminDashboard() {
                 const res = await fetch("/api/admin/session", { credentials: "include" });
                 if (cancelled) return;
                 const data = await res.json();
-                // Beta-scoped sessions (Jenn) belong on the beta cockpit —
-                // this dashboard's APIs would all 403 for them anyway.
+                // A beta-scoped session (the cockpit-only password) cannot
+                // use this dashboard: its APIs would all 403. Drop it and
+                // show the login, so the full password can be entered here —
+                // a silent redirect to /beta-admin looked like a broken route.
                 if (data?.authenticated && data?.scope === "beta") {
-                    window.location.href = "/beta-admin";
+                    await fetch("/api/admin/logout", { method: "POST", credentials: "include" }).catch(() => {});
+                    setError("This browser was signed in with the beta cockpit password. Enter the full admin password here, or use /beta-admin for the cockpit.");
                     return;
                 }
                 if (data?.authenticated) {
