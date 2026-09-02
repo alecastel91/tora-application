@@ -133,10 +133,10 @@ export default function AdminBetaPage() {
   useEffect(() => { if (authed && tab === "preview") loadPreview(); }, [authed, tab, loadPreview]);
 
   // One in-flight queue action at a time; errors surface in the banner.
-  const [acting, setActing] = useState<string | null>(null);
+  const [acting, setActing] = useState(false);
   const queueAction = async (path: string) => {
     if (acting) return;
-    setActing(path);
+    setActing(true);
     try {
       const r = await fetch(path, { method: "POST", credentials: "include" });
       const d = await r.json().catch(() => ({}));
@@ -145,7 +145,7 @@ export default function AdminBetaPage() {
     } catch (e) {
       setLoadError(String((e as Error).message));
     } finally {
-      setActing(null);
+      setActing(false);
     }
   };
 
@@ -271,17 +271,17 @@ export default function AdminBetaPage() {
                 <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-[11px] text-white/60">{r.assignee}</span>
                 {r.kind === "add_profile_pending" && r.ref?.applicationId && (
                   <span className="flex gap-2">
-                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/approve`)} disabled={!!acting}
+                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/approve`)} disabled={acting}
                       className="rounded-lg border border-[#00C875]/50 bg-[#00C875]/10 px-3 py-1 text-[12px] font-semibold text-[#00C875] disabled:opacity-40">Approve</button>
-                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/decline`)} disabled={!!acting}
+                    <button onClick={() => queueAction(`/api/admin/beta/applications/${r.ref.applicationId}/decline`)} disabled={acting}
                       className="rounded-lg border border-white/15 px-3 py-1 text-[12px] text-white/60 disabled:opacity-40">Decline</button>
                   </span>
                 )}
                 {r.kind === "verification_pending" && r.ref?.profileId && (
                   <span className="flex gap-2">
-                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/verify`)} disabled={!!acting}
+                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/verify`)} disabled={acting}
                       className="rounded-lg border border-[#00C875]/50 bg-[#00C875]/10 px-3 py-1 text-[12px] font-semibold text-[#00C875] disabled:opacity-40">Verify</button>
-                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/reject`)} disabled={!!acting}
+                    <button onClick={() => queueAction(`/api/admin/beta/verification/${r.ref.profileId}/reject`)} disabled={acting}
                       className="rounded-lg border border-white/15 px-3 py-1 text-[12px] text-white/60 disabled:opacity-40">Reject</button>
                   </span>
                 )}
