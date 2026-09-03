@@ -15,7 +15,7 @@ import Image from "next/image";
 
 interface QueueRow { kind: string; adminProfile: string; assignee: string; other: string; since: string; ageMs: number; ref: { dealId?: string; event?: string; applicationId?: string; profileId?: string } }
 interface TesterRow { trackerId: string; firstName: string | null; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
-interface MatrixTask { code: string; group: string }
+interface MatrixTask { code: string; group: string; title?: string }
 interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
 interface PreviewTask { code: string; group: string; counterparty: string | null; autoDetected: boolean; debrief: boolean; roleSpecific: boolean; title: string; hint: string }
 interface PreviewData { wave: number; role: string; tier: string; total: number; groups: { group: string; tasks: PreviewTask[] }[] }
@@ -399,8 +399,8 @@ export default function AdminBetaPage() {
                     <tr>
                       <th className="sticky left-0 z-10 bg-[#0f0f12] p-2 text-left"><Label>Tester</Label></th>
                       {matrix.tasks.map((t) => (
-                        <th key={t.code} className="p-1 text-center align-bottom">
-                          <span className="text-[10px] font-mono text-white/45">{t.code}</span>
+                        <th key={t.code} className="p-1 text-center align-bottom" title={`${t.code} · ${t.group}\n${t.title || ""}`}>
+                          <span className="cursor-help text-[10px] font-mono text-white/45">{t.code}</span>
                         </th>
                       ))}
                     </tr>
@@ -416,7 +416,7 @@ export default function AdminBetaPage() {
                         {matrix.tasks.map((t) => {
                           const c = r.cells[t.code];
                           return (
-                            <td key={t.code} title={`${r.alias} · ${t.code} · ${c}`}
+                            <td key={t.code} title={`${t.code} — ${t.title || t.group}\n${r.alias}: ${c === "na" ? "not applicable" : c}`}
                               className="h-6 w-6 rounded"
                               style={{
                                 background: c === "done" ? "rgba(67,233,123,0.75)"
@@ -434,7 +434,7 @@ export default function AdminBetaPage() {
                         const f = matrix.footers[t.code];
                         const rate = f && f.total ? f.done / f.total : 0;
                         return (
-                          <td key={t.code} className="p-1 text-center">
+                          <td key={t.code} className="p-1 text-center" title={`${t.code} — ${t.title || t.group}\n${f ? `${f.done} of ${f.total} applicable testers done` : ""}`}>
                             <span className="text-[9px] font-mono" style={{ color: rate === 0 ? "rgba(255,80,80,0.9)" : rate < 0.5 ? "rgba(255,184,0,0.9)" : "rgba(67,233,123,0.9)" }}>
                               {f ? `${f.done}/${f.total}` : "–"}
                             </span>
