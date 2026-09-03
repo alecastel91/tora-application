@@ -44,6 +44,10 @@ const age = (ms: number) => {
   return `${Math.floor(h / 24)}d`;
 };
 
+const pillStyle = (on: boolean) => (on
+  ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" }
+  : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" });
+
 const Label = ({ children }: { children: React.ReactNode }) => (
   <span className="font-tech text-[10.5px] font-semibold uppercase tracking-[0.2em] text-white/45">{children}</span>
 );
@@ -83,6 +87,10 @@ export default function AdminBetaPage() {
     if (res.ok) { setAuthed(true); setPassword(""); }
     else setLoginError("Wrong password.");
   };
+  const logout = async () => {
+    await fetch("/api/admin/logout", { method: "POST", credentials: "include" }).catch(() => {});
+    setAuthed(false);
+  };
 
   const [loadError, setLoadError] = useState<string | null>(null);
   // Shared loader: a backend/proxy error must show as an ERROR, never as a
@@ -90,6 +98,9 @@ export default function AdminBetaPage() {
   const getJson = useCallback(async (path: string) => {
     const r = await fetch(path, { credentials: "include" });
     const d = await r.json().catch(() => ({}));
+    // Session gone (logged out in another tab, expired): back to the login
+    // form instead of a permanent error banner over stale rows.
+    if (r.status === 401) setAuthed(false);
     if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
     return d;
   }, []);
@@ -109,11 +120,14 @@ export default function AdminBetaPage() {
       .catch((e) => setLoadError(String(e.message)));
   }, [getJson]);
   const loadFeedback = useCallback(() => {
-    const qs = fbStatus === "all" ? "" : `?status=${fbStatus}`;
-    getJson(`/api/admin/beta/feedback${qs}`)
+    // Split is server-side (see adminBeta.js /feedback). Triage status has
+    // no meaning for a Final Check answer.
+    const params = new URLSearchParams({ view: fbType });
+    if (fbType === "reports" && fbStatus !== "all") params.set("status", fbStatus);
+    getJson(`/api/admin/beta/feedback?${params}`)
       .then((d) => { setFeedback(d.rows || []); setLoadError(null); })
       .catch((e) => setLoadError(String(e.message)));
-  }, [fbStatus, getJson]);
+  }, [fbStatus, fbType, getJson]);
 
   useEffect(() => {
     if (!authed) return;
@@ -189,6 +203,8 @@ export default function AdminBetaPage() {
   const exportCsv = () => {
     if (!feedback) return;
     const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    // Exports exactly the rows on screen. On Final Check rows `severity`
+    // is the yes/no answer and `body` the reason.
     const head = ["createdAt", "alias", "role", "tier", "wave", "type", "severity", "status", "owner", "taskCode", "screen", "route", "commit", "body", "lastApiError"];
     const lines = [head.join(","), ...feedback.map((f) => head.map((h) => esc((f as unknown as Record<string, unknown>)[h])).join(","))];
     const blob = new Blob([lines.join("\n")], { type: "text/csv" });
@@ -232,10 +248,7 @@ export default function AdminBetaPage() {
             <Label>Cockpit</Label>
           </div>
           <button
-            onClick={async () => {
-              await fetch("/api/admin/logout", { method: "POST", credentials: "include" }).catch(() => {});
-              setAuthed(false);
-            }}
+            onClick={logout}
             className="font-tech rounded-full border border-white/15 px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-white/50 hover:text-white">
             Log out
           </button>
@@ -448,7 +461,7 @@ export default function AdminBetaPage() {
             <div className="mb-5 flex flex-wrap items-center gap-2">
               {[1, 2].map((w) => (
                 <button key={w} onClick={() => setPvWave(w)} className="rounded-full border px-3.5 py-1 text-xs"
-                  style={pvWave === w ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>Wave {w}</button>
+                  style={pillStyle(pvWave === w)}>Wave {w}</button>
               ))}
               <span className="mx-1 h-4 w-px bg-white/10" />
               {["ARTIST", "AGENT", "PROMOTER", "VENUE"].map((r) => (
@@ -460,7 +473,7 @@ export default function AdminBetaPage() {
               <span className="mx-1 h-4 w-px bg-white/10" />
               {["FREE", "YEARLY"].map((tr) => (
                 <button key={tr} onClick={() => setPvTier(tr)} className="rounded-full border px-3.5 py-1 text-xs"
-                  style={pvTier === tr ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{tr === "FREE" ? "starts free" : "starts paid"}</button>
+                  style={pillStyle(pvTier === tr)}>{tr === "FREE" ? "starts free" : "starts paid"}</button>
               ))}
               {preview && <span className="ml-auto text-[13px] text-white/50">{preview.total} tasks</span>}
             </div>
@@ -487,30 +500,34 @@ export default function AdminBetaPage() {
         {tab === "feedback" && (
           <div>
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              {["open", "triaged", "fixed", "all"].map((s) => (
-                <button key={s} onClick={() => setFbStatus(s)}
-                  className="rounded-full border px-3 py-1 text-xs capitalize"
-                  style={fbStatus === s ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{s}</button>
-              ))}
-              <span className="mx-1 text-white/20">|</span>
               {(["reports", "debrief"] as const).map((k) => (
                 <button key={k} onClick={() => setFbType(k)}
                   className="rounded-full border px-3 py-1 text-xs capitalize"
-                  style={fbType === k ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" } : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.5)" }}>{k === "debrief" ? "Final check" : k}</button>
+                  style={pillStyle(fbType === k)}>{k === "debrief" ? "Final check" : k}</button>
               ))}
+              {fbType === "reports" && (
+                <>
+                  <span className="mx-1 text-white/20">|</span>
+                  {["open", "triaged", "fixed", "all"].map((s) => (
+                    <button key={s} onClick={() => setFbStatus(s)}
+                      className="rounded-full border px-3 py-1 text-xs capitalize"
+                      style={pillStyle(fbStatus === s)}>{s}</button>
+                  ))}
+                </>
+              )}
               <button onClick={exportCsv} className="ml-auto rounded-full border border-white/15 px-3 py-1 text-xs text-white/60 hover:text-white">Export CSV</button>
             </div>
             {!feedback && <p className="text-white/40">Loading…</p>}
-            {feedback && feedback.filter((f) => (f.type === "Debrief") === (fbType === "debrief")).length === 0 && (
+            {feedback && feedback.length === 0 && (
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">Nothing here.</div>
             )}
-            {feedback && feedback.filter((f) => (f.type === "Debrief") === (fbType === "debrief")).map((f) => (
+            {feedback && feedback.map((f) => (
               <div key={f.id} className="mb-2 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 text-sm">
                 <div className="flex flex-wrap items-center gap-2">
                   {f.type === "Debrief" ? (
-                    <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-                      style={{ background: f.body.startsWith("YES") ? "rgba(67,233,123,0.25)" : "rgba(255,80,80,0.3)" }}>
-                      {f.body.startsWith("YES") ? "would book: YES" : "would book: NO"}
+                    <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase"
+                      style={{ background: f.severity === "yes" ? "rgba(67,233,123,0.25)" : "rgba(255,80,80,0.3)" }}>
+                      would book: {f.severity}
                     </span>
                   ) : (
                     <>

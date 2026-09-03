@@ -88,12 +88,12 @@ export default function AdminDashboard() {
                 if (cancelled) return;
                 const data = await res.json();
                 // A beta-scoped session (the cockpit-only password) cannot
-                // use this dashboard: its APIs would all 403. Drop it and
-                // show the login, so the full password can be entered here —
-                // a silent redirect to /beta-admin looked like a broken route.
+                // use this dashboard: its APIs would all 403. Show the login
+                // with a hint — the session itself is left alone, so a
+                // cockpit open in another tab keeps working; signing in here
+                // with the full password simply replaces the cookie.
                 if (data?.authenticated && data?.scope === "beta") {
-                    await fetch("/api/admin/logout", { method: "POST", credentials: "include" }).catch(() => {});
-                    setError("This browser was signed in with the beta cockpit password. Enter the full admin password here, or use /beta-admin for the cockpit.");
+                    setError("This browser is signed in with the beta cockpit password. Enter the full admin password here, or use /beta-admin for the cockpit.");
                     return;
                 }
                 if (data?.authenticated) {
@@ -116,13 +116,16 @@ export default function AdminDashboard() {
                 credentials: "include",
                 body: JSON.stringify({ password }),
             });
+            const data = await res.json().catch(() => ({}));
             if (res.ok) {
+                // The cockpit password grants beta scope only — this
+                // dashboard would 403 on every call. Send it where it works.
+                if (data?.scope === "beta") { window.location.href = "/beta-admin"; return; }
                 setIsAuthenticated(true);
                 setPassword("");
                 setError("");
                 loadApplications();
             } else {
-                const data = await res.json().catch(() => ({}));
                 setError(data?.error || "Invalid password");
             }
         } catch {
