@@ -242,7 +242,8 @@ export default function AdminBetaPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] px-5 py-8 text-white">
-      <div className="mx-auto max-w-6xl">
+      {/* Wide on purpose: the task matrix has ~44 columns and should fit a laptop without scrolling. */}
+      <div className="mx-auto max-w-[1760px]">
         <div className="mb-7 flex items-end justify-between">
           <div>
             <div className="flex items-center gap-3"><Image src="/tora_logo_v2.png" alt="TORA" width={110} height={31} /><span className="text-xl font-bold tracking-[0.14em]" style={{ color: INFRARED }}>BETA</span></div>
