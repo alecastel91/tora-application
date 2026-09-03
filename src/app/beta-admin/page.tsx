@@ -399,9 +399,11 @@ export default function AdminBetaPage() {
                   <thead>
                     <tr>
                       <th className="sticky left-0 z-10 bg-[#0f0f12] p-2 text-left"><Label>Tester</Label></th>
-                      {matrix.tasks.map((t) => (
+                      {/* Columns are numbered in display order; the real code
+                          (T-ids have gaps after retirements) lives in the hover. */}
+                      {matrix.tasks.map((t, i) => (
                         <th key={t.code} className="p-1 text-center align-bottom" title={`${taskLabel(t)}\n${t.group}`}>
-                          <span className="cursor-help text-[10px] font-mono text-white/45">{t.code}</span>
+                          <span className="cursor-help text-[10px] font-mono text-white/45">{i + 1}</span>
                         </th>
                       ))}
                     </tr>
