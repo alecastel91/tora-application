@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -17,7 +18,7 @@ interface QueueRow { kind: string; adminProfile: string; assignee: string; other
 interface TesterRow { trackerId: string; firstName: string | null; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string; title?: string }
 const taskLabel = (t: MatrixTask) => `${t.code} — ${t.title || t.group}`;
-interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; cells: Record<string, string> }
+interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; isAdmin?: boolean; cells: Record<string, string> }
 interface PreviewTask { code: string; group: string; counterparty: string | null; autoDetected: boolean; debrief: boolean; roleSpecific: boolean; title: string; hint: string }
 interface PreviewData { wave: number; role: string; tier: string; total: number; groups: { group: string; tasks: PreviewTask[] }[] }
 
@@ -410,11 +411,19 @@ export default function AdminBetaPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {matrix.rows.map((r) => (
-                      <tr key={r.profileId}>
+                    {matrix.rows.map((r, i) => (
+                      <React.Fragment key={r.profileId}>
+                        {/* Admin-operated persona profiles (the owners' QA rows) sit
+                            below the testers under one divider; they do not count
+                            in the footers. */}
+                        {r.isAdmin && !matrix.rows[i - 1]?.isAdmin && (
+                          <tr><td colSpan={matrix.tasks.length + 1} className="pt-4 pb-1"><Label>Admin profiles · QA rows, not in the cohort rate</Label></td></tr>
+                        )}
+                      <tr>
                         <td className="sticky left-0 z-10 whitespace-nowrap bg-[#0f0f12] p-2 pr-4">
                           <span className="font-medium">{r.alias}</span>
                           <span className="ml-2 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: `${ROLE_COLORS[r.role]}22`, color: ROLE_COLORS[r.role] }}>{r.role}</span>
+                          {r.isAdmin && <span className="ml-1 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: "rgba(255,51,102,0.14)", color: INFRARED }}>ADMIN</span>}
                           <div className="text-[10px] text-white/30">W{r.wave} · {r.city} · {r.tier || "FREE"}</div>
                         </td>
                         {matrix.tasks.map((t) => {
@@ -431,6 +440,7 @@ export default function AdminBetaPage() {
                           );
                         })}
                       </tr>
+                      </React.Fragment>
                     ))}
                     <tr>
                       <td className="sticky left-0 z-10 bg-[#0f0f12] p-2"><Label>Done / applicable</Label></td>
