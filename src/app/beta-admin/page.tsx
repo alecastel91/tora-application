@@ -392,10 +392,10 @@ export default function AdminBetaPage() {
           <div>
             <p className="mb-4 text-[13px] text-white/45">Testers down, tasks across. Read the columns: an empty column for everyone is a broken step in the product, not a lazy cohort.</p>
             {!matrix && <p className="text-white/40">Loading…</p>}
-            {matrix && matrix.rows.length === 0 && (
+            {matrix && !matrix.rows.some((r) => !r.isAdmin) && (
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">No tester profiles yet — the grid fills as Wave 1 signs up.</div>
             )}
-            {matrix && matrix.rows.length > 0 && (
+            {matrix && matrix.rows.some((r) => !r.isAdmin) && (
               <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02] p-2">
                 <table className="border-separate" style={{ borderSpacing: 2 }}>
                   <thead>
@@ -446,11 +446,14 @@ export default function AdminBetaPage() {
                       <td className="sticky left-0 z-10 bg-[#0f0f12] p-2"><Label>Done / applicable</Label></td>
                       {matrix.tasks.map((t) => {
                         const f = matrix.footers[t.code];
-                        const rate = f && f.total ? f.done / f.total : 0;
+                        // No applicable tester (admin-only or verification-only
+                        // columns) is not "nobody done": grey, not red.
+                        const none = !f || f.total === 0;
+                        const rate = none ? 0 : f.done / f.total;
                         return (
-                          <td key={t.code} className="p-1 text-center" title={`${taskLabel(t)}\n${f ? `${f.done} of ${f.total} applicable testers done` : ""}`}>
-                            <span className="text-[9px] font-mono" style={{ color: rate === 0 ? "rgba(255,80,80,0.9)" : rate < 0.5 ? "rgba(255,184,0,0.9)" : "rgba(67,233,123,0.9)" }}>
-                              {f ? `${f.done}/${f.total}` : "–"}
+                          <td key={t.code} className="p-1 text-center" title={`${taskLabel(t)}\n${none ? "no applicable tester" : `${f.done} of ${f.total} applicable testers done`}`}>
+                            <span className="text-[9px] font-mono" style={{ color: none ? "rgba(255,255,255,0.25)" : rate === 0 ? "rgba(255,80,80,0.9)" : rate < 0.5 ? "rgba(255,184,0,0.9)" : "rgba(67,233,123,0.9)" }}>
+                              {none ? "–" : `${f.done}/${f.total}`}
                             </span>
                           </td>
                         );
