@@ -18,7 +18,7 @@ interface QueueRow { kind: string; adminProfile: string; assignee: string; other
 interface TesterRow { trackerId: string; firstName: string | null; kind: string; wave: number; plannedAliases: string[]; plannedProfiles: string; assignedAdmin: string | null; tierAtStart: string; code: string; email: string | null; inviteSentAt: string | null; status: "awaiting_email" | "invited" | "signed_up"; signedUp: string | null; lastActive: string | null; liveAliases: string[] | null; tasksDone: number; tasksSkipped: number; feedback: number; notes: string }
 interface MatrixTask { code: string; group: string; title?: string }
 const taskLabel = (t: MatrixTask) => `${t.code} — ${t.title || t.group}`;
-interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; isAdmin?: boolean; cells: Record<string, string> }
+interface MatrixRow { profileId: string; alias: string; role: string; tier: string | null; city: string; country: string; email: string; wave: number; lastActive: string | null; isAdmin?: boolean; tester?: string; cells: Record<string, string> }
 interface PreviewTask { code: string; group: string; counterparty: string | null; autoDetected: boolean; debrief: boolean; roleSpecific: boolean; title: string; hint: string }
 interface PreviewData { wave: number; role: string; tier: string; total: number; groups: { group: string; tasks: PreviewTask[] }[] }
 
@@ -424,7 +424,7 @@ export default function AdminBetaPage() {
                           <span className="font-medium">{r.alias}</span>
                           <span className="ml-2 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: `${ROLE_COLORS[r.role]}22`, color: ROLE_COLORS[r.role] }}>{r.role}</span>
                           {r.isAdmin && <span className="ml-1 rounded px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: "rgba(255,51,102,0.14)", color: INFRARED }}>ADMIN</span>}
-                          <div className="text-[10px] text-white/30">W{r.wave} · {r.city} · {r.tier || "FREE"}</div>
+                          <div className="text-[10px] text-white/30">{r.tester && <span className="text-white/55">{r.tester} · </span>}W{r.wave} · {r.city} · {r.tier || "FREE"}</div>
                         </td>
                         {matrix.tasks.map((t) => {
                           const c = r.cells[t.code];
