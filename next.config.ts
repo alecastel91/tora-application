@@ -13,7 +13,8 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://plausible.io",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://resend-attachments.s3.amazonaws.com https://cdn-icons-png.flaticon.com",
+  // *.supabase.co: beta-feedback screenshots and avatars shown in the cockpit live in Supabase Storage.
+  "img-src 'self' data: blob: https://*.supabase.co https://resend-attachments.s3.amazonaws.com https://cdn-icons-png.flaticon.com",
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tora-backend-production.up.railway.app https://plausible.io",
   "frame-ancestors 'none'",
