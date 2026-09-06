@@ -3,6 +3,7 @@ import React from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { PostReportsView } from "../admin/PostReportsView";
 import Image from "next/image";
 
 /**
@@ -62,7 +63,7 @@ export default function AdminBetaPage() {
   const [feedback, setFeedback] = useState<FeedbackRow[] | null>(null);
   const [strays, setStrays] = useState<{ email: string; createdAt: string; lastLogin: string | null }[]>([]);
   const [fbStatus, setFbStatus] = useState("open");
-  const [fbType, setFbType] = useState<"reports" | "debrief">("reports");
+  const [fbType, setFbType] = useState<"reports" | "debrief" | "posts">("reports");
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [pvWave, setPvWave] = useState(2);
   const [pvRole, setPvRole] = useState("ARTIST");
@@ -124,6 +125,7 @@ export default function AdminBetaPage() {
   const loadFeedback = useCallback(() => {
     // Split is server-side (see adminBeta.js /feedback). Triage status has
     // no meaning for a Final Check answer.
+    if (fbType === "posts") return; // PostReportsView loads its own data
     const params = new URLSearchParams({ view: fbType });
     if (fbType === "reports" && fbStatus !== "all") params.set("status", fbStatus);
     getJson(`/api/admin/beta/feedback?${params}`)
@@ -517,10 +519,10 @@ export default function AdminBetaPage() {
         {tab === "feedback" && (
           <div>
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              {(["reports", "debrief"] as const).map((k) => (
+              {(["reports", "debrief", "posts"] as const).map((k) => (
                 <button key={k} onClick={() => setFbType(k)}
                   className="rounded-full border px-3 py-1 text-xs capitalize"
-                  style={pillStyle(fbType === k)}>{k === "debrief" ? "Final check" : k}</button>
+                  style={pillStyle(fbType === k)}>{k === "debrief" ? "Final check" : k === "posts" ? "Post reports" : k}</button>
               ))}
               {fbType === "reports" && (
                 <>
@@ -532,13 +534,16 @@ export default function AdminBetaPage() {
                   ))}
                 </>
               )}
-              <button onClick={exportCsv} className="ml-auto rounded-full border border-white/15 px-3 py-1 text-xs text-white/60 hover:text-white">Export CSV</button>
+              {fbType !== "posts" && (
+                <button onClick={exportCsv} className="ml-auto rounded-full border border-white/15 px-3 py-1 text-xs text-white/60 hover:text-white">Export CSV</button>
+              )}
             </div>
-            {!feedback && <p className="text-white/40">Loading…</p>}
-            {feedback && feedback.length === 0 && (
+            {fbType === "posts" && <PostReportsView endpoint="/api/admin/beta/reports" />}
+            {fbType !== "posts" && !feedback && <p className="text-white/40">Loading…</p>}
+            {fbType !== "posts" && feedback && feedback.length === 0 && (
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">Nothing here.</div>
             )}
-            {feedback && feedback.map((f) => (
+            {fbType !== "posts" && feedback && feedback.map((f) => (
               <div key={f.id} className="mb-2 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 text-sm">
                 <div className="flex flex-wrap items-center gap-2">
                   {f.type === "Debrief" ? (
