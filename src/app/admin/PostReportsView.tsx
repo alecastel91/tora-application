@@ -22,7 +22,7 @@ export type ReportedPost = {
 
 const ROLE_COLORS: Record<string, string> = { ARTIST: '#6B5FFF', AGENT: '#00C875', PROMOTER: '#FFB800', VENUE: '#FF5757' };
 
-export function PostReportsView({ endpoint }: { endpoint: string }) {
+export function PostReportsView({ endpoint, onCount }: { endpoint: string; onCount?: (n: number) => void }) {
   const [posts, setPosts] = useState<ReportedPost[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -33,11 +33,12 @@ export function PostReportsView({ endpoint }: { endpoint: string }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setPosts(data.posts);
+      onCount?.(data.posts.length);
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load reports');
     }
-  }, [endpoint]);
+  }, [endpoint, onCount]);
 
   useEffect(() => { load(); }, [load]);
 

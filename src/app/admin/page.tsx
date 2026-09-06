@@ -64,6 +64,7 @@ export default function AdminDashboard() {
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
     const [view, setView] = useState<'applications' | 'recap' | 'reports'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
+    const [reportedPostsCount, setReportedPostsCount] = useState(0);
 
     // Badge on the Verification nav button — how many profiles await review.
     useEffect(() => {
@@ -75,6 +76,15 @@ export default function AdminDashboard() {
                 if (cancelled || !res.ok) return;
                 const data = await res.json();
                 setVerifyPendingCount((data.pending || []).length);
+            } catch { /* badge is best-effort */ }
+        })();
+        // Red dot on the Reports tab — any post members have reported.
+        (async () => {
+            try {
+                const res = await fetch("/api/admin/reports", { credentials: "include" });
+                if (cancelled || !res.ok) return;
+                const data = await res.json();
+                setReportedPostsCount((data.posts || []).length);
             } catch { /* badge is best-effort */ }
         })();
         return () => { cancelled = true; };
@@ -591,6 +601,9 @@ export default function AdminDashboard() {
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
                             {v === 'applications' ? 'Applications' : v === 'recap' ? 'Recap' : 'Reports'}
+                            {v === 'reports' && reportedPostsCount > 0 && (
+                                <span className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500 align-middle" aria-label={`${reportedPostsCount} reported`} />
+                            )}
                         </button>
                     ))}
                     {view === 'applications' && (
@@ -615,7 +628,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {view === 'recap' && <RecapView applications={applications} />}
-                {view === 'reports' && <PostReportsView endpoint="/api/admin/reports" />}
+                {view === 'reports' && <PostReportsView endpoint="/api/admin/reports" onCount={setReportedPostsCount} />}
 
                 {view === 'applications' && (<>
                 {/* Stats */}
