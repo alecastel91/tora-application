@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { RecapView } from "./RecapView";
-import { PostReportsView } from "./PostReportsView";
+import { PostReportsView, fetchReportedPosts, type ReportedPost } from "./PostReportsView";
+import { roleColor } from "@/lib/roleColors";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { GlassPanel } from "@/components/ui/GlassPanel";
@@ -64,7 +65,8 @@ export default function AdminDashboard() {
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
     const [view, setView] = useState<'applications' | 'recap' | 'reports'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
-    const [reportedPostsCount, setReportedPostsCount] = useState(0);
+    // Reported posts feed both the Reports tab and its red dot.
+    const [reportedPosts, setReportedPosts] = useState<ReportedPost[] | null>(null);
 
     // Badge on the Verification nav button — how many profiles await review.
     useEffect(() => {
@@ -78,15 +80,9 @@ export default function AdminDashboard() {
                 setVerifyPendingCount((data.pending || []).length);
             } catch { /* badge is best-effort */ }
         })();
-        // Red dot on the Reports tab — any post members have reported.
-        (async () => {
-            try {
-                const res = await fetch("/api/admin/reports", { credentials: "include" });
-                if (cancelled || !res.ok) return;
-                const data = await res.json();
-                setReportedPostsCount((data.posts || []).length);
-            } catch { /* badge is best-effort */ }
-        })();
+        fetchReportedPosts("/api/admin/reports")
+            .then((posts) => { if (!cancelled) setReportedPosts(posts); })
+            .catch(() => { /* badge is best-effort; the tab shows the error */ });
         return () => { cancelled = true; };
     }, [isAuthenticated]);
 
@@ -462,15 +458,7 @@ export default function AdminDashboard() {
         }
     };
 
-    const getRoleColor = (role: string) => {
-        switch (role?.toUpperCase()) {
-            case 'ARTIST': return '#6B5FFF';
-            case 'VENUE': return '#FF5757';
-            case 'PROMOTER': return '#FFB800';
-            case 'AGENT': return '#00C875';
-            default: return '#999999';
-        }
-    };
+    const getRoleColor = roleColor;
 
     const filteredApplications = applications.filter(app => {
         // Filter by status
@@ -601,8 +589,8 @@ export default function AdminDashboard() {
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
                             {v === 'applications' ? 'Applications' : v === 'recap' ? 'Recap' : 'Reports'}
-                            {v === 'reports' && reportedPostsCount > 0 && (
-                                <span className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500 align-middle" aria-label={`${reportedPostsCount} reported`} />
+                            {v === 'reports' && (reportedPosts?.length ?? 0) > 0 && (
+                                <span className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500 align-middle" aria-label={`${reportedPosts?.length} reported`} />
                             )}
                         </button>
                     ))}
@@ -628,7 +616,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {view === 'recap' && <RecapView applications={applications} />}
-                {view === 'reports' && <PostReportsView endpoint="/api/admin/reports" onCount={setReportedPostsCount} />}
+                {view === 'reports' && <PostReportsView endpoint="/api/admin/reports" posts={reportedPosts} onChange={setReportedPosts} />}
 
                 {view === 'applications' && (<>
                 {/* Stats */}

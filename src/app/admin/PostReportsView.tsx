@@ -1,11 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
+import { ROLE_COLORS } from '@/lib/roleColors';
 
 /**
- * Reported News posts with moderation actions. Shared by the prod admin
- * dashboard (/api/admin/reports) and the beta cockpit (/api/admin/beta/reports)
- * — pass the proxy endpoint.
+ * Reported News posts with moderation actions. The page owns the list (it
+ * also feeds the tab badge) and passes the proxy endpoint; every action's
+ * outcome is known up front, so the list is patched locally instead of
+ * refetched.
  */
 type Reporter = { id: string; name: string; role: string };
 export type ReportedPost = {
@@ -19,32 +21,33 @@ export type ReportedPost = {
   author: Reporter;
   reports: { reason: string | null; createdAt: string; reporter: Reporter }[];
 };
+type Action = 'hide' | 'remove' | 'dismiss';
 
-const ROLE_COLORS: Record<string, string> = { ARTIST: '#6B5FFF', AGENT: '#00C875', PROMOTER: '#FFB800', VENUE: '#FF5757' };
+/** Fetch the reported posts through an admin proxy endpoint. */
+export async function fetchReportedPosts(endpoint: string): Promise<ReportedPost[]> {
+  const res = await fetch(endpoint, { credentials: 'include', cache: 'no-store' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data.posts;
+}
 
-export function PostReportsView({ endpoint, onCount }: { endpoint: string; onCount?: (n: number) => void }) {
-  const [posts, setPosts] = useState<ReportedPost[] | null>(null);
+const applyAction = (posts: ReportedPost[], id: string, action: Action) =>
+  action === 'hide'
+    ? posts.map((p) => (p.id === id ? { ...p, status: 'HIDDEN' as const } : p))
+    : posts.filter((p) => p.id !== id);
+
+export function PostReportsView({ endpoint, posts, onChange }: {
+  endpoint: string;
+  posts: ReportedPost[] | null;
+  onChange: (posts: ReportedPost[]) => void;
+}) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    try {
-      const res = await fetch(endpoint, { credentials: 'include', cache: 'no-store' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      setPosts(data.posts);
-      onCount?.(data.posts.length);
-      setError(null);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load reports');
-    }
-  }, [endpoint, onCount]);
-
-  useEffect(() => { load(); }, [load]);
-
-  const act = async (postId: string, action: 'hide' | 'remove' | 'dismiss') => {
+  const act = async (postId: string, action: Action) => {
     if (action === 'remove' && !window.confirm('Remove this post permanently?')) return;
     setBusy(postId);
+    setError(null);
     try {
       const res = await fetch(endpoint, {
         method: 'POST', credentials: 'include',
@@ -52,7 +55,7 @@ export function PostReportsView({ endpoint, onCount }: { endpoint: string; onCou
         body: JSON.stringify({ postId, action }),
       });
       if (!res.ok) throw new Error((await res.json()).error || `HTTP ${res.status}`);
-      await load();
+      onChange(applyAction(posts || [], postId, action));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Action failed');
     } finally {
@@ -66,15 +69,14 @@ export function PostReportsView({ endpoint, onCount }: { endpoint: string; onCou
     </span>
   );
 
-  if (error) return <p className="text-red-400 text-sm">{error}</p>;
-  if (!posts) return <p className="text-white/40">Loading…</p>;
-  if (posts.length === 0) {
-    return <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">No reported posts.</div>;
-  }
-
   return (
     <div>
-      {posts.map((p) => (
+      {error && <p className="mb-3 text-sm text-red-400">{error}</p>}
+      {!posts && <p className="text-white/40">Loading…</p>}
+      {posts && posts.length === 0 && (
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">No reported posts.</div>
+      )}
+      {posts && posts.map((p) => (
         <div key={p.id} className="mb-2 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 text-sm">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"

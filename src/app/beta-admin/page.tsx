@@ -3,7 +3,8 @@ import React from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { PostReportsView } from "../admin/PostReportsView";
+import { PostReportsView, fetchReportedPosts, type ReportedPost } from "../admin/PostReportsView";
+import { ROLE_COLORS } from "@/lib/roleColors";
 import Image from "next/image";
 
 /**
@@ -37,7 +38,6 @@ const KIND_LABEL: Record<string, string> = {
   verification_pending: "Verification review",
 };
 
-const ROLE_COLORS: Record<string, string> = { ARTIST: "#6B5FFF", AGENT: "#00C875", PROMOTER: "#FFB800", VENUE: "#FF5757" };
 const INFRARED = "#FF3366";
 
 const age = (ms: number) => {
@@ -56,14 +56,15 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function AdminBetaPage() {
-  const [tab, setTab] = useState<"queue" | "testers" | "matrix" | "preview" | "feedback">("queue");
+  const [tab, setTab] = useState<"queue" | "testers" | "matrix" | "preview" | "feedback" | "posts">("queue");
   const [queue, setQueue] = useState<QueueRow[] | null>(null);
   const [testers, setTesters] = useState<TesterRow[] | null>(null);
   const [matrix, setMatrix] = useState<{ tasks: MatrixTask[]; rows: MatrixRow[]; footers: Record<string, { done: number; total: number }> } | null>(null);
   const [feedback, setFeedback] = useState<FeedbackRow[] | null>(null);
+  const [reportedPosts, setReportedPosts] = useState<ReportedPost[] | null>(null);
   const [strays, setStrays] = useState<{ email: string; createdAt: string; lastLogin: string | null }[]>([]);
   const [fbStatus, setFbStatus] = useState("open");
-  const [fbType, setFbType] = useState<"reports" | "debrief" | "posts">("reports");
+  const [fbType, setFbType] = useState<"reports" | "debrief">("reports");
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [pvWave, setPvWave] = useState(2);
   const [pvRole, setPvRole] = useState("ARTIST");
@@ -125,7 +126,6 @@ export default function AdminBetaPage() {
   const loadFeedback = useCallback(() => {
     // Split is server-side (see adminBeta.js /feedback). Triage status has
     // no meaning for a Final Check answer.
-    if (fbType === "posts") return; // PostReportsView loads its own data
     const params = new URLSearchParams({ view: fbType });
     if (fbType === "reports" && fbStatus !== "all") params.set("status", fbStatus);
     getJson(`/api/admin/beta/feedback?${params}`)
@@ -142,6 +142,10 @@ export default function AdminBetaPage() {
   useEffect(() => { if (authed && tab === "testers") loadTesters(); }, [authed, tab, loadTesters]);
   useEffect(() => { if (authed && tab === "matrix") loadMatrix(); }, [authed, tab, loadMatrix]);
   useEffect(() => { if (authed && tab === "feedback") loadFeedback(); }, [authed, tab, loadFeedback]);
+  useEffect(() => {
+    if (!authed || tab !== "posts") return;
+    fetchReportedPosts("/api/admin/beta/reports").then(setReportedPosts).catch((e) => setLoadError(String(e.message)));
+  }, [authed, tab]);
 
   const loadPreview = useCallback(() => {
     setPreview(null);
@@ -260,13 +264,13 @@ export default function AdminBetaPage() {
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
-          {(["queue", "testers", "matrix", "preview", "feedback"] as const).map((k) => (
+          {(["queue", "testers", "matrix", "preview", "feedback", "posts"] as const).map((k) => (
             <button key={k} onClick={() => setTab(k)}
               className="font-tech rounded-full border px-4 py-1.5 text-[13px] uppercase tracking-[0.08em] transition-colors"
               style={tab === k
                 ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" }
                 : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}>
-              {k === "queue" ? `Action queue${queue ? ` (${queue.length})` : ""}` : k === "matrix" ? "Task matrix" : k === "preview" ? "Tester list preview" : k}
+              {k === "queue" ? `Action queue${queue ? ` (${queue.length})` : ""}` : k === "matrix" ? "Task matrix" : k === "preview" ? "Tester list preview" : k === "posts" ? "Post reports" : k}
             </button>
           ))}
         </div>
@@ -519,10 +523,10 @@ export default function AdminBetaPage() {
         {tab === "feedback" && (
           <div>
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              {(["reports", "debrief", "posts"] as const).map((k) => (
+              {(["reports", "debrief"] as const).map((k) => (
                 <button key={k} onClick={() => setFbType(k)}
                   className="rounded-full border px-3 py-1 text-xs capitalize"
-                  style={pillStyle(fbType === k)}>{k === "debrief" ? "Final check" : k === "posts" ? "Post reports" : k}</button>
+                  style={pillStyle(fbType === k)}>{k === "debrief" ? "Final check" : k}</button>
               ))}
               {fbType === "reports" && (
                 <>
@@ -534,16 +538,13 @@ export default function AdminBetaPage() {
                   ))}
                 </>
               )}
-              {fbType !== "posts" && (
-                <button onClick={exportCsv} className="ml-auto rounded-full border border-white/15 px-3 py-1 text-xs text-white/60 hover:text-white">Export CSV</button>
-              )}
+              <button onClick={exportCsv} className="ml-auto rounded-full border border-white/15 px-3 py-1 text-xs text-white/60 hover:text-white">Export CSV</button>
             </div>
-            {fbType === "posts" && <PostReportsView endpoint="/api/admin/beta/reports" />}
-            {fbType !== "posts" && !feedback && <p className="text-white/40">Loading…</p>}
-            {fbType !== "posts" && feedback && feedback.length === 0 && (
+            {!feedback && <p className="text-white/40">Loading…</p>}
+            {feedback && feedback.length === 0 && (
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">Nothing here.</div>
             )}
-            {fbType !== "posts" && feedback && feedback.map((f) => (
+            {feedback && feedback.map((f) => (
               <div key={f.id} className="mb-2 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 text-sm">
                 <div className="flex flex-wrap items-center gap-2">
                   {f.type === "Debrief" ? (
@@ -598,6 +599,10 @@ export default function AdminBetaPage() {
               </div>
             ))}
           </div>
+        )}
+
+        {tab === "posts" && (
+          <PostReportsView endpoint="/api/admin/beta/reports" posts={reportedPosts} onChange={setReportedPosts} />
         )}
       </div>
     </div>

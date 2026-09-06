@@ -1,5 +1,7 @@
 "use client";
 
+import { ROLE_COLORS } from "@/lib/roleColors";
+
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,12 +25,6 @@ interface PendingProfile {
     user: { email: string; lastLogin: string | null };
 }
 
-const ROLE_COLORS: Record<string, string> = {
-    ARTIST: "#6B5FFF",
-    AGENT: "#00C875",
-    PROMOTER: "#FFB800",
-    VENUE: "#FF5757",
-};
 
 function instagramUrl(handle: string): string {
     const clean = handle
