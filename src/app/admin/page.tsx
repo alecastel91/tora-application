@@ -16,6 +16,19 @@ import { TORALoader } from "@/components/ui/TORALoader";
 // stopped working when we enabled RLS to close the PII leak.
 const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
 
+// "Invite all approved" runs in batches of this size per server call
+// (mirrors BATCH_MAX in /api/admin/send-invitations-bulk).
+const BULK_BATCH = 5;
+
+type BulkResult = {
+    id: string;
+    name: string;
+    email: string;
+    status: 'invited' | 'invited_email_failed' | 'skipped' | 'failed';
+    code?: string;
+    error?: string;
+};
+
 // Helper function to convert artist name to RA URL slug
 const convertToRASlug = (name: string): string => {
     return name
@@ -67,6 +80,12 @@ export default function AdminDashboard() {
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
     // Reported posts feed both the Reports tab and its red dot.
     const [reportedPosts, setReportedPosts] = useState<ReportedPost[] | null>(null);
+    // "Invite all approved" run: null when idle; results accumulate batch by batch.
+    const [bulk, setBulk] = useState<{
+        running: boolean;
+        total: number;
+        results: BulkResult[];
+    } | null>(null);
 
     // Badge on the Verification nav button — how many profiles await review.
     useEffect(() => {
@@ -447,6 +466,64 @@ export default function AdminDashboard() {
         }
     };
 
+    /**
+     * Invite every APPROVED row in one go. Runs server-side in batches of
+     * BULK_BATCH so each request stays short; the server re-checks each
+     * row's status before sending, so re-running after an interruption is
+     * safe (already-invited rows are skipped, not re-sent).
+     */
+    const handleInviteAll = async () => {
+        const approved = applications.filter(a => a.status === 'APPROVED');
+        if (approved.length === 0) return;
+        const packages = approved.reduce<Record<string, number>>((acc, a) => {
+            const p = a.application_type === 'ADD_PROFILE' ? 'ADD PROFILE' : (invitationPackages[a.id] || 'STANDARD');
+            acc[p] = (acc[p] || 0) + 1;
+            return acc;
+        }, {});
+        const breakdown = Object.entries(packages).map(([p, n]) => `${n} × ${p}`).join(', ');
+        if (!confirm(
+            `Send invitations to ALL ${approved.length} approved applicants?\n\n` +
+            `Packages: ${breakdown}\n` +
+            `(set each row's package dropdown first if it should not be STANDARD)\n\n` +
+            `Emails go out at roughly one per second. You can leave this page open and watch progress.`
+        )) return;
+
+        setBulk({ running: true, total: approved.length, results: [] });
+        const queue = approved.map(a => ({ id: a.id, couponPackage: invitationPackages[a.id] || 'STANDARD' }));
+
+        for (let i = 0; i < queue.length; i += BULK_BATCH) {
+            const items = queue.slice(i, i + BULK_BATCH);
+            let batchResults: BulkResult[];
+            try {
+                const res = await fetch('/api/admin/send-invitations-bulk', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ env: envMode, items }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+                batchResults = data.results;
+            } catch (err) {
+                // Whole batch failed to reach the server: mark its rows failed and keep going.
+                const message = err instanceof Error ? err.message : String(err);
+                batchResults = items.map(it => {
+                    const a = approved.find(x => x.id === it.id)!;
+                    return {
+                        id: it.id,
+                        name: a.profile_name || `${a.first_name} ${a.last_name}`,
+                        email: a.email,
+                        status: 'failed' as const,
+                        error: message,
+                    };
+                });
+            }
+            setBulk(prev => prev ? { ...prev, results: [...prev.results, ...batchResults] } : prev);
+        }
+
+        setBulk(prev => prev ? { ...prev, running: false } : prev);
+        await loadApplications();
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'PENDING': return 'bg-yellow-500/20 text-yellow-300';
@@ -642,6 +719,74 @@ export default function AdminDashboard() {
                         <div className="text-purple-300 text-2xl font-bold">{stats.signedUp}</div>
                     </div>
                 </div>
+
+                {/* Invite all approved */}
+                {(stats.approved > 0 || bulk) && (
+                    <div className="mb-6 bg-blue-500/5 border border-blue-500/20 rounded-xl p-4">
+                        <div className="flex flex-col md:flex-row md:items-center gap-3">
+                            <div className="flex-1">
+                                <div className="text-blue-300 text-sm font-semibold uppercase tracking-wide">
+                                    Launch day
+                                </div>
+                                <div className="text-white/50 text-xs mt-1">
+                                    Sends the invitation email (with code) to every APPROVED applicant, one per second, using each row&apos;s package dropdown. Already-invited rows are skipped, so it is safe to re-run.
+                                </div>
+                            </div>
+                            <button
+                                onClick={handleInviteAll}
+                                disabled={!!bulk?.running || stats.approved === 0}
+                                className="px-5 py-2.5 bg-blue-500/20 hover:bg-blue-500/30 disabled:opacity-40 disabled:cursor-not-allowed text-blue-300 border border-blue-500/30 rounded text-sm font-semibold transition-colors whitespace-nowrap"
+                            >
+                                {bulk?.running
+                                    ? `SENDING ${bulk.results.length} / ${bulk.total}…`
+                                    : `INVITE ALL APPROVED (${stats.approved})`}
+                            </button>
+                        </div>
+
+                        {bulk && (() => {
+                            const count = (s: BulkResult['status']) => bulk.results.filter(r => r.status === s).length;
+                            const problems = bulk.results.filter(r => r.status !== 'invited' && r.status !== 'skipped');
+                            const pct = bulk.total ? Math.round((bulk.results.length / bulk.total) * 100) : 0;
+                            return (
+                                <div className="mt-4">
+                                    <div className="h-1.5 bg-white/10 rounded overflow-hidden">
+                                        <div className="h-full bg-blue-400 transition-all" style={{ width: `${pct}%` }} />
+                                    </div>
+                                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs mt-2">
+                                        <span className="text-white/60">{bulk.results.length} / {bulk.total} processed</span>
+                                        <span className="text-green-300">{count('invited')} sent</span>
+                                        {count('skipped') > 0 && <span className="text-white/40">{count('skipped')} skipped (already handled)</span>}
+                                        {count('invited_email_failed') > 0 && <span className="text-yellow-300">{count('invited_email_failed')} invited but email failed</span>}
+                                        {count('failed') > 0 && <span className="text-red-300">{count('failed')} failed</span>}
+                                        {!bulk.running && (
+                                            <button onClick={() => setBulk(null)} className="text-white/40 hover:text-white/70 underline">dismiss</button>
+                                        )}
+                                    </div>
+                                    {problems.length > 0 && (
+                                        <div className="mt-3 max-h-48 overflow-y-auto border border-white/10 rounded divide-y divide-white/5 text-xs">
+                                            {problems.map(r => (
+                                                <div key={r.id} className="px-3 py-2 flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+                                                    <span className={r.status === 'failed' ? 'text-red-300' : 'text-yellow-300'}>
+                                                        {r.status === 'failed' ? 'FAILED' : 'EMAIL FAILED'}
+                                                    </span>
+                                                    <span className="text-white">{r.name}</span>
+                                                    <span className="text-white/50">{r.email}</span>
+                                                    {r.code && <span className="text-white/70 font-mono">{r.code}</span>}
+                                                    <span className="text-white/40 md:ml-auto">{r.error}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {!bulk.running && problems.length > 0 && (
+                                        <div className="text-white/40 text-xs mt-2">
+                                            &ldquo;Email failed&rdquo; rows are INVITED with the code shown; relay it by hand. &ldquo;Failed&rdquo; rows are still APPROVED; press the button again to retry just those.
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
+                    </div>
+                )}
 
                 {/* Filters */}
                 <div className="flex flex-col md:flex-row gap-4 mb-6">
