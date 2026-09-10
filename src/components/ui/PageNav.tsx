@@ -35,9 +35,11 @@ export function TopNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
+            className="fixed top-0 left-0 right-0 z-50 flex flex-wrap items-center justify-between px-6 md:px-10 py-4 md:py-5 bg-black/80 backdrop-blur-xl"
         >
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            {/* On phones the header is two rows: logo + language picker, then the
+                centred links (FR/PT labels are too long to share a row). */}
+            <Link href="/" className="hover:opacity-80 transition-opacity order-1">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -52,7 +54,7 @@ export function TopNav() {
                     </svg>
                 </motion.div>
             </Link>
-            <div className="flex items-center space-x-8 md:space-x-10">
+            <div className="order-3 md:order-2 w-full md:w-auto mt-4 md:mt-0 flex items-center justify-center md:justify-end space-x-7 md:space-x-10 md:mr-8">
                 {links.map((link) => (
                     <Link
                         key={link.key}
@@ -67,6 +69,9 @@ export function TopNav() {
                         {t(link.key)}
                     </Link>
                 ))}
+            </div>
+            <div className="order-2 md:order-3">
+                <LanguagePicker placement="top" />
             </div>
         </motion.nav>
     );
@@ -95,8 +100,14 @@ export function PageBrand() {
     );
 }
 
-function LanguagePicker() {
+/**
+ * Language picker. Lives in the top-right of every page header (HomeNav on
+ * the homepage, TopNav on the detail pages). `placement` only decides which
+ * way the menu opens.
+ */
+export function LanguagePicker({ placement = "top" }: { placement?: "top" | "bottom" }) {
     const { language, setLanguage } = useLanguage();
+    const current = LANGUAGES.find((l) => l.code === language)?.label ?? language;
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -114,21 +125,38 @@ function LanguagePicker() {
         <div ref={ref} className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-1.5 text-white/20 hover:text-white/50 transition-colors"
+                aria-label="Language"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors ${
+                    isOpen
+                        ? "border-white/30 text-white bg-white/10"
+                        : "border-white/15 text-white/70 hover:text-white hover:border-white/40 bg-black/40"
+                }`}
             >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={sgFont}>{language}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.25em]" style={sgFont}>{current}</span>
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-60">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
             </button>
 
             {isOpen && (
-                <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[80px]">
+                <div
+                    role="listbox"
+                    className={`absolute right-0 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[96px] ${
+                        placement === "top" ? "top-full mt-3" : "bottom-full mb-3"
+                    }`}
+                >
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
+                            role="option"
+                            aria-selected={language === lang.code}
                             onClick={() => { setLanguage(lang.code); setIsOpen(false); }}
                             className={`block w-full text-center text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-2 rounded transition-colors ${
                                 language === lang.code
@@ -186,7 +214,6 @@ export function BottomNav() {
                             </Link>
                         )
                     ))}
-                    <LanguagePicker />
                 </div>
             </motion.nav>
         </>

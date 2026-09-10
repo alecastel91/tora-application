@@ -35,14 +35,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     loadTranslations();
   }, [language]);
 
-  // Save language preference to localStorage
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('tora-language', language);
-    }
-  }, [language]);
-
-  // Load saved language preference on mount
+  // Load saved language preference on mount. This effect must run BEFORE the
+  // save effect below: effects fire in declaration order, and with the save
+  // effect first the initial 'EN' overwrote the stored choice on every page
+  // load, so the site forgot the visitor's language on refresh/navigation.
+  const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('tora-language') as LanguageCode;
@@ -50,7 +47,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setLanguageState(saved);
       }
     }
+    setHydrated(true);
   }, []);
+
+  // Save language preference to localStorage (only after the saved value has
+  // been read, so the default never clobbers it).
+  useEffect(() => {
+    if (hydrated && typeof window !== 'undefined') {
+      localStorage.setItem('tora-language', language);
+    }
+  }, [language, hydrated]);
 
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
