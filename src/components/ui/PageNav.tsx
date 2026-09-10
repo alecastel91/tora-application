@@ -147,18 +147,60 @@ function LanguagePicker() {
     );
 }
 
+/**
+ * Bottom bar. Slides away while the visitor scrolls down and returns as soon as
+ * they scroll up (or reach the top / bottom of the page).
+ *
+ * The slide is applied to the fixed <nav> itself — never to a wrapper — so the
+ * bar keeps its place in the root stacking context and stays clickable
+ * whenever it is on screen. (A wrapper with opacity/transform once put the
+ * bar underneath <main className="z-10"> and swallowed every click.)
+ */
+function useHideOnScrollDown() {
+    const [hidden, setHidden] = useState(false);
+    useEffect(() => {
+        let lastY = window.scrollY;
+        let ticking = false;
+        const onScroll = () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const y = window.scrollY;
+                const dy = y - lastY;
+                const atTop = y < 80;
+                const atBottom = y + window.innerHeight >= document.documentElement.scrollHeight - 4;
+                if (atTop || atBottom) {
+                    setHidden(false);
+                    lastY = y;
+                } else if (Math.abs(dy) > 6) {
+                    setHidden(dy > 0);
+                    lastY = y;
+                }
+                ticking = false;
+            });
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+    return hidden;
+}
+
 export function BottomNav() {
     const { t } = useLanguage();
+    const hidden = useHideOnScrollDown();
 
     return (
         <>
-            <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10 z-50" />
             <motion.nav
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
-                className="fixed bottom-0 left-0 right-0 z-50 flex justify-center py-6 bg-black/80 backdrop-blur-xl"
+                aria-hidden={hidden}
+                className={`fixed bottom-0 left-0 right-0 z-50 flex justify-center py-6 bg-black/80 backdrop-blur-xl transition-transform duration-300 ease-out ${
+                    hidden ? "translate-y-full pointer-events-none" : "translate-y-0"
+                }`}
             >
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10" />
                 <div className="flex items-center space-x-6 md:space-x-10">
                     {[
                         { key: "nav_privacy", href: "/privacy", external: false },
