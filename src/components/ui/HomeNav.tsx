@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { LanguagePicker } from "@/components/ui/PageNav";
 
 const LINKS = [
   { key: "nav_about", href: "/about" },
@@ -28,12 +27,7 @@ export function HomeNav() {
       transition={{ delay: 1.2, duration: 0.8 }}
       className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-5 pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none [&_a]:pointer-events-auto"
     >
-      {/* Language picker: top-right on desktop; on phones it sits on its own
-          row above the centred links so long labels (FR/PT) never collide. */}
-      <div className="pointer-events-auto absolute right-4 md:right-8 top-4 md:top-[15px]">
-        <LanguagePicker placement="top" />
-      </div>
-      <div className="flex items-center space-x-6 md:space-x-10 mt-12 md:mt-0">
+      <div className="flex items-center space-x-8 md:space-x-10">
         {LINKS.map((link) => (
           <Link
             key={link.key}

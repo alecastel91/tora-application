@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { HomeDrawerProvider } from "@/components/sections/home/HomeDrawer";
 import { BottomNav } from "@/components/ui/PageNav";
@@ -34,24 +33,12 @@ export default function Home() {
         <FinalCtaSection />
       </main>
 
-      <HomeBottomNav />
+      {/* Rendered directly, not inside an opacity-animated wrapper: that wrapper
+          created its own stacking context, so the bar's z-50 only applied
+          inside it and <main className="z-10"> painted over the bar. It looked
+          fine but swallowed every click (Privacy / Terms / language picker). */}
+      <BottomNav />
      </HomeDrawerProvider>
     </LenisProvider>
-  );
-}
-
-/**
- * Bottom nav visible on the hero (language picker stays discoverable on landing)
- * and at the final CTA / footer, but faded out during the scroll journey so the
- * cinematic beats get the full viewport.
- */
-function HomeBottomNav() {
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.04, 0.1, 0.85, 0.93], [1, 1, 0, 0, 1]);
-  const pointerEvents = useTransform(opacity, (v) => (v < 0.4 ? "none" : "auto"));
-  return (
-    <motion.div style={{ opacity, pointerEvents }}>
-      <BottomNav />
-    </motion.div>
   );
 }
