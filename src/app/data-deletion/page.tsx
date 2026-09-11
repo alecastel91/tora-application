@@ -26,6 +26,19 @@ export default function DataDeletion() {
                     </p>
 
                     <GlassCard className="space-y-4">
+                        <h3 className="text-white font-semibold text-lg font-tech">{t('deletion_app_title')}</h3>
+                        <p>
+                            {t('deletion_app_text')}
+                        </p>
+                        <ul className="list-disc pl-6 space-y-2">
+                            <li>{t('deletion_app_item1')}</li>
+                            <li>{t('deletion_app_item2')}</li>
+                            <li>{t('deletion_app_item3')}</li>
+                            <li>{t('deletion_app_item4')}</li>
+                        </ul>
+                    </GlassCard>
+
+                    <GlassCard className="space-y-4">
                         <h3 className="text-white font-semibold text-lg font-tech">{t('deletion_how_title')}</h3>
                         <p>
                             {t('deletion_how_text')}
