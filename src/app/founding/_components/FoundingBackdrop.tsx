@@ -14,7 +14,7 @@ export function FoundingBackdrop() {
       className="fixed inset-0 -z-10 overflow-hidden bg-black pointer-events-none"
     >
       <div
-        className="absolute left-1/2 top-[-15%] h-[70vh] w-[70vh] -translate-x-1/2 rounded-full opacity-40 md:opacity-100"
+        className="absolute left-1/2 top-[-15%] h-[70vh] w-[70vh] -translate-x-1/2 rounded-full opacity-25 md:opacity-100"
         style={{
           background:
             "radial-gradient(circle, rgba(255,51,102,0.12) 0%, transparent 70%)",

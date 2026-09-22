@@ -163,7 +163,7 @@ function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
-      <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-40 md:opacity-100">
+      <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 hidden items-center justify-center md:flex">
         <motion.div
           className="absolute h-[62vh] max-h-[560px] w-[62vh] max-w-[560px] rounded-full"
           style={{ background: "radial-gradient(circle, rgba(255,51,102,0.16) 0%, transparent 62%)" }}
@@ -204,7 +204,7 @@ function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-10 text-[9.5px] leading-[1.9] md:mt-8 md:text-xs uppercase tracking-[0.22em] md:tracking-[0.34em] text-infrared/90 md:text-infrared"
+          className="mt-14 text-[9.5px] leading-[1.9] md:mt-8 md:text-xs uppercase tracking-[0.22em] md:tracking-[0.34em] text-infrared/90 md:text-infrared"
           style={{ ...supreme, fontWeight: 500 }}
         >
           {c.hero.eyebrow.split("·").map((part, i) => (
@@ -216,7 +216,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.8, ease: EASE }}
-          className="mt-4 max-w-[320px] text-[24px] font-semibold uppercase leading-[1.2] tracking-[0.03em] text-white text-balance md:mt-5 md:max-w-3xl md:text-5xl md:leading-tight md:tracking-normal"
+          className="mt-5 hidden max-w-3xl text-5xl font-semibold uppercase leading-tight text-white text-balance md:block"
           style={supreme}
         >
           {c.hero.title}
@@ -226,7 +226,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.8, ease: EASE }}
-          className="mt-4 max-w-[300px] text-[13px] leading-relaxed text-white/50 md:mt-5 md:max-w-xl md:text-base md:text-white/55"
+          className="mt-5 hidden max-w-xl text-base leading-relaxed text-white/55 md:block"
           style={grotesk}
         >
           {c.hero.subline}
@@ -236,12 +236,12 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.7 }}
-          className="mt-8 flex flex-col items-center gap-4 md:mt-9 md:flex-row md:flex-wrap md:justify-center md:gap-3"
+          className="mt-7 flex flex-col items-center gap-5 md:mt-9 md:flex-row md:flex-wrap md:justify-center md:gap-3"
         >
-          <Link href={useApplyHref()} className="rounded-full bg-infrared px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] hover:brightness-110" style={supreme}>
+          <Link href={useApplyHref()} className="rounded-full border border-white/40 px-9 py-3.5 text-[11px] font-medium uppercase tracking-[0.26em] text-white/90 transition-all duration-300 hover:border-white hover:text-white md:border-0 md:bg-infrared md:px-8 md:py-3 md:font-semibold md:tracking-[0.22em] md:text-white md:hover:-translate-y-0.5 md:hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] md:hover:brightness-110" style={supreme}>
             {c.hero.ctaPrimary}
           </Link>
-          <a href="#problem" className="text-[10px] uppercase tracking-[0.26em] text-white/55 transition-colors hover:text-white md:rounded-full md:border md:border-white/30 md:px-8 md:py-3 md:text-[11px] md:font-semibold md:tracking-[0.22em] md:text-white md:transition-all md:duration-300 md:hover:-translate-y-0.5 md:hover:border-white/50 md:hover:bg-white/10" style={supreme}>
+          <a href="#problem" className="text-[10px] uppercase tracking-[0.26em] text-white/40 transition-colors hover:text-white md:rounded-full md:border md:border-white/30 md:px-8 md:py-3 md:text-[11px] md:font-semibold md:tracking-[0.22em] md:text-white md:transition-all md:duration-300 md:hover:-translate-y-0.5 md:hover:border-white/50 md:hover:bg-white/10" style={supreme}>
             {c.hero.ctaSecondary}
           </a>
         </motion.div>
