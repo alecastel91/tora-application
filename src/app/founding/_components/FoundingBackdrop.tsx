@@ -14,7 +14,7 @@ export function FoundingBackdrop() {
       className="fixed inset-0 -z-10 overflow-hidden bg-black pointer-events-none"
     >
       <div
-        className="absolute left-1/2 top-[-15%] h-[70vh] w-[70vh] -translate-x-1/2 rounded-full"
+        className="absolute left-1/2 top-[-15%] h-[70vh] w-[70vh] -translate-x-1/2 rounded-full opacity-40 md:opacity-100"
         style={{
           background:
             "radial-gradient(circle, rgba(255,51,102,0.12) 0%, transparent 70%)",
@@ -27,7 +27,7 @@ export function FoundingBackdrop() {
             "radial-gradient(circle, rgba(107,95,255,0.08) 0%, transparent 70%)",
         }}
       />
-      <WaveMesh opacity={0.5} />
+      <div className="absolute inset-0 opacity-70 md:opacity-100"><WaveMesh opacity={0.5} /></div>
     </div>
   );
 }

@@ -35,10 +35,10 @@ export function LangMenu({ current, label }: { current: LangCode; label: string 
         aria-label={label}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3.5 py-2 text-[11px] uppercase tracking-[0.14em] text-white/80 backdrop-blur transition-colors hover:border-white/35 hover:text-white"
+        className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-white/60 backdrop-blur transition-colors hover:border-white/35 hover:text-white md:gap-2 md:border-white/15 md:bg-black/50 md:px-3.5 md:py-2 md:text-[11px] md:text-white/80"
         style={supreme}
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <circle cx="12" cy="12" r="9" />
           <path d="M3 12h18" />
           <path d="M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z" />

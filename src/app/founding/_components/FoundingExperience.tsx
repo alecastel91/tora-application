@@ -163,7 +163,7 @@ function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
-      <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
+      <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-40 md:opacity-100">
         <motion.div
           className="absolute h-[62vh] max-h-[560px] w-[62vh] max-w-[560px] rounded-full"
           style={{ background: "radial-gradient(circle, rgba(255,51,102,0.16) 0%, transparent 62%)" }}
@@ -187,18 +187,28 @@ function Hero() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1, ease: EASE }}
         >
-          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[210px] md:w-[300px]" />
+          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[236px] md:w-[300px]" />
         </motion.div>
+
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.7 }}
+          className="mt-4 text-[10px] uppercase tracking-[0.34em] text-white/55 md:hidden"
+          style={supreme}
+        >
+          {c.hero.footer}
+        </motion.span>
 
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-8 text-[11px] leading-[1.9] md:text-xs uppercase tracking-[0.34em] text-infrared"
+          className="mt-10 text-[9.5px] leading-[1.9] md:mt-8 md:text-xs uppercase tracking-[0.22em] md:tracking-[0.34em] text-infrared/90 md:text-infrared"
           style={{ ...supreme, fontWeight: 500 }}
         >
           {c.hero.eyebrow.split("·").map((part, i) => (
-            <span key={i} className="block">{part.trim()}</span>
+            <span key={i} className="md:block">{i > 0 ? <span className="md:hidden"> · </span> : null}{part.trim()}</span>
           ))}
         </motion.span>
 
@@ -206,7 +216,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.8, ease: EASE }}
-          className="mt-5 max-w-3xl text-3xl font-semibold uppercase leading-tight text-white text-balance md:text-5xl"
+          className="mt-4 max-w-[320px] text-[24px] font-semibold uppercase leading-[1.2] tracking-[0.03em] text-white text-balance md:mt-5 md:max-w-3xl md:text-5xl md:leading-tight md:tracking-normal"
           style={supreme}
         >
           {c.hero.title}
@@ -216,7 +226,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.8, ease: EASE }}
-          className="mt-5 max-w-xl text-white/55 text-sm leading-relaxed md:text-base"
+          className="mt-4 max-w-[300px] text-[13px] leading-relaxed text-white/50 md:mt-5 md:max-w-xl md:text-base md:text-white/55"
           style={grotesk}
         >
           {c.hero.subline}
@@ -226,19 +236,19 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.7 }}
-          className="mt-9 flex flex-wrap items-center justify-center gap-3"
+          className="mt-8 flex flex-col items-center gap-4 md:mt-9 md:flex-row md:flex-wrap md:justify-center md:gap-3"
         >
           <Link href={useApplyHref()} className="rounded-full bg-infrared px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] hover:brightness-110" style={supreme}>
             {c.hero.ctaPrimary}
           </Link>
-          <a href="#problem" className="rounded-full border border-white/30 px-8 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10" style={supreme}>
+          <a href="#problem" className="text-[10px] uppercase tracking-[0.26em] text-white/55 transition-colors hover:text-white md:rounded-full md:border md:border-white/30 md:px-8 md:py-3 md:text-[11px] md:font-semibold md:tracking-[0.22em] md:text-white md:transition-all md:duration-300 md:hover:-translate-y-0.5 md:hover:border-white/50 md:hover:bg-white/10" style={supreme}>
             {c.hero.ctaSecondary}
           </a>
         </motion.div>
       </motion.div>
 
       <motion.div style={{ opacity }} className="absolute bottom-10 flex flex-col items-center gap-2 text-white/50">
-        <span className="text-[10px] uppercase tracking-[0.3em]" style={supreme}>{c.hero.footer}</span>
+        <span className="hidden text-[10px] uppercase tracking-[0.3em] md:block" style={supreme}>{c.hero.footer}</span>
         <motion.svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}>
           <path d="M12 5v14" /><path d="M19 12l-7 7-7-7" />
         </motion.svg>
