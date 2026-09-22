@@ -3,7 +3,7 @@ import type { FoundingContent } from "./types";
 export const en: FoundingContent = {
   hero: {
     eyebrow: "Founding Members · Applications open",
-    title: "The club music industry, finally in one place",
+    title: "The club music industry, in one place",
     subline: "Artists, Agents, Promoters and Venues, connected in one professional network.",
     ctaPrimary: "Become a Founding Member",
     ctaSecondary: "See how it works",

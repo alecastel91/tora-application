@@ -3,7 +3,7 @@ import type { FoundingContent } from "./types";
 export const jp: FoundingContent = {
   hero: {
     eyebrow: "ファウンディングメンバー · 申込受付中",
-    title: "クラブミュージック業界が、ついにひとつの場所に",
+    title: "クラブミュージック業界が、ひとつの場所に",
     subline: "アーティスト、エージェント、プロモーター、ベニューを、ひとつのプロフェッショナルネットワークでつなぎます。",
     ctaPrimary: "ファウンディングメンバーになる",
     ctaSecondary: "仕組みを見る",

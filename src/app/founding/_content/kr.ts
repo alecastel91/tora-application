@@ -3,7 +3,7 @@ import type { FoundingContent } from "./types";
 export const kr: FoundingContent = {
   hero: {
     eyebrow: "파운딩 멤버 · 신청 접수 중",
-    title: "클럽 음악 산업, 마침내 한곳에서",
+    title: "클럽 음악 산업, 한곳에서",
     subline: "아티스트, 에이전트, 프로모터, 베뉴가 하나의 전문 네트워크로 연결됩니다.",
     ctaPrimary: "파운딩 멤버 되기",
     ctaSecondary: "작동 방식 보기",

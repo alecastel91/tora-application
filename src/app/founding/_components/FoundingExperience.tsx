@@ -163,38 +163,20 @@ function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
-      <motion.div aria-hidden style={{ opacity, y }} className="pointer-events-none absolute inset-0 z-0 hidden items-center justify-center md:flex">
-        <motion.div
-          className="absolute h-[62vh] max-h-[560px] w-[62vh] max-w-[560px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(255,51,102,0.16) 0%, transparent 62%)" }}
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={reduce ? { opacity: 0.7, scale: 1 } : { opacity: [0.45, 0.8, 0.45], scale: [0.94, 1.06, 0.94] }}
-          transition={reduce ? { duration: 1.2, ease: EASE } : { duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute h-[46vh] max-h-[420px] w-[46vh] max-w-[420px] opacity-[0.06]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.07, rotate: reduce ? 0 : 360 }}
-          transition={{ opacity: { duration: 1.4, ease: EASE }, rotate: { duration: 90, repeat: Infinity, ease: "linear" } }}
-        >
-          <Image src="/loading-globe.png" alt="" width={420} height={420} className="h-full w-full object-contain" />
-        </motion.div>
-      </motion.div>
-
       <motion.div style={{ opacity, y }} className="relative z-10 flex flex-col items-center">
         <motion.div
           initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.92, filter: "blur(10px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1, ease: EASE }}
         >
-          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[236px] md:w-[300px]" />
+          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[236px] md:w-[280px]" />
         </motion.div>
 
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.7 }}
-          className="mt-4 text-[10px] uppercase tracking-[0.34em] text-white/55 md:hidden"
+          className="mt-4 text-[10px] uppercase tracking-[0.34em] text-white/55 md:mt-5 md:text-[11px]"
           style={supreme}
         >
           {c.hero.footer}
@@ -204,52 +186,39 @@ function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-14 text-[9.5px] leading-[1.9] md:mt-8 md:text-xs uppercase tracking-[0.22em] md:tracking-[0.34em] text-infrared/90 md:text-infrared"
+          className="mt-14 text-[9.5px] leading-[1.9] uppercase tracking-[0.22em] text-infrared/90 md:mt-16 md:text-[11px] md:tracking-[0.3em]"
           style={{ ...supreme, fontWeight: 500 }}
         >
-          {c.hero.eyebrow.split("·").map((part, i) => (
-            <span key={i} className="md:block">{i > 0 ? <span className="md:hidden"> · </span> : null}{part.trim()}</span>
-          ))}
+          {c.hero.eyebrow.split("·").map((p) => p.trim()).join(" · ")}
         </motion.span>
 
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.8, ease: EASE }}
-          className="mt-5 hidden max-w-3xl text-5xl font-semibold uppercase leading-tight text-white text-balance md:block"
+          className="mt-3 max-w-[340px] text-[15px] font-medium uppercase leading-[1.6] tracking-[0.2em] text-white/85 text-balance md:max-w-xl md:text-[17px] md:tracking-[0.24em]"
           style={supreme}
         >
           {c.hero.title}
         </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8, ease: EASE }}
-          className="mt-5 hidden max-w-xl text-base leading-relaxed text-white/55 md:block"
-          style={grotesk}
-        >
-          {c.hero.subline}
-        </motion.p>
-
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.7 }}
-          className="mt-7 flex flex-col items-center gap-5 md:mt-9 md:flex-row md:flex-wrap md:justify-center md:gap-3"
+          className="mt-9 flex flex-col items-center gap-5 md:mt-10"
         >
-          <Link href={useApplyHref()} className="rounded-full border border-white/40 px-9 py-3.5 text-[11px] font-medium uppercase tracking-[0.26em] text-white/90 transition-all duration-300 hover:border-white hover:text-white md:border-0 md:bg-infrared md:px-8 md:py-3 md:font-semibold md:tracking-[0.22em] md:text-white md:hover:-translate-y-0.5 md:hover:shadow-[0_0_28px_rgba(255,51,102,0.5)] md:hover:brightness-110" style={supreme}>
+          <Link href={useApplyHref()} className="rounded-full border border-white/40 px-9 py-3.5 text-[11px] font-medium uppercase tracking-[0.26em] text-white/90 transition-all duration-300 hover:border-white hover:bg-white/5 hover:text-white" style={supreme}>
             {c.hero.ctaPrimary}
           </Link>
-          <a href="#problem" className="text-[10px] uppercase tracking-[0.26em] text-white/40 transition-colors hover:text-white md:rounded-full md:border md:border-white/30 md:px-8 md:py-3 md:text-[11px] md:font-semibold md:tracking-[0.22em] md:text-white md:transition-all md:duration-300 md:hover:-translate-y-0.5 md:hover:border-white/50 md:hover:bg-white/10" style={supreme}>
+          <a href="#problem" className="text-[10px] uppercase tracking-[0.26em] text-white/40 transition-colors hover:text-white" style={supreme}>
             {c.hero.ctaSecondary}
           </a>
         </motion.div>
       </motion.div>
 
       <motion.div style={{ opacity }} className="absolute bottom-10 flex flex-col items-center gap-2 text-white/50">
-        <span className="hidden text-[10px] uppercase tracking-[0.3em] md:block" style={supreme}>{c.hero.footer}</span>
-        <motion.svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}>
+                <motion.svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}>
           <path d="M12 5v14" /><path d="M19 12l-7 7-7-7" />
         </motion.svg>
       </motion.div>

@@ -3,7 +3,7 @@ import type { FoundingContent } from "./types";
 export const it: FoundingContent = {
   hero: {
     eyebrow: "Membri Fondatori · Candidature aperte",
-    title: "L'industria della club music, finalmente in un unico posto",
+    title: "L'industria della club music, in un unico posto",
     subline: "Artisti, Agenti, Promoter e Venue, connessi in un unico network professionale.",
     ctaPrimary: "Diventa Membro Fondatore",
     ctaSecondary: "Scopri come funziona",
