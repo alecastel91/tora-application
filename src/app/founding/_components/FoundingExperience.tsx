@@ -196,10 +196,14 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.8, ease: EASE }}
-          className="mt-3 max-w-[340px] text-[15px] font-medium uppercase leading-[1.6] tracking-[0.2em] text-white/85 text-balance md:max-w-xl md:text-[17px] md:tracking-[0.24em]"
+          className="mt-3 text-[15px] font-medium uppercase leading-[1.6] tracking-[0.2em] text-white/85 md:text-[17px] md:tracking-[0.24em]"
           style={supreme}
         >
-          {c.hero.title}
+          {/* Two lines, split after the comma (Latin ',' or CJK '、' / '，'), so
+              no language wraps mid-word on a phone. */}
+          {c.hero.title.split(/(?<=[,、，])\s*/).map((line, i) => (
+            <span key={i} className="block">{line}</span>
+          ))}
         </motion.h1>
 
         <motion.div
