@@ -54,13 +54,13 @@ export function TopNav() {
                     </svg>
                 </motion.div>
             </Link>
-            <div className="order-3 md:order-2 mt-4 md:mt-0 w-full md:w-auto flex items-center justify-center md:justify-end space-x-7 md:space-x-10">
+            <div className="order-3 md:order-2 mt-4 md:mt-0 w-full md:w-auto flex items-center justify-center md:justify-end space-x-5 md:space-x-10">
                 {links.map((link) => (
                     <Link
                         key={link.key}
                         href={link.href}
                         style={sgFont}
-                        className={`text-[10px] font-bold uppercase tracking-[0.3em] transition-colors ${
+                        className={`text-[10px] font-bold uppercase tracking-[0.22em] md:tracking-[0.3em] transition-colors ${
                             pathname === link.href
                                 ? "text-white"
                                 : "text-white/30 hover:text-white"
@@ -69,9 +69,8 @@ export function TopNav() {
                         {t(link.key)}
                     </Link>
                 ))}
-                <LanguagePicker className="hidden md:flex" />
+                <LanguagePicker className="flex" />
             </div>
-            <LanguagePicker className="order-2 flex md:hidden" />
         </motion.nav>
     );
 }
@@ -128,16 +127,16 @@ export function LanguagePicker({ className = "" }: { className?: string }) {
                 aria-expanded={isOpen}
                 className={`flex items-center gap-1.5 transition-colors ${isOpen ? "text-white" : "text-white/30 hover:text-white"}`}
             >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="hidden md:block">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>
-                <span className="hidden md:inline text-[10px] font-bold uppercase tracking-[0.3em]" style={sgFont}>{language}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.22em] md:tracking-[0.3em]" style={sgFont}>{language}</span>
             </button>
 
             {isOpen && (
-                <div role="listbox" className="absolute top-full mt-3 right-0 md:left-1/2 md:right-auto md:-translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[96px]">
+                <div role="listbox" className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[96px]">
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
