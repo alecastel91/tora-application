@@ -41,6 +41,7 @@ export default function Terms() {
                         <li>{t('terms_membership_item3')}</li>
                         <li>{t('terms_membership_item4')}</li>
                         <li>{t('terms_membership_item5')}</li>
+                        <li>{t('terms_membership_item6')}</li>
                     </ul>
 
                     <h3 className="text-white font-semibold text-lg mt-8 font-tech">{t('terms_account_title')}</h3>
@@ -89,6 +90,9 @@ export default function Terms() {
                     </p>
                     <p>
                         {t('terms_ip_text2')}
+                    </p>
+                    <p>
+                        {t('terms_ip_text3')}
                     </p>
 
                     <h3 className="text-white font-semibold text-lg mt-8 font-tech">{t('terms_agent_title')}</h3>

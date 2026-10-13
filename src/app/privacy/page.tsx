@@ -40,6 +40,8 @@ export default function Privacy() {
 
                     <p><strong className="text-white">{t('privacy_collecting_others')}</strong> {t('privacy_collecting_others_text')}</p>
 
+                    <p><strong className="text-white">{t('privacy_collecting_activity')}</strong> {t('privacy_collecting_activity_text')}</p>
+
                     <p><strong className="text-white">{t('privacy_collecting_financial')}</strong> {t('privacy_collecting_financial_text')}</p>
 
                     <h3 className="text-white font-semibold text-lg mt-8 font-tech">{t('privacy_sharing_title')}</h3>
