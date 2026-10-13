@@ -35,12 +35,16 @@ export function TopNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
+            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
         >
-            {/* One row on every size: the type tightens on phones so logo, three
-                links and the language item fit 390px even in French. */}
-            <Link href="/" className="shrink-0 hover:opacity-80 transition-opacity">
+            {/* Same type as the bottom bar. Home link: a small back arrow on phones
+                (so the row fits 390px even in French), the spinning globe on desktop. */}
+            <Link href="/" className="shrink-0 text-white/30 hover:text-white transition-colors md:hover:opacity-80" aria-label="Home">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:hidden">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
                 <motion.div
+                    className="hidden md:block"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 >
@@ -60,7 +64,7 @@ export function TopNav() {
                         key={link.key}
                         href={link.href}
                         style={sgFont}
-                        className={`whitespace-nowrap text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] md:tracking-[0.3em] transition-colors ${
+                        className={`whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.18em] md:tracking-[0.3em] transition-colors ${
                             pathname === link.href
                                 ? "text-white"
                                 : "text-white/30 hover:text-white"
@@ -132,7 +136,7 @@ export function LanguagePicker({ className = "" }: { className?: string }) {
                     <line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>
-                <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] md:tracking-[0.3em]" style={sgFont}>{language}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] md:tracking-[0.3em]" style={sgFont}>{language}</span>
             </button>
 
             {isOpen && (

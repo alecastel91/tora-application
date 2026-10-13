@@ -34,7 +34,7 @@ export function HomeNav() {
             key={link.key}
             href={link.href}
             style={navFont}
-            className="whitespace-nowrap text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] md:tracking-[0.3em] text-white/30 hover:text-white transition-colors"
+            className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.18em] md:tracking-[0.3em] text-white/30 hover:text-white transition-colors"
           >
             {t(link.key)}
           </Link>
