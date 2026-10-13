@@ -28,13 +28,13 @@ export function HomeNav() {
       transition={{ delay: 1.2, duration: 0.8 }}
       className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-5 pb-10 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none [&_a]:pointer-events-auto [&_button]:pointer-events-auto"
     >
-      <div className="flex items-center space-x-5 md:space-x-10">
+      <div className="flex items-center space-x-4 md:space-x-10">
         {LINKS.map((link) => (
           <Link
             key={link.key}
             href={link.href}
             style={navFont}
-            className="text-[10px] font-bold uppercase tracking-[0.22em] md:tracking-[0.3em] text-white/30 hover:text-white transition-colors"
+            className="whitespace-nowrap text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] md:tracking-[0.3em] text-white/30 hover:text-white transition-colors"
           >
             {t(link.key)}
           </Link>

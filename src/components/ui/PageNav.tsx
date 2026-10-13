@@ -35,11 +35,11 @@ export function TopNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="fixed top-0 left-0 right-0 z-50 flex flex-wrap items-center justify-between px-6 md:px-10 py-4 md:py-5 bg-black/80 backdrop-blur-xl"
+            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
         >
-            {/* Phones: logo + language on the first row, the links centred beneath
-                (FR/PT labels are too long to share a row). Desktop: one row. */}
-            <Link href="/" className="order-1 hover:opacity-80 transition-opacity">
+            {/* One row on every size: the type tightens on phones so logo, three
+                links and the language item fit 390px even in French. */}
+            <Link href="/" className="shrink-0 hover:opacity-80 transition-opacity">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -54,13 +54,13 @@ export function TopNav() {
                     </svg>
                 </motion.div>
             </Link>
-            <div className="order-3 md:order-2 mt-4 md:mt-0 w-full md:w-auto flex items-center justify-center md:justify-end space-x-5 md:space-x-10">
+            <div className="flex items-center space-x-4 md:space-x-10">
                 {links.map((link) => (
                     <Link
                         key={link.key}
                         href={link.href}
                         style={sgFont}
-                        className={`text-[10px] font-bold uppercase tracking-[0.22em] md:tracking-[0.3em] transition-colors ${
+                        className={`whitespace-nowrap text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] md:tracking-[0.3em] transition-colors ${
                             pathname === link.href
                                 ? "text-white"
                                 : "text-white/30 hover:text-white"
@@ -125,14 +125,14 @@ export function LanguagePicker({ className = "" }: { className?: string }) {
                 aria-label="Language"
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className={`flex items-center gap-1.5 transition-colors ${isOpen ? "text-white" : "text-white/30 hover:text-white"}`}
+                className={`flex items-center gap-1 md:gap-1.5 transition-colors ${isOpen ? "text-white" : "text-white/30 hover:text-white"}`}
             >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="hidden md:block">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 md:h-3.5 md:w-3.5 shrink-0">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>
-                <span className="text-[10px] font-bold uppercase tracking-[0.22em] md:tracking-[0.3em]" style={sgFont}>{language}</span>
+                <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.16em] md:tracking-[0.3em]" style={sgFont}>{language}</span>
             </button>
 
             {isOpen && (
