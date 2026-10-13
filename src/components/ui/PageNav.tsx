@@ -35,9 +35,11 @@ export function TopNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
+            className="fixed top-0 left-0 right-0 z-50 flex flex-wrap items-center justify-between px-6 md:px-10 py-4 md:py-5 bg-black/80 backdrop-blur-xl"
         >
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            {/* Phones: logo + language on the first row, the links centred beneath
+                (FR/PT labels are too long to share a row). Desktop: one row. */}
+            <Link href="/" className="order-1 hover:opacity-80 transition-opacity">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -52,7 +54,7 @@ export function TopNav() {
                     </svg>
                 </motion.div>
             </Link>
-            <div className="flex items-center space-x-8 md:space-x-10">
+            <div className="order-3 md:order-2 mt-4 md:mt-0 w-full md:w-auto flex items-center justify-center md:justify-end space-x-7 md:space-x-10">
                 {links.map((link) => (
                     <Link
                         key={link.key}
@@ -67,7 +69,9 @@ export function TopNav() {
                         {t(link.key)}
                     </Link>
                 ))}
+                <LanguagePicker className="hidden md:flex" />
             </div>
+            <LanguagePicker className="order-2 flex md:hidden" />
         </motion.nav>
     );
 }
@@ -95,7 +99,12 @@ export function PageBrand() {
     );
 }
 
-function LanguagePicker() {
+/**
+ * Language picker — a plain text item in the top nav (globe + code), styled like
+ * the nav links so it reads as a fourth link rather than a control. Phones show
+ * the globe only. The menu opens downward.
+ */
+export function LanguagePicker({ className = "" }: { className?: string }) {
     const { language, setLanguage } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
@@ -111,22 +120,24 @@ function LanguagePicker() {
     }, [isOpen]);
 
     return (
-        <div ref={ref} className="relative">
+        <div ref={ref} className={`relative items-center ${className}`}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Language"
-                className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                className={`flex items-center gap-1.5 transition-colors ${isOpen ? "text-white" : "text-white/30 hover:text-white"}`}
             >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="2" y1="12" x2="22" y2="12"/>
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={sgFont}>{language}</span>
+                <span className="hidden md:inline text-[10px] font-bold uppercase tracking-[0.3em]" style={sgFont}>{language}</span>
             </button>
 
             {isOpen && (
-                <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[80px]">
+                <div role="listbox" className="absolute top-full mt-3 right-0 md:left-1/2 md:right-auto md:-translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[96px]">
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
@@ -201,35 +212,34 @@ export function BottomNav() {
                 }`}
             >
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10" />
-                <div className="flex items-center space-x-6 md:space-x-10">
+                <div className="flex items-center space-x-4 md:space-x-10 px-4">
                     {[
-                        { key: "nav_privacy", href: "/privacy", external: false },
-                        { key: "nav_terms", href: "/terms", external: false },
-                        { key: "nav_social", href: "https://instagram.com/tora.hub", external: true },
+                        { key: "nav_privacy", href: "/privacy" },
+                        { key: "nav_terms", href: "/terms" },
+                        { key: "nav_support", href: "/support" },
                     ].map((link) => (
-                        link.external ? (
-                            <a
-                                key={link.key}
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={sgFont}
-                                className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20 hover:text-white/50 transition-colors"
-                            >
-                                {t(link.key)}
-                            </a>
-                        ) : (
-                            <Link
-                                key={link.key}
-                                href={link.href}
-                                style={sgFont}
-                                className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20 hover:text-white/50 transition-colors"
-                            >
-                                {t(link.key)}
-                            </Link>
-                        )
+                        <Link
+                            key={link.key}
+                            href={link.href}
+                            style={sgFont}
+                            className="text-[10px] font-bold uppercase tracking-[0.18em] md:tracking-[0.3em] text-white/20 hover:text-white/50 transition-colors whitespace-nowrap"
+                        >
+                            {t(link.key)}
+                        </Link>
                     ))}
-                    <LanguagePicker />
+                    <a
+                        href="https://instagram.com/tora.hub"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t("nav_social")}
+                        className="text-white/20 hover:text-white/50 transition-colors"
+                    >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                            <rect x="3" y="3" width="18" height="18" rx="5" />
+                            <circle cx="12" cy="12" r="4" />
+                            <circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none" />
+                        </svg>
+                    </a>
                 </div>
             </motion.nav>
         </>
