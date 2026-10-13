@@ -37,14 +37,9 @@ export function TopNav() {
             transition={{ duration: 0.6 }}
             className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-10 py-5 bg-black/80 backdrop-blur-xl"
         >
-            {/* Same type as the bottom bar. Home link: a small back arrow on phones
-                (so the row fits 390px even in French), the spinning globe on desktop. */}
-            <Link href="/" className="shrink-0 text-white/30 hover:text-white transition-colors md:hover:opacity-80" aria-label="Home">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:hidden">
-                    <path d="M15 18l-6-6 6-6" />
-                </svg>
+            {/* Same type as the bottom bar; the spinning globe is the home link. */}
+            <Link href="/" className="shrink-0 hover:opacity-80 transition-opacity" aria-label="Home">
                 <motion.div
-                    className="hidden md:block"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 >
@@ -73,7 +68,6 @@ export function TopNav() {
                         {t(link.key)}
                     </Link>
                 ))}
-                <LanguagePicker className="flex" />
             </div>
         </motion.nav>
     );
@@ -103,9 +97,8 @@ export function PageBrand() {
 }
 
 /**
- * Language picker — a plain text item in the top nav (globe + code), styled like
- * the nav links so it reads as a fourth link rather than a control. Phones show
- * the globe only. The menu opens downward.
+ * Language picker — globe + language initials in the bottom bar, in the bar's
+ * own type so it reads as one more item. The menu opens upward.
  */
 export function LanguagePicker({ className = "" }: { className?: string }) {
     const { language, setLanguage } = useLanguage();
@@ -129,7 +122,7 @@ export function LanguagePicker({ className = "" }: { className?: string }) {
                 aria-label="Language"
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                className={`flex items-center gap-1 md:gap-1.5 transition-colors ${isOpen ? "text-white" : "text-white/30 hover:text-white"}`}
+                className={`flex items-center gap-1 md:gap-1.5 transition-colors ${isOpen ? "text-white/70" : "text-white/20 hover:text-white/50"}`}
             >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 md:h-3.5 md:w-3.5 shrink-0">
                     <circle cx="12" cy="12" r="10"/>
@@ -140,7 +133,7 @@ export function LanguagePicker({ className = "" }: { className?: string }) {
             </button>
 
             {isOpen && (
-                <div role="listbox" className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[96px]">
+                <div role="listbox" className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-black/95 border border-white/10 rounded-lg p-2 backdrop-blur-xl min-w-[96px]">
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
@@ -243,6 +236,7 @@ export function BottomNav() {
                             <circle cx="17.3" cy="6.7" r="0.9" fill="currentColor" stroke="none" />
                         </svg>
                     </a>
+                    <LanguagePicker className="flex" />
                 </div>
             </motion.nav>
         </>
