@@ -77,7 +77,7 @@ export default function AdminDashboard() {
     const [roleFilter, setRoleFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
-    const [view, setView] = useState<'applications' | 'recap' | 'reports'>('applications');
+    const [view, setView] = useState<'applications' | 'recap' | 'reports' | 'moderation'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
     // Reported posts feed both the Reports tab and its red dot.
     const [reportedPosts, setReportedPosts] = useState<ReportedPost[] | null>(null);
