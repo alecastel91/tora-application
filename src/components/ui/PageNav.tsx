@@ -68,6 +68,13 @@ export function TopNav() {
                         {t(link.key)}
                     </Link>
                 ))}
+                <a
+                    href="https://app.torahub.io"
+                    style={sgFont}
+                    className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.18em] text-white/70 transition-colors hover:text-white md:tracking-[0.3em]"
+                >
+                    {t("nav_login")}
+                </a>
             </div>
         </motion.nav>
     );

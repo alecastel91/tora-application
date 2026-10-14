@@ -110,12 +110,7 @@ const ROWS: { term: string; body: React.ReactNode }[] = [
     { term: "所在地", body: "〒150-0011 東京都渋谷区東3-6-22 グラマシー恵比寿212" },
     {
         term: "電話番号",
-        body: (
-            <>
-                070-2030-2095
-                <span className="mt-1 block text-white/45">受付時間：平日 10:00–18:00（日本時間）</span>
-            </>
-        ),
+        body: "070-2030-2095",
     },
     {
         term: "メールアドレス",
