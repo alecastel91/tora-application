@@ -108,10 +108,9 @@ const ROWS: { term: string; body: React.ReactNode }[] = [
     { term: "販売事業者名", body: "Alessandro Castelbuono（屋号 TORA）" },
     { term: "運営統括責任者", body: "Alessandro Castelbuono" },
     { term: "所在地", body: "〒150-0011 東京都渋谷区東3-6-22 グラマシー恵比寿212" },
-    {
-        term: "電話番号",
-        body: "070-2030-2095",
-    },
+    // Identical to the EU DSA trader declaration filed with Apple, so the two
+    // public disclosures match if anyone compares them.
+    { term: "電話番号", body: "+81 70-2030-2095" },
     {
         term: "メールアドレス",
         body: <a href="mailto:support@torahub.io" className="text-infrared hover:underline">support@torahub.io</a>,
