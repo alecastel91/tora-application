@@ -143,6 +143,9 @@ export default function Terms() {
                         {t('terms_contact_text')}{" "}
                         <a href="mailto:support@torahub.io" className="text-infrared hover:underline">support@torahub.io</a>
                     </p>
+                    <p className="pt-4 text-sm text-white/40">
+                        <Link href="/tokushoho" className="hover:text-white/70 transition-colors">特定商取引法に基づく表記</Link>
+                    </p>
                 </div>
 
                 <div className="text-center">
