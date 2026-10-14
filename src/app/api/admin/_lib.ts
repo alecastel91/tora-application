@@ -42,6 +42,13 @@ export const isUuid = (v: unknown): v is string =>
   typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
 
 /** POST { postId, action } → /reports/:postId on the chosen backend. */
+/** Close one report in the moderation queue (profiles, messages, posts). */
+export async function moderationAction(target: AdminTarget, req: NextRequest) {
+  const { reportId, action, resolution, postAction } = await req.json();
+  if (!isUuid(reportId)) return NextResponse.json({ error: 'Invalid report id' }, { status: 400 });
+  return proxyAdmin(target, `/moderation/${reportId}`, { method: 'POST', body: { action, resolution, postAction } });
+}
+
 export async function postReportAction(target: AdminTarget, req: NextRequest) {
   const { postId, action } = await req.json();
   // The id joins the upstream URL, so it must be a plain uuid (no traversal).
