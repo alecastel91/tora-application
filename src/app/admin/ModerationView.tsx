@@ -5,10 +5,16 @@ import { ROLE_COLORS } from '@/lib/roleColors';
 
 /**
  * The single moderation queue: every report of a profile, a message or a post
- * (App Review guideline 1.2). Closing a report records the decision; a post
- * can additionally be hidden or removed in the same action.
+ * (App Review guideline 1.2). A reported post lands here too, so this is the
+ * only place reports are worked through — there is no separate post queue.
+ *
+ * The page owns the list because it also feeds the tab's open-count dot; after
+ * an action the list is refetched rather than patched, so the recorded status,
+ * resolution note and review time are the server's, not a guess.
  */
 type Brief = { id: string; name: string; role: string } | null;
+type Target = (NonNullable<Brief> & { text?: string | null; status?: string; from?: Brief; author?: Brief }) | null;
+
 export type Report = {
   id: string;
   targetType: 'PROFILE' | 'MESSAGE' | 'POST';
@@ -16,12 +22,16 @@ export type Report = {
   reason: string;
   note: string | null;
   status: 'OPEN' | 'REVIEWED' | 'ACTIONED' | 'DISMISSED';
+  resolution: string | null;
   createdAt: string;
+  reviewedAt: string | null;
   reporter: Brief;
-  target: (Brief & { text?: string | null; status?: string; from?: Brief; author?: Brief }) | null;
+  target: Target;
 };
+
 type Action = 'dismiss' | 'review' | 'action';
 
+/** Fetch the moderation queue through an admin proxy endpoint. */
 export async function fetchReports(endpoint: string): Promise<Report[]> {
   const res = await fetch(endpoint, { credentials: 'include', cache: 'no-store' });
   const data = await res.json();
@@ -29,20 +39,29 @@ export async function fetchReports(endpoint: string): Promise<Report[]> {
   return data.reports;
 }
 
-const STATUS_COLOR: Record<string, string> = {
-  OPEN: '#FF3366', REVIEWED: '#FFB800', ACTIONED: '#00C875', DISMISSED: '#6b6b7b',
+const STATUS_STYLE: Record<Report['status'], string> = {
+  OPEN: 'bg-infrared/25 text-red-200',
+  REVIEWED: 'bg-yellow-500/20 text-yellow-200',
+  ACTIONED: 'bg-green-500/20 text-green-200',
+  DISMISSED: 'bg-white/10 text-white/50',
 };
 
-export function ModerationView({ endpoint, reports, onChange }: {
+export function ModerationView({ endpoint, reports, onChange, loadError }: {
   endpoint: string;
-  reports: Report[];
+  reports: Report[] | null;
   onChange: (next: Report[]) => void;
+  /** Set when the queue itself failed to load, so the view does not sit on "Loading…". */
+  loadError?: string | null;
 }) {
+  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [showAll, setShowAll] = useState(false);
 
-  const run = async (report: Report, action: Action, postAction?: 'hide' | 'remove') => {
+  const act = async (report: Report, action: Action, postAction?: 'hide' | 'remove') => {
+    if (postAction === 'remove' && !window.confirm('Remove this post permanently?')) return;
     setBusy(report.id);
+    setError(null);
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -50,82 +69,98 @@ export function ModerationView({ endpoint, reports, onChange }: {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reportId: report.id, action, resolution: notes[report.id] || undefined, postAction }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      const status = action === 'dismiss' ? 'DISMISSED' : action === 'review' ? 'REVIEWED' : 'ACTIONED';
-      onChange(reports.map((r) => (r.id === report.id ? { ...r, status } : r)));
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Action failed');
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `HTTP ${res.status}`);
+      // Refetch: the server owns the resulting status, note and review time.
+      onChange(await fetchReports(endpoint));
+      setNotes((n) => ({ ...n, [report.id]: '' }));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Action failed');
     } finally {
       setBusy(null);
     }
   };
 
-  if (reports.length === 0) {
-    return <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14 }}>No reports. Nothing to review.</p>;
-  }
+  const who = (p: NonNullable<Brief>) => (
+    <span className="text-white/80">
+      {p.name} <span className="text-[10px] uppercase" style={{ color: ROLE_COLORS[p.role] || 'rgba(255,255,255,0.5)' }}>{p.role}</span>
+    </span>
+  );
+
+  const open = (reports || []).filter((r) => r.status === 'OPEN');
+  const shown = showAll ? reports || [] : open;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {reports.map((r) => {
-        const who = r.target?.from || r.target?.author || r.target;
+    <div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {([false, true] as const).map((all) => (
+          <button
+            key={String(all)}
+            onClick={() => setShowAll(all)}
+            className={`rounded px-4 py-2 text-xs uppercase tracking-wider transition-colors ${
+              showAll === all ? 'border border-white/20 bg-white/10 text-white' : 'border border-white/10 text-white/50 hover:text-white'
+            }`}
+            style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+          >
+            {all ? `All (${reports?.length ?? 0})` : `Open (${open.length})`}
+          </button>
+        ))}
+      </div>
+
+      {(error || loadError) && <p className="mb-3 text-sm text-red-400">{error || `Could not load the queue: ${loadError}`}</p>}
+      {!reports && !loadError && <p className="text-white/40">Loading…</p>}
+      {reports && shown.length === 0 && (
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">
+          {reports.length === 0 ? 'No reports. Nothing to review.' : 'No open reports. Everything here has been closed.'}
+        </div>
+      )}
+
+      {shown.map((r) => {
+        const subject = r.target?.from || r.target?.author || r.target;
         return (
-          <div key={r.id} style={{
-            border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: 14,
-            background: r.status === 'OPEN' ? 'rgba(255,51,102,0.04)' : 'rgba(255,255,255,0.02)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap', marginBottom: 8 }}>
-              <span style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: STATUS_COLOR[r.status] }}>
-                {r.status}
+          <div key={r.id} className={`mb-2 rounded-xl border border-white/10 p-3.5 text-sm ${r.status === 'OPEN' ? 'bg-infrared/[0.04]' : 'bg-white/[0.02]'}`}>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase ${STATUS_STYLE[r.status]}`}>
+                {r.status.toLowerCase()}
               </span>
-              <strong style={{ fontSize: 14 }}>{r.targetType.toLowerCase()}</strong>
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>· {r.reason}</span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginLeft: 'auto' }}>
-                {new Date(r.createdAt).toLocaleString()}
-              </span>
+              <span className="text-white/90">{r.targetType.toLowerCase()}</span>
+              <span className="text-white/55">· {r.reason}</span>
+              {r.target?.status === 'HIDDEN' && <span className="text-[11px] uppercase text-yellow-300/80">post hidden</span>}
+              <span className="ml-auto text-[12px] text-white/35">{new Date(r.createdAt).toLocaleString()}</span>
             </div>
 
-            <p style={{ margin: '0 0 6px', fontSize: 13 }}>
-              <span style={{ color: 'rgba(255,255,255,0.45)' }}>Reported by </span>
-              {r.reporter
-                ? <span style={{ color: ROLE_COLORS[r.reporter.role] || '#fff' }}>{r.reporter.name}</span>
-                : <span style={{ color: 'rgba(255,255,255,0.45)' }}>a member</span>}
-              <span style={{ color: 'rgba(255,255,255,0.45)' }}> · about </span>
-              {who
-                ? <span style={{ color: ROLE_COLORS[who.role] || '#fff' }}>{who.name}</span>
-                : <span style={{ color: 'rgba(255,255,255,0.45)' }}>a deleted item</span>}
+            <p className="mt-2 text-[13px]">
+              <span className="text-white/45">Reported by </span>
+              {r.reporter ? who(r.reporter) : <span className="text-white/45">a member</span>}
+              <span className="text-white/45"> · about </span>
+              {subject ? who(subject) : <span className="text-white/45">a deleted item</span>}
             </p>
 
-            {r.target?.text && (
-              <p style={{ margin: '0 0 8px', fontSize: 13, color: 'rgba(255,255,255,0.75)', fontStyle: 'italic' }}>
-                “{r.target.text.slice(0, 280)}”
-              </p>
-            )}
-            {r.note && (
-              <p style={{ margin: '0 0 8px', fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>
-                <span style={{ color: 'rgba(255,255,255,0.45)' }}>Note: </span>{r.note}
-              </p>
+            {r.target?.text && <p className="my-2 whitespace-pre-wrap italic text-white/80">“{r.target.text.slice(0, 280)}”</p>}
+            {r.note && <p className="my-2 text-[13px] text-white/75"><span className="text-white/45">Reporter&apos;s note: </span>{r.note}</p>}
+            {r.resolution && <p className="my-2 text-[13px] text-white/75"><span className="text-white/45">Outcome: </span>{r.resolution}</p>}
+            {r.status !== 'OPEN' && r.reviewedAt && (
+              <p className="text-[12px] text-white/35">Closed {new Date(r.reviewedAt).toLocaleString()}</p>
             )}
 
             {r.status === 'OPEN' && (
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginTop: 10 }}>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
                 <input
                   value={notes[r.id] || ''}
                   onChange={(e) => setNotes((n) => ({ ...n, [r.id]: e.target.value }))}
                   placeholder="What did you do? (kept with the report)"
-                  style={{
-                    flex: '1 1 220px', minWidth: 0, padding: '7px 10px', borderRadius: 8, fontSize: 13,
-                    border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(255,255,255,0.04)', color: '#fff',
-                  }}
+                  className="min-w-0 flex-[1_1_220px] rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-[13px] text-white placeholder-white/30 outline-none focus:border-white/30"
                 />
-                {r.targetType === 'POST' && (
-                  <>
-                    <button disabled={busy === r.id} onClick={() => run(r, 'action', 'hide')} style={btn}>Hide post</button>
-                    <button disabled={busy === r.id} onClick={() => run(r, 'action', 'remove')} style={btn}>Remove post</button>
-                  </>
-                )}
-                <button disabled={busy === r.id} onClick={() => run(r, 'action')} style={btn}>Mark actioned</button>
-                <button disabled={busy === r.id} onClick={() => run(r, 'dismiss')} style={{ ...btn, color: 'rgba(255,255,255,0.6)' }}>Dismiss</button>
+                <div className="flex flex-wrap gap-3 text-[12px] text-white/50">
+                  {r.targetType === 'POST' && r.target?.status !== 'HIDDEN' && (
+                    <button className="underline" disabled={busy === r.id} onClick={() => act(r, 'action', 'hide')}>hide post</button>
+                  )}
+                  {r.targetType === 'POST' && (
+                    <button className="text-red-400/80 underline" disabled={busy === r.id} onClick={() => act(r, 'action', 'remove')}>remove post</button>
+                  )}
+                  <button className="underline" disabled={busy === r.id} onClick={() => act(r, 'action')}>mark actioned</button>
+                  <button className="underline" disabled={busy === r.id} onClick={() => act(r, 'review')}>mark reviewed</button>
+                  <button className="underline" disabled={busy === r.id} onClick={() => act(r, 'dismiss')}>dismiss</button>
+                </div>
               </div>
             )}
           </div>
@@ -134,8 +169,3 @@ export function ModerationView({ endpoint, reports, onChange }: {
     </div>
   );
 }
-
-const btn: React.CSSProperties = {
-  padding: '7px 12px', borderRadius: 8, fontSize: 12, cursor: 'pointer',
-  border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', color: '#fff',
-};

@@ -3,7 +3,7 @@ import React from "react";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { PostReportsView, fetchReportedPosts, type ReportedPost } from "../admin/PostReportsView";
+import { ModerationView, fetchReports, type Report } from "../admin/ModerationView";
 import { ROLE_COLORS } from "@/lib/roleColors";
 import Image from "next/image";
 
@@ -56,12 +56,14 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function AdminBetaPage() {
-  const [tab, setTab] = useState<"queue" | "testers" | "matrix" | "preview" | "feedback" | "posts">("queue");
+  const [tab, setTab] = useState<"queue" | "testers" | "matrix" | "preview" | "feedback" | "moderation">("queue");
   const [queue, setQueue] = useState<QueueRow[] | null>(null);
   const [testers, setTesters] = useState<TesterRow[] | null>(null);
   const [matrix, setMatrix] = useState<{ tasks: MatrixTask[]; rows: MatrixRow[]; footers: Record<string, { done: number; total: number }> } | null>(null);
   const [feedback, setFeedback] = useState<FeedbackRow[] | null>(null);
-  const [reportedPosts, setReportedPosts] = useState<ReportedPost[] | null>(null);
+  const [reports, setReports] = useState<Report[] | null>(null);
+  const [reportsError, setReportsError] = useState<string | null>(null);
+  const openReports = (reports || []).filter((r) => r.status === "OPEN").length;
   const [strays, setStrays] = useState<{ email: string; createdAt: string; lastLogin: string | null }[]>([]);
   const [fbStatus, setFbStatus] = useState("open");
   const [fbType, setFbType] = useState<"reports" | "debrief">("reports");
@@ -142,10 +144,11 @@ export default function AdminBetaPage() {
   useEffect(() => { if (authed && tab === "testers") loadTesters(); }, [authed, tab, loadTesters]);
   useEffect(() => { if (authed && tab === "matrix") loadMatrix(); }, [authed, tab, loadMatrix]);
   useEffect(() => { if (authed && tab === "feedback") loadFeedback(); }, [authed, tab, loadFeedback]);
+  // Loaded once on sign-in, not per tab visit: the count rides on the tab label.
   useEffect(() => {
-    if (!authed || tab !== "posts") return;
-    fetchReportedPosts("/api/admin/beta/reports").then(setReportedPosts).catch((e) => setLoadError(String(e.message)));
-  }, [authed, tab]);
+    if (!authed) return;
+    fetchReports("/api/admin/beta/moderation").then(setReports).catch((e) => setReportsError(String(e.message)));
+  }, [authed]);
 
   const loadPreview = useCallback(() => {
     setPreview(null);
@@ -264,13 +267,13 @@ export default function AdminBetaPage() {
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
-          {(["queue", "testers", "matrix", "preview", "feedback", "posts"] as const).map((k) => (
+          {(["queue", "testers", "matrix", "preview", "feedback", "moderation"] as const).map((k) => (
             <button key={k} onClick={() => setTab(k)}
               className="font-tech rounded-full border px-4 py-1.5 text-[13px] uppercase tracking-[0.08em] transition-colors"
               style={tab === k
                 ? { borderColor: INFRARED, background: "rgba(255,51,102,0.14)" }
                 : { borderColor: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}>
-              {k === "queue" ? `Action queue${queue ? ` (${queue.length})` : ""}` : k === "matrix" ? "Task matrix" : k === "preview" ? "Tester list preview" : k === "posts" ? "Post reports" : k}
+              {k === "queue" ? `Action queue${queue ? ` (${queue.length})` : ""}` : k === "matrix" ? "Task matrix" : k === "preview" ? "Tester list preview" : k === "moderation" ? `Moderation${openReports ? ` (${openReports})` : ""}` : k}
             </button>
           ))}
         </div>
@@ -601,8 +604,8 @@ export default function AdminBetaPage() {
           </div>
         )}
 
-        {tab === "posts" && (
-          <PostReportsView endpoint="/api/admin/beta/reports" posts={reportedPosts} onChange={setReportedPosts} />
+        {tab === "moderation" && (
+          <ModerationView endpoint="/api/admin/beta/moderation" reports={reports} onChange={setReports} loadError={reportsError} />
         )}
       </div>
     </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { RecapView } from "./RecapView";
-import { PostReportsView, fetchReportedPosts, type ReportedPost } from "./PostReportsView";
 import { ModerationView, fetchReports, type Report } from "./ModerationView";
 import { roleColor } from "@/lib/roleColors";
 import { motion } from "framer-motion";
@@ -77,12 +76,12 @@ export default function AdminDashboard() {
     const [roleFilter, setRoleFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
-    const [view, setView] = useState<'applications' | 'recap' | 'reports' | 'moderation'>('applications');
+    const [view, setView] = useState<'applications' | 'recap' | 'moderation'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
-    // Reported posts feed both the Reports tab and its red dot.
-    const [reportedPosts, setReportedPosts] = useState<ReportedPost[] | null>(null);
-    const [reports, setReports] = useState<Report[]>([]);
-    const openReports = reports.filter((r) => r.status === 'OPEN').length;
+    // One moderation queue (profiles, messages, posts) feeds the tab and its dot.
+    const [reports, setReports] = useState<Report[] | null>(null);
+    const [reportsError, setReportsError] = useState<string | null>(null);
+    const openReports = (reports || []).filter((r) => r.status === 'OPEN').length;
     // "Invite all approved" run: null when idle; results accumulate batch by batch.
     const [bulk, setBulk] = useState<{
         running: boolean;
@@ -102,12 +101,9 @@ export default function AdminDashboard() {
                 setVerifyPendingCount((data.pending || []).length);
             } catch { /* badge is best-effort */ }
         })();
-        fetchReportedPosts("/api/admin/reports")
-            .then((posts) => { if (!cancelled) setReportedPosts(posts); })
-            .catch(() => { /* badge is best-effort; the tab shows the error */ });
         fetchReports("/api/admin/moderation")
             .then((rows) => { if (!cancelled) setReports(rows); })
-            .catch(() => { /* same: the tab reports its own failure */ });
+            .catch((e) => { if (!cancelled) setReportsError(e instanceof Error ? e.message : String(e)); });
         return () => { cancelled = true; };
     }, [isAuthenticated]);
 
@@ -664,17 +660,14 @@ export default function AdminDashboard() {
 
                 {/* View toggle + role filter */}
                 <div className="flex flex-wrap items-center gap-2 mb-6">
-                    {(['applications', 'recap', 'reports', 'moderation'] as const).map((v) => (
+                    {(['applications', 'recap', 'moderation'] as const).map((v) => (
                         <button
                             key={v}
                             onClick={() => setView(v)}
                             className={`px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors ${view === v ? 'bg-white/10 text-white border border-white/20' : 'text-white/50 hover:text-white border border-white/10'}`}
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
-                            {v === 'applications' ? 'Applications' : v === 'recap' ? 'Recap' : v === 'reports' ? 'Reports' : 'Moderation'}
-                            {v === 'reports' && (reportedPosts?.length ?? 0) > 0 && (
-                                <span className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500 align-middle" aria-label={`${reportedPosts?.length} reported`} />
-                            )}
+                            {v === 'applications' ? 'Applications' : v === 'recap' ? 'Recap' : 'Moderation'}
                             {v === 'moderation' && openReports > 0 && (
                                 <span className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500 align-middle" aria-label={`${openReports} open reports`} />
                             )}
@@ -702,8 +695,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {view === 'recap' && <RecapView applications={applications} />}
-                {view === 'reports' && <PostReportsView endpoint="/api/admin/reports" posts={reportedPosts} onChange={setReportedPosts} />}
-                {view === 'moderation' && <ModerationView endpoint="/api/admin/moderation" reports={reports} onChange={setReports} />}
+                {view === 'moderation' && <ModerationView endpoint="/api/admin/moderation" reports={reports} onChange={setReports} loadError={reportsError} />}
 
                 {view === 'applications' && (<>
                 {/* Stats */}
