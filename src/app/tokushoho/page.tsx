@@ -15,6 +15,13 @@ import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
  * Commercial terms come first; the business details sit at the end. Prices
  * mirror tora-backend/src/config/pricing.js — update both together.
  *
+ * Trimmed to the legal minimum for a 個人事業主: the Consumer Affairs Agency
+ * lets an individual seller withhold the address from the page as long as it
+ * undertakes to disclose it without delay on request, which is what the 所在地
+ * row now says. The seller's NAME cannot be withheld and is shown plainly. The
+ * phone is kept visible although it could also be withheld. The street address
+ * must not reappear anywhere — not in markup, metadata or a comment.
+ *
  * Deliberately not in the site chrome: reachable from the Terms page, and
  * (still owed) from the subscription screen in the app, where the purchase is
  * actually made. noindex keeps it out of search results; the law asks that
@@ -105,11 +112,18 @@ const ROWS: { term: string; body: React.ReactNode }[] = [
         term: "動作環境",
         body: "Google Chrome、Safari、Microsoft Edge、Mozilla Firefox の各最新版、および TORA の iOS／Android アプリ。",
     },
-    { term: "販売事業者名", body: "Alessandro Castelbuono（屋号 TORA）" },
-    { term: "運営統括責任者", body: "Alessandro Castelbuono" },
-    { term: "所在地", body: "〒150-0011 東京都渋谷区東3-6-22 グラマシー恵比寿212" },
-    // Identical to the EU DSA trader declaration filed with Apple, so the two
-    // public disclosures match if anyone compares them.
+    { term: "事業者名", body: "TORA（屋号）／ Alessandro Castelbuono" },
+    {
+        term: "所在地",
+        body: (
+            <>
+                ご請求があれば遅滞なく開示いたします。support@torahub.io までご連絡ください。
+                <span className="mt-1 block text-sm text-white/45">
+                    Disclosed without delay on request — write to support@torahub.io.
+                </span>
+            </>
+        ),
+    },
     { term: "電話番号", body: "+81 70-2030-2095" },
     {
         term: "メールアドレス",

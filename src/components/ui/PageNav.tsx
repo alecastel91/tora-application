@@ -230,6 +230,17 @@ export function BottomNav() {
                             {t(link.key)}
                         </Link>
                     ))}
+                    {/* Japanese seller disclosure. The label stays Japanese in
+                        every language — it names a Japanese legal notice — and
+                        uses the short form footers conventionally use. */}
+                    <Link
+                        href="/tokushoho"
+                        rel="nofollow"
+                        style={sgFont}
+                        className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.18em] text-white/20 transition-colors hover:text-white/50 md:tracking-[0.3em]"
+                    >
+                        特商法
+                    </Link>
                     <a
                         href="https://instagram.com/tora.hub"
                         target="_blank"
