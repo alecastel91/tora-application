@@ -13,8 +13,9 @@ type OrgRow = { id: string; name: string; verifiedDomains: string[]; artistTotal
 type Member = { memberId: string; status: string; role: string; matchedBy: string | null; invitedEmail: string | null; email: string | null; name: string | null; tier: string | null; seats: number | null; rosterCount: number; hasStripe: boolean; createdAt: string };
 type OrgDetail = OrgRow & { members: Member[] };
 
+// Mirrors tora-backend/src/config/pricing.js AGENT_BANDS and
+// tora-app/src/utils/money.js AGENT_BANDS — keep the three in step.
 const BAND_LABEL = ['1–3', '4–10', '11–25', '26–50', '51+'];
-const BAND_OFF = [0, 25, 40, 55, 65];
 
 export function OrganisationsView() {
   const [orgs, setOrgs] = useState<OrgRow[] | null>(null);
@@ -23,35 +24,37 @@ export function OrganisationsView() {
   const [detail, setDetail] = useState<Record<string, OrgDetail>>({});
   const [busy, setBusy] = useState<string | null>(null);
 
+  async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
+    const res = await fetch(url, { credentials: 'include', cache: 'no-store', ...init });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    return data as T;
+  }
+
   const load = async () => {
-    try {
-      const res = await fetch('/api/admin/organisations', { credentials: 'include', cache: 'no-store' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      setOrgs(data.organisations);
-    } catch (e) { setError(e instanceof Error ? e.message : 'Failed to load'); }
+    try { setOrgs((await getJson<{ organisations: OrgRow[] }>('/api/admin/organisations')).organisations); }
+    catch (e) { setError(e instanceof Error ? e.message : 'Failed to load'); }
   };
   useEffect(() => { load(); }, []);
+
+  const loadDetail = async (id: string) => {
+    try {
+      const d = await getJson<{ organisation: OrgDetail }>(`/api/admin/organisations/${id}`);
+      setDetail((prev) => ({ ...prev, [id]: d.organisation }));
+    } catch (e) { setError(e instanceof Error ? e.message : 'Failed to load the organisation'); }
+  };
 
   const toggle = async (id: string) => {
     if (open === id) { setOpen(null); return; }
     setOpen(id);
-    if (!detail[id]) {
-      const res = await fetch(`/api/admin/organisations/${id}`, { credentials: 'include', cache: 'no-store' });
-      const data = await res.json();
-      if (res.ok) setDetail((d) => ({ ...d, [id]: data.organisation }));
-    }
+    if (!detail[id]) await loadDetail(id);
   };
 
   const resync = async (id: string) => {
     setBusy(id);
     try {
-      const res = await fetch(`/api/admin/organisations/${id}/resync`, { method: 'POST', credentials: 'include' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      setDetail((d) => { const { [id]: _gone, ...rest } = d; return rest; });
-      await load();
-      if (open === id) { setOpen(null); await toggle(id); }
+      await getJson(`/api/admin/organisations/${id}/resync`, { method: 'POST' });
+      await Promise.all([load(), loadDetail(id)]);
     } catch (e) { setError(e instanceof Error ? e.message : 'Resync failed'); } finally { setBusy(null); }
   };
 
@@ -66,7 +69,7 @@ export function OrganisationsView() {
           <button type="button" onClick={() => toggle(o.id)} className="w-full flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-left">
             <span className="text-white font-medium">{o.name}</span>
             <span className="text-white/50 text-xs">{o.memberCount} agent{o.memberCount === 1 ? '' : 's'}{o.pendingCount > 0 ? ` · ${o.pendingCount} pending` : ''}</span>
-            <span className="text-white/50 text-xs">{o.artistTotal} artists · band {BAND_LABEL[o.band]}{BAND_OFF[o.band] ? ` (−${BAND_OFF[o.band]}%)` : ''}</span>
+            <span className="text-white/50 text-xs">{o.artistTotal} artists · band {BAND_LABEL[o.band]}{o.memberCount < 2 ? ' (single member — ordinary rate)' : ''}</span>
             {o.verifiedDomains.length > 0 && <span className="text-white/35 text-xs">{o.verifiedDomains.join(', ')}</span>}
             <span className="ml-auto text-white/40 text-xs">{open === o.id ? '▲' : '▼'}</span>
           </button>
