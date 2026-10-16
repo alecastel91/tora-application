@@ -129,7 +129,7 @@ export const es: FoundingContent = {
     ],
     pricingNote: "Unirse a TORA es gratis, y cada solicitud se revisa para mantener alta la calidad de la red. El plan Premium desbloquea las funciones más avanzadas — y los miembros fundadores (quienes se postulan antes del lanzamiento) lo reciben todo gratis durante sus tres primeros meses en la plataforma, sin ninguna obligación de continuar.",
     button: "Envía tu solicitud",
-    foot: "torahub.io · lanzamiento previsto octubre 2026",
+    foot: "torahub.io · lanzamiento previsto para finales de 2026",
   },
   drawer: {
     role: "Rol",

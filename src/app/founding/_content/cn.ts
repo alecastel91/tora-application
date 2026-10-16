@@ -129,7 +129,7 @@ export const cn: FoundingContent = {
     ],
     pricingNote: "加入 TORA 完全免费，每一份申请都会经过审核，以保证网络的质量。Premium 方案可解锁更高级的功能——创始会员（在正式上线前申请的用户）可在注册后的前三个月免费体验全部功能，无需承诺继续订阅。",
     button: "立即申请",
-    foot: "torahub.io · 预计 2026 年 10 月上线",
+    foot: "torahub.io · 预计 2026 年下半年上线",
   },
   drawer: {
     role: "角色",

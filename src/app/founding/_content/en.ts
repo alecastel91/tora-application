@@ -129,7 +129,7 @@ export const en: FoundingContent = {
     ],
     pricingNote: "Joining TORA is free, and every application is reviewed to keep the quality of the network high. A Premium tier unlocks the most advanced features — and Founding Members (everyone who applies before launch) get all of it free for their first three months on the platform, with no obligation to continue.",
     button: "Apply now",
-    foot: "torahub.io · expected launch October 2026",
+    foot: "torahub.io · expected launch late 2026",
   },
   drawer: {
     role: "Role",
