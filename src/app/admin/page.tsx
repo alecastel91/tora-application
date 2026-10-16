@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { RecapView } from "./RecapView";
 import { ModerationView, fetchReports, type Report } from "./ModerationView";
+import { OrganisationsView } from "./OrganisationsView";
 import { roleColor } from "@/lib/roleColors";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -76,7 +77,7 @@ export default function AdminDashboard() {
     const [roleFilter, setRoleFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
-    const [view, setView] = useState<'applications' | 'recap' | 'moderation'>('applications');
+    const [view, setView] = useState<'applications' | 'recap' | 'moderation' | 'organisations'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
     // One moderation queue (profiles, messages, posts) feeds the tab and its dot.
     const [reports, setReports] = useState<Report[] | null>(null);
@@ -660,14 +661,14 @@ export default function AdminDashboard() {
 
                 {/* View toggle + role filter */}
                 <div className="flex flex-wrap items-center gap-2 mb-6">
-                    {(['applications', 'recap', 'moderation'] as const).map((v) => (
+                    {(['applications', 'recap', 'moderation', 'organisations'] as const).map((v) => (
                         <button
                             key={v}
                             onClick={() => setView(v)}
                             className={`px-4 py-2 rounded text-xs uppercase tracking-wider transition-colors ${view === v ? 'bg-white/10 text-white border border-white/20' : 'text-white/50 hover:text-white border border-white/10'}`}
                             style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
                         >
-                            {v === 'applications' ? 'Applications' : v === 'recap' ? 'Recap' : 'Moderation'}
+                            {v === 'applications' ? 'Applications' : v === 'recap' ? 'Recap' : v === 'moderation' ? 'Moderation' : 'Agencies'}
                             {v === 'moderation' && openReports > 0 && (
                                 <span className="ml-2 inline-block h-2 w-2 rounded-full bg-red-500 align-middle" aria-label={`${openReports} open reports`} />
                             )}
@@ -695,6 +696,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {view === 'recap' && <RecapView applications={applications} />}
+                {view === 'organisations' && <OrganisationsView />}
                 {view === 'moderation' && <ModerationView endpoint="/api/admin/moderation" reports={reports} onChange={setReports} loadError={reportsError} />}
 
                 {view === 'applications' && (<>
