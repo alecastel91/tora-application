@@ -13,8 +13,9 @@ type OrgRow = { id: string; name: string; verifiedDomains: string[]; artistTotal
 type Member = { memberId: string; status: string; role: string; matchedBy: string | null; invitedEmail: string | null; email: string | null; name: string | null; tier: string | null; seats: number | null; rosterCount: number; hasStripe: boolean; createdAt: string };
 type OrgDetail = OrgRow & { members: Member[] };
 
-// Mirrors tora-backend/src/config/pricing.js AGENT_BANDS and
-// tora-app/src/utils/money.js AGENT_BANDS — keep the three in step.
+// Band labels only. The amounts live in four places — tora-backend
+// src/config/pricing.js, tora-app src/utils/money.js, the tokushoho page
+// (the published price list) and here — change them together.
 const BAND_LABEL = ['1–3', '4–10', '11–25', '26–50', '51+'];
 
 export function OrganisationsView() {
@@ -69,7 +70,7 @@ export function OrganisationsView() {
           <button type="button" onClick={() => toggle(o.id)} className="w-full flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-left">
             <span className="text-white font-medium">{o.name}</span>
             <span className="text-white/50 text-xs">{o.memberCount} agent{o.memberCount === 1 ? '' : 's'}{o.pendingCount > 0 ? ` · ${o.pendingCount} pending` : ''}</span>
-            <span className="text-white/50 text-xs">{o.artistTotal} artists · band {BAND_LABEL[o.band]}{o.memberCount < 2 ? ' (single member — ordinary rate)' : ''}</span>
+            <span className="text-white/50 text-xs">{o.artistTotal} artists · band {BAND_LABEL[o.band]}{o.memberCount < 2 ? ' (single member — same as solo)' : ''}</span>
             {o.verifiedDomains.length > 0 && <span className="text-white/35 text-xs">{o.verifiedDomains.join(', ')}</span>}
             <span className="ml-auto text-white/40 text-xs">{open === o.id ? '▲' : '▼'}</span>
           </button>
