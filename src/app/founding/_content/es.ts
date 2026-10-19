@@ -64,7 +64,7 @@ export const es: FoundingContent = {
       points: [
         "Gestión de roster multi-artista",
         "Seguimiento de acuerdos y negociaciones",
-        "Planes por niveles: Solo to Unlimited",
+        "Precio fijo por artista — cuantos más artistas, menor la tarifa",
         "Visión financiera por artista",
         "Contrata directamente en nombre de tus artistas",
       ],

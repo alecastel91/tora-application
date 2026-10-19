@@ -22,10 +22,11 @@ import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
  * phone is kept visible although it could also be withheld. The street address
  * must not reappear anywhere — not in markup, metadata or a comment.
  *
- * Deliberately not in the site chrome: reachable from the Terms page, and
- * (still owed) from the subscription screen in the app, where the purchase is
- * actually made. noindex keeps it out of search results; the law asks that
- * consumers can read the disclosure, not that search engines can.
+ * Deliberately not in the site chrome: reachable from the Terms page, the
+ * footer legal row, and the subscription screen in the app (tora-app App.js),
+ * where the purchase is actually made. noindex keeps it out of search results;
+ * the law asks that consumers can read the disclosure, not that search engines
+ * can.
  */
 
 const sg = { fontFamily: "var(--font-space-grotesk), sans-serif" } as React.CSSProperties;

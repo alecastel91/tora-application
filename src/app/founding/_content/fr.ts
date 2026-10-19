@@ -64,7 +64,7 @@ export const fr: FoundingContent = {
       points: [
         "Gestion d'un roster multi-artistes",
         "Suivi des accords et des négociations",
-        "Tarification par paliers : Solo to Unlimited",
+        "Tarif fixe par artiste — plus d’artistes, tarif réduit",
         "Vue financière par artiste",
         "Bookez des dates directement en leur nom",
       ],

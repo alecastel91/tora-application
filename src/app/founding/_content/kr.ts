@@ -64,7 +64,7 @@ export const kr: FoundingContent = {
       points: [
         "다중 아티스트 로스터 관리",
         "딜 및 협상 추적",
-        "티어 요금제: Solo to Unlimited",
+        "아티스트당 균일 요금 — 아티스트가 많을수록 낮은 단가",
         "아티스트별 재무 개요",
         "아티스트를 대신한 직접 부킹",
       ],
