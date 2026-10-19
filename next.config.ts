@@ -53,6 +53,32 @@ const nextConfig: NextConfig = {
       { source: "/foundingmembers", destination: "/founding/en", permanent: false },
       // Beta cockpit moved: /admin autocompleted to /admin/beta in the browser.
       { source: "/admin/beta", destination: "/beta-admin", permanent: false },
+
+      // ACCEPTANCE CRITERIA (campaign vanity paths)
+      //   G1. Short, retypeable links for press placements where a long UTM
+      //       string is impractical: printed in article copy, read aloud, or
+      //       pasted by an editor who may strip a query string.
+      //   G2. Each lands on the founding page IN THE RIGHT LANGUAGE, carrying
+      //       the same utm_* the long-form links use, so the stored attribution
+      //       is identical however the visitor arrived.
+      //   G3. Point straight at /founding/<lang>, not /founding — that would
+      //       bounce through the redirect above and risk losing the query.
+      //   G4. temporary (307): a campaign path may be re-pointed later, and a
+      //       permanent redirect would be cached in browsers for good.
+      //   G5. One path per PLACEMENT is not the goal — these cover the article
+      //       placements only. Newsletter, Instagram and email use the full
+      //       links in docs/campaign-links.md, which distinguish utm_medium.
+      {
+        source: "/mixmag",
+        destination: "/founding/en?utm_source=mixmag&utm_medium=article&utm_campaign=launch",
+        permanent: false,
+      },
+      {
+        // Clubberia is a Japanese publication — its readers get the JA page.
+        source: "/clubberia",
+        destination: "/founding/jp?utm_source=clubberia&utm_medium=article&utm_campaign=launch",
+        permanent: false,
+      },
     ];
   },
 };

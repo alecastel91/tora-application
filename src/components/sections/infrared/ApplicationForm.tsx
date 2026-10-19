@@ -8,6 +8,8 @@ import { CitySearch } from "@/components/ui/CitySearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { attributionForSubmit } from "@/lib/attribution";
+import { trackEvent } from "@/lib/plausible";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Create a dummy Supabase client with placeholder values for build time
@@ -411,6 +413,17 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             website: website || null,
                             linkedin: linkedin || null,
                             venue_capacity: venueCapacity || null,
+                            // ACCEPTANCE CRITERIA (attribution on the insert)
+                            //   E1. One extra nullable column on the SAME insert
+                            //       that already happens. No new request, no new
+                            //       round trip, nothing else in the payload moves.
+                            //   E2. null whenever there is no live campaign, when
+                            //       storage is blocked, or when the entry expired.
+                            //       "Direct" is a perfectly normal outcome.
+                            //   E3. Cannot fail the application: the helper never
+                            //       throws, and the DB trigger nulls anything it
+                            //       dislikes rather than rejecting the row.
+                            attribution: attributionForSubmit(),
                         },
                     ]);
 
@@ -421,6 +434,14 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                         // Don't return - continue to show confirmation page
                     } else {
                         console.log('✅ Database insert successful!');
+
+                        // ACCEPTANCE CRITERIA (conversion event)
+                        //   F1. Fires ONLY here, in the success branch — never on
+                        //       a database error, never on a validation bounce.
+                        //   F2. Exactly once per successful submission.
+                        //   F3. Event name only. No email, no name, no campaign
+                        //       values — nothing that identifies a person.
+                        trackEvent('Application Submitted');
 
                         // Send confirmation email (fire-and-forget - don't block on errors)
                         fetch('/api/send-email', {

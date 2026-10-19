@@ -5,6 +5,10 @@ import { RecapView } from "./RecapView";
 import { ModerationView, fetchReports, type Report } from "./ModerationView";
 import { OrganisationsView } from "./OrganisationsView";
 import { roleColor } from "@/lib/roleColors";
+import {
+    type RowAttribution, sourceKey, sourceLabel, campaignDetail, mediumLabel, referrerLabel,
+    distinctSources, distinctCampaigns, matchesAttribution, DIRECT,
+} from "./attribution";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { GlassPanel } from "@/components/ui/GlassPanel";
@@ -65,6 +69,10 @@ export interface Application {
     status: string;
     coupon_code: string | null;
     invited_at: string | null;
+    // Campaign that brought this applicant. Null = Direct, which is normal.
+    // Written by the website; sanitised again by a DB trigger. See
+    // src/lib/attribution.ts and tora-backend/migrations/006_*.sql.
+    attribution?: RowAttribution;
 }
 
 export default function AdminDashboard() {
@@ -76,6 +84,14 @@ export default function AdminDashboard() {
     const [filter, setFilter] = useState("all");
     const [roleFilter, setRoleFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
+    // ACCEPTANCE CRITERIA (campaign filters)
+    //   I1. Options are built from the values actually present in the loaded
+    //       rows, never a hard-coded list, so a new campaign appears by itself.
+    //   I2. "all" on either filter means that filter constrains nothing.
+    //   I3. They compose with the existing status, role and search filters
+    //       rather than replacing them.
+    const [sourceFilter, setSourceFilter] = useState("all");
+    const [campaignFilter, setCampaignFilter] = useState("all");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
     const [view, setView] = useState<'applications' | 'recap' | 'moderation' | 'organisations'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
@@ -547,6 +563,9 @@ export default function AdminDashboard() {
         // Filter by role
         if (roleFilter !== 'all' && app.role?.toLowerCase() !== roleFilter) return false;
 
+        // I3: campaign source / campaign, composed with the rest
+        if (!matchesAttribution(app.attribution, sourceFilter, campaignFilter)) return false;
+
         // Search filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
@@ -562,6 +581,10 @@ export default function AdminDashboard() {
 
         return true;
     });
+
+    // I1: derived from the loaded rows, so new campaigns appear on their own.
+    const sourceOptions = distinctSources(applications);
+    const campaignOptions = distinctCampaigns(applications);
 
     const stats = {
         total: applications.length,
@@ -809,6 +832,32 @@ export default function AdminDashboard() {
                             </button>
                         ))}
                     </div>
+                    <select
+                        value={sourceFilter}
+                        onChange={(e) => setSourceFilter(e.target.value)}
+                        aria-label="Filter by campaign source"
+                        className="px-3 py-2 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-infrared/50 appearance-none cursor-pointer"
+                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                    >
+                        <option value="all" className="bg-black text-white">All sources</option>
+                        {sourceOptions.map((sopt) => (
+                            <option key={sopt} value={sopt} className="bg-black text-white">
+                                {sopt === DIRECT ? 'Direct' : sopt}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        value={campaignFilter}
+                        onChange={(e) => setCampaignFilter(e.target.value)}
+                        aria-label="Filter by campaign"
+                        className="px-3 py-2 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-infrared/50 appearance-none cursor-pointer"
+                        style={{ fontFamily: 'var(--font-rajdhani), sans-serif' }}
+                    >
+                        <option value="all" className="bg-black text-white">All campaigns</option>
+                        {campaignOptions.map((copt) => (
+                            <option key={copt} value={copt} className="bg-black text-white">{copt}</option>
+                        ))}
+                    </select>
                     <input
                         type="text"
                         placeholder="Search by name, email, role, city..."
@@ -876,6 +925,21 @@ export default function AdminDashboard() {
                                                     Additional Profile
                                                 </span>
                                             )}
+                                            {/* ACCEPTANCE CRITERIA (source badge)
+                                                J1. Always present, so a row is never ambiguous:
+                                                    a campaign name, or DIRECT when there is none.
+                                                J2. Direct is muted; a real campaign is highlighted,
+                                                    so Mixmag rows are scannable at a glance. */}
+                                            <span
+                                                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide ${
+                                                    sourceKey(app.attribution) === DIRECT
+                                                        ? 'bg-white/5 text-white/35'
+                                                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                                }`}
+                                                title={[mediumLabel(app.attribution), referrerLabel(app.attribution)].filter(Boolean).join(' · ') || undefined}
+                                            >
+                                                {sourceLabel(app.attribution)}
+                                            </span>
                                         </div>
                                         <div className="text-white/60 text-sm">
                                             <span className="text-white/40">Legal name:</span> <span className="text-white/60">{app.first_name} {app.last_name}</span>
@@ -949,6 +1013,9 @@ export default function AdminDashboard() {
                                         </div>
                                         <div className="text-white/30 text-xs">
                                             Applied: {new Date(app.created_at).toLocaleString()}
+                                            {campaignDetail(app.attribution) && (
+                                                <span className="ml-2 text-white/40">· {campaignDetail(app.attribution)}</span>
+                                            )}
                                         </div>
                                     </div>
 

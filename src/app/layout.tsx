@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Orbitron, Rajdhani, Inter, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
+import { AttributionCapture } from "@/components/AttributionCapture";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -73,10 +74,20 @@ export default function RootLayout({
       <body
         className={`${orbitron.variable} ${rajdhani.variable} ${inter.variable} ${spaceGrotesk.variable} ${supreme.variable} font-sans antialiased`}
       >
+        {/* Campaign attribution: remembers which campaign brought a visitor so
+            the application they submit later can be labelled with it. Renders
+            nothing — see src/lib/attribution.ts. */}
+        <AttributionCapture />
         <LanguageProvider>
           {children}
         </LanguageProvider>
         <Analytics />
+        {/* Plausible's documented queue stub. The tracker below is deferred, so
+            without this a plausible() call made before it loads would be lost.
+            No extra third-party script — it only queues into the existing one. */}
+        <Script id="plausible-queue" strategy="beforeInteractive">
+          {`window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
+        </Script>
         <Script
           defer
           data-domain="torahub.io"

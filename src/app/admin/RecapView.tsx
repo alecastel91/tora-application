@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import type { Application } from './page';
 import { ZONES } from '@/lib/geo';
+import { sourceKey, campaignKey, attributionCsv, DIRECT } from './attribution';
 
 const ROLES = ['ARTIST', 'AGENT', 'PROMOTER', 'VENUE'] as const;
 
@@ -97,7 +98,13 @@ export function RecapView({ applications }: { applications: Application[] }) {
   // All tallies derive from `filtered`, so compute them together in one memo keyed
   // on [filtered] — avoids re-scanning/re-sorting (and re-parsing genres) on every
   // unrelated render (e.g. toggling a "Show all" or typing in a date input).
-  const { byRole, byCountry, byCity, byGenre, byZone, byStatus, byMonth } = useMemo(() => {
+  // ACCEPTANCE CRITERIA (campaign recap)
+  //   K1. Campaign tallies obey the SAME filters as every other tally on this
+  //       page — they derive from `filtered`, not from `applications`.
+  //   K2. Rows with no campaign count as "direct" rather than vanishing, so the
+  //       source column always sums back to the total.
+  //   K3. Built from the data present; no hard-coded campaign list.
+  const { byRole, byCountry, byCity, byGenre, byZone, byStatus, byMonth, bySource, byCampaign } = useMemo(() => {
     const tally = (getKey: (a: Application) => string | string[] | undefined): [string, number][] => {
       const m = new Map<string, number>();
       for (const a of filtered) {
@@ -134,6 +141,8 @@ export function RecapView({ applications }: { applications: Application[] }) {
       byZone: tally((a) => a.zone),
       byStatus: tally((a) => (a.status || '').toUpperCase()),
       byMonth,
+      bySource: tally((a) => sourceKey(a.attribution)),           // K2, K3
+      byCampaign: tally((a) => campaignKey(a.attribution) || ''), // '' is skipped by tally
     };
   }, [filtered]);
 
@@ -151,11 +160,20 @@ export function RecapView({ applications }: { applications: Application[] }) {
 
   const exportCsv = () => {
     const cols: (keyof Application)[] = ['created_at', 'first_name', 'last_name', 'email', 'role', 'zone', 'country', 'city', 'genres', 'status'];
+    // ACCEPTANCE CRITERIA (CSV): attribution is appended as its own columns —
+    // existing columns keep their names and order so anything consuming this
+    // file today keeps working.
+    const attrCols = ['source', 'medium', 'campaign', 'content', 'referrer', 'landing_path'] as const;
     const esc = (v: unknown) => {
       const s = v == null ? '' : String(v);
       return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
-    const csv = [cols.join(','), ...filtered.map((r) => cols.map((c) => esc(r[c])).join(','))].join('\n');
+    const header = [...cols, ...attrCols].join(',');
+    const body = filtered.map((r) => {
+      const a = attributionCsv(r.attribution);
+      return [...cols.map((c) => esc(r[c])), ...attrCols.map((k) => esc(a[k]))].join(',');
+    });
+    const csv = [header, ...body].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -216,6 +234,21 @@ export function RecapView({ applications }: { applications: Application[] }) {
             </div>
           );
         })}
+      </div>
+
+      {/* Campaign attribution */}
+      <div className="bg-white/5 border border-white/10 rounded-lg p-5">
+        <div className="text-white/60 text-xs uppercase tracking-wider mb-4">Where applications came from</div>
+        {bySource.length === 0 ? (
+          <div className="text-white/40 text-sm">No applications in this selection.</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Ranking title="By source" data={bySource.map(([k, v]) => [k === DIRECT ? 'Direct' : k, v] as [string, number])} />
+            {byCampaign.length > 0
+              ? <Ranking title="By campaign" data={byCampaign} />
+              : <div className="text-white/40 text-sm self-start">No tagged campaigns yet. Links from docs/campaign-links.md will show up here.</div>}
+          </div>
+        )}
       </div>
 
       {/* Rankings */}
