@@ -10,6 +10,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { attributionForSubmit } from "@/lib/attribution";
 import { trackEvent } from "@/lib/plausible";
+import { reportLostApplication } from "@/lib/reportFailure";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Create a dummy Supabase client with placeholder values for build time
@@ -448,6 +449,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                         console.error("❌ Direct insert failed:", dbError.message);
                         // N2, second way: our own origin. The browser can always
                         // reach it — it loaded this page from here.
+                        let fallbackStatus: number | string = 'unreachable';
                         try {
                             const res = await fetch('/api/public/apply', {
                                 method: 'POST',
@@ -455,9 +457,15 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                 body: JSON.stringify(applicationRow),
                             });
                             saved = res.ok;
+                            fallbackStatus = res.status;
                             console.log(res.ok ? '✅ Saved via the server fallback' : `❌ Server fallback failed: ${res.status}`);
                         } catch (fallbackErr) {
                             console.error("❌ Server fallback unreachable:", fallbackErr);
+                        }
+                        if (!saved) {
+                            // Both ways failed — make it visible to us, not just
+                            // to the applicant. Technical detail only, no PII.
+                            void reportLostApplication({ role: role ?? undefined, directError: dbError.message, fallbackStatus });
                         }
                     } else {
                         saved = true;
