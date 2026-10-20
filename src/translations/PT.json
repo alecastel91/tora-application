@@ -88,6 +88,7 @@
   "prelaunch_title": "Aviso de Pré-Lançamento",
   "prelaunch_text": "O TORA está atualmente em fase de pré-lançamento. Os candidatos iniciais podem receber consideração prioritária e benefícios especiais de membro quando lançarmos.",
   "error_generic": "Algo deu errado. Por favor, tente novamente.",
+  "application_failed": "Não foi possível salvar sua candidatura. Tente novamente, ou de outra rede ou dispositivo.",
   "nav_apply": "Candidate-se",
   "nav_about": "Sobre",
   "nav_roles": "Papéis",

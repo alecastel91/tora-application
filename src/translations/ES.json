@@ -88,6 +88,7 @@
   "prelaunch_title": "Aviso de Prelanzamiento",
   "prelaunch_text": "TORA está actualmente en fase de prelanzamiento. Los solicitantes tempranos pueden recibir consideración prioritaria y beneficios especiales de membresía cuando lancemos.",
   "error_generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+  "application_failed": "No se pudo guardar tu solicitud. Inténtalo de nuevo, o desde otra red o dispositivo.",
   "nav_apply": "Solicitar acceso",
   "nav_about": "Sobre TORA",
   "nav_roles": "Roles",

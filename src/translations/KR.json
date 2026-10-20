@@ -88,6 +88,7 @@
   "prelaunch_title": "사전 출시 공지",
   "prelaunch_text": "TORA는 현재 사전 출시 단계에 있습니다. 초기 지원자는 출시 시 우선 고려 및 특별 회원 혜택을 받을 수 있습니다.",
   "error_generic": "오류가 발생했습니다. 다시 시도해 주세요.",
+  "application_failed": "신청서를 저장하지 못했습니다. 다시 시도하시거나 다른 네트워크 또는 기기에서 시도해 주세요.",
   "nav_apply": "신청",
   "nav_about": "소개",
   "nav_roles": "역할",

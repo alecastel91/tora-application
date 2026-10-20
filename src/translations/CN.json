@@ -88,6 +88,7 @@
   "prelaunch_title": "预发布通知",
   "prelaunch_text": "TORA目前处于预上线阶段。早期申请者在平台上线时或可获得优先审核及专属会员福利。",
   "error_generic": "出现错误，请重试。",
+  "application_failed": "无法保存您的申请。请重试，或换用其他网络或设备。",
   "nav_apply": "申请",
   "nav_about": "关于",
   "nav_roles": "角色",

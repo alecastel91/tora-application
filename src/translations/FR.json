@@ -88,6 +88,7 @@
   "prelaunch_title": "Avis de Pré-Lancement",
   "prelaunch_text": "TORA est actuellement en phase de pré-lancement. Les premiers candidats peuvent bénéficier d'un examen prioritaire de leur candidature et d'avantages exclusifs au lancement.",
   "error_generic": "Une erreur s'est produite. Veuillez réessayer.",
+  "application_failed": "Impossible d’enregistrer votre candidature. Réessayez, ou depuis un autre réseau ou appareil.",
   "nav_apply": "Postuler",
   "nav_about": "À propos",
   "nav_roles": "Rôles",

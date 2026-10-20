@@ -88,6 +88,7 @@
   "prelaunch_title": "Pre-Launch Notice",
   "prelaunch_text": "TORA is currently in pre-launch phase. Early applicants may receive priority consideration and special membership benefits when we launch.",
   "error_generic": "Something went wrong. Please try again.",
+  "application_failed": "Could not save your application. Please try again, or from another network or device.",
   "nav_apply": "Apply",
   "nav_about": "About",
   "nav_roles": "Roles",

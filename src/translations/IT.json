@@ -88,6 +88,7 @@
   "prelaunch_title": "Avviso di pre-lancio",
   "prelaunch_text": "TORA è attualmente in fase di pre-lancio. Chi si candida per primo potrà avere priorità in fase di revisione e vantaggi speciali di membership al lancio.",
   "error_generic": "Qualcosa è andato storto. Riprova.",
+  "application_failed": "Impossibile salvare la tua candidatura. Riprova, oppure da un’altra rete o dispositivo.",
   "nav_apply": "Candidati",
   "nav_about": "Chi siamo",
   "nav_roles": "Ruoli",

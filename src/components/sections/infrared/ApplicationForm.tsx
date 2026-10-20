@@ -383,6 +383,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
 
         // Simulate loading delay for better UX
         setTimeout(async () => {
+            // N3: only a real write flips this to true.
+            let saved = false;
             try {
                 // Only try to save to Supabase if valid credentials are configured
                 const hasSupabaseConfig =
@@ -394,8 +396,22 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                     const envMode = process.env.NEXT_PUBLIC_ENV_MODE || 'production';
                     const tableName = envMode === 'test' ? 'waitlist_test' : 'waitlist';
 
-                    const { error: dbError } = await supabase.from(tableName).insert([
-                        {
+                    // ACCEPTANCE CRITERIA (never lose an application)
+                    //   N1. The row is built ONCE and reused, so the fallback
+                    //       path can never send something different.
+                    //   N2. Two ways to post it. The browser writes straight to
+                    //       supabase.co; many corporate networks block that host
+                    //       outright, so on failure we post to our OWN origin
+                    //       (/api/public/apply) which writes it server-side from
+                    //       Vercel, outside the customer's firewall.
+                    //   N3. The confirmation screen is shown ONLY when a row was
+                    //       really written. Before this, a blocked network showed
+                    //       "Application received" for an application that never
+                    //       existed, and the applicant waited for an invitation
+                    //       that was never coming.
+                    //   N4. On total failure the applicant stays on the form with
+                    //       a visible message and can press submit again.
+                    const applicationRow = {
                             phone_number: `${countryCode} ${phoneNumber}`,
                             role,
                             first_name: firstName,
@@ -424,16 +440,31 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             //       throws, and the DB trigger nulls anything it
                             //       dislikes rather than rejecting the row.
                             attribution: attributionForSubmit(),
-                        },
-                    ]);
+                    };
 
+                    // N2, first way: straight from the browser.
+                    const { error: dbError } = await supabase.from(tableName).insert([applicationRow]);
                     if (dbError) {
-                        console.error("❌ Database error:", dbError);
-                        console.error("Error details:", JSON.stringify(dbError, null, 2));
-                        console.log("Continuing to confirmation despite database error...");
-                        // Don't return - continue to show confirmation page
+                        console.error("❌ Direct insert failed:", dbError.message);
+                        // N2, second way: our own origin. The browser can always
+                        // reach it — it loaded this page from here.
+                        try {
+                            const res = await fetch('/api/public/apply', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(applicationRow),
+                            });
+                            saved = res.ok;
+                            console.log(res.ok ? '✅ Saved via the server fallback' : `❌ Server fallback failed: ${res.status}`);
+                        } catch (fallbackErr) {
+                            console.error("❌ Server fallback unreachable:", fallbackErr);
+                        }
                     } else {
-                        console.log('✅ Database insert successful!');
+                        saved = true;
+                    }
+
+                    if (saved) {
+                        console.log('✅ Application stored');
 
                         // ACCEPTANCE CRITERIA (conversion event)
                         //   F1. Fires ONLY here, in the success branch — never on
@@ -463,6 +494,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             .catch(err => console.log('Email error (continuing anyway):', err));
                     }
                 } else {
+                    // Local dev without Supabase: unchanged behaviour.
+                    saved = true;
                     // Log form data to console instead (for testing without Supabase)
                     console.log("Supabase not configured. Form data:", {
                         phone_number: `${countryCode} ${phoneNumber}`,
@@ -486,6 +519,14 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                 }
 
                 setLoading(false);
+
+                // N3 + N4
+                if (!saved) {
+                    console.error("Application NOT stored — showing the failure message, keeping the draft.");
+                    setError(t('application_failed'));
+                    return;
+                }
+
                 console.log("Submission successful, showing confirmation...");
                 try { localStorage.removeItem(DRAFT_KEY); } catch { /* non-fatal */ }
                 setSubmitted(true);
@@ -1268,6 +1309,24 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                             {' '}and understand that my data will be used to review my application and, if accepted, to create my TORA profile.
                                         </label>
                                     </div>
+
+                                    {/* ACCEPTANCE CRITERIA (failure is visible where it happens)
+                                        O1. The ONLY other error render on this form lives on the
+                                            email step, so a failure at submit used to set an error
+                                            that nothing displayed — the applicant saw the form sit
+                                            there doing nothing. This puts it beside the button that
+                                            failed.
+                                        O2. The applicant stays on this step with their answers and
+                                            their draft intact, so pressing submit again retries. */}
+                                    {error && (
+                                        <motion.p
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className="mb-4 text-xs text-red-400 tracking-widest uppercase text-center"
+                                        >
+                                            {error}
+                                        </motion.p>
+                                    )}
 
                                     <div className="flex space-x-4 w-full justify-center">
                                         <InfraredButton type="button" variant="secondary" onClick={prevStep} className="px-6 py-3">{t('back')}</InfraredButton>
