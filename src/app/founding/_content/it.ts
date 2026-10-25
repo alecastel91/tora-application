@@ -64,7 +64,7 @@ export const it: FoundingContent = {
       points: [
         "Gestione multi-artista del roster",
         "Monitoraggio di accordi e trattative",
-        "Tariffa fissa per artista — più artisti, tariffa più bassa",
+        "Un unico piano Agent a tariffa fissa — artisti illimitati",
         "Panoramica finanziaria per singolo artista",
         "Prenota gig direttamente per loro conto",
       ],

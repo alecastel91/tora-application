@@ -33,14 +33,6 @@ const sg = { fontFamily: "var(--font-space-grotesk), sans-serif" } as React.CSSP
 
 const PRICE_COLS = ["日本円", "ユーロ", "米ドル"];
 
-const AGENT_BANDS = [
-    ["1〜3名", "¥3,480", "€19.90", "$22.90"],
-    ["4〜10名", "¥2,960", "€17.00", "$19.40"],
-    ["11〜25名", "¥2,500", "€14.40", "$16.50"],
-    ["26〜50名", "¥2,100", "€12.00", "$13.70"],
-    ["51名以上", "¥1,700", "€9.70", "$11.10"],
-];
-
 function PriceTable({ head, rows }: { head: string; rows: string[][] }) {
     return (
         <div className="overflow-x-auto">
@@ -83,12 +75,10 @@ const ROWS: { term: string; body: React.ReactNode }[] = [
                 </div>
 
                 <div>
-                    <div className="mb-2 text-white">エージェント（所属アーティスト1名あたりの月額）</div>
-                    <PriceTable head="人数" rows={AGENT_BANDS} />
+                    <div className="mb-2 text-white">エージェントプラン</div>
+                    <PriceTable head="" rows={[["月額", "¥7,980", "€49", "$56.90"], ["年額", "¥79,800", "€490", "$569"]]} />
                     <p className="mt-2 text-sm text-white/45">
-                        所属アーティスト数の合計が該当する区分の単価を、全アーティストに一律で適用して算出します（区分ごとの単価を合算するものではありません）。
-                        エージェンシーに所属する場合は、エージェンシー全体の所属アーティスト数によって区分が決まります。
-                        アーティスト1名までは無料でご利用いただけます。年額は月額10か月分です。
+                        エージェント1名につき定額、担当アーティスト数は無制限。プランなしの場合、有効なアーティストは1名まで無料（その他のアーティストはプラン再開まで休止中となり、削除されません）。年額は月額10か月分です。
                     </p>
                 </div>
 

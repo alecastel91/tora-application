@@ -3,20 +3,25 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Agency organisations: several agents, each on their own subscription,
- * paying at the band of the agency's TOTAL artist count. This view exists so
- * support can answer "why did my price change" — total, band, who is in,
- * who is pending, whether each member actually has a live subscription —
- * and force a resync when a trigger was missed.
+ * Agency organisations: an agency is a TEAM shown on its members' profiles,
+ * nothing more. Since 2026-10-26 it does not change anyone's price — every
+ * agent pays the same flat Agent plan for unlimited artists. This view exists
+ * so support can see who is in, who is pending, how many artists the agency
+ * carries between them, and whether each member actually has a live plan.
+ *
+ * No amounts here, deliberately. They live in tora-backend
+ * src/config/pricing.js, tora-app src/utils/money.js and the tokushoho page
+ * (the published price list) — never add a fourth.
  */
 type OrgRow = { id: string; name: string; verifiedDomains: string[]; artistTotal: number; band: number; memberCount: number; pendingCount: number; createdAt: string };
+// seats is a plan marker, not a quantity: 1 = Agent plan, 0 = member plan,
+// null = no Stripe plan. band is legacy — the backend still sends it for
+// compatibility, nothing reads it.
 type Member = { memberId: string; status: string; role: string; matchedBy: string | null; invitedEmail: string | null; email: string | null; name: string | null; tier: string | null; seats: number | null; rosterCount: number; hasStripe: boolean; createdAt: string };
 type OrgDetail = OrgRow & { members: Member[] };
 
-// Band labels only. The amounts live in four places — tora-backend
-// src/config/pricing.js, tora-app src/utils/money.js, the tokushoho page
-// (the published price list) and here — change them together.
-const BAND_LABEL = ['1–3', '4–10', '11–25', '26–50', '51+'];
+const planLabel = (seats: number | null) =>
+  seats === 1 ? ' · Agent plan' : seats === 0 ? ' · Member plan' : '';
 
 export function OrganisationsView() {
   const [orgs, setOrgs] = useState<OrgRow[] | null>(null);
@@ -51,12 +56,12 @@ export function OrganisationsView() {
     if (!detail[id]) await loadDetail(id);
   };
 
-  const resync = async (id: string) => {
+  const recount = async (id: string) => {
     setBusy(id);
     try {
       await getJson(`/api/admin/organisations/${id}/resync`, { method: 'POST' });
       await Promise.all([load(), loadDetail(id)]);
-    } catch (e) { setError(e instanceof Error ? e.message : 'Resync failed'); } finally { setBusy(null); }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Recount failed'); } finally { setBusy(null); }
   };
 
   if (error) return <p className="text-red-300 text-sm">{error}</p>;
@@ -70,7 +75,7 @@ export function OrganisationsView() {
           <button type="button" onClick={() => toggle(o.id)} className="w-full flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-left">
             <span className="text-white font-medium">{o.name}</span>
             <span className="text-white/50 text-xs">{o.memberCount} agent{o.memberCount === 1 ? '' : 's'}{o.pendingCount > 0 ? ` · ${o.pendingCount} pending` : ''}</span>
-            <span className="text-white/50 text-xs">{o.artistTotal} artists · band {BAND_LABEL[o.band]}{o.memberCount < 2 ? ' (single member — same as solo)' : ''}</span>
+            <span className="text-white/50 text-xs">{o.artistTotal} artists</span>
             {o.verifiedDomains.length > 0 && <span className="text-white/35 text-xs">{o.verifiedDomains.join(', ')}</span>}
             <span className="ml-auto text-white/40 text-xs">{open === o.id ? '▲' : '▼'}</span>
           </button>
@@ -88,7 +93,7 @@ export function OrganisationsView() {
                         <td>{m.email || m.invitedEmail || '—'}</td>
                         <td>{m.status}</td>
                         <td className="text-right tabular-nums">{m.rosterCount}</td>
-                        <td className="pl-3">{m.tier || '—'}{m.seats != null ? ` · ${m.seats} seats` : ''}{m.hasStripe ? '' : m.tier && m.tier !== 'FREE' ? ' · no Stripe' : ''}</td>
+                        <td className="pl-3">{m.tier || '—'}{planLabel(m.seats)}{m.hasStripe ? '' : m.tier && m.tier !== 'FREE' ? ' · no Stripe' : ''}</td>
                         <td className="text-white/40">{m.matchedBy || '—'}</td>
                       </tr>
                     ))}
@@ -96,10 +101,10 @@ export function OrganisationsView() {
                 </table>
               )}
               <div className="mt-3 flex items-center gap-3">
-                <button type="button" disabled={busy === o.id} onClick={() => resync(o.id)} className="px-3 py-1.5 rounded text-xs uppercase tracking-wider border border-white/15 text-white/70 hover:text-white disabled:opacity-50">
-                  {busy === o.id ? 'Resyncing…' : 'Resync rates'}
+                <button type="button" disabled={busy === o.id} onClick={() => recount(o.id)} className="px-3 py-1.5 rounded text-xs uppercase tracking-wider border border-white/15 text-white/70 hover:text-white disabled:opacity-50">
+                  {busy === o.id ? 'Recounting…' : 'Recount artists'}
                 </button>
-                <span className="text-white/35 text-xs">Recounts artists and re-applies the band coupon on every member for their next invoice.</span>
+                <span className="text-white/35 text-xs">Recounts the agency&rsquo;s artist total. Nobody&rsquo;s price depends on it — every agent pays the same flat Agent plan.</span>
               </div>
             </div>
           )}

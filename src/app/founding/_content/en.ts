@@ -64,7 +64,7 @@ export const en: FoundingContent = {
       points: [
         "Multi-Artist roster management",
         "Deal & negotiation tracking",
-        "Flat per-Artist pricing — the more Artists, the lower the rate",
+        "One flat Agent plan — unlimited Artists",
         "Per-Artist financial overview",
         "Book gigs directly on their behalf",
       ],
