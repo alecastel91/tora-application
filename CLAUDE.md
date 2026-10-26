@@ -56,7 +56,7 @@ TORA Landing Page is a Next.js application for collecting pre-launch application
   CN roles in prose = 艺人/经纪人/主办方/场地; KR = 아티스트/에이전트/프로모터/베뉴;
   IT/FR marketing use booking/cachet loanwords (legal pages keep formal native terms).
 - Brand terms stay English everywhere: TORA, Tour Kickstart (NOT "Kickstarter"),
-  "WHERE MUSIC MEETS" (incl. the `tagline` key), Solo to Unlimited, torahub.io,
+  "WHERE MUSIC MEETS" (incl. the `tagline` key), torahub.io,
   role names as labels. `where_music_meets` and `tagline` are both English in all 8.
 
 ### Homepage cards = founding cards

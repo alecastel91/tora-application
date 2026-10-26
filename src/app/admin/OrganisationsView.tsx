@@ -13,15 +13,27 @@ import { useEffect, useState } from 'react';
  * src/config/pricing.js, tora-app src/utils/money.js and the tokushoho page
  * (the published price list) — never add a fourth.
  */
-type OrgRow = { id: string; name: string; verifiedDomains: string[]; artistTotal: number; band: number; memberCount: number; pendingCount: number; createdAt: string };
-// seats is a plan marker, not a quantity: 1 = Agent plan, 0 = member plan,
-// null = no Stripe plan. band is legacy — the backend still sends it for
-// compatibility, nothing reads it.
+type OrgRow = { id: string; name: string; verifiedDomains: string[]; artistTotal: number; memberCount: number; pendingCount: number; createdAt: string };
 type Member = { memberId: string; status: string; role: string; matchedBy: string | null; invitedEmail: string | null; email: string | null; name: string | null; tier: string | null; seats: number | null; rosterCount: number; hasStripe: boolean; createdAt: string };
 type OrgDetail = OrgRow & { members: Member[] };
 
-const planLabel = (seats: number | null) =>
-  seats === 1 ? ' · Agent plan' : seats === 0 ? ' · Member plan' : '';
+const PAID_TIERS = ['MONTHLY', 'YEARLY'];
+
+// Which plan the backend bills this agent for: a paid tier first, then
+// agentSeats picks which one — 0 = member plan, anything else = agent plan,
+// null included, because comped agents never get a marker written. Not
+// seats === 1: the column used to hold a real seat count and was never
+// backfilled, so an older agent can still carry 5.
+//
+// NOT an exact mirror of isPaidAgent (tora-backend utils/agentTiers.js) —
+// that reads the CURRENT tier, and this payload carries the stored tier with
+// no expiry dates, so a lapsed row can still read as paid. The exact answer
+// needs /organisations to send the plan itself.
+const planLabel = (tier: string | null, seats: number | null) =>
+  !tier || !PAID_TIERS.includes(tier) ? '' : seats === 0 ? ' · Member plan' : ' · Agent plan';
+
+const stripeLabel = (m: Member) =>
+  !m.hasStripe && m.tier && m.tier !== 'FREE' ? ' · no Stripe' : '';
 
 export function OrganisationsView() {
   const [orgs, setOrgs] = useState<OrgRow[] | null>(null);
@@ -93,7 +105,7 @@ export function OrganisationsView() {
                         <td>{m.email || m.invitedEmail || '—'}</td>
                         <td>{m.status}</td>
                         <td className="text-right tabular-nums">{m.rosterCount}</td>
-                        <td className="pl-3">{m.tier || '—'}{planLabel(m.seats)}{m.hasStripe ? '' : m.tier && m.tier !== 'FREE' ? ' · no Stripe' : ''}</td>
+                        <td className="pl-3">{m.tier || '—'}{planLabel(m.tier, m.seats)}{stripeLabel(m)}</td>
                         <td className="text-white/40">{m.matchedBy || '—'}</td>
                       </tr>
                     ))}

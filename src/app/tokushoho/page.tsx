@@ -33,13 +33,14 @@ const sg = { fontFamily: "var(--font-space-grotesk), sans-serif" } as React.CSSP
 
 const PRICE_COLS = ["日本円", "ユーロ", "米ドル"];
 
-function PriceTable({ head, rows }: { head: string; rows: string[][] }) {
+function PriceTable({ rows }: { rows: string[][] }) {
     return (
         <div className="overflow-x-auto">
             <table className="w-full max-w-md border-collapse text-left text-[13px] md:text-base">
                 <thead>
                     <tr className="text-white/45">
-                        <th className="whitespace-nowrap py-1 pr-3 font-normal md:pr-4">{head}</th>
+                        {/* Empty corner above the 月額 / 年額 label column. */}
+                        <th className="whitespace-nowrap py-1 pr-3 font-normal md:pr-4" />
                         {PRICE_COLS.map((c) => (
                             <th key={c} className="py-1 pr-3 font-normal last:pr-0 md:pr-4">{c}</th>
                         ))}
@@ -71,12 +72,12 @@ const ROWS: { term: string; body: React.ReactNode }[] = [
             <div className="space-y-5">
                 <div>
                     <div className="mb-2 text-white">TORA Premium（アーティスト／プロモーター／ベニュー）</div>
-                    <PriceTable head="" rows={[["月額", "¥3,480", "€19.90", "$22.90"], ["年額", "¥34,800", "€199.90", "$229.90"]]} />
+                    <PriceTable rows={[["月額", "¥3,480", "€19.90", "$22.90"], ["年額", "¥34,800", "€199.90", "$229.90"]]} />
                 </div>
 
                 <div>
                     <div className="mb-2 text-white">エージェントプラン</div>
-                    <PriceTable head="" rows={[["月額", "¥7,980", "€49", "$56.90"], ["年額", "¥79,800", "€490", "$569"]]} />
+                    <PriceTable rows={[["月額", "¥7,980", "€49", "$56.90"], ["年額", "¥79,800", "€490", "$569"]]} />
                     <p className="mt-2 text-sm text-white/45">
                         エージェント1名につき定額、担当アーティスト数は無制限。プランなしの場合、有効なアーティストは1名まで無料（その他のアーティストはプラン再開まで休止中となり、削除されません）。年額は月額10か月分です。
                     </p>
