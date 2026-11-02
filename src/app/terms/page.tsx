@@ -80,6 +80,7 @@ export default function Terms() {
                     <p><strong className="text-white">{t('terms_bookings_sub2')}</strong> {t('terms_bookings_sub2_text')}</p>
                     <p><strong className="text-white">{t('terms_bookings_sub3')}</strong> {t('terms_bookings_sub3_text')}</p>
                     <p><strong className="text-white">{t('terms_bookings_sub4')}</strong> {t('terms_bookings_sub4_text')}</p>
+                    <p><strong className="text-white">{t('terms_bookings_sub5')}</strong> {t('terms_bookings_sub5_text')}</p>
                     <p>
                         {t('terms_bookings_close')}
                     </p>
