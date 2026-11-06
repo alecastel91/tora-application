@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 
 /**
  * Agency organisations: an agency is a TEAM shown on its members' profiles,
- * nothing more. Since 2026-10-26 it does not change anyone's price — every
- * agent pays the same flat Agent plan for unlimited artists. This view exists
+ * nothing more. Every agent pays the same flat Agent plan for unlimited
+ * artists; agencies of 5+ agents get a percent-off coupon support adds by
+ * hand (2026-11-06), nothing automatic. This view exists
  * so support can see who is in, who is pending, how many artists the agency
  * carries between them, and whether each member actually has a live plan.
  *
@@ -31,6 +32,11 @@ const PAID_TIERS = ['MONTHLY', 'YEARLY'];
 // needs /organisations to send the plan itself.
 const planLabel = (tier: string | null, seats: number | null) =>
   !tier || !PAID_TIERS.includes(tier) ? '' : seats === 0 ? ' · Member plan' : ' · Agent plan';
+
+// Agency discount support applies by hand in Stripe (tora-backend pricing.js
+// AGENCY_COUPONS): 5–9 agents tora_agency_5_10, 10+ tora_agency_10_20.
+const agencyDiscount = (agents: number) =>
+  agents >= 10 ? ' · 20% off (tora_agency_10_20)' : agents >= 5 ? ' · 10% off (tora_agency_5_10)' : '';
 
 const stripeLabel = (m: Member) =>
   !m.hasStripe && m.tier && m.tier !== 'FREE' ? ' · no Stripe' : '';
@@ -86,7 +92,7 @@ export function OrganisationsView() {
         <div key={o.id} className="rounded-lg border border-white/10 bg-white/[0.03]">
           <button type="button" onClick={() => toggle(o.id)} className="w-full flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 text-left">
             <span className="text-white font-medium">{o.name}</span>
-            <span className="text-white/50 text-xs">{o.memberCount} agent{o.memberCount === 1 ? '' : 's'}{o.pendingCount > 0 ? ` · ${o.pendingCount} pending` : ''}</span>
+            <span className="text-white/50 text-xs">{o.memberCount} agent{o.memberCount === 1 ? '' : 's'}{o.pendingCount > 0 ? ` · ${o.pendingCount} pending` : ''}{agencyDiscount(o.memberCount)}</span>
             <span className="text-white/50 text-xs">{o.artistTotal} artists</span>
             {o.verifiedDomains.length > 0 && <span className="text-white/35 text-xs">{o.verifiedDomains.join(', ')}</span>}
             <span className="ml-auto text-white/40 text-xs">{open === o.id ? '▲' : '▼'}</span>
@@ -116,7 +122,7 @@ export function OrganisationsView() {
                 <button type="button" disabled={busy === o.id} onClick={() => recount(o.id)} className="px-3 py-1.5 rounded text-xs uppercase tracking-wider border border-white/15 text-white/70 hover:text-white disabled:opacity-50">
                   {busy === o.id ? 'Recounting…' : 'Recount artists'}
                 </button>
-                <span className="text-white/35 text-xs">Recounts the agency&rsquo;s artist total. Nobody&rsquo;s price depends on it — every agent pays the same flat Agent plan.</span>
+                <span className="text-white/35 text-xs">Recounts the agency&rsquo;s artist total. Prices are the flat Agent plan; agencies of 5+ agents get the discount above, added by hand to each member&rsquo;s subscription in Stripe.</span>
               </div>
             </div>
           )}
