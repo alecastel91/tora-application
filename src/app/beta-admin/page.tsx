@@ -120,6 +120,16 @@ export default function AdminBetaPage() {
       .then((d) => { setTesters(d.rows || []); setStrays(d.unexpected || []); setLoadError(null); })
       .catch((e) => setLoadError(String(e.message)));
   }, [getJson]);
+  // Hand-tick a matrix cell (tasks the app cannot detect); optimistic, reloads on failure.
+  const tickTask = async (profileId: string, code: string, status: "todo" | "done") => {
+    setMatrix((m) => m && { ...m, rows: m.rows.map((r) => (r.profileId === profileId ? { ...r, cells: { ...r.cells, [code]: status } } : r)) });
+    const res = await fetch("/api/admin/beta/matrix", {
+      method: "PUT", credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileId, code, status }),
+    }).catch(() => null);
+    if (!res?.ok) loadMatrix();
+  };
   const loadMatrix = useCallback(() => {
     getJson("/api/admin/beta/matrix")
       .then((d) => { setMatrix(d.tasks ? d : null); setLoadError(null); })
@@ -438,8 +448,9 @@ export default function AdminBetaPage() {
                         {matrix.tasks.map((t) => {
                           const c = r.cells[t.code];
                           return (
-                            <td key={t.code} title={`${taskLabel(t)}\n${r.alias}: ${c === "na" ? "not applicable" : c}`}
-                              className="h-6 w-6 rounded"
+                            <td key={t.code} title={`${taskLabel(t)}\n${r.alias}: ${c === "na" ? "not applicable" : `${c} · click to mark ${c === "done" ? "to do" : "done"}`}`}
+                              onClick={c === "na" ? undefined : () => tickTask(r.profileId, t.code, c === "done" ? "todo" : "done")}
+                              className={`h-6 w-6 rounded${c === "na" ? "" : " cursor-pointer hover:ring-1 hover:ring-white/40"}`}
                               style={{
                                 background: c === "done" ? "rgba(67,233,123,0.75)"
                                   : c === "skipped" ? "rgba(255,184,0,0.4)"
