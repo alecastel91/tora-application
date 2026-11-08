@@ -5,6 +5,7 @@ import { SectionReveal } from "@/components/ui/SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ROLES } from "./home.data";
 import { useHomeDrawer } from "./HomeDrawer";
+import { RoomBackdrop } from "./RoomBackdrop";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
@@ -38,18 +39,19 @@ export function RolesStack() {
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(role.id); } }}
               >
+                <RoomBackdrop photo={role.photo} color={role.color} variant="row" />
                 <span
-                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl [&_svg]:h-8 [&_svg]:w-8"
-                  style={{ background: `${role.color}18`, border: `1px solid ${role.color}55` }}
+                  className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl [&_svg]:h-8 [&_svg]:w-8"
+                  style={{ background: `linear-gradient(0deg, ${role.color}26, ${role.color}26), rgba(10,10,10,0.62)`, border: `1px solid ${role.color}66` }}
                 >
                   {role.icon}
                 </span>
-                <div className="flex min-w-0 flex-1 flex-col items-start">
+                <div className="relative flex min-w-0 flex-1 flex-col items-start">
                   <span className="text-lg font-bold uppercase tracking-wide" style={{ ...headingFont, color: role.color }}>
                     {role.label}
                   </span>
-                  <span className="mt-1 text-[13px] leading-relaxed text-white/45">{t(role.descKey)}</span>
-                  <span className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70">
+                  <span className="mt-1 text-[13px] leading-relaxed text-white/60">{t(role.descKey)}</span>
+                  <span className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/55 transition-colors group-hover:text-white/85">
                     {t("home_tap_explore")}
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </span>

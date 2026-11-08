@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
+import { FacesStrip } from "./FacesStrip";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const bodyFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
@@ -45,8 +46,8 @@ export function NetworkFormation() {
         </div>
       </div>
 
-      {/* The shift */}
-      <div className="relative min-h-[70vh] flex items-center justify-center px-6">
+      {/* The shift, then the faces that make it literal */}
+      <div className="relative min-h-[82vh] flex items-center justify-center px-6 py-16">
         {scrim}
         <div className="relative max-w-4xl text-center">
           <h2
@@ -58,6 +59,7 @@ export function NetworkFormation() {
           <p className="whitespace-pre-line mt-6 mx-auto max-w-xl text-infrared/80 text-sm md:text-base leading-relaxed uppercase tracking-widest" style={bodyFont}>
             {t("home_shift_sub")}
           </p>
+          <FacesStrip />
         </div>
       </div>
     </section>

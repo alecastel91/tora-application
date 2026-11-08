@@ -18,6 +18,8 @@ export type Role = {
   label: string;
   descKey: string; // founding-page role sentence, e.g. home_role_artist_desc
   color: string;
+  /** Club photograph behind the card, lit in this role's own colour. */
+  photo: string;
   icon: ReactNode;
 };
 
@@ -42,6 +44,7 @@ export const ROLES: Role[] = [
     id: "artist",
     label: "Artist",
     descKey: "home_role_artist_desc",
+    photo: "/home/rooms/artist.jpg",
     color: "#6B5FFF",
     icon: (
       // The artist — headphones (standardized icon)
@@ -56,6 +59,7 @@ export const ROLES: Role[] = [
     id: "agent",
     label: "Agent",
     descKey: "home_role_agent_desc",
+    photo: "/home/rooms/agent.jpg",
     color: "#00C875",
     icon: (
       // The agent — one person representing another
@@ -71,6 +75,7 @@ export const ROLES: Role[] = [
     id: "promoter",
     label: "Promoter",
     descKey: "home_role_promoter_desc",
+    photo: "/home/rooms/promoter.jpg",
     color: "#FFB800",
     icon: (
       // The promoter — a megaphone, sound leaving the horn
@@ -85,6 +90,7 @@ export const ROLES: Role[] = [
     id: "venue",
     label: "Venue",
     descKey: "home_role_venue_desc",
+    photo: "/home/rooms/venue.jpg",
     color: "#FF5757",
     icon: (
       // The venue — house / entrance (standardized icon)

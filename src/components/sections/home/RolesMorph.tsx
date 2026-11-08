@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ROLES } from "./home.data";
 import { useHomeDrawer } from "./HomeDrawer";
 import { roleBoxes, type Box } from "./morphLayout";
+import { RoomBackdrop } from "./RoomBackdrop";
 
 const headingFont = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 
@@ -58,27 +59,31 @@ export function RolesMorph() {
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(role.id); } }}
             >
-              {/* Founding-page card: neutral glass surface, colored icon badge. */}
+              {/* Founding-page card: neutral glass surface, colored icon badge.
+                  Its backdrop-blur still softens the globe's dots BEHIND the
+                  card, but the room photo is layered on top of the glass —
+                  underneath it, the blur turned the photo into colour fog. */}
               <div
                 className="absolute inset-0 rounded-2xl backdrop-blur-md transition-colors duration-300 group-hover:border-white/25"
                 style={{
-                  background: "rgba(13,13,18,0.5)", // half-glass: blurred dots read as bokeh, copy stays legible
+                  background: "rgba(13,13,18,0.5)",
                   border: "1px solid rgba(255,255,255,0.1)",
                 }}
               />
+              <RoomBackdrop photo={role.photo} color={role.color} />
               <span
                 className="relative mb-5 flex h-20 w-20 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-10 [&_svg]:w-10"
-                style={{ background: `${role.color}18`, border: `1px solid ${role.color}55` }}
+                style={{ background: `linear-gradient(0deg, ${role.color}26, ${role.color}26), rgba(10,10,10,0.62)`, border: `1px solid ${role.color}66` }}
               >
                 {role.icon}
               </span>
               <div className="relative text-xl font-bold uppercase tracking-wide" style={{ ...headingFont, color: role.color }}>
                 {role.label}
               </div>
-              <p className="relative mt-2 max-w-[15rem] text-[13px] leading-relaxed text-white/45">
+              <p className="relative mt-2 max-w-[15rem] text-[13px] leading-relaxed text-white/60">
                 {t(role.descKey)}
               </p>
-              <span className="relative mt-4 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70">
+              <span className="relative mt-4 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/55 transition-colors group-hover:text-white/85">
                 {t("home_tap_explore")}
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
               </span>
