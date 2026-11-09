@@ -1,8 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { scrollToId } from "@/lib/scroll";
 import { Scene } from "./Scene";
@@ -12,37 +13,29 @@ const display = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), 
 const body = { fontFamily: "var(--font-space-grotesk), sans-serif" };
 const supreme = { fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" };
 
-/** A phone screenshot dissolves downward — it still needs its own top edge. */
-const featherDown = {
-  WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 100%)",
-  maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 100%)",
-};
-
-/** A person dissolves on every side, so no rectangle is ever drawn around them.
- *  The radii must stay at or under 50% of the box width, or the gradient's
- *  transparent stop falls outside the element and the sides cut hard. */
-const featherAll = {
-  WebkitMaskImage: "radial-gradient(50% 56% at 50% 42%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
-  maskImage: "radial-gradient(50% 56% at 50% 42%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
-};
-
 const ROLES = [
-  { id: "artist", label: "Artist", descKey: "home_role_artist_desc", color: "#6B5FFF",
-    face: "/home/v2/face-artist.jpg", room: "/home/v2/room-artist.jpg" },
-  { id: "agent", label: "Agent", descKey: "home_role_agent_desc", color: "#00C875",
-    face: "/home/v2/face-agent.jpg", room: "/home/v2/room-agent.jpg" },
-  { id: "promoter", label: "Promoter", descKey: "home_role_promoter_desc", color: "#FFB800",
-    face: "/home/v2/face-promoter.jpg", room: "/home/v2/room-promoter.jpg" },
-  { id: "venue", label: "Venue", descKey: "home_role_venue_desc", color: "#FF5757",
-    face: "/home/v2/face-venue.jpg", room: "/home/v2/room-venue.jpg" },
+  { id: "artist", label: "Artist", descKey: "home_role_artist_desc", color: "#6B5FFF", face: "/home/v2/face-artist.jpg" },
+  { id: "agent", label: "Agent", descKey: "home_role_agent_desc", color: "#00C875", face: "/home/v2/face-agent.jpg" },
+  { id: "promoter", label: "Promoter", descKey: "home_role_promoter_desc", color: "#FFB800", face: "/home/v2/face-promoter.jpg" },
+  { id: "venue", label: "Venue", descKey: "home_role_venue_desc", color: "#FF5757", face: "/home/v2/face-venue.jpg" },
 ];
 
-const STEPS = [
-  { titleKey: "home_journey_discover_title", descKey: "home_journey_discover_desc", shot: "/home/discover.png" },
-  { titleKey: "home_journey_connect_title", descKey: "home_journey_connect_desc", shot: "/home/connect.png" },
-  { titleKey: "home_journey_offer_title", descKey: "home_journey_offer_desc", shot: "/home/offer.png" },
-  { titleKey: "home_journey_contract_title", descKey: "home_journey_contract_desc", shot: "/home/contract.png" },
-  { titleKey: "home_journey_confirmed_title", descKey: "home_journey_confirmed_desc", shot: "/home/book.png" },
+/** Three screens carry the product. Every one of them is a moment, not a list:
+ *  the network on a globe, the yes, and the deal tracked to paid. The other two
+ *  journey steps are named in the strip underneath rather than given a screen
+ *  each — five phones in a row is an inventory, not an argument. */
+const SHOTS = [
+  { shot: "/home/discover.png", titleKey: "home_journey_discover_title", descKey: "home_journey_discover_desc" },
+  { shot: "/home/offer.png", titleKey: "home_journey_offer_title", descKey: "home_journey_offer_desc" },
+  { shot: "/home/book.png", titleKey: "home_journey_confirmed_title", descKey: "home_journey_confirmed_desc" },
+];
+
+const STEP_KEYS = [
+  "home_journey_discover_title",
+  "home_journey_connect_title",
+  "home_journey_offer_title",
+  "home_journey_contract_title",
+  "home_journey_confirmed_title",
 ];
 
 /** Rises into place once, from a visible resting state — never left at zero. */
@@ -50,13 +43,56 @@ function Rise({ children, delay = 0, className }: { children: React.ReactNode; d
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-90px" }}
-      transition={{ duration: 0.85, ease: EASE_TORA, delay }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: EASE_TORA, delay }}
     >
       {children}
     </motion.div>
+  );
+}
+
+/**
+ * One app screen in a phone frame, drifting at its own speed as the section
+ * passes. The drift is what keeps three static PNGs from reading as a product
+ * sheet; `lift` raises the middle phone so the trio has a shape.
+ */
+function Phone({
+  src,
+  drift,
+  lift = 0,
+  priority,
+}: {
+  src: string;
+  drift: number;
+  lift?: number;
+  priority?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  // The raise rides inside the same transform as the drift: as margin it pushed
+  // the caption down with it and the three captions stopped sharing a line.
+  const y = useTransform(scrollYProgress, [0, 1], [drift + lift, -drift + lift]);
+
+  return (
+    <div ref={ref} className="shrink-0">
+      <motion.div
+        style={{ y }}
+        className="relative w-[64vw] max-w-[260px] rounded-[2rem] border border-white/10 bg-black p-1.5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] md:w-[clamp(180px,17vw,252px)]"
+      >
+        <Image
+          src={src}
+          alt=""
+          aria-hidden="true"
+          width={860}
+          height={1962}
+          priority={priority}
+          sizes="(min-width: 768px) 252px, 64vw"
+          className="h-auto w-full rounded-[1.6rem]"
+        />
+      </motion.div>
+    </div>
   );
 }
 
@@ -79,12 +115,9 @@ export function HomeV2() {
             width={500}
             height={166}
             priority
-            className="h-auto w-[280px] object-contain md:w-[420px]"
+            className="h-auto w-[270px] object-contain md:w-[420px]"
           />
-          <span
-            className="mt-3 text-[12px] uppercase tracking-[0.3em] text-white md:text-[14px]"
-            style={supreme}
-          >
+          <span className="mt-3 text-[12px] uppercase tracking-[0.3em] text-white md:text-[14px]" style={supreme}>
             {t("where_music_meets")}
           </span>
         </motion.div>
@@ -95,60 +128,60 @@ export function HomeV2() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.9 }}
-          className="absolute bottom-14 flex flex-col items-center gap-3 text-white/45 transition-colors hover:text-white"
+          className="absolute bottom-12 flex flex-col items-center gap-3 text-white/45 transition-colors hover:text-white"
           aria-label={t("scroll_explore")}
         >
           <span className="text-[10px] uppercase tracking-[0.34em]" style={supreme}>
             {t("scroll_explore")}
           </span>
           <motion.span
-            className="block h-10 w-px bg-current"
+            className="block h-9 w-px bg-current"
             animate={{ scaleY: [0.25, 1, 0.25], transformOrigin: ["top", "top", "bottom"] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.button>
       </Scene>
 
-      {/* ─────────────── what is wrong ─────────────── */}
-      <Scene photo="/home/v2/room-open.jpg" className="flex min-h-screen items-center px-6 md:px-16">
+      {/* ─────────────── the problem, and the turn out of it ───────────────
+          One room instead of two: the three symptoms sit under the headline as
+          a single band, and the answer lands in the same frame rather than a
+          screen further down. */}
+      <Scene photo="/home/v2/room-open.jpg" className="flex min-h-[92vh] items-center px-6 py-20 md:px-16">
         <div id="network" className="absolute -top-24" />
-        <div className="mx-auto w-full max-w-5xl">
+        <div className="mx-auto w-full max-w-6xl">
           <Rise>
             <h2
-              className="whitespace-pre-line text-[clamp(34px,7vw,86px)] font-black uppercase leading-[0.96] tracking-tight text-white"
+              className="max-w-4xl text-[clamp(32px,6.4vw,76px)] font-black uppercase leading-[0.96] tracking-tight text-white"
               style={display}
             >
               {t("home_problem")}
             </h2>
           </Rise>
-          <div className="mt-10 max-w-xl" style={body}>
+
+          <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:mt-14 md:grid-cols-3">
             {t("home_problem_sub")
               .split("\n")
               .map((line, i) => (
-                <Rise key={line} delay={0.12 + i * 0.12}>
-                  <p className="border-l border-white/15 py-2 pl-5 text-base leading-relaxed text-white/55 md:text-lg">
+                <Rise key={line} delay={0.1 + i * 0.1}>
+                  <p
+                    className="h-full bg-black/55 px-5 py-5 text-[15px] leading-relaxed text-white/60 backdrop-blur-sm md:px-6 md:py-7 md:text-base"
+                    style={body}
+                  >
                     {line}
                   </p>
                 </Rise>
               ))}
           </div>
-        </div>
-      </Scene>
 
-      {/* ─────────────── the turn ─────────────── */}
-      <Scene className="flex min-h-[85vh] items-center px-6 md:px-16">
-        <div className="mx-auto w-full max-w-5xl">
-          <Rise>
-            <h2
-              className="text-[clamp(36px,8vw,104px)] font-black uppercase leading-[0.92] tracking-tight text-white"
+          <Rise delay={0.2}>
+            <h3
+              className="mt-14 max-w-3xl text-[clamp(26px,4.6vw,56px)] font-black uppercase leading-[1] tracking-tight text-white md:mt-20"
               style={display}
             >
               {t("home_shift")}
-            </h2>
-          </Rise>
-          <Rise delay={0.15}>
+            </h3>
             <p
-              className="mt-8 whitespace-pre-line text-sm uppercase leading-relaxed tracking-[0.2em] text-infrared/85 md:text-base"
+              className="mt-5 whitespace-pre-line text-[11px] uppercase leading-relaxed tracking-[0.22em] text-infrared md:text-sm"
               style={body}
             >
               {t("home_shift_sub")}
@@ -157,171 +190,160 @@ export function HomeV2() {
         </div>
       </Scene>
 
-      {/* ─────────────── four rooms ─────────────── */}
-      <div id="roles" className="scroll-mt-20">
-        {ROLES.map((role, i) => (
-          <Scene
-            key={role.id}
-            photo={role.room}
-            tint={role.color}
-            className={`flex min-h-screen items-end px-6 pb-16 md:items-center md:px-16 md:pb-0 ${i % 2 ? "justify-end" : ""}`}
-          >
-            <div
-              className={`flex w-full max-w-6xl flex-col items-start gap-8 md:items-end md:gap-16 ${
-                i % 2 ? "md:flex-row-reverse" : "md:flex-row"
-              }`}
+      {/* ─────────────── the four, side by side ───────────────
+          Four full screens became one wall. On a phone it is a swipe, so the
+          roles cost a single screen there too. */}
+      <section id="roles" className="scroll-mt-20 py-16 md:py-24">
+        <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
+          <Rise>
+            <h2
+              className="max-w-3xl text-[clamp(26px,4.6vw,56px)] font-black uppercase leading-[1] tracking-tight text-white"
+              style={display}
             >
-              <div className="min-w-0 flex-1 md:pb-[6vh]">
-                <Rise>
-                  <span
-                    className="block h-px w-16"
-                    style={{ background: role.color }}
-                  />
+              {t("home_roles_title")}
+            </h2>
+          </Rise>
+        </div>
+
+        <Rise className="mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-auto md:max-w-6xl md:grid md:grid-cols-4 md:overflow-visible md:px-16 md:pb-0 [&::-webkit-scrollbar]:hidden">
+          {ROLES.map((role) => (
+            <div key={role.id} className="shrink-0 snap-center md:shrink">
+              <Link
+                href="/apply?start=role"
+                className="group relative block h-[62vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 md:h-[58vh] md:w-full"
+              >
+                <Image
+                  src={role.face}
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="(min-width: 768px) 24vw, 74vw"
+                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                />
+                {/* The role's colour as light on the photograph, then enough
+                    black at the foot for the words to sit on. */}
+                <div
+                  className="absolute inset-0 mix-blend-color"
+                  style={{ background: role.color, opacity: 0.22 }}
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.45) 48%, rgba(10,10,10,0.95) 100%)`,
+                  }}
+                />
+                <span className="absolute left-0 top-0 h-1 w-full" style={{ background: role.color }} />
+                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                   <h3
-                    className="mt-6 text-[clamp(54px,12vw,150px)] font-black uppercase leading-[0.84] tracking-tight"
+                    className="text-[clamp(28px,4.4vw,40px)] font-black uppercase leading-[0.9] tracking-tight"
                     style={{ ...display, color: role.color }}
                   >
                     {role.label}
                   </h3>
-                </Rise>
-                <Rise delay={0.12}>
                   <p
-                    className="mt-7 max-w-md text-base leading-relaxed text-white/70 md:text-xl"
+                    className="mt-3 min-h-[5em] text-[13px] leading-relaxed text-white/70 md:min-h-[6.6em] md:text-sm"
                     style={body}
                   >
                     {t(role.descKey)}
                   </p>
-                </Rise>
-              </div>
-
-              {/* One person, large. Not a row of faces — a row reads as a
-                  member directory, and these are generated people. */}
-              <Rise delay={0.2} className="w-full md:w-auto">
-                <div
-                  className="relative h-[46vh] w-[76vw] max-w-[460px] md:h-[58vh] md:w-[30vw]"
-                  style={featherAll}
-                >
-                  <Image
-                    src={role.face}
-                    alt=""
-                    aria-hidden="true"
-                    fill
-                    sizes="(min-width: 768px) 340px, 62vw"
-                    className="object-cover object-top"
-                  />
-                  {/* A touch of the room's light on the person, not a duotone */}
-                  <div
-                    className="absolute inset-0 mix-blend-color"
-                    style={{ background: role.color, opacity: 0.16 }}
-                  />
                 </div>
-              </Rise>
+              </Link>
             </div>
-          </Scene>
-        ))}
-      </div>
+          ))}
+        </Rise>
+      </section>
 
-      {/* ─────────────── what it takes ─────────────── */}
-      <Scene photo="/home/v2/room-close.jpg" dim={0.42} className="scroll-mt-20 px-6 pt-28 md:px-16">
+      {/* ─────────────── what it takes, in three screens ─────────────── */}
+      <Scene photo="/home/v2/room-close.jpg" dim={0.38} className="scroll-mt-20 px-6 pb-16 pt-20 md:px-16 md:pb-20 md:pt-28">
         <div id="solutions" className="absolute -top-24" />
-        <div className="mx-auto w-full max-w-5xl">
+        <div className="mx-auto w-full max-w-6xl">
           <Rise>
             <h2
-              className="text-[clamp(30px,6vw,72px)] font-black uppercase leading-[0.96] tracking-tight text-white"
+              className="max-w-3xl text-[clamp(28px,5vw,64px)] font-black uppercase leading-[0.98] tracking-tight text-white"
               style={display}
             >
               {t("home_solutions_title")}
             </h2>
           </Rise>
-        </div>
 
-        <div className="mx-auto mt-20 w-full max-w-5xl">
-          {STEPS.map((step, i) => (
-            <div
-              key={step.titleKey}
-              className={`flex flex-col items-center gap-8 py-16 md:gap-20 md:py-24 ${
-                i % 2 ? "md:flex-row-reverse" : "md:flex-row"
-              }`}
-            >
-              <Rise className="min-w-0 flex-1">
-                <span
-                  className="text-[11px] tracking-[0.12em] text-infrared"
-                  style={{ ...supreme, fontVariantNumeric: "tabular-nums" }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3
-                  className="mt-3 text-[clamp(26px,4.4vw,48px)] font-black uppercase leading-[1] tracking-tight text-white"
-                  style={display}
-                >
-                  {t(step.titleKey)}
-                </h3>
-                <p className="mt-4 max-w-sm text-base leading-relaxed text-white/60" style={body}>
-                  {t(step.descKey)}
-                </p>
-              </Rise>
-
-              <Rise delay={0.12}>
-                <div
-                  className="relative h-[380px] w-[180px] overflow-hidden md:h-[520px] md:w-[248px]"
-                  style={featherDown}
-                >
-                  <Image
-                    src={step.shot}
-                    alt=""
-                    aria-hidden="true"
-                    fill
-                    sizes="(min-width: 768px) 248px, 180px"
-                    className="object-cover object-top"
-                  />
+          {/* Phones first on a phone — swiped; a trio on a desktop. */}
+          <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-16 md:justify-center md:gap-10 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden">
+            {SHOTS.map((s, i) => (
+              <div key={s.shot} className="flex shrink-0 snap-center flex-col items-start md:shrink">
+                <Phone src={s.shot} drift={i === 1 ? 46 : 26} lift={i === 1 ? -28 : 0} priority={i === 0} />
+                <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(180px,17vw,252px)]">
+                  <h3
+                    className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:text-xl"
+                    style={display}
+                  >
+                    {t(s.titleKey)}
+                  </h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-white/55" style={body}>
+                    {t(s.descKey)}
+                  </p>
                 </div>
-              </Rise>
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
+
+          {/* The whole run, named — the two screens left out are still here. */}
+          <Rise delay={0.12}>
+            <ol
+              className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-7 md:mt-20 md:gap-x-9"
+              style={supreme}
+            >
+              {STEP_KEYS.map((key, i) => (
+                <li key={key} className="flex items-baseline gap-2">
+                  <span
+                    className="text-[10px] text-infrared"
+                    style={{ fontVariantNumeric: "tabular-nums" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-white/70 md:text-xs">
+                    {t(key)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </Rise>
         </div>
       </Scene>
 
-      {/* ─────────────── the door ─────────────── */}
-      <section className="flex min-h-screen items-center px-6 md:px-16">
-        <div className="mx-auto w-full max-w-4xl text-center">
-          <Rise>
-            <h2
-              className="text-[clamp(30px,6vw,76px)] font-black uppercase leading-[0.96] tracking-tight text-white"
-              style={display}
-            >
-              {t("home_ethos_title")}
-            </h2>
-          </Rise>
-          <Rise delay={0.12}>
-            <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-white/55 md:text-lg" style={body}>
-              {t("home_ethos_sub")}
-            </p>
-          </Rise>
-        </div>
-      </section>
-
-      <section className="flex min-h-[90vh] flex-col items-center justify-center px-6 pb-32 text-center">
+      {/* ─────────────── the door ───────────────
+          Ethos and invitation in one frame: they were always the same thought. */}
+      <section className="flex min-h-[82vh] flex-col items-center justify-center px-6 pb-24 pt-10 text-center">
         <Rise>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-infrared" style={supreme}>
+            {t("home_ethos_title")}
+          </span>
+        </Rise>
+        <Rise delay={0.1}>
           <h2
-            className="text-[clamp(34px,7vw,92px)] font-black uppercase leading-[0.94] tracking-tight text-white"
+            className="mt-7 max-w-4xl text-[clamp(32px,6.4vw,84px)] font-black uppercase leading-[0.94] tracking-tight text-white"
             style={display}
           >
             {t("home_final_cta_title")}
           </h2>
         </Rise>
-        <Rise delay={0.12}>
-          <p className="mt-6 text-sm uppercase tracking-[0.2em] text-white/45" style={body}>
-            {t("home_final_cta_sub")}
+        <Rise delay={0.16}>
+          <p className="mx-auto mt-6 max-w-xl text-[15px] leading-relaxed text-white/55" style={body}>
+            {t("home_ethos_sub")}
           </p>
         </Rise>
-        <Rise delay={0.22}>
+        <Rise delay={0.24}>
           <Link
             href="/apply?start=role"
-            className="mt-12 inline-block rounded-full border border-white/60 px-12 py-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-white transition-all duration-300 hover:border-infrared hover:bg-infrared"
+            className="mt-10 inline-block rounded-full border border-white/60 px-11 py-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-white transition-all duration-300 hover:border-infrared hover:bg-infrared"
             style={supreme}
           >
             {t("apply_for_membership")}
           </Link>
+        </Rise>
+        <Rise delay={0.3}>
+          <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-white/40" style={body}>
+            {t("home_final_cta_sub")}
+          </p>
         </Rise>
       </section>
     </main>
