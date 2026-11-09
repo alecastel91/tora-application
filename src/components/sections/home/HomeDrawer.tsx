@@ -215,10 +215,13 @@ function HomeDrawer({
               <div className="relative w-[240px] rounded-[2rem] bg-black p-2 shadow-2xl sm:w-[260px]">
                 {item.kind === "role" ? (
                   <>
-                    {/* tall profile — scroll inside the frame */}
+                    {/* Tall profile — scroll inside the frame. scrollbar-color
+                        is what Firefox and recent Chrome read; without it the
+                        frame gets the browser's grey default, which is what
+                        /founding already avoids. */}
                     <div
                       data-lenis-prevent
-                      className="h-[360px] overflow-y-auto overscroll-contain rounded-[1.6rem] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 sm:h-[470px]"
+                      className="h-[360px] overflow-y-auto overscroll-contain rounded-[1.6rem] [scrollbar-width:thin] [scrollbar-color:rgba(255,51,102,0.5)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-infrared/50 [&::-webkit-scrollbar-track]:bg-transparent sm:h-[470px]"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={item.shot} alt={`${item.label} screen`} className="block w-full" />
