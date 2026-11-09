@@ -17,7 +17,7 @@ type Target = (NonNullable<Brief> & { text?: string | null; status?: string; fro
 
 export type Report = {
   id: string;
-  targetType: 'PROFILE' | 'MESSAGE' | 'POST';
+  targetType: 'PROFILE' | 'MESSAGE' | 'POST' | 'COMMENT';
   targetId: string;
   reason: string;
   note: string | null;
@@ -59,7 +59,7 @@ export function ModerationView({ endpoint, reports, onChange, loadError }: {
   const [showAll, setShowAll] = useState(false);
 
   const act = async (report: Report, action: Action, postAction?: 'hide' | 'remove') => {
-    if (postAction === 'remove' && !window.confirm('Remove this post permanently?')) return;
+    if (postAction === 'remove' && !window.confirm(`Remove this ${report.targetType === 'COMMENT' ? 'comment' : 'post'} permanently?`)) return;
     setBusy(report.id);
     setError(null);
     try {
@@ -156,6 +156,9 @@ export function ModerationView({ endpoint, reports, onChange, loadError }: {
                   )}
                   {r.targetType === 'POST' && (
                     <button className="text-red-400/80 underline" disabled={busy === r.id} onClick={() => act(r, 'action', 'remove')}>remove post</button>
+                  )}
+                  {r.targetType === 'COMMENT' && r.target && (
+                    <button className="text-red-400/80 underline" disabled={busy === r.id} onClick={() => act(r, 'action', 'remove')}>remove comment</button>
                   )}
                   <button className="underline" disabled={busy === r.id} onClick={() => act(r, 'action')}>mark actioned</button>
                   <button className="underline" disabled={busy === r.id} onClick={() => act(r, 'review')}>mark reviewed</button>
