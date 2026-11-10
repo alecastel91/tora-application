@@ -31,14 +31,19 @@ const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
  *
  * `settled` skips the narrative entirely and holds the assembled globe from the
  * first frame — for a page whose hero stands inside the sphere rather than
- * above it.
+ * above it. `morph` is separate: a page can run the narrative and still want
+ * the nodes to stay a globe, because the cluster positions come from the live
+ * home page's pinned card layouts and mean nothing anywhere else.
  */
-export function NodeField({ settled = false }: { settled?: boolean } = {}) {
+export function NodeField({
+  settled = false,
+  morph = true,
+}: { settled?: boolean; morph?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   // A settled field is a page backdrop, not a narrative: no assembly, no morph.
-  const morphEnabled = isDesktop && !reduced && !settled;
+  const morphEnabled = isDesktop && !reduced && !settled && morph;
 
   useEffect(() => {
     const canvas = canvasRef.current;

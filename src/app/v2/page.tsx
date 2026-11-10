@@ -12,12 +12,12 @@ import { HomeV2 } from "@/components/sections/home2/HomeV2";
 /**
  * Home, restructured — one uninterrupted descent instead of six pinned beats.
  *
- * The globe layers are the same ones the live home page uses, but settled: the
- * wordmark stands in the middle of the sphere from the first frame instead of
- * the nodes assembling on the way down. Each Scene below covers them with its
- * own room while it is on screen, so the rooms cross-fade into one another as
- * you descend and the globe is left exposed at the top, at the turn, and on the
- * way out. There are no cards and no role icons anywhere:
+ * The globe layers are the same ones the live home page uses, and so is their
+ * narrative: the wave mesh alone under the hero, loose dots fading in with the
+ * problem, and the nodes assembling into the globe as the turn — "one platform,
+ * every booking" — comes up the screen. The morph is off, though: the cluster
+ * positions it gathers into are the live page's pinned card layouts, and this
+ * page has no pinned cards. There are no cards and no role icons anywhere:
  * where a photograph carries the role, an icon of the role on top of it is
  * saying the same thing twice.
  *
@@ -29,7 +29,7 @@ export default function HomeV2Page() {
       <HomeNav />
       <ParallaxBackdrop />
       <WaveMesh />
-      <NodeField settled />
+      <NodeField morph={false} />
       <ScrollThread />
       <HomeV2 />
       <BottomNav />
