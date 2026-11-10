@@ -93,38 +93,48 @@ const FEATURES = [
   },
 ];
 
+const display = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
+
+/**
+ * Ten features as one ruled list rather than ten glass cards.
+ *
+ * Every card carried its own border, blur, glow and corner tick, so the page
+ * spent most of its ink drawing containers; at two columns the eye also had
+ * to pick between two reading orders. Hairlines and a number give the same
+ * separation, keep the order unambiguous, and leave the icons as the only
+ * drawn thing on the page.
+ */
 export default function Features() {
   const { t } = useLanguage();
 
   return (
-    <DetailPageShell title={t("features_title")} subtitle={t("features_subtitle")}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={sgFont}>
+    <DetailPageShell title={t("features_title")} subtitle={t("features_subtitle")} width="max-w-4xl">
+      <div className="border-t border-white/10" style={sgFont}>
         {FEATURES.map((item, i) => (
-          <SectionReveal key={item.titleKey} delay={(i % 2) * 0.06}>
+          <SectionReveal key={item.titleKey} delay={0.03}>
             <motion.div
-              className="relative h-full rounded-2xl p-6 overflow-hidden"
-              whileHover={{ y: -3 }}
+              className="group flex items-start gap-5 border-b border-white/10 py-6 md:gap-8 md:py-7"
+              whileHover={{ x: 4 }}
               transition={{ type: "tween", duration: 0.25 }}
             >
-              <div
-                className="absolute inset-0 rounded-2xl backdrop-blur-md"
-                style={{
-                  background: "rgba(255,255,255,0.02)", // founding-page glass — let the backdrop show through
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  boxShadow: "0 0 50px -24px rgba(255,51,102,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-                }}
-              />
-              <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-infrared/50" />
-              <div className="relative flex items-center gap-4">
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 [&>svg]:w-8 [&>svg]:h-8"
-                  style={{ background: "rgba(255,51,102,0.07)", border: "1px solid rgba(255,51,102,0.24)" }}
+              <span
+                className="w-7 shrink-0 pt-1 text-[11px] text-infrared"
+                style={{ fontVariantNumeric: "tabular-nums" }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="shrink-0 pt-0.5 [&>svg]:h-6 [&>svg]:w-6 md:[&>svg]:h-7 md:[&>svg]:w-7">
+                {item.icon}
+              </span>
+              <div className="min-w-0">
+                <h2
+                  className="text-lg font-black uppercase leading-[1.05] tracking-tight text-white md:text-xl"
+                  style={display}
                 >
-                  {item.icon}
-                </div>
-                <span className="text-infrared text-xs font-bold uppercase tracking-[0.25em]">{t(item.titleKey)}</span>
+                  {t(item.titleKey)}
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">{t(item.descKey)}</p>
               </div>
-              <p className="relative text-white/65 text-sm leading-relaxed mt-4">{t(item.descKey)}</p>
             </motion.div>
           </SectionReveal>
         ))}

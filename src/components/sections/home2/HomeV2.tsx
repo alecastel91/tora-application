@@ -20,14 +20,25 @@ const ROLES = [
   { id: "venue", label: "Venue", descKey: "home_role_venue_desc", color: "#FF5757", face: "/home/v2/face-venue.jpg" },
 ];
 
-/** Three screens carry the product. Every one of them is a moment, not a list:
- *  the network on a globe, the yes, and the deal tracked to paid. The other two
- *  journey steps are named in the strip underneath rather than given a screen
- *  each — five phones in a row is an inventory, not an argument. */
+/** Five screens, in the order you would actually use them: find the people,
+ *  see when they are near, build the tour, agree the deal, keep the record.
+ *  Every title and line here is an existing translated string — nothing on
+ *  this page says anything the eight catalogues cannot say too. */
 const SHOTS = [
   { shot: "/home/discover.png", titleKey: "home_journey_discover_title", descKey: "home_journey_discover_desc" },
+  { shot: "/home/calendar.png", titleKey: "feature_calendar_title", descKey: "feature_calendar_desc" },
+  { shot: "/home/tour.png", titleKey: "feature_tour_title", descKey: "feature_tour_desc" },
   { shot: "/home/offer.png", titleKey: "home_journey_offer_title", descKey: "home_journey_offer_desc" },
-  { shot: "/home/book.png", titleKey: "home_journey_confirmed_title", descKey: "home_journey_confirmed_desc" },
+  { shot: "/home/book.png", titleKey: "feature_contracts_title", descKey: "home_journey_confirmed_desc" },
+];
+
+/** The row stands in an arc, highest in the middle, and drifts hardest there. */
+const ARC = [
+  { drift: 22, lift: 0 },
+  { drift: 32, lift: -18 },
+  { drift: 44, lift: -30 },
+  { drift: 32, lift: -18 },
+  { drift: 22, lift: 0 },
 ];
 
 const STEP_KEYS = [
@@ -100,7 +111,7 @@ function Phone({
     <div ref={ref} className="shrink-0">
       <motion.div
         style={{ y }}
-        className="relative w-[64vw] max-w-[260px] rounded-[2rem] border border-white/10 bg-black p-1.5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] md:w-[clamp(180px,17vw,252px)]"
+        className="relative w-[64vw] max-w-[260px] rounded-[2rem] border border-white/10 bg-black p-1.5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] md:w-[clamp(126px,13.4vw,196px)]"
       >
         <Image
           src={src}
@@ -109,7 +120,7 @@ function Phone({
           width={860}
           height={1962}
           priority={priority}
-          sizes="(min-width: 768px) 252px, 64vw"
+          sizes="(min-width: 768px) 196px, 64vw"
           className="h-auto w-full rounded-[1.6rem]"
         />
       </motion.div>
@@ -301,18 +312,18 @@ export function HomeV2() {
           </Rise>
 
           {/* Phones first on a phone — swiped; a trio on a desktop. */}
-          <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-16 md:justify-center md:gap-10 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden">
+          <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-16 md:justify-center md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden">
             {SHOTS.map((s, i) => (
               <div key={s.shot} className="flex shrink-0 snap-center flex-col items-start md:shrink">
-                <Phone src={s.shot} drift={i === 1 ? 46 : 26} lift={i === 1 ? -28 : 0} priority={i === 0} />
-                <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(180px,17vw,252px)]">
+                <Phone src={s.shot} drift={ARC[i].drift} lift={ARC[i].lift} priority={i === 0} />
+                <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(126px,13.4vw,196px)]">
                   <h3
-                    className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:text-xl"
+                    className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:min-h-[2.2em] md:text-base lg:text-lg"
                     style={display}
                   >
                     {t(s.titleKey)}
                   </h3>
-                  <p className="mt-2 text-[13px] leading-relaxed text-white/55" style={body}>
+                  <p className="mt-2 text-[13px] leading-relaxed text-white/55 md:text-[12px] lg:text-[13px]" style={body}>
                     {t(s.descKey)}
                   </p>
                 </div>
