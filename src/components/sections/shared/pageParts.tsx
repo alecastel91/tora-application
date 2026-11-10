@@ -282,8 +282,11 @@ export function RoleFace({ src, color }: { src: string; color: string }) {
 }
 
 /**
- * The row of five screens: swiped on a phone, a row on a desktop. With
- * `onOpen` each frame opens that screen's drawer.
+ * The row of five screens: swiped on a phone, a row on a desktop. It starts at
+ * the same left edge as every heading on the page — centred, it sat thirty
+ * pixels in from everything above it.
+ *
+ * With `onOpen` each frame opens that screen's drawer.
  */
 export function ScreenStrip({
   items,
@@ -296,7 +299,7 @@ export function ScreenStrip({
 }) {
   return (
     <div
-      className={`flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:justify-center md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden ${className}`}
+      className={`flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:justify-start md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden ${className}`}
     >
       {items.map((item, i) => (
         <div key={item.shot} className="flex shrink-0 snap-center flex-col items-start md:shrink">

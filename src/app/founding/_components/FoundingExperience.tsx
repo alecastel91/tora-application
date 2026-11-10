@@ -157,6 +157,9 @@ function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
+      {/* The wordmark sits at the centre of the node globe, which is drawn at the
+          centre of the viewport; everything else hangs below it. Stacked in one
+          centred column the logo rode above the sphere. */}
       <motion.div style={{ opacity, y }} className="relative z-10 flex flex-col items-center">
         <motion.div
           initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.92, filter: "blur(10px)" }}
@@ -176,11 +179,14 @@ function Hero() {
           {c.hero.footer}
         </motion.span>
 
+      </motion.div>
+
+      <motion.div style={{ opacity, y }} className="absolute inset-x-0 bottom-[16vh] z-10 flex flex-col items-center px-6">
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-14 text-[9.5px] leading-[1.9] uppercase tracking-[0.22em] text-infrared/90 md:mt-16 md:text-[11px] md:tracking-[0.3em]"
+          className="text-[9.5px] leading-[1.9] uppercase tracking-[0.22em] text-infrared/90 md:text-[11px] md:tracking-[0.3em]"
           style={{ ...supreme, fontWeight: 500 }}
         >
           {c.hero.eyebrow.split("·").map((p) => p.trim()).join(" · ")}
@@ -190,7 +196,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.7 }}
-          className="mt-9 flex flex-col items-center gap-5 md:mt-10"
+          className="mt-7 flex flex-col items-center gap-4 md:mt-8"
         >
           <Link href={useApplyHref()} className="rounded-full border border-white/40 px-9 py-3.5 text-[11px] font-medium uppercase tracking-[0.26em] text-white/90 transition-all duration-300 hover:border-white hover:bg-white/5 hover:text-white" style={supreme}>
             {c.hero.ctaPrimary}
@@ -222,7 +228,7 @@ function ProblemSolution() {
       <div className="mx-auto w-full max-w-6xl">
         <Reveal><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
-          <h2 className="mt-5 max-w-3xl text-[clamp(30px,5.4vw,64px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
+          <h2 className="mt-5 max-w-3xl text-[clamp(28px,5vw,60px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
             {c.problem.heading}
           </h2>
         </Reveal>
@@ -238,7 +244,7 @@ function ProblemSolution() {
         <Reveal delay={0.16}>
           <div className="mt-14 md:mt-16">
             <Eyebrow>{c.solution.eyebrow}</Eyebrow>
-            <h2 className="mt-5 max-w-4xl text-[clamp(32px,6vw,76px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
+            <h2 className="mt-5 max-w-4xl text-[clamp(28px,5.2vw,64px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
               {c.solution.headingLead}{" "}
               <span className="text-infrared">{c.solution.headingAccent}</span>
             </h2>
@@ -317,12 +323,12 @@ function RolePicker() {
         {selected === null ? (
           <motion.div key="picker"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}>
-            <div className="mx-auto w-full max-w-6xl px-6">
+            <div className="mx-auto w-full max-w-6xl px-6 md:px-0">
               <p className="text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
             </div>
             {/* A swipe on a phone, a wall on a desktop — the roles cost one screen either way. */}
             <RoleWall
-              className="mt-7 px-6 md:mx-auto md:max-w-6xl"
+              className="mt-7 px-6 md:mx-auto md:max-w-6xl md:px-0"
               cardHeight="h-[58vh] md:h-[54vh]"
               items={ROLE_META.map((r, i) => ({
                 id: r.id,
@@ -341,7 +347,7 @@ function RolePicker() {
             />
           </motion.div>
         ) : (
-          <div className="mx-auto w-full max-w-6xl px-6">
+          <div className="mx-auto w-full max-w-6xl px-6 md:px-0">
             <RoleDetail key={"detail-" + selected} index={selected} onPick={setSelected} onBack={() => setSelected(null)} reduce={reduce} />
           </div>
         )}
@@ -382,7 +388,7 @@ function Door() {
     <section id="why" className="scroll-mt-20 px-6 pb-20 pt-16 text-center md:pt-20">
       <Reveal className="flex justify-center"><Eyebrow>{c.why.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(32px,5.6vw,68px)] font-black uppercase leading-[1.0] tracking-tight text-white" style={rajdhani}>
+        <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(28px,5.2vw,64px)] font-black uppercase leading-[1.0] tracking-tight text-white" style={rajdhani}>
           {c.why.headingLead}{" "}
           <span className="text-infrared">{c.why.headingAccent}</span>
         </h2>
@@ -396,7 +402,7 @@ function Door() {
       <div id="join" className="relative mt-16 scroll-mt-20 md:mt-20">
         <Reveal className="flex justify-center"><Eyebrow>{c.cta.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
-          <h2 className="mx-auto mt-6 max-w-3xl break-keep text-[clamp(34px,6.2vw,80px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
+          <h2 className="mx-auto mt-6 max-w-3xl break-keep text-[clamp(30px,5.6vw,68px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
             {c.cta.headingLine1}<br />{c.cta.headingLine2}
           </h2>
         </Reveal>

@@ -99,7 +99,7 @@ export function HomeV2() {
           One beat instead of two: the four symptoms sit under the headline as
           a single band, and the answer lands in the same frame rather than a
           screen further down. */}
-      <section id="network" className="relative scroll-mt-20 px-6 py-20 md:px-16 md:py-24">
+      <section id="network" className="relative scroll-mt-20 px-6 py-20 md:px-0 md:py-24">
         <div className="mx-auto w-full max-w-6xl">
           <Reveal>
             <h2
@@ -144,22 +144,15 @@ export function HomeV2() {
 
       {/* ─────────────── the four, side by side ───────────────
           Four full screens became one wall. On a phone it is a swipe, so the
-          roles cost a single screen there too. */}
-      <section id="roles" className="scroll-mt-20 py-20 md:py-24">
-        <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
-          <Reveal>
-            <h2
-              className="max-w-3xl text-[clamp(26px,4.6vw,56px)] font-black uppercase leading-[1] tracking-tight text-white"
-              style={display}
-            >
-              {t("home_roles_title")}
-            </h2>
-          </Reveal>
-        </div>
+          roles cost a single screen there too.
 
+          No heading: the four names are the heading, in type nothing else on
+          the page matches. The wall sits close under the paragraph that sets
+          it up, the way the founding deck does it. */}
+      <section id="roles" className="scroll-mt-20 pb-20 pt-10 md:pb-24 md:pt-12">
         <Reveal>
           <RoleWall
-            className="mt-10 px-6 md:mx-auto md:max-w-6xl md:px-16"
+            className="px-6 md:mx-auto md:max-w-6xl md:px-0"
             cardHeight="h-[62vh] md:h-[58vh]"
             items={ROLES.map((role) => ({
               id: role.id,
@@ -174,7 +167,7 @@ export function HomeV2() {
       </section>
 
       {/* ─────────────── what it takes, in five screens ─────────────── */}
-      <section id="solutions" className="relative scroll-mt-20 px-6 pb-16 pt-20 md:px-16 md:pb-20 md:pt-28">
+      <section id="solutions" className="relative scroll-mt-20 px-6 pb-16 pt-14 md:px-0 md:pb-20 md:pt-16">
         <div className="mx-auto w-full max-w-6xl">
           <Reveal>
             <h2
