@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { scrollToId } from "@/lib/scroll";
-import { Scene } from "./Scene";
 import {
   body,
   display,
@@ -97,10 +96,10 @@ export function HomeV2() {
       </section>
 
       {/* ─────────────── the problem, and the turn out of it ───────────────
-          One room instead of two: the four symptoms sit under the headline as
+          One beat instead of two: the four symptoms sit under the headline as
           a single band, and the answer lands in the same frame rather than a
           screen further down. */}
-      <Scene id="network" photo="/home/v2/room-open.jpg" className="px-6 py-20 md:px-16 md:py-24">
+      <section id="network" className="relative scroll-mt-20 px-6 py-20 md:px-16 md:py-24">
         <div className="mx-auto w-full max-w-6xl">
           <Reveal>
             <h2
@@ -141,7 +140,7 @@ export function HomeV2() {
             </div>
           </Reveal>
         </div>
-      </Scene>
+      </section>
 
       {/* ─────────────── the four, side by side ───────────────
           Four full screens became one wall. On a phone it is a swipe, so the
@@ -175,7 +174,7 @@ export function HomeV2() {
       </section>
 
       {/* ─────────────── what it takes, in five screens ─────────────── */}
-      <Scene id="solutions" photo="/home/v2/room-venue.jpg" dim={0.38} className="px-6 pb-16 pt-20 md:px-16 md:pb-20 md:pt-28">
+      <section id="solutions" className="relative scroll-mt-20 px-6 pb-16 pt-20 md:px-16 md:pb-20 md:pt-28">
         <div className="mx-auto w-full max-w-6xl">
           <Reveal>
             <h2
@@ -197,7 +196,7 @@ export function HomeV2() {
           />
 
         </div>
-      </Scene>
+      </section>
 
       {/* ─────────────── the door ───────────────
           Ethos and invitation in one frame: they were always the same thought. */}

@@ -10,7 +10,6 @@ import {
   DRAWER_CONTENT,
   type DrawerItem,
 } from "@/components/sections/home/HomeDrawer";
-import { Scene } from "@/components/sections/home2/Scene";
 import { PROBLEM_MARKS, ROLE_FACES, RoleWall, ScreenStrip, Symptom } from "@/components/sections/shared/pageParts";
 import { FoundingBackdrop } from "./FoundingBackdrop";
 import { LangMenu } from "./LangMenu";
@@ -164,7 +163,7 @@ function Hero() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1, ease: EASE }}
         >
-          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[236px] md:w-[280px]" />
+          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[190px] md:w-[260px]" />
         </motion.div>
 
         <motion.span
@@ -219,7 +218,7 @@ function Hero() {
 function ProblemSolution() {
   const c = useC();
   return (
-    <Scene id="problem" photo="/home/v2/room-open.jpg" className="px-6 py-20 md:px-10 md:py-24">
+    <section id="problem" className="relative scroll-mt-20 px-6 py-20 md:px-10 md:py-24">
       <div className="mx-auto w-full max-w-6xl">
         <Reveal><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
@@ -249,7 +248,7 @@ function ProblemSolution() {
           </div>
         </Reveal>
       </div>
-    </Scene>
+    </section>
   );
 }
 
@@ -355,7 +354,7 @@ function Journey({ journey }: { journey: JourneyStep[] }) {
   const c = useC();
   const { open } = useHomeDrawer();
   return (
-    <Scene id="journey" photo="/home/v2/room-venue.jpg" dim={0.38} className="px-6 py-16 md:px-10 md:py-20">
+    <section id="journey" className="relative scroll-mt-20 px-6 py-16 md:px-10 md:py-20">
       <div className="mx-auto w-full max-w-6xl">
         <Reveal><Eyebrow>{c.journey.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
@@ -370,7 +369,7 @@ function Journey({ journey }: { journey: JourneyStep[] }) {
           onOpen={(i) => open(JOURNEY_IDS[i])}
         />
       </div>
-    </Scene>
+    </section>
   );
 }
 

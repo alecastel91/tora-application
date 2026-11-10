@@ -24,11 +24,14 @@ const cspDirectives = [
 
 const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
-  // The scene backdrops ask for quality 55 — they sit under a near-black scrim
-  // and a vignette, so the difference is invisible. Any quality not listed here
-  // is refused by the optimizer with a 400, which shows up as a missing image,
-  // not as an error.
-  images: { qualities: [55, 75] },
+  images: {
+    // AVIF encoding of the wordmark PNG stalls the optimizer for minutes, so the
+    // browser — which asks for AVIF first — simply never got the logo. WebP only.
+    formats: ["image/webp"],
+    // The scene backdrops ask for quality 55; any quality not listed here is
+    // refused with a 400, which shows up as a missing image, not as an error.
+    qualities: [55, 75],
+  },
   // all-the-cities reads its data from a bundled cities.pbf via fs at load time;
   // keep it external so the bundler doesn't rewrite that path and break the read.
   serverExternalPackages: ["all-the-cities"],

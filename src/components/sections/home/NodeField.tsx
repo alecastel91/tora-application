@@ -37,7 +37,8 @@ export function NodeField({ settled = false }: { settled?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const morphEnabled = isDesktop && !reduced;
+  // A settled field is a page backdrop, not a narrative: no assembly, no morph.
+  const morphEnabled = isDesktop && !reduced && !settled;
 
   useEffect(() => {
     const canvas = canvasRef.current;
