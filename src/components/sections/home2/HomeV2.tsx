@@ -196,6 +196,35 @@ export function HomeV2() {
         </div>
       </section>
 
+      {/* ─────────────── why ───────────────
+          The founding deck's closing argument, which the homepage never made:
+          the network is not only a way out of a local scene, it is a way into
+          one. Same strings, so the eight catalogues already carry it. */}
+      <section id="why" className="scroll-mt-20 px-6 pb-16 pt-12 text-center md:pb-20 md:pt-16">
+        <Reveal>
+          <span className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.3em] text-infrared" style={supreme}>
+            <span className="h-px w-8 bg-current" aria-hidden="true" />
+            {t("home_why_eyebrow")}
+          </span>
+        </Reveal>
+        <Reveal delay={0.06}>
+          <h2
+            className="mx-auto mt-5 max-w-4xl text-[clamp(25px,4.2vw,48px)] font-black uppercase leading-[1.02] tracking-tight text-white"
+            style={display}
+          >
+            {t("home_why_lead")}{" "}
+            {/* Its own line: the accent used to break mid-phrase and read as
+                two fragments. */}
+            <span className="block text-infrared">{t("home_why_accent")}</span>
+          </h2>
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={body}>
+            {t("home_why_body")}
+          </p>
+        </Reveal>
+      </section>
+
       {/* ─────────────── the door ───────────────
           Ethos and invitation in one frame: they were always the same thought. */}
       <section className="flex min-h-[82vh] flex-col items-center justify-center px-6 pb-24 pt-10 text-center">

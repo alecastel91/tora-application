@@ -390,7 +390,9 @@ function Door() {
       <Reveal delay={0.05}>
         <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(25px,4.2vw,48px)] font-black uppercase leading-[1.02] tracking-tight text-white" style={rajdhani}>
           {c.why.headingLead}{" "}
-          <span className="text-infrared">{c.why.headingAccent}</span>
+          {/* Its own line: the accent broke mid-phrase and read as two
+              fragments. */}
+          <span className="block text-infrared">{c.why.headingAccent}</span>
         </h2>
       </Reveal>
       <Reveal delay={0.12}>
