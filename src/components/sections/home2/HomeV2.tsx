@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { scrollToId } from "@/lib/scroll";
 import { Scene } from "./Scene";
@@ -11,6 +11,7 @@ import { Scene } from "./Scene";
 const EASE_TORA = [0.16, 1, 0.3, 1] as const;
 const display = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const body = { fontFamily: "var(--font-space-grotesk), sans-serif" };
+const body2 = body;
 const supreme = { fontFamily: "var(--font-supreme), var(--font-space-grotesk), sans-serif" };
 
 const ROLES = [
@@ -41,17 +42,9 @@ const ARC = [
   { drift: 22, lift: 0 },
 ];
 
-const STEP_KEYS = [
-  "home_journey_discover_title",
-  "home_journey_connect_title",
-  "home_journey_offer_title",
-  "home_journey_contract_title",
-  "home_journey_confirmed_title",
-];
-
-/** One mark per symptom, in the order the sentence pairs them: an empty date,
- *  a cost curve nobody else carries, two nodes that never meet. Drawn here
- *  rather than imported so the three stay a set. */
+/** One mark per symptom: a calendar with nothing in it, a cost curve nobody
+ *  else carries, a closed door, two nodes that never meet. Drawn here rather
+ *  than imported so the four stay a set. */
 const PROBLEM_ICONS = [
   <>
     <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
@@ -64,11 +57,24 @@ const PROBLEM_ICONS = [
     <path d="M15.5 7H20v4.5" />
   </>,
   <>
+    <rect x="5" y="3.5" width="14" height="17" rx="2" />
+    <path d="M15 12h.01" />
+    <path d="M9.5 8.5V7a2.5 2.5 0 0 1 5 0v1.5" opacity="0.55" />
+  </>,
+  <>
     <circle cx="6" cy="7" r="2.6" />
     <circle cx="18" cy="17" r="2.6" />
     <path d="M8.3 8.9l2.4 2.4M13.3 13.9l2.4 2.4" />
   </>,
 ];
+
+/** The four symptoms, as a title you can open. The paragraphs read well but
+ *  four of them at once is a wall; the headline carries the point and the
+ *  sentence is there for whoever wants it. */
+const PROBLEM_ITEMS = [1, 2, 3, 4].map((n) => ({
+  titleKey: `home_problem_item${n}_title`,
+  bodyKey: `home_problem_item${n}_body`,
+}));
 
 /** Rises into place once, from a visible resting state — never left at zero. */
 function Rise({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -82,6 +88,52 @@ function Rise({ children, delay = 0, className }: { children: React.ReactNode; d
     >
       {children}
     </motion.div>
+  );
+}
+
+/** A symptom: the headline, and the sentence on request. */
+function Symptom({ mark, title, body, defaultOpen = false }: { mark: React.ReactNode; title: string; body: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="bg-black/55 backdrop-blur-sm">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-white/[0.03] md:gap-4 md:px-6 md:py-4"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0 text-infrared">
+          {mark}
+        </svg>
+        <span className="min-w-0 flex-1 text-[14px] font-semibold leading-snug text-white md:text-[15px]" style={body2}>
+          {title}
+        </span>
+        <motion.svg
+          width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          aria-hidden="true" className="shrink-0 text-white/40"
+          animate={{ rotate: open ? 90 : 0 }}
+          transition={{ duration: 0.25, ease: EASE_TORA }}
+        >
+          <path d="M9 18l6-6-6-6" />
+        </motion.svg>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.32, ease: EASE_TORA }}
+            className="overflow-hidden"
+          >
+            <p className="px-4 pb-4 pl-[2.75rem] text-[13.5px] leading-relaxed text-white/55 md:px-6 md:pb-5 md:pl-[3.5rem] md:text-sm" style={body2}>
+              {body}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -178,7 +230,7 @@ export function HomeV2() {
           One room instead of two: the three symptoms sit under the headline as
           a single band, and the answer lands in the same frame rather than a
           screen further down. */}
-      <Scene photo="/home/v2/room-open.jpg" className="flex min-h-[86vh] items-center px-6 py-16 md:px-16 md:py-20">
+      <Scene photo="/home/v2/room-open.jpg" className="px-6 py-20 md:px-16 md:py-24">
         <div id="network" className="absolute -top-24" />
         <div className="mx-auto w-full max-w-6xl">
           <Rise>
@@ -190,47 +242,34 @@ export function HomeV2() {
             </h2>
           </Rise>
 
-          <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:mt-10 md:grid-cols-3">
-            {t("home_problem_sub")
-              .split("\n")
-              .map((line, i) => (
-                <Rise key={line} delay={0.1 + i * 0.1}>
-                  <div className="flex h-full items-center gap-4 bg-black/55 px-5 py-4 backdrop-blur-sm md:flex-col md:items-start md:gap-4 md:px-6 md:py-6">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                      className="shrink-0 text-infrared"
-                    >
-                      {PROBLEM_ICONS[i]}
-                    </svg>
-                    <p className="text-[15px] leading-relaxed text-white/60 md:text-base" style={body}>
-                      {line}
-                    </p>
-                  </div>
-                </Rise>
-              ))}
+          {/* The four symptoms as a thin stack: a headline each, the
+              sentence on request. Four paragraphs at once was a wall. */}
+          <div className="mt-8 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 md:mt-10">
+            {PROBLEM_ITEMS.map((item, i) => (
+              <Rise key={item.titleKey} delay={0.08 + i * 0.07}>
+                <Symptom mark={PROBLEM_ICONS[i]} title={t(item.titleKey)} body={t(item.bodyKey)} defaultOpen={i === 0} />
+              </Rise>
+            ))}
           </div>
 
+          {/* The turn. The founding deck said this better than the homepage
+              did, so the homepage says it the founding deck's way. */}
           <Rise delay={0.2}>
-            <h3
-              className="mt-10 max-w-3xl text-[clamp(26px,4.6vw,56px)] font-black uppercase leading-[1] tracking-tight text-white md:mt-12"
-              style={display}
-            >
-              {t("home_shift")}
-            </h3>
-            <p
-              className="mt-4 whitespace-pre-line text-[11px] uppercase leading-relaxed tracking-[0.22em] text-infrared md:text-sm"
-              style={body}
-            >
-              {t("home_shift_sub")}
-            </p>
+            <div className="mt-14 md:mt-16">
+              <span className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-infrared" style={supreme}>
+                <span className="h-px w-8 bg-current" aria-hidden="true" />
+                {t("home_solution_eyebrow")}
+              </span>
+              <h3
+                className="mt-5 max-w-4xl text-[clamp(28px,5.2vw,64px)] font-black uppercase leading-[0.98] tracking-tight text-white"
+                style={display}
+              >
+                {t("home_solution_lead")} <span className="text-infrared">{t("home_solution_accent")}</span>
+              </h3>
+              <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={body}>
+                {t("home_solution_body")}
+              </p>
+            </div>
           </Rise>
         </div>
       </Scene>
@@ -238,7 +277,7 @@ export function HomeV2() {
       {/* ─────────────── the four, side by side ───────────────
           Four full screens became one wall. On a phone it is a swipe, so the
           roles cost a single screen there too. */}
-      <section id="roles" className="scroll-mt-20 py-12 md:py-20">
+      <section id="roles" className="scroll-mt-20 py-20 md:py-24">
         <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
           <Rise>
             <h2
@@ -255,26 +294,37 @@ export function HomeV2() {
             <div key={role.id} className="shrink-0 snap-center md:shrink">
               <Link
                 href="/apply?start=role"
-                className="group relative block h-[62vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 md:h-[58vh] md:w-full"
+                className="group relative block h-[62vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] md:h-[58vh] md:w-full"
               >
-                <Image
-                  src={role.face}
-                  alt=""
-                  aria-hidden="true"
-                  fill
-                  sizes="(min-width: 768px) 24vw, 74vw"
-                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                />
-                {/* The role's colour as light on the photograph, then enough
-                    black at the foot for the words to sit on. */}
+                {/* The photograph stops short of the words and dissolves into
+                    the card. Full-bleed, the names sat across people's faces —
+                    only Venue escaped it, because her head happens to sit high
+                    in frame. */}
                 <div
-                  className="absolute inset-0 mix-blend-color"
-                  style={{ background: role.color, opacity: 0.22 }}
-                />
+                  className="absolute inset-x-0 top-0 h-[74%] overflow-hidden"
+                  style={{
+                    maskImage: "linear-gradient(180deg, #000 58%, transparent 100%)",
+                    WebkitMaskImage: "linear-gradient(180deg, #000 58%, transparent 100%)",
+                  }}
+                >
+                  <Image
+                    src={role.face}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    sizes="(min-width: 768px) 24vw, 74vw"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                  />
+                  {/* The role's colour as light on the photograph. */}
+                  <div
+                    className="absolute inset-0 mix-blend-color"
+                    style={{ background: role.color, opacity: 0.22 }}
+                  />
+                </div>
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: `linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.45) 48%, rgba(10,10,10,0.95) 100%)`,
+                    background: `linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.2) 52%, rgba(10,10,10,0.92) 100%)`,
                   }}
                 />
                 <span className="absolute left-0 top-0 h-1 w-full" style={{ background: role.color }} />
@@ -331,27 +381,6 @@ export function HomeV2() {
             ))}
           </div>
 
-          {/* The whole run, named — the two screens left out are still here. */}
-          <Rise delay={0.12}>
-            <ol
-              className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-7 md:mt-20 md:gap-x-9"
-              style={supreme}
-            >
-              {STEP_KEYS.map((key, i) => (
-                <li key={key} className="flex items-baseline gap-2">
-                  <span
-                    className="text-[10px] text-infrared"
-                    style={{ fontVariantNumeric: "tabular-nums" }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-white/70 md:text-xs">
-                    {t(key)}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </Rise>
         </div>
       </Scene>
 

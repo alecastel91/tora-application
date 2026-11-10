@@ -26,10 +26,12 @@ import {
 } from "./primitives";
 import type { FoundingContent, LangCode, DrawerId } from "../_content/types";
 
+/** One of the five screens, worded by the site catalogue (see [lang]/page.tsx). */
+export type JourneyStep = { title: string; body: string };
+
 /* --------------------------------------------------------------- constants */
 
 const INFRARED = "#FF3366";
-const GHOST = "rgba(255,255,255,0.45)";
 
 // Role labels stay in English to match the pills shown inside the app screenshots.
 const ROLE_LABELS = ["Artist", "Agent", "Promoter", "Venue"] as const;
@@ -89,14 +91,16 @@ const DEEPDIVE_META = [
   { color: ROLE.venue, shot: "/founding/shots/venue-full.png" },
 ] as const;
 
-const JOURNEY_IDS = ["discover", "connect", "offer", "contract", "confirmed"] as const;
+/** The homepage's five screens, in use order: find the people, see when they
+ *  are near, build the tour, agree the deal, keep the record. Each is still
+ *  the tap target for its own drawer. */
+const JOURNEY_IDS = ["discover", "travel", "tour", "offer", "confirmed"] as const;
 
-/** The screen each step of the run actually shows, in the drawer's own order. */
 const JOURNEY_SHOTS = [
   "/home/discover.png",
-  "/home/connect.png",
+  "/home/calendar.png",
+  "/home/tour.png",
   "/home/offer.png",
-  "/home/contract.png",
   "/home/book.png",
 ] as const;
 
@@ -143,25 +147,6 @@ const PROBLEM_MARKS = [
   </>,
 ];
 
-/* Line icons in the /features language — ghost-white base, one infrared accent. */
-const IconBell = (
-  <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.8 8.6a5.8 5.8 0 0 0-11.6 0c0 6.2-2.4 7.8-2.4 7.8h16.4s-2.4-1.6-2.4-7.8" stroke={GHOST} />
-    <path d="M10.4 19.8a1.9 1.9 0 0 0 3.2 0" stroke={GHOST} />
-    <circle cx="18.6" cy="4.6" r="1.7" fill="#FF3366" stroke="none" />
-  </svg>
-);
-const IconPlane = (
-  <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" stroke={GHOST} />
-    <circle cx="19.4" cy="4.6" r="1.5" fill="#FF3366" stroke="none" />
-  </svg>
-);
-const TOURING_META = [
-  { id: "travel", icon: IconBell },
-  { id: "tour", icon: IconPlane },
-] as const;
-
 /* --------------------------------------------------------------- content ctx */
 
 const Cx = createContext<FoundingContent | null>(null);
@@ -200,6 +185,41 @@ function Bullet({ text, color }: { text: string; color: string }) {
       </svg>
       <span className="text-white/70 text-[15px] leading-relaxed">{text}</span>
     </li>
+  );
+}
+
+/** A symptom: the headline, and the sentence on request. Four paragraphs at
+ *  once was a wall of text where the page needed a list. */
+function Symptom({ mark, title, body, defaultOpen = false }: { mark: ReactNode; title: string; body: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="bg-black/55 backdrop-blur-sm">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-white/[0.03] md:gap-4 md:px-6 md:py-4"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0 text-infrared">
+          {mark}
+        </svg>
+        <span className="min-w-0 flex-1 text-[14px] font-semibold leading-snug text-white md:text-[15px]" style={supreme}>{title}</span>
+        <motion.svg
+          width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          aria-hidden="true" className="shrink-0 text-white/40"
+          animate={{ rotate: open ? 90 : 0 }} transition={{ duration: 0.25, ease: EASE }}
+        >
+          <path d="M9 18l6-6-6-6" />
+        </motion.svg>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div key="body" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.32, ease: EASE }} className="overflow-hidden">
+            <p className="px-4 pb-4 pl-[2.75rem] text-[13.5px] leading-relaxed text-white/55 md:px-6 md:pb-5 md:pl-[3.5rem] md:text-sm" style={grotesk}>{body}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -313,16 +333,10 @@ function ProblemSolution() {
           </h2>
         </Reveal>
 
-        <div className="mt-9 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:mt-11 md:grid-cols-4">
+        <div className="mt-9 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 md:mt-11">
           {c.problem.items.map((p, i) => (
             <Reveal key={i} delay={0.08 + i * 0.07}>
-              <div className="flex h-full flex-col gap-3 bg-black/55 px-5 py-5 backdrop-blur-sm md:px-5 md:py-6">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0 text-infrared">
-                  {PROBLEM_MARKS[i]}
-                </svg>
-                <h3 className="text-[15px] font-semibold leading-snug text-white" style={supreme}>{p.title}</h3>
-                <p className="text-[13.5px] leading-relaxed text-white/55" style={grotesk}>{p.body}</p>
-              </div>
+              <Symptom mark={PROBLEM_MARKS[i]} title={p.title} body={p.body} defaultOpen={i === 0} />
             </Reveal>
           ))}
         </div>
@@ -417,17 +431,28 @@ function RolePicker() {
               {ROLE_META.map((r, i) => (
                 <div key={r.id} className="shrink-0 snap-center md:shrink">
                   <button type="button" onClick={() => setSelected(i)}
-                    className="group relative block h-[58vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 text-left md:h-[54vh] md:w-full">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={ROLE_FACE[i]} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
-                    <div className="absolute inset-0 mix-blend-color" style={{ background: r.color, opacity: 0.22 }} />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.45) 48%, rgba(10,10,10,0.95) 100%)" }} />
+                    className="group relative block h-[58vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] text-left md:h-[54vh] md:w-full">
+                    {/* The photograph stops short of the words and dissolves
+                        into the card: full-bleed, the names sat across
+                        people's faces. */}
+                    <div
+                      className="absolute inset-x-0 top-0 h-[70%] overflow-hidden"
+                      style={{
+                        maskImage: "linear-gradient(180deg, #000 58%, transparent 100%)",
+                        WebkitMaskImage: "linear-gradient(180deg, #000 58%, transparent 100%)",
+                      }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={ROLE_FACE[i]} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
+                      <div className="absolute inset-0 mix-blend-color" style={{ background: r.color, opacity: 0.22 }} />
+                    </div>
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.2) 52%, rgba(10,10,10,0.92) 100%)" }} />
                     <span className="absolute left-0 top-0 h-1 w-full" style={{ background: r.color }} />
                     <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                       <h3 className="text-[clamp(28px,4.4vw,40px)] font-black uppercase leading-[0.9] tracking-tight" style={{ ...rajdhani, color: r.color }}>
                         {ROLE_LABELS[i]}
                       </h3>
-                      <p className="mt-3 min-h-[4.6em] text-[13px] leading-relaxed text-white/70 md:min-h-[5.8em] md:text-sm" style={grotesk}>
+                      <p className="mt-3 min-h-[5em] text-[13px] leading-relaxed text-white/70 md:min-h-[6.6em] md:text-sm" style={grotesk}>
                         {c.roles[i].body}
                       </p>
                       <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/45 transition-colors group-hover:text-white" style={supreme}>
@@ -450,40 +475,7 @@ function RolePicker() {
   );
 }
 
-/* Shared tappable card — opens the (localized) homepage drawer for `id`. */
-function ExploreTile({ n, icon, title, body, onOpen }: { n?: string; icon?: ReactNode; title: string; body: string; onOpen: () => void; }) {
-  const c = useC();
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group relative flex h-full flex-row items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-infrared/60 hover:bg-white/[0.04] hover:shadow-[0_18px_50px_-24px_rgba(255,51,102,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infrared/70 md:flex-col md:gap-0 md:p-6"
-    >
-      <div className="shrink-0">
-        {n ? (
-          <span className="text-3xl font-black leading-none text-infrared md:text-4xl lg:text-5xl" style={rajdhani}>{n}</span>
-        ) : null}
-        {icon ? (
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-infrared/40 bg-infrared/10 [&>svg]:h-6 [&>svg]:w-6 md:h-12 md:w-12">{icon}</span>
-        ) : null}
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col md:mt-4">
-        <h3 className="text-base font-bold uppercase tracking-wide text-white md:text-lg" style={rajdhani}>{title}</h3>
-        <p className="mt-1.5 flex-1 text-[14px] leading-relaxed text-white/55 md:mt-2 md:text-[15px]" style={grotesk}>{body}</p>
-        <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-infrared md:mt-5" style={supreme}>
-          {c.solution.tapToExplore}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-        </span>
-      </div>
-    </button>
-  );
-}
-
-
-/* The run, in five real screens, with touring in the same room.
-   Five numbered cards described the app; five screens show it. Each phone is
-   still the tap target that opens that step's drawer. */
-function Journey() {
+function Journey({ journey }: { journey: JourneyStep[] }) {
   const c = useC();
   const { open } = useHomeDrawer();
   return (
@@ -498,47 +490,22 @@ function Journey() {
         </Reveal>
 
         <div className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-12 md:justify-center md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden">
-          {c.journey.steps.map((s, i) => (
+          {journey.map((s, i) => (
             <div key={i} className="flex shrink-0 snap-center flex-col items-start md:shrink">
               <StepPhone src={JOURNEY_SHOTS[i]} drift={ARC[i].drift} lift={ARC[i].lift} label={s.title} onOpen={() => open(JOURNEY_IDS[i])} />
               <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(126px,13.4vw,196px)]">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-[10px] text-infrared" style={{ ...supreme, fontVariantNumeric: "tabular-nums" }}>{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:min-h-[2.2em] md:text-base lg:text-lg" style={rajdhani}>
-                    {s.title}
-                  </h3>
-                </div>
+                <h3 className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:min-h-[2.2em] md:text-base lg:text-lg" style={rajdhani}>
+                  {s.title}
+                </h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-white/55 md:text-[12px] lg:text-[13px]" style={grotesk}>{s.body}</p>
               </div>
             </div>
           ))}
         </div>
-
-        {/* Touring was a section of its own with one heading and two cards in
-            it; it belongs to the same run, so it lands in the same room. */}
-        <div id="touring" className="mt-14 border-t border-white/10 pt-12 md:mt-16">
-          <Reveal><Eyebrow>{c.touring.eyebrow}</Eyebrow></Reveal>
-          <div className="mt-5 grid gap-8 md:grid-cols-2 md:items-start md:gap-12">
-            <Reveal delay={0.05}>
-              <h2 className="text-[clamp(26px,4.2vw,48px)] font-black uppercase leading-[1.02] tracking-tight text-white text-balance" style={rajdhani}>
-                {c.touring.heading}
-              </h2>
-              <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{c.touring.body}</p>
-            </Reveal>
-            <div className="grid gap-3 md:gap-4">
-              {c.touring.tiles.map((t, i) => (
-                <Reveal key={i} delay={0.08 + i * 0.08}>
-                  <ExploreTile icon={TOURING_META[i].icon} title={t.title} body={t.body} onOpen={() => open(TOURING_META[i].id)} />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
     </Scene>
   );
 }
-
 
 /* The door — why, the invitation and the sign-off in one frame.
    They were three sections, each with its own full padding, saying one thing:
@@ -611,7 +578,6 @@ function ChapterNav() {
     { id: "top", label: c.chapters.intro },
     { id: "problem", label: c.chapters.pitch },
     { id: "journey", label: c.chapters.how },
-    { id: "touring", label: c.chapters.touring },
     { id: "why", label: c.chapters.why },
     { id: "join", label: c.chapters.join },
   ];
@@ -635,7 +601,7 @@ function ChapterNav() {
 }
 
 
-export function FoundingExperience({ content, lang }: { content: FoundingContent; lang: LangCode }) {
+export function FoundingExperience({ content, lang, journey }: { content: FoundingContent; lang: LangCode; journey: JourneyStep[] }) {
   const { map, labels } = buildDrawer(content);
   return (
     <Cx.Provider value={content}>
@@ -649,7 +615,7 @@ export function FoundingExperience({ content, lang }: { content: FoundingContent
           <Hero />
           <ProblemSolution />
           <RolePicker />
-          <Journey />
+          <Journey journey={journey} />
           <Door />
         </main>
       </HomeDrawerProvider>
