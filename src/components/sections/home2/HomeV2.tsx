@@ -38,6 +38,27 @@ const STEP_KEYS = [
   "home_journey_confirmed_title",
 ];
 
+/** One mark per symptom, in the order the sentence pairs them: an empty date,
+ *  a cost curve nobody else carries, two nodes that never meet. Drawn here
+ *  rather than imported so the three stay a set. */
+const PROBLEM_ICONS = [
+  <>
+    <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
+    <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+    <path d="M9 14.5l6 4M15 14.5l-6 4" />
+  </>,
+  <>
+    <path d="M3 19.5h18" />
+    <path d="M4 16l5-5 3.5 3.5L20 7" />
+    <path d="M15.5 7H20v4.5" />
+  </>,
+  <>
+    <circle cx="6" cy="7" r="2.6" />
+    <circle cx="18" cy="17" r="2.6" />
+    <path d="M8.3 8.9l2.4 2.4M13.3 13.9l2.4 2.4" />
+  </>,
+];
+
 /** Rises into place once, from a visible resting state — never left at zero. */
 function Rise({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -146,7 +167,7 @@ export function HomeV2() {
           One room instead of two: the three symptoms sit under the headline as
           a single band, and the answer lands in the same frame rather than a
           screen further down. */}
-      <Scene photo="/home/v2/room-open.jpg" className="flex min-h-[92vh] items-center px-6 py-20 md:px-16">
+      <Scene photo="/home/v2/room-open.jpg" className="flex min-h-[86vh] items-center px-6 py-16 md:px-16 md:py-20">
         <div id="network" className="absolute -top-24" />
         <div className="mx-auto w-full max-w-6xl">
           <Rise>
@@ -158,30 +179,43 @@ export function HomeV2() {
             </h2>
           </Rise>
 
-          <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:mt-14 md:grid-cols-3">
+          <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:mt-10 md:grid-cols-3">
             {t("home_problem_sub")
               .split("\n")
               .map((line, i) => (
                 <Rise key={line} delay={0.1 + i * 0.1}>
-                  <p
-                    className="h-full bg-black/55 px-5 py-5 text-[15px] leading-relaxed text-white/60 backdrop-blur-sm md:px-6 md:py-7 md:text-base"
-                    style={body}
-                  >
-                    {line}
-                  </p>
+                  <div className="flex h-full items-center gap-4 bg-black/55 px-5 py-4 backdrop-blur-sm md:flex-col md:items-start md:gap-4 md:px-6 md:py-6">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className="shrink-0 text-infrared"
+                    >
+                      {PROBLEM_ICONS[i]}
+                    </svg>
+                    <p className="text-[15px] leading-relaxed text-white/60 md:text-base" style={body}>
+                      {line}
+                    </p>
+                  </div>
                 </Rise>
               ))}
           </div>
 
           <Rise delay={0.2}>
             <h3
-              className="mt-14 max-w-3xl text-[clamp(26px,4.6vw,56px)] font-black uppercase leading-[1] tracking-tight text-white md:mt-20"
+              className="mt-10 max-w-3xl text-[clamp(26px,4.6vw,56px)] font-black uppercase leading-[1] tracking-tight text-white md:mt-12"
               style={display}
             >
               {t("home_shift")}
             </h3>
             <p
-              className="mt-5 whitespace-pre-line text-[11px] uppercase leading-relaxed tracking-[0.22em] text-infrared md:text-sm"
+              className="mt-4 whitespace-pre-line text-[11px] uppercase leading-relaxed tracking-[0.22em] text-infrared md:text-sm"
               style={body}
             >
               {t("home_shift_sub")}
@@ -193,7 +227,7 @@ export function HomeV2() {
       {/* ─────────────── the four, side by side ───────────────
           Four full screens became one wall. On a phone it is a swipe, so the
           roles cost a single screen there too. */}
-      <section id="roles" className="scroll-mt-20 py-16 md:py-24">
+      <section id="roles" className="scroll-mt-20 py-12 md:py-20">
         <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
           <Rise>
             <h2
