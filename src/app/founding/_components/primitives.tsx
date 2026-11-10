@@ -86,26 +86,6 @@ export function Eyebrow({
   );
 }
 
-/** Section wrapper — consistent vertical rhythm + max width. */
-export function Section({
-  children,
-  className = "",
-  id,
-}: {
-  children: ReactNode;
-  className?: string;
-  id?: string;
-}) {
-  return (
-    <section
-      id={id}
-      className={`relative mx-auto w-full max-w-6xl px-6 py-24 md:py-32 ${className}`}
-    >
-      {children}
-    </section>
-  );
-}
-
 /**
  * Phone device frame around an app screenshot, with a soft role-colored glow.
  * Screenshots are pre-cropped beta captures (no TEST banner).

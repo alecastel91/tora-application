@@ -18,17 +18,21 @@ import { motion, useScroll, useTransform } from "framer-motion";
  * hero, the turn, the way out) simply lets the node globe show through.
  */
 export function Scene({
+  id,
   photo,
-  tint,
   dim = 1,
   className = "",
+  innerClassName = "",
   children,
 }: {
+  /** Anchor for in-page links, the chapter nav and NodeField's narrative. */
+  id?: string;
   photo?: string;
-  tint?: string;
   /** Multiplier on the photograph's brightness — the pipeline runs quieter. */
   dim?: number;
   className?: string;
+  /** Layout for the content layer — a full-height scene centres its own. */
+  innerClassName?: string;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -38,7 +42,7 @@ export function Scene({
   const scale = useTransform(scrollYProgress, [0, 1], [1.06, 1.18]);
 
   return (
-    <section ref={ref} className={`relative ${className}`}>
+    <section id={id} ref={ref} className={`relative scroll-mt-20 ${className}`}>
       {photo && (
         <motion.div aria-hidden="true" style={{ opacity }} className="pointer-events-none fixed inset-0 z-[1]">
           <motion.div style={{ scale }} className="absolute inset-0">
@@ -51,21 +55,13 @@ export function Scene({
                 "linear-gradient(180deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.6) 28%, rgba(10,10,10,0.64) 72%, rgba(10,10,10,0.92) 100%)",
             }}
           />
-          {/* Light, not a filter: a flat fill at any usable strength turned the
-              room into one colour and threw the photograph away. */}
-          {tint && (
-            <div
-              className="absolute inset-0"
-              style={{ background: `radial-gradient(90% 70% at 50% 88%, ${tint}, transparent 72%)`, opacity: 0.3 }}
-            />
-          )}
           <div
             className="absolute inset-0"
             style={{ background: "radial-gradient(118% 82% at 50% 50%, transparent 36%, rgba(10,10,10,0.78) 100%)" }}
           />
         </motion.div>
       )}
-      <div className="relative z-10">{children}</div>
+      <div className={`relative z-10 ${innerClassName}`}>{children}</div>
     </section>
   );
 }

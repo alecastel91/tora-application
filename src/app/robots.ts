@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/beta-admin", "/api/", "/founding"],
+      disallow: ["/admin", "/beta-admin", "/api/", "/founding", "/v2"],
     },
     sitemap: "https://www.torahub.io/sitemap.xml",
     host: "https://www.torahub.io",
