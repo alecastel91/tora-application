@@ -4,6 +4,36 @@ import { LenisProvider } from "@/components/providers/LenisProvider";
 import { FoundingExperience } from "../_components/FoundingExperience";
 import { CONTENT, LANGS } from "../_content";
 import type { LangCode } from "../_content/types";
+import EN from "@/translations/EN.json";
+import ES from "@/translations/ES.json";
+import FR from "@/translations/FR.json";
+import IT from "@/translations/IT.json";
+import PT from "@/translations/PT.json";
+import JP from "@/translations/JP.json";
+import CN from "@/translations/CN.json";
+import KR from "@/translations/KR.json";
+
+/**
+ * The five screens the homepage shows, in the homepage's order, read from the
+ * site catalogue rather than restated in FoundingContent — the strings are
+ * already natively reviewed in all eight languages, so this page says what the
+ * homepage says without a single new key to translate. Server-side only: the
+ * catalogues never reach the browser.
+ */
+// `typeof EN`, not Record<string, string>: a renamed catalogue key should fail
+// the build here the way a missing _content key does, not render an empty heading
+// in eight languages.
+const CATALOGUE: Record<LangCode, typeof EN> = {
+  en: EN, es: ES, fr: FR, it: IT, pt: PT, jp: JP, cn: CN, kr: KR,
+};
+
+const JOURNEY_KEYS = [
+  ["home_journey_discover_title", "home_journey_discover_desc"],
+  ["feature_calendar_title", "feature_calendar_desc"],
+  ["feature_tour_title", "feature_tour_desc"],
+  ["home_journey_offer_title", "home_journey_offer_desc"],
+  ["feature_contracts_title", "home_journey_confirmed_desc"],
+] as const;
 
 /**
  * Unlisted founding-members presentation, one static page per language at
@@ -47,9 +77,16 @@ export default async function FoundingLangPage({
   const content = CONTENT[lang as LangCode];
   if (!content) notFound();
 
+  const cat = CATALOGUE[lang as LangCode];
+  const journey = JOURNEY_KEYS.map(([title, body]) => ({
+    title: cat[title],
+    body: cat[body],
+  }));
+  const journeyHeading = cat.home_solutions_title;
+
   return (
     <LenisProvider>
-      <FoundingExperience content={content} lang={lang as LangCode} />
+      <FoundingExperience content={content} lang={lang as LangCode} journey={journey} journeyHeading={journeyHeading} />
     </LenisProvider>
   );
 }

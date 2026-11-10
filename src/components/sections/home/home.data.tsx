@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ROLE_COLORS } from "@/components/sections/shared/pageParts";
 
 /**
  * Home-page narrative data. Roles are reframed as one-line VALUE props (not the
@@ -18,6 +19,8 @@ export type Role = {
   label: string;
   descKey: string; // founding-page role sentence, e.g. home_role_artist_desc
   color: string;
+  /** Club photograph behind the card, lit in this role's own colour. */
+  photo: string;
   icon: ReactNode;
 };
 
@@ -42,10 +45,11 @@ export const ROLES: Role[] = [
     id: "artist",
     label: "Artist",
     descKey: "home_role_artist_desc",
-    color: "#6B5FFF",
+    photo: "/home/rooms/artist.jpg",
+    color: ROLE_COLORS.artist,
     icon: (
       // The artist — headphones (standardized icon)
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#6B5FFF", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke(ROLE_COLORS.artist, 1.4)}>
         <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
         <rect x="3" y="14" width="4" height="6" rx="1.5" />
         <rect x="17" y="14" width="4" height="6" rx="1.5" />
@@ -56,10 +60,11 @@ export const ROLES: Role[] = [
     id: "agent",
     label: "Agent",
     descKey: "home_role_agent_desc",
-    color: "#00C875",
+    photo: "/home/rooms/agent.jpg",
+    color: ROLE_COLORS.agent,
     icon: (
       // The agent — one person representing another
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#00C875", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke(ROLE_COLORS.agent, 1.4)}>
         <circle cx="9" cy="8" r="3" />
         <path d="M3 19.5c0-3.3 2.7-5.7 6-5.7s6 2.4 6 5.7" />
         <circle cx="16.8" cy="9" r="2.4" opacity="0.5" />
@@ -71,10 +76,11 @@ export const ROLES: Role[] = [
     id: "promoter",
     label: "Promoter",
     descKey: "home_role_promoter_desc",
-    color: "#FFB800",
+    photo: "/home/rooms/promoter.jpg",
+    color: ROLE_COLORS.promoter,
     icon: (
       // The promoter — a megaphone, sound leaving the horn
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FFB800", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke(ROLE_COLORS.promoter, 1.4)}>
         <path d="M17.5 4 6.8 8.6H4.2a1.7 1.7 0 0 0-1.7 1.7v3.4a1.7 1.7 0 0 0 1.7 1.7h2.6L17.5 20z" />
         <path d="M7.2 15.6v3.2a1.2 1.2 0 0 0 1.2 1.2h1.4" opacity="0.5" />
         <path d="M20.2 9.2a4.2 4.2 0 0 1 0 5.6" opacity="0.6" />
@@ -85,10 +91,11 @@ export const ROLES: Role[] = [
     id: "venue",
     label: "Venue",
     descKey: "home_role_venue_desc",
-    color: "#FF5757",
+    photo: "/home/rooms/venue.jpg",
+    color: ROLE_COLORS.venue,
     icon: (
       // The venue — house / entrance (standardized icon)
-      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke("#FF5757", 1.4)}>
+      <svg width="30" height="30" viewBox="0 0 24 24" {...stroke(ROLE_COLORS.venue, 1.4)}>
         <path d="M4 20V9l8-5 8 5v11" />
         <path d="M9 20v-5a3 3 0 0 1 6 0v5" />
       </svg>

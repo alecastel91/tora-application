@@ -1,17 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import type { ReactNode } from "react";
 
 export const EASE = [0.16, 1, 0.3, 1] as const;
 
-export const ROLE = {
-  artist: "#6B5FFF",
-  agent: "#00C875",
-  promoter: "#FFB800",
-  venue: "#FF5757",
-} as const;
+/** The one palette, re-exported here so /founding keeps its import surface. */
+export { ROLE_COLORS as ROLE } from "@/components/sections/shared/pageParts";
 
 export const supreme = {
   fontFamily:
@@ -83,157 +78,6 @@ export function Eyebrow({
         {children}
       </span>
     </div>
-  );
-}
-
-/** Section wrapper — consistent vertical rhythm + max width. */
-export function Section({
-  children,
-  className = "",
-  id,
-}: {
-  children: ReactNode;
-  className?: string;
-  id?: string;
-}) {
-  return (
-    <section
-      id={id}
-      className={`relative mx-auto w-full max-w-6xl px-6 py-24 md:py-32 ${className}`}
-    >
-      {children}
-    </section>
-  );
-}
-
-/**
- * Phone device frame around an app screenshot, with a soft role-colored glow.
- * Screenshots are pre-cropped beta captures (no TEST banner).
- */
-export function PhoneFrame({
-  src,
-  alt,
-  glow = "#FF3366",
-  className = "",
-  priority = false,
-}: {
-  src: string;
-  alt: string;
-  glow?: string;
-  className?: string;
-  priority?: boolean;
-}) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  // Gentle vertical float as the device passes through the viewport.
-  const drift = useTransform(scrollYProgress, [0, 1], [34, -34]);
-  const y = useSpring(drift, { stiffness: 60, damping: 20, restDelta: 0.001 });
-
-  return (
-    <motion.div
-      ref={ref}
-      className={`relative ${className}`}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, rotateX: 8 }}
-      whileInView={{ opacity: 1, rotateX: 0 }}
-      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-      transition={{ duration: 0.9, ease: EASE }}
-      style={{ perspective: 1200 }}
-    >
-      <motion.div style={reduce ? undefined : { y }}>
-        {/* ambient glow — soft pulse in the role accent */}
-        <motion.div
-          aria-hidden
-          className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
-          style={{ background: glow }}
-          initial={{ opacity: 0.14 }}
-          animate={reduce ? { opacity: 0.14 } : { opacity: [0.11, 0.22, 0.11] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
-          <div className="overflow-hidden rounded-[1.9rem]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              alt={alt}
-              loading={priority ? "eager" : "lazy"}
-              className="block h-auto w-full"
-            />
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/**
- * Phone frame whose (tall) screenshot scrolls INSIDE the frame as the section
- * passes through the viewport — reveals a full app page without taking the whole
- * page height. `imgRatio` = screenshot height/width (so we know how far to travel).
- * Under reduced motion the frame simply shows the top of the screenshot.
- */
-export function ScrollablePhone({
-  src,
-  alt,
-  imgRatio,
-  glow = "#FF3366",
-  className = "",
-  frameRatio = 2.16,
-}: {
-  src: string;
-  alt: string;
-  imgRatio: number;
-  glow?: string;
-  className?: string;
-  frameRatio?: number;
-}) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  // travel = fraction of the image height that must slide up so the bottom
-  // reaches the frame bottom. translateY percentages are relative to the img.
-  const maxShift = Math.max(0, (1 - frameRatio / imgRatio) * 100);
-  const raw = useTransform(scrollYProgress, [0.1, 0.9], ["0%", `-${maxShift}%`]);
-  const y = useSpring(raw, { stiffness: 80, damping: 24, restDelta: 0.001 });
-
-  return (
-    <motion.div
-      ref={ref}
-      className={`relative ${className}`}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-8% 0px -8% 0px" }}
-      transition={{ duration: 0.8, ease: EASE }}
-    >
-      <div
-        aria-hidden
-        className="absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
-        style={{ background: glow, opacity: 0.16 }}
-      />
-      <div className="mx-auto w-[230px] sm:w-[260px] rounded-[2.4rem] bg-[#0a0a0f] p-2 shadow-2xl">
-        <div
-          className="relative overflow-hidden rounded-[1.9rem]"
-          style={{ aspectRatio: `1 / ${frameRatio}` }}
-        >
-          <motion.img
-            src={src}
-            alt={alt}
-            loading="lazy"
-            className="absolute left-0 top-0 block w-full"
-            style={reduce ? undefined : { y }}
-          />
-          {/* top/bottom fades so the internal scroll reads as a viewport */}
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#050505] to-transparent" />
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#050505] to-transparent" />
-        </div>
-      </div>
-    </motion.div>
   );
 }
 

@@ -24,6 +24,14 @@ const cspDirectives = [
 
 const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
+  images: {
+    // AVIF encoding of the wordmark PNG stalls the optimizer for minutes, so the
+    // browser — which asks for AVIF first — simply never got the logo. WebP only.
+    formats: ["image/webp"],
+    // The scene backdrops ask for quality 55; any quality not listed here is
+    // refused with a 400, which shows up as a missing image, not as an error.
+    qualities: [55, 75],
+  },
   // all-the-cities reads its data from a bundled cities.pbf via fs at load time;
   // keep it external so the bundler doesn't rewrite that path and break the read.
   serverExternalPackages: ["all-the-cities"],
@@ -51,6 +59,9 @@ const nextConfig: NextConfig = {
       // Lean base link + old name both land on the default-language founding page.
       { source: "/founding", destination: "/founding/en", permanent: false },
       { source: "/foundingmembers", destination: "/founding/en", permanent: false },
+      // /v2 was the home-page proposal while it was read against the live
+      // one; it is the live one now, so the link keeps working.
+      { source: "/v2", destination: "/", permanent: false },
       // Beta cockpit moved: /admin autocompleted to /admin/beta in the browser.
       { source: "/admin/beta", destination: "/beta-admin", permanent: false },
 

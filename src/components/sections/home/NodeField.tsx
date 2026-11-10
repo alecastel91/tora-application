@@ -28,12 +28,22 @@ const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
  *
  * Fixed full-viewport <canvas>. On mobile / reduced motion it stays a static
  * globe (the sections use their own grid/stack fallbacks, no morph).
+ *
+ * `settled` skips the narrative entirely and holds the assembled globe from the
+ * first frame — for a page whose hero stands inside the sphere rather than
+ * above it. `morph` is separate: a page can run the narrative and still want
+ * the nodes to stay a globe, because the cluster positions come from the live
+ * home page's pinned card layouts and mean nothing anywhere else.
  */
-export function NodeField() {
+export function NodeField({
+  settled = false,
+  morph = true,
+}: { settled?: boolean; morph?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const morphEnabled = isDesktop && !reduced;
+  // A settled field is a page backdrop, not a narrative: no assembly, no morph.
+  const morphEnabled = isDesktop && !reduced && !settled && morph;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -139,12 +149,16 @@ export function NodeField() {
       // network") reaches centre. Static globe under reduced motion.
       let reveal = 1;
       let intro = 1;
-      if (!reduced) {
-        const net = document.getElementById("network");
-        if (net) {
-          const r = net.getBoundingClientRect();
+      if (!reduced && !settled) {
+        const r = document.getElementById("network")?.getBoundingClientRect();
+        if (r) {
           reveal = easeInOut(clamp01((height * 0.85 - r.top) / (height * 0.5)));
-          intro = easeInOut(clamp01((height / 2 - (r.top + r.height * 0.25)) / (r.height * 0.5)));
+          // A zero-height #network (a bare scroll anchor rather than a section)
+          // divides by zero here, and on the frame where the numerator is also
+          // zero it hands every node a NaN position and the field blinks out.
+          if (r.height > 0) {
+            intro = easeInOut(clamp01((height / 2 - (r.top + r.height * 0.25)) / (r.height * 0.5)));
+          }
         }
       }
 
@@ -262,7 +276,7 @@ export function NodeField() {
       window.removeEventListener("resize", resize);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [reduced, morphEnabled]);
+  }, [reduced, morphEnabled, settled]);
 
   return (
     <canvas
