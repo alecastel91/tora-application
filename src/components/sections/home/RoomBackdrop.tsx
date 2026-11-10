@@ -31,7 +31,7 @@ export function RoomBackdrop({
         src={photo}
         alt=""
         fill
-        sizes={row ? "100vw" : "(min-width: 768px) 420px, 100vw"}
+        sizes={row ? "100vw" : "(min-width: 768px) 320px, 100vw"}
         className={row ? "object-cover opacity-[0.55]" : "object-cover opacity-[0.78]"}
       />
       <div

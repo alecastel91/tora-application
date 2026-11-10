@@ -1,8 +1,9 @@
 "use client";
 
 import { useId, useState, useRef, type ReactNode } from "react";
+import Link from "next/link";
 import Image from "next/image";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 /**
  * The parts /v2 and /founding both build out of.
@@ -16,6 +17,57 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 const EASE = [0.16, 1, 0.3, 1] as const;
 const display = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const body = { fontFamily: "var(--font-space-grotesk), sans-serif" };
+
+/**
+ * The rendered role palette, and the photograph that carries each role.
+ *
+ * Both were written out in five files and three files respectively, in a repo
+ * where the role colours have already gone wrong once by being copied from a
+ * stale table. These values are the pixel-verified ones; a different set lives
+ * in src/lib/roleColors.ts for admin views and must never be consolidated onto.
+ */
+export const ROLE_COLORS = {
+  artist: "#6B5FFF",
+  agent: "#00C875",
+  promoter: "#FFB800",
+  venue: "#FF5757",
+} as const;
+
+export type RoleId = keyof typeof ROLE_COLORS;
+
+export const ROLE_FACES: Record<RoleId, string> = {
+  artist: "/home/v2/face-artist.jpg",
+  agent: "/home/v2/face-agent.jpg",
+  promoter: "/home/v2/face-promoter.jpg",
+  venue: "/home/v2/face-venue.jpg",
+};
+
+/** Scroll-into-view reveal — fade, rise, and a gentle deblur. Sits still for
+ *  anyone who asked their system for less motion. */
+export function Reveal({
+  children,
+  delay = 0,
+  y = 26,
+  className,
+}: {
+  children: ReactNode;
+  delay?: number;
+  y?: number;
+  className?: string;
+}) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y, filter: "blur(8px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-12% 0px -12% 0px" }}
+      transition={{ duration: 0.75, delay, ease: EASE }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 /** One mark per symptom: a calendar with nothing in it, a cost curve nobody
  *  else carries, a closed door, two nodes that never meet. */
@@ -205,7 +257,7 @@ export function PhoneScreen({
  * people's faces — only Venue escaped it, because her head happens to sit high
  * in frame.
  */
-export function RoleFace({ src, color, sizes }: { src: string; color: string; sizes: string }) {
+export function RoleFace({ src, color }: { src: string; color: string }) {
   return (
     <>
       <div
@@ -220,7 +272,7 @@ export function RoleFace({ src, color, sizes }: { src: string; color: string; si
           alt=""
           aria-hidden="true"
           fill
-          sizes={sizes}
+          sizes="(min-width: 1152px) 248px, (min-width: 768px) 24vw, 74vw"
           className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]"
         />
         <div className="absolute inset-0 mix-blend-color" style={{ background: color, opacity: 0.22 }} />
@@ -237,4 +289,105 @@ export function RoleFace({ src, color, sizes }: { src: string; color: string; si
   );
 }
 
-export { EASE as SHARED_EASE, display as sharedDisplay, body as sharedBody };
+/**
+ * The row of five screens: swiped on a phone, a row on a desktop. With
+ * `onOpen` each frame opens that screen's drawer.
+ */
+export function ScreenStrip({
+  items,
+  className = "",
+  onOpen,
+}: {
+  items: { shot: string; title: string; body: string }[];
+  className?: string;
+  onOpen?: (index: number) => void;
+}) {
+  return (
+    <div
+      className={`flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:justify-center md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden ${className}`}
+    >
+      {items.map((item, i) => (
+        <div key={item.shot} className="flex shrink-0 snap-center flex-col items-start md:shrink">
+          <PhoneScreen
+            src={item.shot}
+            drift={ARC[i].drift}
+            lift={ARC[i].lift}
+            label={item.title}
+            onOpen={onOpen ? () => onOpen(i) : undefined}
+          />
+          <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(126px,13.4vw,196px)]">
+            <h3
+              className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:min-h-[2.2em] md:text-base lg:text-lg"
+              style={display}
+            >
+              {item.title}
+            </h3>
+            <p className="mt-2 text-[13px] leading-relaxed text-white/55 md:text-[12px] lg:text-[13px]" style={body}>
+              {item.body}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * The four roles as four people: swiped on a phone, a wall on a desktop. A
+ * card either links somewhere or opens something, and may carry one more line
+ * under its blurb.
+ */
+export function RoleWall({
+  items,
+  className = "",
+  cardHeight,
+  footer,
+}: {
+  items: { id: string; label: string; color: string; face: string; blurb: string; href?: string; onSelect?: () => void }[];
+  className?: string;
+  /** Tailwind height for the card — the two walls stand at their own scale. */
+  cardHeight: string;
+  footer?: ReactNode;
+}) {
+  return (
+    <div
+      className={`flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-4 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden ${className}`}
+    >
+      {items.map((role) => {
+        const shell = `group relative block w-[74vw] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] text-left md:w-full ${cardHeight}`;
+        const inside = (
+          <>
+            <RoleFace src={role.face} color={role.color} />
+            <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+              <h3
+                className="text-[clamp(28px,4.4vw,40px)] font-black uppercase leading-[0.9] tracking-tight"
+                style={{ ...display, color: role.color }}
+              >
+                {role.label}
+              </h3>
+              <p className="mt-3 min-h-[5em] text-[13px] leading-relaxed text-white/70 md:min-h-[6.6em] md:text-sm" style={body}>
+                {role.blurb}
+              </p>
+              {footer}
+            </div>
+          </>
+        );
+        return (
+          <div key={role.id} className="shrink-0 snap-center md:shrink">
+            {role.href ? (
+              <Link href={role.href} className={shell}>
+                {inside}
+              </Link>
+            ) : (
+              <button type="button" onClick={role.onSelect} className={shell}>
+                {inside}
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export { EASE, display, body };

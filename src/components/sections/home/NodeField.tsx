@@ -140,14 +140,15 @@ export function NodeField() {
       let reveal = 1;
       let intro = 1;
       if (!reduced) {
-        const net = document.getElementById("network");
-        // A zero-height #network (a bare scroll anchor rather than a section)
-        // divided by zero here and, on the frame where the numerator was also
-        // zero, handed every node a NaN position.
-        if (net && net.getBoundingClientRect().height > 0) {
-          const r = net.getBoundingClientRect();
+        const r = document.getElementById("network")?.getBoundingClientRect();
+        if (r) {
           reveal = easeInOut(clamp01((height * 0.85 - r.top) / (height * 0.5)));
-          intro = easeInOut(clamp01((height / 2 - (r.top + r.height * 0.25)) / (r.height * 0.5)));
+          // A zero-height #network (a bare scroll anchor rather than a section)
+          // divides by zero here, and on the frame where the numerator is also
+          // zero it hands every node a NaN position and the field blinks out.
+          if (r.height > 0) {
+            intro = easeInOut(clamp01((height / 2 - (r.top + r.height * 0.25)) / (r.height * 0.5)));
+          }
         }
       }
 

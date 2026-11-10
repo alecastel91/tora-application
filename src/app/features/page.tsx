@@ -111,7 +111,7 @@ export default function Features() {
     <DetailPageShell title={t("features_title")} subtitle={t("features_subtitle")} width="max-w-4xl">
       <div className="border-t border-white/10" style={sgFont}>
         {FEATURES.map((item, i) => (
-          <SectionReveal key={item.titleKey} delay={0.03}>
+          <SectionReveal key={item.titleKey}>
             <motion.div
               className="group flex items-start gap-5 border-b border-white/10 py-6 md:gap-8 md:py-7"
               whileHover={{ x: 4 }}

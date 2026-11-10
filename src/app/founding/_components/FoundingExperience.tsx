@@ -11,7 +11,7 @@ import {
   type DrawerItem,
 } from "@/components/sections/home/HomeDrawer";
 import { Scene } from "@/components/sections/home2/Scene";
-import { ARC, PhoneScreen, PROBLEM_MARKS, RoleFace, Symptom } from "@/components/sections/shared/pageParts";
+import { PROBLEM_MARKS, ROLE_FACES, RoleWall, ScreenStrip, Symptom } from "@/components/sections/shared/pageParts";
 import { FoundingBackdrop } from "./FoundingBackdrop";
 import { LangMenu } from "./LangMenu";
 import {
@@ -103,14 +103,6 @@ const JOURNEY_SHOTS = [
   "/home/tour.png",
   "/home/offer.png",
   "/home/book.png",
-] as const;
-
-/** The homepage's role photographs — the same four faces /roles carries. */
-const ROLE_FACE = [
-  "/home/v2/face-artist.jpg",
-  "/home/v2/face-agent.jpg",
-  "/home/v2/face-promoter.jpg",
-  "/home/v2/face-venue.jpg",
 ] as const;
 
 /* --------------------------------------------------------------- content ctx */
@@ -321,7 +313,7 @@ function RolePicker() {
     if (i >= 0) setSelected(i);
   }, []);
   return (
-    <section id="roles" className="relative z-10 scroll-mt-20 py-12 md:py-16">
+    <section id="roles" className="scroll-mt-20 py-12 md:py-16">
       <AnimatePresence mode="wait" initial={false}>
         {selected === null ? (
           <motion.div key="picker"
@@ -330,28 +322,24 @@ function RolePicker() {
               <p className="text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
             </div>
             {/* A swipe on a phone, a wall on a desktop — the roles cost one screen either way. */}
-            <div className="mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-auto md:max-w-6xl md:grid md:grid-cols-4 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden">
-              {ROLE_META.map((r, i) => (
-                <div key={r.id} className="shrink-0 snap-center md:shrink">
-                  <button type="button" onClick={() => setSelected(i)}
-                    className="group relative block h-[58vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] text-left md:h-[54vh] md:w-full">
-                    <RoleFace src={ROLE_FACE[i]} color={r.color} sizes="(min-width: 768px) 24vw, 74vw" />
-                    <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
-                      <h3 className="text-[clamp(28px,4.4vw,40px)] font-black uppercase leading-[0.9] tracking-tight" style={{ ...rajdhani, color: r.color }}>
-                        {ROLE_LABELS[i]}
-                      </h3>
-                      <p className="mt-3 min-h-[5em] text-[13px] leading-relaxed text-white/70 md:min-h-[6.6em] md:text-sm" style={grotesk}>
-                        {c.roles[i].body}
-                      </p>
-                      <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/45 transition-colors group-hover:text-white" style={supreme}>
-                        {c.solution.tapToExplore}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-                      </span>
-                    </div>
-                  </button>
-                </div>
-              ))}
-            </div>
+            <RoleWall
+              className="mt-7 px-6 md:mx-auto md:max-w-6xl"
+              cardHeight="h-[58vh] md:h-[54vh]"
+              items={ROLE_META.map((r, i) => ({
+                id: r.id,
+                label: ROLE_LABELS[i],
+                color: r.color,
+                face: ROLE_FACES[r.id],
+                blurb: c.roles[i].body,
+                onSelect: () => setSelected(i),
+              }))}
+              footer={
+                <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/45 transition-colors group-hover:text-white" style={supreme}>
+                  {c.solution.tapToExplore}
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                </span>
+              }
+            />
           </motion.div>
         ) : (
           <div className="mx-auto w-full max-w-6xl px-6">
@@ -376,19 +364,11 @@ function Journey({ journey }: { journey: JourneyStep[] }) {
           </h2>
         </Reveal>
 
-        <div className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-12 md:justify-center md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden">
-          {journey.map((s, i) => (
-            <div key={i} className="flex shrink-0 snap-center flex-col items-start md:shrink">
-              <PhoneScreen src={JOURNEY_SHOTS[i]} drift={ARC[i].drift} lift={ARC[i].lift} label={s.title} onOpen={() => open(JOURNEY_IDS[i])} />
-              <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(126px,13.4vw,196px)]">
-                <h3 className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:min-h-[2.2em] md:text-base lg:text-lg" style={rajdhani}>
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-white/55 md:text-[12px] lg:text-[13px]" style={grotesk}>{s.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ScreenStrip
+          className="mt-10 md:mt-12"
+          items={journey.map((step, i) => ({ shot: JOURNEY_SHOTS[i], title: step.title, body: step.body }))}
+          onOpen={(i) => open(JOURNEY_IDS[i])}
+        />
       </div>
     </Scene>
   );
@@ -400,7 +380,7 @@ function Journey({ journey }: { journey: JourneyStep[] }) {
 function Door() {
   const c = useC();
   return (
-    <section id="why" className="relative z-10 scroll-mt-20 px-6 pb-20 pt-16 text-center md:pt-20">
+    <section id="why" className="scroll-mt-20 px-6 pb-20 pt-16 text-center md:pt-20">
       <Reveal className="flex justify-center"><Eyebrow>{c.why.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
         <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(32px,5.6vw,68px)] font-black uppercase leading-[1.0] tracking-tight text-white" style={rajdhani}>

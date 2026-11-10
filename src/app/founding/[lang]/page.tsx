@@ -20,7 +20,10 @@ import KR from "@/translations/KR.json";
  * homepage says without a single new key to translate. Server-side only: the
  * catalogues never reach the browser.
  */
-const CATALOGUE: Record<LangCode, Record<string, string>> = {
+// `typeof EN`, not Record<string, string>: a renamed catalogue key should fail
+// the build here the way a missing _content key does, not render an empty heading
+// in eight languages.
+const CATALOGUE: Record<LangCode, typeof EN> = {
   en: EN, es: ES, fr: FR, it: IT, pt: PT, jp: JP, cn: CN, kr: KR,
 };
 

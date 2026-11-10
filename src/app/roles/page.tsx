@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { DetailPageShell } from "@/components/ui/DetailPageShell";
 import { SectionReveal } from "@/components/ui/SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ROLE_COLORS, ROLE_FACES } from "@/components/sections/shared/pageParts";
 
 const display = { fontFamily: "var(--font-rajdhani), var(--font-space-grotesk), sans-serif" };
 const sgFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
@@ -19,18 +20,17 @@ const sgFont = { fontFamily: "var(--font-space-grotesk), sans-serif" };
  * who the role is for than a line drawing of a turntable, and the colour band
  * does the work the ring was doing.
  *
- * Photo and colour are the homepage's; the long descriptions are this page's.
+ * Photo and colour come from the one role table; the long descriptions are
+ * this page's own.
  */
-const PAGE_ROLES = [
-  { id: "artist", color: "#6B5FFF", photo: "/home/v2/face-artist.jpg",
-    labelKey: "role_artists_title", descKey: "role_artists_desc" },
-  { id: "promoter", color: "#FFB800", photo: "/home/v2/face-promoter.jpg",
-    labelKey: "role_promoters_title", descKey: "role_promoters_desc" },
-  { id: "venue", color: "#FF5757", photo: "/home/v2/face-venue.jpg",
-    labelKey: "role_venues_title", descKey: "role_venues_desc" },
-  { id: "agent", color: "#00C875", photo: "/home/v2/face-agent.jpg",
-    labelKey: "role_agents_title", descKey: "role_agents_desc" },
-];
+const PAGE_ROLES = (
+  [
+    { id: "artist", labelKey: "role_artists_title", descKey: "role_artists_desc" },
+    { id: "promoter", labelKey: "role_promoters_title", descKey: "role_promoters_desc" },
+    { id: "venue", labelKey: "role_venues_title", descKey: "role_venues_desc" },
+    { id: "agent", labelKey: "role_agents_title", descKey: "role_agents_desc" },
+  ] as const
+).map((r) => ({ ...r, color: ROLE_COLORS[r.id], photo: ROLE_FACES[r.id] }));
 
 export default function Roles() {
   const { t } = useLanguage();
@@ -39,7 +39,7 @@ export default function Roles() {
     <DetailPageShell title={t("roles_title")} subtitle={t("roles_subtitle")} width="max-w-5xl">
       <div className="space-y-6 md:space-y-10" style={sgFont}>
         {PAGE_ROLES.map((role, i) => (
-          <SectionReveal key={role.id} delay={0.04}>
+          <SectionReveal key={role.id}>
             <motion.div
               whileHover={{ y: -3 }}
               transition={{ type: "tween", duration: 0.25 }}

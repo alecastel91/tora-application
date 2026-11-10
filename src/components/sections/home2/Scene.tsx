@@ -2,7 +2,7 @@
 
 import { useRef, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
 /**
  * A beat of the page, carrying its own full-screen backdrop.
@@ -16,13 +16,23 @@ import { motion, useScroll, useTransform } from "framer-motion";
  * Neighbouring scenes overlap while one is leaving and the next arriving, which
  * is what produces the cross-fade: nothing cuts, and a scene with no photo (the
  * hero, the turn, the way out) simply lets the node globe show through.
+ *
+ * The backdrop sits at a NEGATIVE z-index. A fixed layer is always intersecting
+ * the viewport, so at a positive one it painted over every ordinary section on
+ * the page and each of those had to be lifted to z-10 by hand — which is how
+ * one page's role wall ended up underneath its own room. Below zero, every
+ * sibling is correct without being told.
+ *
+ * It is also only mounted within a viewport of its own scene: `fixed` defeats
+ * next/image's lazy loading (the element never leaves the viewport), so every
+ * room was fetched, decoded and promoted to its own compositor layer on first
+ * paint, however far down the page it belonged.
  */
 export function Scene({
   id,
   photo,
   dim = 1,
   className = "",
-  innerClassName = "",
   children,
 }: {
   /** Anchor for in-page links, the chapter nav and NodeField's narrative. */
@@ -31,11 +41,10 @@ export function Scene({
   /** Multiplier on the photograph's brightness — the pipeline runs quieter. */
   dim?: number;
   className?: string;
-  /** Layout for the content layer — a full-height scene centres its own. */
-  innerClassName?: string;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const near = useInView(ref, { margin: "100% 0px" });
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, dim, dim, 0]);
   // Slow push through the whole pass, so a held room never freezes
@@ -43,10 +52,11 @@ export function Scene({
 
   return (
     <section id={id} ref={ref} className={`relative scroll-mt-20 ${className}`}>
-      {photo && (
-        <motion.div aria-hidden="true" style={{ opacity }} className="pointer-events-none fixed inset-0 z-[1]">
+      {photo && near && (
+        <motion.div aria-hidden="true" style={{ opacity }} className="pointer-events-none fixed inset-0 z-[-1]">
           <motion.div style={{ scale }} className="absolute inset-0">
-            <Image src={photo} alt="" fill sizes="100vw" className="object-cover" />
+            {/* Under a 0.6-0.92 black scrim and a vignette, full quality is invisible. */}
+            <Image src={photo} alt="" fill sizes="100vw" quality={55} className="object-cover" />
           </motion.div>
           <div
             className="absolute inset-0"
@@ -61,7 +71,7 @@ export function Scene({
           />
         </motion.div>
       )}
-      <div className={`relative z-10 ${innerClassName}`}>{children}</div>
+      <div className="relative">{children}</div>
     </section>
   );
 }
