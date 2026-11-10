@@ -105,10 +105,10 @@ export function HomeV2() {
           a single band, and the answer lands in the same frame rather than a
           screen further down. */}
       <section id="network" className="relative scroll-mt-20 px-6 py-20 md:px-0 md:py-24">
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-6xl text-center">
           <Reveal>
             <h2
-              className="max-w-4xl text-[clamp(32px,6.4vw,76px)] font-black uppercase leading-[0.96] tracking-tight text-white"
+              className="mx-auto max-w-4xl text-[clamp(27px,4.8vw,56px)] font-black uppercase leading-[0.98] tracking-tight text-white"
               style={display}
             >
               {t("home_problem")}
@@ -117,7 +117,7 @@ export function HomeV2() {
 
           {/* The four symptoms as a thin stack: a headline each, the
               sentence on request. Four paragraphs at once was a wall. */}
-          <div className="mt-8 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 md:mt-10">
+          <div className="mx-auto mt-8 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 text-left md:mt-10">
             {PROBLEM_ITEMS.map((item, i) => (
               <Reveal key={item.titleKey} delay={0.08 + i * 0.07}>
                 <Symptom mark={PROBLEM_MARKS[i]} title={t(item.titleKey)} sentence={t(item.bodyKey)} defaultOpen={i === 0} />
@@ -129,17 +129,17 @@ export function HomeV2() {
               did, so the homepage says it the founding deck's way. */}
           <Reveal delay={0.2}>
             <div className="mt-14 md:mt-16">
-              <span className="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-infrared" style={supreme}>
+              <span className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.3em] text-infrared" style={supreme}>
                 <span className="h-px w-8 bg-current" aria-hidden="true" />
                 {t("home_solution_eyebrow")}
               </span>
               <h3
-                className="mt-5 max-w-4xl text-[clamp(28px,5.2vw,64px)] font-black uppercase leading-[0.98] tracking-tight text-white"
+                className="mx-auto mt-5 max-w-4xl text-[clamp(27px,4.8vw,56px)] font-black uppercase leading-[0.98] tracking-tight text-white"
                 style={display}
               >
                 {t("home_solution_lead")} <span className="text-infrared">{t("home_solution_accent")}</span>
               </h3>
-              <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={body}>
+              <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={body}>
                 {t("home_solution_body")}
               </p>
             </div>
@@ -173,10 +173,10 @@ export function HomeV2() {
 
       {/* ─────────────── what it takes, in five screens ─────────────── */}
       <section id="solutions" className="relative scroll-mt-20 px-6 pb-16 pt-14 md:px-0 md:pb-20 md:pt-16">
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-6xl text-center">
           <Reveal>
             <h2
-              className="max-w-3xl text-[clamp(28px,5vw,64px)] font-black uppercase leading-[0.98] tracking-tight text-white"
+              className="mx-auto max-w-3xl text-[clamp(25px,4.2vw,48px)] font-black uppercase leading-[1] tracking-tight text-white"
               style={display}
             >
               {t("home_solutions_title")}
@@ -206,7 +206,7 @@ export function HomeV2() {
         </Reveal>
         <Reveal delay={0.1}>
           <h2
-            className="mt-7 max-w-4xl text-[clamp(32px,6.4vw,84px)] font-black uppercase leading-[0.94] tracking-tight text-white"
+            className="mt-7 max-w-4xl text-[clamp(27px,4.8vw,56px)] font-black uppercase leading-[0.98] tracking-tight text-white"
             style={display}
           >
             {t("home_final_cta_title")}

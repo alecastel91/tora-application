@@ -225,15 +225,15 @@ function ProblemSolution() {
   const c = useC();
   return (
     <section id="problem" className="relative scroll-mt-20 px-6 py-20 md:px-10 md:py-24">
-      <div className="mx-auto w-full max-w-6xl">
-        <Reveal><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
+      <div className="mx-auto w-full max-w-6xl text-center">
+        <Reveal className="flex justify-center"><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
-          <h2 className="mt-5 max-w-3xl text-[clamp(28px,5vw,60px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
+          <h2 className="mx-auto mt-5 max-w-3xl text-[clamp(27px,4.8vw,56px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
             {c.problem.heading}
           </h2>
         </Reveal>
 
-        <div className="mt-9 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 md:mt-11">
+        <div className="mx-auto mt-9 max-w-3xl divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 text-left md:mt-11">
           {c.problem.items.map((p, i) => (
             <Reveal key={i} delay={0.08 + i * 0.07}>
               <Symptom mark={PROBLEM_MARKS[i]} title={p.title} sentence={p.body} defaultOpen={i === 0} />
@@ -243,12 +243,12 @@ function ProblemSolution() {
 
         <Reveal delay={0.16}>
           <div className="mt-14 md:mt-16">
-            <Eyebrow>{c.solution.eyebrow}</Eyebrow>
-            <h2 className="mt-5 max-w-4xl text-[clamp(28px,5.2vw,64px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
+            <div className="flex justify-center"><Eyebrow>{c.solution.eyebrow}</Eyebrow></div>
+            <h2 className="mx-auto mt-5 max-w-4xl text-[clamp(27px,4.8vw,56px)] font-black uppercase leading-[0.98] tracking-tight text-white" style={rajdhani}>
               {c.solution.headingLead}{" "}
               <span className="text-infrared">{c.solution.headingAccent}</span>
             </h2>
-            <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
+            <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
               {c.solution.body}
             </p>
           </div>
@@ -323,7 +323,7 @@ function RolePicker() {
         {selected === null ? (
           <motion.div key="picker"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}>
-            <div className="mx-auto w-full max-w-6xl px-6 md:px-0">
+            <div className="mx-auto w-full max-w-6xl px-6 text-center md:px-0">
               <p className="text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
             </div>
             {/* A swipe on a phone, a wall on a desktop — the roles cost one screen either way. */}
@@ -361,10 +361,10 @@ function Journey({ journey, heading }: { journey: JourneyStep[]; heading: string
   const { open } = useHomeDrawer();
   return (
     <section id="journey" className="relative scroll-mt-20 px-6 py-16 md:px-10 md:py-20">
-      <div className="mx-auto w-full max-w-6xl">
-        <Reveal><Eyebrow>{c.journey.eyebrow}</Eyebrow></Reveal>
+      <div className="mx-auto w-full max-w-6xl text-center">
+        <Reveal className="flex justify-center"><Eyebrow>{c.journey.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
-          <h2 className="mt-5 max-w-3xl text-[clamp(28px,5vw,60px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
+          <h2 className="mx-auto mt-5 max-w-3xl text-[clamp(25px,4.2vw,48px)] font-black uppercase leading-[1] tracking-tight text-white text-balance" style={rajdhani}>
             {heading}
           </h2>
         </Reveal>
@@ -388,7 +388,7 @@ function Door() {
     <section id="why" className="scroll-mt-20 px-6 pb-20 pt-16 text-center md:pt-20">
       <Reveal className="flex justify-center"><Eyebrow>{c.why.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(28px,5.2vw,64px)] font-black uppercase leading-[1.0] tracking-tight text-white" style={rajdhani}>
+        <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(25px,4.2vw,48px)] font-black uppercase leading-[1.02] tracking-tight text-white" style={rajdhani}>
           {c.why.headingLead}{" "}
           <span className="text-infrared">{c.why.headingAccent}</span>
         </h2>
@@ -402,7 +402,7 @@ function Door() {
       <div id="join" className="relative mt-16 scroll-mt-20 md:mt-20">
         <Reveal className="flex justify-center"><Eyebrow>{c.cta.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
-          <h2 className="mx-auto mt-6 max-w-3xl break-keep text-[clamp(30px,5.6vw,68px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
+          <h2 className="mx-auto mt-6 max-w-3xl break-keep text-[clamp(27px,4.8vw,56px)] font-black uppercase leading-[0.98] tracking-tight text-white" style={rajdhani}>
             {c.cta.headingLine1}<br />{c.cta.headingLine2}
           </h2>
         </Reveal>
