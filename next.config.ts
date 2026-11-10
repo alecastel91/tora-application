@@ -59,6 +59,9 @@ const nextConfig: NextConfig = {
       // Lean base link + old name both land on the default-language founding page.
       { source: "/founding", destination: "/founding/en", permanent: false },
       { source: "/foundingmembers", destination: "/founding/en", permanent: false },
+      // /v2 was the home-page proposal while it was read against the live
+      // one; it is the live one now, so the link keeps working.
+      { source: "/v2", destination: "/", permanent: false },
       // Beta cockpit moved: /admin autocompleted to /admin/beta in the browser.
       { source: "/admin/beta", destination: "/beta-admin", permanent: false },
 
