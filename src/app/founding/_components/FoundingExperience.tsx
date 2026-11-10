@@ -166,7 +166,7 @@ function Hero() {
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           transition={{ duration: 1, ease: EASE }}
         >
-          <Image src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[190px] md:w-[260px]" />
+          <Image unoptimized src="/tora_logo_transparent.png" alt="TORA" width={500} height={166} priority className="h-auto w-[190px] md:w-[260px]" />
         </motion.div>
 
         <motion.span
@@ -356,7 +356,7 @@ function RolePicker() {
   );
 }
 
-function Journey({ journey }: { journey: JourneyStep[] }) {
+function Journey({ journey, heading }: { journey: JourneyStep[]; heading: string }) {
   const c = useC();
   const { open } = useHomeDrawer();
   return (
@@ -365,7 +365,7 @@ function Journey({ journey }: { journey: JourneyStep[] }) {
         <Reveal><Eyebrow>{c.journey.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>
           <h2 className="mt-5 max-w-3xl text-[clamp(28px,5vw,60px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
-            {c.journey.heading}
+            {heading}
           </h2>
         </Reveal>
 
@@ -432,7 +432,7 @@ function Door() {
         </Reveal>
         <Reveal delay={0.26}>
           <div className="mt-16 flex flex-col items-center gap-4">
-            <Image src="/tora_logo_transparent.png" alt="TORA" width={400} height={133} className="h-auto w-[132px] opacity-90" />
+            <Image unoptimized src="/tora_logo_transparent.png" alt="TORA" width={400} height={133} className="h-auto w-[132px] opacity-90" />
             <span className="text-[11px] uppercase tracking-[0.4em] text-white/45" style={supreme}>{c.hero.footer}</span>
           </div>
         </Reveal>
@@ -472,7 +472,7 @@ function ChapterNav() {
 }
 
 
-export function FoundingExperience({ content, lang, journey }: { content: FoundingContent; lang: LangCode; journey: JourneyStep[] }) {
+export function FoundingExperience({ content, lang, journey, journeyHeading }: { content: FoundingContent; lang: LangCode; journey: JourneyStep[]; journeyHeading: string }) {
   const { map, labels } = buildDrawer(content);
   return (
     <Cx.Provider value={content}>
@@ -486,7 +486,7 @@ export function FoundingExperience({ content, lang, journey }: { content: Foundi
           <Hero />
           <ProblemSolution />
           <RolePicker />
-          <Journey journey={journey} />
+          <Journey journey={journey} heading={journeyHeading} />
           <Door />
         </main>
       </HomeDrawerProvider>

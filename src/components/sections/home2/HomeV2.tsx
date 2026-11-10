@@ -62,7 +62,12 @@ export function HomeV2() {
           transition={{ duration: 1, ease: EASE }}
           className="flex flex-col items-center"
         >
+          {/* Straight from /public: a 25KB wordmark is smaller than the
+              optimizer's round trip, and routing it through next/image is what
+              made it vanish — the optimizer hangs on this PNG at w=640 and
+              above, so the request never came back. */}
           <Image
+            unoptimized
             src="/tora_logo_transparent.png"
             alt="TORA"
             width={500}

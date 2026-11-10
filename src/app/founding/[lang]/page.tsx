@@ -82,10 +82,11 @@ export default async function FoundingLangPage({
     title: cat[title],
     body: cat[body],
   }));
+  const journeyHeading = cat.home_solutions_title;
 
   return (
     <LenisProvider>
-      <FoundingExperience content={content} lang={lang as LangCode} journey={journey} />
+      <FoundingExperience content={content} lang={lang as LangCode} journey={journey} journeyHeading={journeyHeading} />
     </LenisProvider>
   );
 }
