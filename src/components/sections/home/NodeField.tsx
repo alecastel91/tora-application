@@ -28,8 +28,12 @@ const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
  *
  * Fixed full-viewport <canvas>. On mobile / reduced motion it stays a static
  * globe (the sections use their own grid/stack fallbacks, no morph).
+ *
+ * `settled` skips the narrative entirely and holds the assembled globe from the
+ * first frame — for a page whose hero stands inside the sphere rather than
+ * above it.
  */
-export function NodeField() {
+export function NodeField({ settled = false }: { settled?: boolean } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -139,7 +143,7 @@ export function NodeField() {
       // network") reaches centre. Static globe under reduced motion.
       let reveal = 1;
       let intro = 1;
-      if (!reduced) {
+      if (!reduced && !settled) {
         const r = document.getElementById("network")?.getBoundingClientRect();
         if (r) {
           reveal = easeInOut(clamp01((height * 0.85 - r.top) / (height * 0.5)));
@@ -266,7 +270,7 @@ export function NodeField() {
       window.removeEventListener("resize", resize);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [reduced, morphEnabled]);
+  }, [reduced, morphEnabled, settled]);
 
   return (
     <canvas

@@ -12,10 +12,12 @@ import { HomeV2 } from "@/components/sections/home2/HomeV2";
 /**
  * Home, restructured — one uninterrupted descent instead of six pinned beats.
  *
- * The globe layers are the same ones the live home page uses. Each Scene below
- * covers them with its own room while it is on screen, so the rooms cross-fade
- * into one another as you descend and the globe is left exposed at the top, at
- * the turn, and on the way out. There are no cards and no role icons anywhere:
+ * The globe layers are the same ones the live home page uses, but settled: the
+ * wordmark stands in the middle of the sphere from the first frame instead of
+ * the nodes assembling on the way down. Each Scene below covers them with its
+ * own room while it is on screen, so the rooms cross-fade into one another as
+ * you descend and the globe is left exposed at the top, at the turn, and on the
+ * way out. There are no cards and no role icons anywhere:
  * where a photograph carries the role, an icon of the role on top of it is
  * saying the same thing twice.
  *
@@ -27,7 +29,7 @@ export default function HomeV2Page() {
       <HomeNav />
       <ParallaxBackdrop />
       <WaveMesh />
-      <NodeField />
+      <NodeField settled />
       <ScrollThread />
       <HomeV2 />
       <BottomNav />

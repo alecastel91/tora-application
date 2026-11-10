@@ -177,43 +177,35 @@ export function Symptom({
   );
 }
 
-/** The row of five stands in an arc, highest in the middle, and drifts
- *  hardest there. */
-export const ARC = [
-  { drift: 22, lift: 0 },
-  { drift: 32, lift: -18 },
-  { drift: 44, lift: -30 },
-  { drift: 32, lift: -18 },
-  { drift: 22, lift: 0 },
-] as const;
+/** The row drifts as one. It used to stand in an arc, highest in the middle,
+ *  which left five screenshots of the same app at five different heights —
+ *  the shapes read as misalignment rather than as a shape. */
+const ROW_DRIFT = 26;
 
 /**
  * One app screen in a phone frame, drifting at its own speed as the section
  * passes. The drift is what keeps five static PNGs from reading as a product
- * sheet; `lift` raises the middle phone so the row has a shape, and rides
- * inside the same transform — as a margin it pushed the caption down with it
- * and the captions lost their shared line.
+ * sheet, and it rides inside the transform — as a margin it pushed the caption
+ * down with it and the captions lost their shared line.
  *
  * With `onOpen` the frame is the tap target for that screen's drawer.
  */
 export function PhoneScreen({
   src,
   drift,
-  lift = 0,
   priority = false,
   onOpen,
   label,
 }: {
   src: string;
   drift: number;
-  lift?: number;
   priority?: boolean;
   onOpen?: () => void;
   label?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [drift + lift, -drift + lift]);
+  const y = useTransform(scrollYProgress, [0, 1], [drift, -drift]);
 
   const frame = (
     <Image
@@ -310,8 +302,7 @@ export function ScreenStrip({
         <div key={item.shot} className="flex shrink-0 snap-center flex-col items-start md:shrink">
           <PhoneScreen
             src={item.shot}
-            drift={ARC[i].drift}
-            lift={ARC[i].lift}
+            drift={ROW_DRIFT}
             label={item.title}
             onOpen={onOpen ? () => onOpen(i) : undefined}
           />

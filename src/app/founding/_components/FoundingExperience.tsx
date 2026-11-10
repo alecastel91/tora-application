@@ -355,7 +355,7 @@ function Journey({ journey }: { journey: JourneyStep[] }) {
   const c = useC();
   const { open } = useHomeDrawer();
   return (
-    <Scene id="journey" photo="/home/v2/room-close.jpg" dim={0.38} className="px-6 py-16 md:px-10 md:py-20">
+    <Scene id="journey" photo="/home/v2/room-venue.jpg" dim={0.38} className="px-6 py-16 md:px-10 md:py-20">
       <div className="mx-auto w-full max-w-6xl">
         <Reveal><Eyebrow>{c.journey.eyebrow}</Eyebrow></Reveal>
         <Reveal delay={0.05}>

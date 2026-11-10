@@ -69,7 +69,7 @@ export function HomeV2() {
             width={500}
             height={166}
             priority
-            className="h-auto w-[270px] object-contain md:w-[420px]"
+            className="h-auto w-[190px] object-contain md:w-[260px]"
           />
           <span className="mt-3 text-[12px] uppercase tracking-[0.3em] text-white md:text-[14px]" style={supreme}>
             {t("where_music_meets")}
@@ -175,7 +175,7 @@ export function HomeV2() {
       </section>
 
       {/* ─────────────── what it takes, in five screens ─────────────── */}
-      <Scene id="solutions" photo="/home/v2/room-close.jpg" dim={0.38} className="px-6 pb-16 pt-20 md:px-16 md:pb-20 md:pt-28">
+      <Scene id="solutions" photo="/home/v2/room-venue.jpg" dim={0.38} className="px-6 pb-16 pt-20 md:px-16 md:pb-20 md:pt-28">
         <div className="mx-auto w-full max-w-6xl">
           <Reveal>
             <h2
