@@ -10,6 +10,7 @@ import {
   DRAWER_CONTENT,
   type DrawerItem,
 } from "@/components/sections/home/HomeDrawer";
+import { Scene } from "@/components/sections/home2/Scene";
 import { FoundingBackdrop } from "./FoundingBackdrop";
 import { LangMenu } from "./LangMenu";
 import {
@@ -18,7 +19,6 @@ import {
   ROLE,
   ScrollInsidePhone,
   ScrollProgress,
-  Section,
   EASE,
   grotesk,
   rajdhani,
@@ -91,6 +91,58 @@ const DEEPDIVE_META = [
 
 const JOURNEY_IDS = ["discover", "connect", "offer", "contract", "confirmed"] as const;
 
+/** The screen each step of the run actually shows, in the drawer's own order. */
+const JOURNEY_SHOTS = [
+  "/home/discover.png",
+  "/home/connect.png",
+  "/home/offer.png",
+  "/home/contract.png",
+  "/home/book.png",
+] as const;
+
+/** The row stands in an arc, highest in the middle, and drifts hardest there. */
+const ARC = [
+  { drift: 22, lift: 0 },
+  { drift: 32, lift: -18 },
+  { drift: 44, lift: -30 },
+  { drift: 32, lift: -18 },
+  { drift: 22, lift: 0 },
+] as const;
+
+/** The homepage's role photographs — the same four faces /roles carries. */
+const ROLE_FACE = [
+  "/home/v2/face-artist.jpg",
+  "/home/v2/face-agent.jpg",
+  "/home/v2/face-promoter.jpg",
+  "/home/v2/face-venue.jpg",
+] as const;
+
+/** One mark per symptom: a calendar with nothing in it, a cost curve nobody
+ *  else carries, a closed door, two nodes that never meet. Drawn here rather
+ *  than imported so the four stay a set. */
+const PROBLEM_MARKS = [
+  <>
+    <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
+    <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+    <path d="M9 14.5l6 4M15 14.5l-6 4" />
+  </>,
+  <>
+    <path d="M3 19.5h18" />
+    <path d="M4 16l5-5 3.5 3.5L20 7" />
+    <path d="M15.5 7H20v4.5" />
+  </>,
+  <>
+    <rect x="5" y="3.5" width="14" height="17" rx="2" />
+    <path d="M15 12h.01" />
+    <path d="M9.5 8.5V7a2.5 2.5 0 0 1 5 0v1.5" opacity="0.55" />
+  </>,
+  <>
+    <circle cx="6" cy="7" r="2.6" />
+    <circle cx="18" cy="17" r="2.6" />
+    <path d="M8.3 8.9l2.4 2.4M13.3 13.9l2.4 2.4" />
+  </>,
+];
+
 /* Line icons in the /features language — ghost-white base, one infrared accent. */
 const IconBell = (
   <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
@@ -148,6 +200,33 @@ function Bullet({ text, color }: { text: string; color: string }) {
       </svg>
       <span className="text-white/70 text-[15px] leading-relaxed">{text}</span>
     </li>
+  );
+}
+
+/**
+ * One app screen in a phone frame, drifting at its own speed as the section
+ * passes, and tappable: it opens that step's drawer. The drift is what keeps
+ * five static PNGs from reading as a product sheet; `lift` raises the middle
+ * phone so the row has a shape, and rides inside the same transform — as a
+ * margin it pushed the caption down with it and the captions lost their line.
+ */
+function StepPhone({ src, drift, lift = 0, label, onOpen }: { src: string; drift: number; lift?: number; label: string; onOpen: () => void; }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [drift + lift, -drift + lift]);
+  return (
+    <div ref={ref} className="shrink-0">
+      <motion.button
+        type="button"
+        onClick={onOpen}
+        aria-label={label}
+        style={{ y }}
+        className="group relative block w-[64vw] max-w-[260px] rounded-[2rem] border border-white/10 bg-black p-1.5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] transition-colors hover:border-infrared/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infrared/70 md:w-[clamp(126px,13.4vw,196px)]"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt="" aria-hidden="true" loading="lazy" className="block h-auto w-full rounded-[1.6rem]" />
+      </motion.button>
+    </div>
   );
 }
 
@@ -216,52 +295,52 @@ function Hero() {
   );
 }
 
-/* Problem flowing directly into Solution, one continuous argument. */
+
+/* The problem and the turn out of it, in ONE room.
+   They were two screens with a hundred-pixel gap between them, and the four
+   symptoms were an unmarked 2x2 of text. Each symptom now carries a mark, the
+   four stand in one band, and the answer lands in the same frame. */
 function ProblemSolution() {
   const c = useC();
   return (
-    <Section id="problem">
-      <Reveal><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
-      <Reveal delay={0.05}>
-        <h2 className="mt-5 max-w-2xl text-3xl font-black uppercase leading-[1.05] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-          {c.problem.heading}
-        </h2>
-      </Reveal>
+    <Scene photo="/home/v2/room-open.jpg" className="px-6 py-20 md:px-10 md:py-24">
+      <div id="problem" className="absolute -top-24" />
+      <div className="mx-auto w-full max-w-6xl">
+        <Reveal><Eyebrow>{c.problem.eyebrow}</Eyebrow></Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="mt-5 max-w-3xl text-[clamp(30px,5.4vw,64px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
+            {c.problem.heading}
+          </h2>
+        </Reveal>
 
-      <div className="mt-14 grid gap-x-10 gap-y-12 md:grid-cols-2">
-        {c.problem.items.map((p, i) => (
-          <Reveal key={i} delay={i * 0.06}>
-            <motion.div
-              className="border-t border-white/10 pt-5 transition-colors"
-              whileHover={{ borderColor: "rgba(255,51,102,0.5)" }}
-            >
-              <span className="text-2xl font-black text-infrared" style={rajdhani}>{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-2 text-lg font-semibold text-white" style={supreme}>{p.title}</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-white/55" style={grotesk}>{p.body}</p>
-            </motion.div>
-          </Reveal>
-        ))}
-      </div>
-
-      <Reveal delay={0.1}>
-        <div className="mx-auto mt-24 flex flex-col items-center">
-          <span className="h-16 w-px bg-gradient-to-b from-transparent to-infrared/60" />
-          <div className="mt-8 flex justify-center"><Eyebrow>{c.solution.eyebrow}</Eyebrow></div>
+        <div className="mt-9 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:mt-11 md:grid-cols-4">
+          {c.problem.items.map((p, i) => (
+            <Reveal key={i} delay={0.08 + i * 0.07}>
+              <div className="flex h-full flex-col gap-3 bg-black/55 px-5 py-5 backdrop-blur-sm md:px-5 md:py-6">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0 text-infrared">
+                  {PROBLEM_MARKS[i]}
+                </svg>
+                <h3 className="text-[15px] font-semibold leading-snug text-white" style={supreme}>{p.title}</h3>
+                <p className="text-[13.5px] leading-relaxed text-white/55" style={grotesk}>{p.body}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
-      </Reveal>
-      <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-6 max-w-4xl text-center text-4xl font-black uppercase leading-[1.02] tracking-tight text-white md:text-7xl" style={rajdhani}>
-          {c.solution.headingLead}{" "}
-          <span className="text-infrared">{c.solution.headingAccent}</span>
-        </h2>
-      </Reveal>
-      <Reveal delay={0.12}>
-        <p className="mx-auto mt-8 max-w-2xl text-center text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
-          {c.solution.body}
-        </p>
-      </Reveal>
-      <RolePicker />
-    </Section>
+
+        <Reveal delay={0.16}>
+          <div className="mt-14 md:mt-16">
+            <Eyebrow>{c.solution.eyebrow}</Eyebrow>
+            <h2 className="mt-5 max-w-4xl text-[clamp(32px,6vw,76px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
+              {c.solution.headingLead}{" "}
+              <span className="text-infrared">{c.solution.headingAccent}</span>
+            </h2>
+            <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
+              {c.solution.body}
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </Scene>
   );
 }
 
@@ -309,6 +388,10 @@ function RoleDetail({ index, onPick, onBack, reduce }: { index: number; onPick: 
   );
 }
 
+
+/* The four, as four people. The icon-in-a-ring tiles made four different
+   trades read as four instances of one thing; the photograph says who the
+   role is for before the sentence does. Tapping still opens the deep-dive. */
 function RolePicker() {
   const c = useC();
   const reduce = useReducedMotion();
@@ -321,36 +404,49 @@ function RolePicker() {
     if (i >= 0) setSelected(i);
   }, []);
   return (
-    <div className="mt-14 md:mt-16">
+    <section id="roles" className="relative z-10 scroll-mt-20 py-12 md:py-16">
       <AnimatePresence mode="wait" initial={false}>
         {selected === null ? (
           <motion.div key="picker"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? { opacity: 0 } : { opacity: 0, y: -16 }} transition={{ duration: 0.4, ease: EASE }}>
-            <p className="mb-8 text-center text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
-            <div className="grid gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-4">
+            <div className="mx-auto w-full max-w-6xl px-6">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-white/45" style={supreme}>{c.solution.chooseRole}</p>
+            </div>
+            {/* A swipe on a phone, a wall on a desktop — the roles cost one screen either way. */}
+            <div className="mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-auto md:max-w-6xl md:grid md:grid-cols-4 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden">
               {ROLE_META.map((r, i) => (
-                <button key={r.id} onClick={() => setSelected(i)}
-                  className="group flex flex-row items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.04] md:flex-col md:items-center md:gap-5 md:px-6 md:py-10 md:text-center">
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl transition-transform group-hover:scale-105 [&_svg]:h-8 [&_svg]:w-8 md:h-24 md:w-24 md:[&_svg]:h-12 md:[&_svg]:w-12" style={{ background: `${r.color}18`, border: `1px solid ${r.color}55` }}>
-                    {r.icon(r.color)}
-                  </span>
-                  <div className="flex min-w-0 flex-1 flex-col items-start md:items-center">
-                    <span className="text-lg font-bold uppercase tracking-wide md:text-xl" style={{ ...rajdhani, color: r.color }}>{ROLE_LABELS[i]}</span>
-                    <span className="mt-1 text-[13px] leading-relaxed text-white/45 md:max-w-[16rem]" style={grotesk}>{c.roles[i].body}</span>
-                    <span className="mt-2 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/35 transition-colors group-hover:text-white/70 md:mt-3" style={supreme}>
-                      {c.solution.tapToExplore}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-                    </span>
-                  </div>
-                </button>
+                <div key={r.id} className="shrink-0 snap-center md:shrink">
+                  <button type="button" onClick={() => setSelected(i)}
+                    className="group relative block h-[58vh] w-[74vw] overflow-hidden rounded-2xl border border-white/10 text-left md:h-[54vh] md:w-full">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={ROLE_FACE[i]} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.05]" />
+                    <div className="absolute inset-0 mix-blend-color" style={{ background: r.color, opacity: 0.22 }} />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.45) 48%, rgba(10,10,10,0.95) 100%)" }} />
+                    <span className="absolute left-0 top-0 h-1 w-full" style={{ background: r.color }} />
+                    <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
+                      <h3 className="text-[clamp(28px,4.4vw,40px)] font-black uppercase leading-[0.9] tracking-tight" style={{ ...rajdhani, color: r.color }}>
+                        {ROLE_LABELS[i]}
+                      </h3>
+                      <p className="mt-3 min-h-[4.6em] text-[13px] leading-relaxed text-white/70 md:min-h-[5.8em] md:text-sm" style={grotesk}>
+                        {c.roles[i].body}
+                      </p>
+                      <span className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-white/45 transition-colors group-hover:text-white" style={supreme}>
+                        {c.solution.tapToExplore}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                      </span>
+                    </div>
+                  </button>
+                </div>
               ))}
             </div>
           </motion.div>
         ) : (
-          <RoleDetail key={"detail-" + selected} index={selected} onPick={setSelected} onBack={() => setSelected(null)} reduce={reduce} />
+          <div className="mx-auto w-full max-w-6xl px-6">
+            <RoleDetail key={"detail-" + selected} index={selected} onPick={setSelected} onBack={() => setSelected(null)} reduce={reduce} />
+          </div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 }
 
@@ -383,127 +479,126 @@ function ExploreTile({ n, icon, title, body, onOpen }: { n?: string; icon?: Reac
   );
 }
 
+
+/* The run, in five real screens, with touring in the same room.
+   Five numbered cards described the app; five screens show it. Each phone is
+   still the tap target that opens that step's drawer. */
 function Journey() {
   const c = useC();
   const { open } = useHomeDrawer();
   return (
-    <Section id="journey">
-      <Reveal className="text-center"><div className="flex justify-center"><Eyebrow>{c.journey.eyebrow}</Eyebrow></div></Reveal>
-      <Reveal delay={0.05}>
-        <h2 className="mt-5 text-center text-3xl font-black uppercase leading-[1.05] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-          {c.journey.heading}
-        </h2>
-      </Reveal>
-      <div className="mt-16 grid gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-5">
-        {c.journey.steps.map((s, i) => (
-          <Reveal key={i} delay={i * 0.06}>
-            <ExploreTile n={String(i + 1)} title={s.title} body={s.body} onOpen={() => open(JOURNEY_IDS[i])} />
-          </Reveal>
-        ))}
+    <Scene photo="/home/v2/room-close.jpg" dim={0.38} className="px-6 py-16 md:px-10 md:py-20">
+      <div id="journey" className="absolute -top-24" />
+      <div className="mx-auto w-full max-w-6xl">
+        <Reveal><Eyebrow>{c.journey.eyebrow}</Eyebrow></Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="mt-5 max-w-3xl text-[clamp(28px,5vw,60px)] font-black uppercase leading-[0.98] tracking-tight text-white text-balance" style={rajdhani}>
+            {c.journey.heading}
+          </h2>
+        </Reveal>
+
+        <div className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-12 md:justify-center md:gap-6 md:overflow-visible md:pb-0 lg:gap-8 [&::-webkit-scrollbar]:hidden">
+          {c.journey.steps.map((s, i) => (
+            <div key={i} className="flex shrink-0 snap-center flex-col items-start md:shrink">
+              <StepPhone src={JOURNEY_SHOTS[i]} drift={ARC[i].drift} lift={ARC[i].lift} label={s.title} onOpen={() => open(JOURNEY_IDS[i])} />
+              <div className="mt-5 w-[64vw] max-w-[260px] md:w-[clamp(126px,13.4vw,196px)]">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[10px] text-infrared" style={{ ...supreme, fontVariantNumeric: "tabular-nums" }}>{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="text-[17px] font-black uppercase leading-[1.05] tracking-tight text-white md:min-h-[2.2em] md:text-base lg:text-lg" style={rajdhani}>
+                    {s.title}
+                  </h3>
+                </div>
+                <p className="mt-2 text-[13px] leading-relaxed text-white/55 md:text-[12px] lg:text-[13px]" style={grotesk}>{s.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Touring was a section of its own with one heading and two cards in
+            it; it belongs to the same run, so it lands in the same room. */}
+        <div id="touring" className="mt-14 border-t border-white/10 pt-12 md:mt-16">
+          <Reveal><Eyebrow>{c.touring.eyebrow}</Eyebrow></Reveal>
+          <div className="mt-5 grid gap-8 md:grid-cols-2 md:items-start md:gap-12">
+            <Reveal delay={0.05}>
+              <h2 className="text-[clamp(26px,4.2vw,48px)] font-black uppercase leading-[1.02] tracking-tight text-white text-balance" style={rajdhani}>
+                {c.touring.heading}
+              </h2>
+              <p className="mt-5 text-[15px] leading-relaxed text-white/60" style={grotesk}>{c.touring.body}</p>
+            </Reveal>
+            <div className="grid gap-3 md:gap-4">
+              {c.touring.tiles.map((t, i) => (
+                <Reveal key={i} delay={0.08 + i * 0.08}>
+                  <ExploreTile icon={TOURING_META[i].icon} title={t.title} body={t.body} onOpen={() => open(TOURING_META[i].id)} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    </Section>
+    </Scene>
   );
 }
 
-function Touring() {
-  const c = useC();
-  const { open } = useHomeDrawer();
-  return (
-    <Section id="touring">
-      <Reveal><Eyebrow>{c.touring.eyebrow}</Eyebrow></Reveal>
-      <Reveal delay={0.05}>
-        <h2 className="mt-5 max-w-2xl text-3xl font-black uppercase leading-[1.03] tracking-tight text-white text-balance md:text-5xl" style={rajdhani}>
-          {c.touring.heading}
-        </h2>
-      </Reveal>
-      <Reveal delay={0.1}>
-        <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-white/60 md:text-base" style={grotesk}>
-          {c.touring.body}
-        </p>
-      </Reveal>
-      <div className="mt-14 grid gap-3 md:grid-cols-2 md:gap-5">
-        {c.touring.tiles.map((t, i) => (
-          <Reveal key={i} delay={i * 0.08}>
-            <ExploreTile icon={TOURING_META[i].icon} title={t.title} body={t.body} onOpen={() => open(TOURING_META[i].id)} />
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
 
-function WhyTora() {
+/* The door — why, the invitation and the sign-off in one frame.
+   They were three sections, each with its own full padding, saying one thing:
+   this is who it is for, and here is the way in. */
+function Door() {
   const c = useC();
   return (
-    <Section id="why" className="text-center">
+    <section className="relative z-10 px-6 pb-20 pt-16 text-center md:pt-20">
+      <div id="why" className="absolute -top-24" />
       <Reveal className="flex justify-center"><Eyebrow>{c.why.eyebrow}</Eyebrow></Reveal>
       <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-6 max-w-4xl text-4xl font-black uppercase leading-[1.02] tracking-tight text-white md:text-6xl" style={rajdhani}>
+        <h2 className="mx-auto mt-6 max-w-4xl text-[clamp(32px,5.6vw,68px)] font-black uppercase leading-[1.0] tracking-tight text-white" style={rajdhani}>
           {c.why.headingLead}{" "}
           <span className="text-infrared">{c.why.headingAccent}</span>
         </h2>
       </Reveal>
       <Reveal delay={0.12}>
-        <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
+        <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
           {c.why.body}
         </p>
       </Reveal>
-    </Section>
-  );
-}
 
-function FoundingCTA() {
-  const c = useC();
-  return (
-    <Section id="join" className="text-center">
-      <Reveal className="flex justify-center"><Eyebrow>{c.cta.eyebrow}</Eyebrow></Reveal>
-      <Reveal delay={0.05}>
-        <h2 className="mx-auto mt-6 max-w-3xl break-keep text-4xl font-black uppercase leading-[1.0] tracking-tight text-white md:text-7xl" style={rajdhani}>
-          {c.cta.headingLine1}<br />{c.cta.headingLine2}
-        </h2>
-      </Reveal>
-      <Reveal delay={0.12}>
-        <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg" style={grotesk}>
-          {c.cta.body}
-        </p>
-      </Reveal>
-      <div className="mx-auto mt-12 grid max-w-3xl gap-5 md:grid-cols-2">
-        {c.cta.cards.map((f, i) => (
-          <Reveal key={i} delay={i * 0.08}>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left" style={{ borderTop: `2px solid ${INFRARED}` }}>
-              <h3 className="text-base font-semibold text-white" style={supreme}>{f.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/55" style={grotesk}>{f.body}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-      <Reveal delay={0.16}>
-        <p className="mx-auto mt-9 max-w-2xl text-sm leading-relaxed text-white/50" style={grotesk}>
-          {c.cta.pricingNote}
-        </p>
-      </Reveal>
-      <Reveal delay={0.2}>
-        <div className="mt-10 flex flex-col items-center gap-4">
-          <Link href={useApplyHref()} className="rounded-full bg-infrared px-10 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(255,51,102,0.55)] hover:brightness-110" style={supreme}>
-            {c.cta.button}
-          </Link>
-          <span className="text-sm text-white/45" style={grotesk}>{c.cta.foot}</span>
+      <div id="join" className="relative mt-16 scroll-mt-20 md:mt-20">
+        <Reveal className="flex justify-center"><Eyebrow>{c.cta.eyebrow}</Eyebrow></Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="mx-auto mt-6 max-w-3xl break-keep text-[clamp(34px,6.2vw,80px)] font-black uppercase leading-[0.96] tracking-tight text-white" style={rajdhani}>
+            {c.cta.headingLine1}<br />{c.cta.headingLine2}
+          </h2>
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60" style={grotesk}>{c.cta.body}</p>
+        </Reveal>
+        <div className="mx-auto mt-10 grid max-w-3xl gap-4 md:grid-cols-2">
+          {c.cta.cards.map((f, i) => (
+            <Reveal key={i} delay={i * 0.08}>
+              <div className="h-full rounded-2xl border border-white/10 bg-black/40 p-6 text-left backdrop-blur-sm" style={{ borderTop: `2px solid ${INFRARED}` }}>
+                <h3 className="text-base font-semibold text-white" style={supreme}>{f.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/55" style={grotesk}>{f.body}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
-      </Reveal>
-    </Section>
-  );
-}
-
-function Closing() {
-  const c = useC();
-  return (
-    <section className="flex flex-col items-center justify-center gap-6 px-6 py-28 text-center">
-      <Reveal>
-        <Image src="/tora_logo_transparent.png" alt="TORA" width={400} height={133} className="h-auto w-[150px] opacity-90" />
-      </Reveal>
-      <Reveal delay={0.08}>
-        <span className="text-[11px] uppercase tracking-[0.4em] text-white/45" style={supreme}>{c.hero.footer}</span>
-      </Reveal>
+        <Reveal delay={0.16}>
+          <p className="mx-auto mt-8 max-w-2xl text-sm leading-relaxed text-white/50" style={grotesk}>{c.cta.pricingNote}</p>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <div className="mt-9 flex flex-col items-center gap-4">
+            <Link href={useApplyHref()} className="rounded-full bg-infrared px-10 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(255,51,102,0.55)] hover:brightness-110" style={supreme}>
+              {c.cta.button}
+            </Link>
+            <span className="text-sm text-white/45" style={grotesk}>{c.cta.foot}</span>
+          </div>
+        </Reveal>
+        <Reveal delay={0.26}>
+          <div className="mt-16 flex flex-col items-center gap-4">
+            <Image src="/tora_logo_transparent.png" alt="TORA" width={400} height={133} className="h-auto w-[132px] opacity-90" />
+            <span className="text-[11px] uppercase tracking-[0.4em] text-white/45" style={supreme}>{c.hero.footer}</span>
+          </div>
+        </Reveal>
+      </div>
     </section>
   );
 }
@@ -539,6 +634,7 @@ function ChapterNav() {
   );
 }
 
+
 export function FoundingExperience({ content, lang }: { content: FoundingContent; lang: LangCode }) {
   const { map, labels } = buildDrawer(content);
   return (
@@ -552,11 +648,9 @@ export function FoundingExperience({ content, lang }: { content: FoundingContent
           <FoundingBackdrop />
           <Hero />
           <ProblemSolution />
+          <RolePicker />
           <Journey />
-          <Touring />
-          <WhyTora />
-          <FoundingCTA />
-          <Closing />
+          <Door />
         </main>
       </HomeDrawerProvider>
       </LangCx.Provider>
