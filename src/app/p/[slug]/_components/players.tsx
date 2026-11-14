@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { MediaItem } from "@/lib/publicProfile";
 import { PROVIDER_LABEL } from "@/lib/publicProfile";
+import { useLabels } from "./i18n";
 
 /* The interactive bits of a public artist page: the sets mini-player, videos
    that play where their preview is, and Copy link. Player rules mirror the
@@ -62,6 +63,7 @@ const Art = ({ src, label, className }: { src?: string | null; label: string; cl
 
 /** Sets: a swipe row on the phone, a grid on desktop; one player bar at the bottom. */
 export function SetsGrid({ sets }: { sets: MediaItem[] }) {
+  const { t } = useLabels();
   const [playing, setPlaying] = useState<MediaItem | null>(null);
   const src = playing ? playerUrl(playing) : null;
 
@@ -78,7 +80,7 @@ export function SetsGrid({ sets }: { sets: MediaItem[] }) {
         {sets.map((s) => {
           const label = PROVIDER_LABEL[s.provider] || s.provider;
           return (
-            <button key={s.url} type="button" onClick={() => setPlaying(s)} className="group w-[200px] shrink-0 text-left md:w-auto">
+            <button key={s.url} type="button" onClick={() => setPlaying(s)} aria-label={`${t.play}: ${s.title || label}`} className="group w-[200px] shrink-0 text-left md:w-auto">
               <span className="relative block">
                 <Art src={s.image} label={label} className="aspect-square w-full rounded-[10px] border border-[#23232c]" />
                 <span className="absolute bottom-2.5 right-2.5 flex h-10 w-10 items-center justify-center rounded-full bg-[#FF3366] text-white transition-transform group-hover:scale-105">
@@ -98,7 +100,7 @@ export function SetsGrid({ sets }: { sets: MediaItem[] }) {
             <a href={playing.url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-[11px] text-white/50 hover:text-white">
               {PROVIDER_LABEL[playing.provider]} ↗
             </a>
-            <button type="button" onClick={() => setPlaying(null)} aria-label="Close player" className="flex h-8 w-8 items-center justify-center text-[#8A8A99] hover:text-white">
+            <button type="button" onClick={() => setPlaying(null)} aria-label={t.closePlayer} className="flex h-8 w-8 items-center justify-center text-[#8A8A99] hover:text-white">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
             </button>
           </div>
@@ -111,6 +113,7 @@ export function SetsGrid({ sets }: { sets: MediaItem[] }) {
 
 /** Videos play right where their preview is, with the provider's own controls. */
 export function VideosGrid({ videos }: { videos: MediaItem[] }) {
+  const { t } = useLabels();
   const [playing, setPlaying] = useState<string | null>(null);
   return (
     <div className="pp-scroller -mx-5 flex gap-3 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0">
@@ -129,7 +132,7 @@ export function VideosGrid({ videos }: { videos: MediaItem[] }) {
                 <span className="absolute inset-0 m-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#FF3366] text-white transition-transform group-hover:scale-105">
                   <PlayGlyph />
                 </span>
-                <span className="sr-only">Play {v.title || label}</span>
+                <span className="sr-only">{t.play}: {v.title || label}</span>
               </button>
             )}
             <span className="mt-2 block truncate text-sm font-semibold text-[#F4F4F6]">{v.title || label}</span>
@@ -141,6 +144,7 @@ export function VideosGrid({ videos }: { videos: MediaItem[] }) {
 }
 
 export function CopyLinkButton({ url }: { url: string }) {
+  const { t } = useLabels();
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -148,7 +152,7 @@ export function CopyLinkButton({ url }: { url: string }) {
     } catch {
       // Clipboard blocked (old browser, insecure context): fall back to the share sheet or a prompt.
       if (navigator.share) { navigator.share({ url }).catch(() => {}); return; }
-      window.prompt("Copy this link", url);
+      window.prompt(t.copyPrompt, url);
       return;
     }
     setCopied(true);
@@ -159,7 +163,7 @@ export function CopyLinkButton({ url }: { url: string }) {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
       </svg>
-      <span aria-live="polite">{copied ? "Copied" : "Copy link"}</span>
+      <span aria-live="polite">{copied ? t.copied : t.copyLink}</span>
     </button>
   );
 }

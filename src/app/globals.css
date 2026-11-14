@@ -295,3 +295,5 @@
 /* Public artist pages: swipe rows without a scrollbar on touch. */
 .pp-scroller { scrollbar-width: none; }
 .pp-scroller::-webkit-scrollbar { display: none; }
+/* Wide label tracking reads as gaps in Japanese, Chinese and Korean. */
+html:lang(ja) .pp-label, html:lang(zh) .pp-label, html:lang(ko) .pp-label { letter-spacing: 0.04em; }

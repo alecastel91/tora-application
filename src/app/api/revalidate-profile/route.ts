@@ -8,11 +8,12 @@ import { cleanSlug } from "@/lib/publicProfile";
  *
  * Called by tora-backend (utils/publicRevalidate.js) after a member saves,
  * publishes, unpublishes or renames their public page, so torahub.io/@slug
- * shows the change at once instead of after its cache window. Same secret on
- * both sides: PUBLIC_REVALIDATE_SECRET.
+ * shows the change at once instead of after its cache window. The same
+ * value on both sides: PUBLIC_REVALIDATE_SECRET on the backend, PROFILE_REVALIDATE_SECRET
+ * here (Vercel refuses to keep a PUBLIC_-prefixed variable as a secret).
  */
 export async function POST(request: NextRequest) {
-  const secret = process.env.PUBLIC_REVALIDATE_SECRET || "";
+  const secret = process.env.PROFILE_REVALIDATE_SECRET || "";
   const given = request.headers.get("x-revalidate-secret") || "";
   const ok = secret.length > 0 && given.length === secret.length
     && timingSafeEqual(Buffer.from(given), Buffer.from(secret));

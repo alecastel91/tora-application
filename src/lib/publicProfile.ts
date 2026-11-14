@@ -94,9 +94,6 @@ export const PROVIDER_LABEL: Record<string, string> = {
 export const STORE_LABEL: Record<string, string> = {
   bandcamp: "Bandcamp", spotify: "Spotify", beatport: "Beatport", soundcloud: "SoundCloud",
 };
-export const PLAY_LABEL: Record<string, string> = {
-  DJ_SET: "DJ set", VINYL: "Vinyl only", HYBRID: "Hybrid", LIVE: "Live",
-};
 
 /** RA stores either a full URL or an artist name ("DNG (1)" → ra.co/dj/dng-1); same rule as the app. */
 export function raProfileUrl(value: string): string {

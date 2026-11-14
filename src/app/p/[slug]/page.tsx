@@ -3,11 +3,12 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { ReactNode } from "react";
 import {
-  APP_URL, PLAY_LABEL, SITE, STORE_LABEL,
+  APP_URL, SITE, STORE_LABEL,
   applyHref, cleanSlug, fetchPublicProfile, pressKitHref, raProfileUrl, safeHttpUrl,
   type PublicProfile,
 } from "@/lib/publicProfile";
 import { CopyLinkButton, SetsGrid, VideosGrid } from "./_components/players";
+import { ApplyLink, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
 
 /* torahub.io/@slug (rewritten here by next.config). A verified artist's
    public page, laid out to the approved mock (round 2–9 decisions, see the
@@ -37,6 +38,8 @@ async function load(raw: string): Promise<PublicProfile> {
 
 const place = (p: { city: string | null; country: string | null }) => [p.city, p.country].filter(Boolean).join(", ");
 const roleLabel = (role: string) => role.charAt(0) + role.slice(1).toLowerCase();
+const PLAY_STYLES = ["DJ_SET", "VINYL", "HYBRID", "LIVE"] as const;
+type PlayStyle = (typeof PLAY_STYLES)[number];
 const FOCUS_RE = /^\d{1,3}(\.\d+)?% \d{1,3}(\.\d+)?%$/;
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -62,12 +65,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 const H2 = ({ children, aside }: { children: ReactNode; aside?: ReactNode }) => (
   <div className="flex items-baseline justify-between">
-    <h2 className="m-0 font-[family-name:var(--font-space-grotesk)] text-[13px] font-medium uppercase tracking-[0.16em] text-[#B9B9C6]">{children}</h2>
+    <h2 className="pp-label m-0 font-[family-name:var(--font-space-grotesk)] text-[13px] font-medium uppercase tracking-[0.16em] text-[#B9B9C6]">{children}</h2>
     {aside}
   </div>
 );
 
-const Section = ({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) => (
+const Section = ({ title, aside, children }: { title: ReactNode; aside?: ReactNode; children: ReactNode }) => (
   <section className="flex flex-col gap-3.5">
     <H2 aside={aside}>{title}</H2>
     {children}
@@ -76,7 +79,7 @@ const Section = ({ title, aside, children }: { title: string; aside?: ReactNode;
 
 const VerifiedTick = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" role="img" aria-label="Verified on TORA" className="shrink-0">
-    <title>Verified on TORA: identity checked</title>
+    <title>Verified on TORA</title>
     <path fill="#FF3366" d="M12 1.5l2.6 1.9 3.2-.2 1 3 2.7 1.8-1 3 1 3-2.7 1.8-1 3-3.2-.2L12 22.5l-2.6-1.9-3.2.2-1-3-2.7-1.8 1-3-1-3 2.7-1.8 1-3 3.2.2z" />
     <path d="M7.5 12.3l3 3 6-6.2" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
@@ -127,7 +130,7 @@ export default async function PublicArtistPage({ params }: Params) {
   const links = profileLinks(p);
   const focus = p.photoFocus && FOCUS_RE.test(p.photoFocus) ? p.photoFocus : "50% 22%";
   const where = place(p);
-  const quiet = [p.playStyles.map((s) => PLAY_LABEL[s]).filter(Boolean).join(" · "), p.label].filter(Boolean);
+  const plays = p.playStyles.filter((s): s is PlayStyle => PLAY_STYLES.includes(s as PlayStyle));
   const pressPhotos = p.pressPhotos;
 
   // Search engines get the same facts the page shows, nothing more.
@@ -145,9 +148,9 @@ export default async function PublicArtistPage({ params }: Params) {
 
   const identity = (
     <div className="flex flex-col gap-2.5">
-      <div className="flex items-center gap-2 font-[family-name:var(--font-space-grotesk)] text-[11px] uppercase tracking-[0.16em] text-[#B9B9C6]">
+      <div className="pp-label flex items-center gap-2 font-[family-name:var(--font-space-grotesk)] text-[11px] uppercase tracking-[0.16em] text-[#B9B9C6]">
         <span className="h-2 w-2 shrink-0 rounded-full bg-[#6B5FFF]" aria-hidden="true" />
-        {[roleLabel(p.role), where].filter(Boolean).join(" · ")}
+        <T k="artist" />{where && ` · ${where}`}
       </div>
       <div className="flex items-center gap-2.5">
         <h1 className="m-0 font-[family-name:var(--font-space-grotesk)] text-[38px] font-bold leading-none tracking-[-0.01em] text-[#F4F4F6] md:text-[44px]">{p.name}</h1>
@@ -172,25 +175,28 @@ export default async function PublicArtistPage({ params }: Params) {
         </div>
       )}
       <div className="mt-3 flex gap-2.5">
-        <a href={applyHref(p.slug)} className="flex h-[50px] flex-1 items-center justify-center rounded-xl bg-[#FF3366] text-[15px] font-semibold text-white transition-colors hover:bg-[#ff4d7a]">
-          Book
-        </a>
+        <ApplyLink href={applyHref(p.slug)} className="flex h-[50px] flex-1 items-center justify-center rounded-xl bg-[#FF3366] text-[15px] font-semibold text-white transition-colors hover:bg-[#ff4d7a]">
+          <T k="book" />
+        </ApplyLink>
         <CopyLinkButton url={url} />
       </div>
-      {(p.bio || quiet.length > 0) && (
+      {(p.bio || plays.length > 0 || p.label) && (
         <div className="mt-[18px] flex flex-col gap-2.5">
-          <H2>Bio</H2>
+          <H2><T k="bio" /></H2>
           {p.bio && <p className="m-0 whitespace-pre-line text-[15px] leading-relaxed text-[#E4E4EA]">{p.bio}</p>}
-          {quiet.length > 0 && (
+          {(plays.length > 0 || p.label) && (
             <div className="flex flex-wrap gap-x-3.5 gap-y-1.5 text-[13px] text-[#B9B9C6]">
-              {quiet.map((q) => <span key={q}>{q}</span>)}
+              {plays.length > 0 && (
+                <span>{plays.map((s, i) => <span key={s}>{i > 0 && " · "}<T k={`play_${s}`} /></span>)}</span>
+              )}
+              {p.label && <span>{p.label}</span>}
             </div>
           )}
         </div>
       )}
       {p.representedBy.length > 0 && (
         <div className="mt-2 flex flex-col gap-2">
-          <H2>Represented by</H2>
+          <H2><T k="representedBy" /></H2>
           {p.representedBy.map((a) => (
             <div key={`${a.name}-${a.agency}`} className="flex items-center gap-3 rounded-xl border border-[#22222B] bg-[#101015] px-3.5 py-3">
               {a.avatar
@@ -208,6 +214,7 @@ export default async function PublicArtistPage({ params }: Params) {
   );
 
   return (
+    <PageLang>
     <div className="min-h-screen bg-black text-[#F4F4F6] [font-family:var(--font-inter),-apple-system,sans-serif]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
@@ -215,8 +222,8 @@ export default async function PublicArtistPage({ params }: Params) {
         <div className="mx-auto flex max-w-[1180px] items-center justify-between px-4 py-3.5 md:px-8 md:py-[22px]">
           <Link href="/" className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold tracking-[0.02em] text-white md:text-[22px]">TORA</Link>
           <nav className="flex items-center gap-[22px] text-sm">
-            <a href={APP_URL} className="rounded-full bg-black/45 px-3.5 py-[9px] text-[13px] text-white md:bg-transparent md:p-0 md:text-sm md:text-[#B9B9C6] md:hover:text-white">Member sign in</a>
-            <a href="/apply?start=role" className="hidden h-[38px] items-center rounded-[10px] bg-white px-4 font-semibold text-black md:flex">Apply to join</a>
+            <a href={APP_URL} className="rounded-full bg-black/45 px-3.5 py-[9px] text-[13px] text-white md:bg-transparent md:p-0 md:text-sm md:text-[#B9B9C6] md:hover:text-white"><T k="memberSignIn" /></a>
+            <ApplyLink href="/apply?start=role" className="hidden h-[38px] items-center rounded-[10px] bg-white px-4 font-semibold text-black md:flex"><T k="applyToJoin" /></ApplyLink>
           </nav>
         </div>
       </header>
@@ -239,13 +246,13 @@ export default async function PublicArtistPage({ params }: Params) {
         {/* Content column */}
         <div className="mt-9 flex min-w-0 flex-1 flex-col gap-9 px-5 md:mt-0 md:px-0">
           {p.sets.length > 0 && (
-            <Section title="Sets" aside={<span className="text-xs text-[#8A8A99]">{p.sets.length} {p.sets.length === 1 ? "mix" : "mixes"}</span>}>
+            <Section title={<T k="sets" />} aside={<span className="text-xs text-[#8A8A99]"><Mixes n={p.sets.length} /></span>}>
               <SetsGrid sets={p.sets} />
             </Section>
           )}
 
           {p.releases.length > 0 && (
-            <Section title="Releases">
+            <Section title={<T k="releases" />}>
               <div className="pp-scroller -mx-5 flex gap-3 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0">
                 {p.releases.map((r) => {
                   const first = r.links?.map((l) => safeHttpUrl(l.url)).find(Boolean);
@@ -280,7 +287,7 @@ export default async function PublicArtistPage({ params }: Params) {
 
           {p.highlights.length > 0 && (
             <section>
-              <div className="mb-1.5"><H2>Highlights</H2></div>
+              <div className="mb-1.5"><H2><T k="highlights" /></H2></div>
               <ul className="m-0 list-none p-0">
                 {p.highlights.map((h, i) => {
                   const ra = safeHttpUrl(h.raUrl);
@@ -299,19 +306,19 @@ export default async function PublicArtistPage({ params }: Params) {
           )}
 
           {p.videos.length > 0 && (
-            <Section title="Videos">
+            <Section title={<T k="videos" />}>
               <VideosGrid videos={p.videos} />
             </Section>
           )}
 
           {pressPhotos.length > 0 && (
-            <Section title="Press photos">
+            <Section title={<T k="pressPhotos" />}>
               <div className="grid grid-cols-3 gap-1.5 md:gap-2">
                 {pressPhotos.map((ph) => (
                   <a key={ph.url} href={ph.url} target="_blank" rel="noopener noreferrer" className="group block">
                     <Img src={ph.url} loading="lazy" alt={ph.credit ? `${p.name}, photo by ${ph.credit}` : `${p.name}, press photo`}
                       className="block aspect-[3/4] w-full rounded-md object-cover" />
-                    {ph.credit && <span className="mt-1 block truncate text-[11px] text-[#8A8A99]">Photo: {ph.credit}</span>}
+                    {ph.credit && <span className="mt-1 block truncate text-[11px] text-[#8A8A99]"><PhotoBy name={ph.credit} /></span>}
                   </a>
                 ))}
               </div>
@@ -320,24 +327,25 @@ export default async function PublicArtistPage({ params }: Params) {
 
           {p.pressKit && p.pressKit.files.length > 0 && (
             <section id="presskit">
-              <div className="mb-1"><H2>Press kit</H2></div>
+              <div className="mb-1"><H2><T k="pressKit" /></H2></div>
               {p.pressKit.files.map((f, i) => (
                 <a key={f.id} href={pressKitHref(f.url)} rel="noopener noreferrer"
                   className={`flex items-center justify-between py-3 text-sm text-[#F4F4F6] hover:text-[#FF3366] ${i < p.pressKit!.files.length - 1 ? "border-b border-[#1C1C24]" : ""}`}>
                   <span>{f.title}</span>
-                  <span className="text-xs text-[#8A8A99]">Download ↓</span>
+                  <span className="text-xs text-[#8A8A99]"><T k="download" /> ↓</span>
                 </a>
               ))}
             </section>
           )}
 
           <footer className="mt-2 flex flex-col items-start gap-3.5 border-t border-[#1C1C24] pt-7">
-            <span className="text-xs text-[#8A8A99]">Every TORA profile is identity-checked before it can go public.</span>
-            <span className="font-[family-name:var(--font-space-grotesk)] text-[22px] font-bold leading-tight">In the scene?<br />Join TORA</span>
-            <a href="/apply?start=role" className="flex h-11 items-center rounded-[10px] bg-white px-[18px] text-sm font-semibold text-black">Apply to join</a>
+            <span className="text-xs text-[#8A8A99]"><T k="identityChecked" /></span>
+            <span className="font-[family-name:var(--font-space-grotesk)] text-[22px] font-bold leading-tight"><T k="joinLine1" /><br /><T k="joinLine2" /></span>
+            <ApplyLink href="/apply?start=role" className="flex h-11 items-center rounded-[10px] bg-white px-[18px] text-sm font-semibold text-black"><T k="applyToJoin" /></ApplyLink>
           </footer>
         </div>
       </main>
     </div>
+    </PageLang>
   );
 }
