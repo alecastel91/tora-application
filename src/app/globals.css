@@ -291,3 +291,7 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Public artist pages: swipe rows without a scrollbar on touch. */
+.pp-scroller { scrollbar-width: none; }
+.pp-scroller::-webkit-scrollbar { display: none; }

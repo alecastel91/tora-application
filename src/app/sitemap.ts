@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
+import { fetchPublicSlugs } from "@/lib/publicProfile";
 
 const BASE = "https://www.torahub.io";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const routes: { path: string; priority: number }[] = [
     { path: "", priority: 1 },
@@ -15,10 +18,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/data-deletion", priority: 0.3 },
     { path: "/support", priority: 0.3 },
   ];
-  return routes.map(({ path, priority }) => ({
+  const pages: MetadataRoute.Sitemap = routes.map(({ path, priority }) => ({
     url: `${BASE}${path}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority,
   }));
+  // Every live public artist page (torahub.io/@slug).
+  const profiles = await fetchPublicSlugs();
+  return pages.concat(profiles.map((p) => ({
+    url: `${BASE}/@${p.slug}`,
+    lastModified: new Date(p.updatedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  })));
 }

@@ -14,9 +14,14 @@ const cspDirectives = [
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://plausible.io",
   "style-src 'self' 'unsafe-inline'",
   // *.supabase.co: beta-feedback screenshots and avatars shown in the cockpit live in Supabase Storage.
-  "img-src 'self' data: blob: https://*.supabase.co https://resend-attachments.s3.amazonaws.com https://cdn-icons-png.flaticon.com",
+  // https: on images — public artist pages (/@slug) show release and set
+  // artwork from whichever store the artist linked (Bandcamp, Spotify,
+  // Beatport, SoundCloud, Mixcloud, YouTube…); images can't run code.
+  "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com https://tora-backend-production.up.railway.app https://plausible.io",
+  // Players on public artist pages, opened only when a visitor taps play.
+  "frame-src https://w.soundcloud.com https://player-widget.mixcloud.com https://www.youtube-nocookie.com https://player.vimeo.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -52,6 +57,13 @@ const nextConfig: NextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
         ],
       },
+    ];
+  },
+  async rewrites() {
+    return [
+      // torahub.io/@slug is a member's public page. The page lives at
+      // /p/[slug]: a folder named "@…" would be a Next parallel route.
+      { source: "/@:slug", destination: "/p/:slug" },
     ];
   },
   async redirects() {
