@@ -159,11 +159,16 @@ export function CopyLinkButton({ url }: { url: string }) {
     window.setTimeout(() => setCopied(false), 1800);
   };
   return (
-    <button type="button" onClick={copy} className="flex h-[50px] shrink-0 items-center gap-2 rounded-xl border border-[#33333D] px-4 text-[15px] font-semibold text-white transition-colors hover:border-white/50">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-      </svg>
-      <span aria-live="polite">{copied ? t.copied : t.copyLink}</span>
+    <button type="button" onClick={copy} aria-label={copied ? t.copied : t.copyLink} title={t.copyLink}
+      className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-xl border border-[#33333D] text-white transition-colors hover:border-white/50">
+      {copied ? (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C875" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+      ) : (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+        </svg>
+      )}
+      <span className="sr-only" aria-live="polite">{copied ? t.copied : ""}</span>
     </button>
   );
 }

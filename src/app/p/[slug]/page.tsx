@@ -10,6 +10,7 @@ import {
 } from "@/lib/publicProfile";
 import { CopyLinkButton, FullBio, SetsGrid, VideosGrid } from "./_components/players";
 import { ApplyLink, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
+import { ShareButton } from "./_components/share";
 
 /* torahub.io/@slug (rewritten here by next.config). A verified artist's
    public page, laid out to the approved mock (round 2–9 decisions, see the
@@ -188,6 +189,7 @@ export default async function PublicArtistPage({ params }: Params) {
           <T k="book" />
         </ApplyLink>
         <CopyLinkButton url={url} />
+        <ShareButton name={p.name} slug={p.slug} url={url} />
       </div>
       {(p.bio || p.bioLong || plays.length > 0 || p.label) && (
         <div className="mt-[18px] flex flex-col gap-2.5">
@@ -195,12 +197,13 @@ export default async function PublicArtistPage({ params }: Params) {
           {p.bio && <p className="m-0 whitespace-pre-line text-[15px] leading-relaxed text-[#E4E4EA]">{p.bio}</p>}
           {p.bioLong && <FullBio name={p.name} text={p.bioLong} />}
           {(plays.length > 0 || p.label) && (
-            <div className="flex flex-wrap gap-x-3.5 gap-y-1.5 text-[13px] text-[#B9B9C6]">
+            <dl className="m-0 mt-1 flex flex-col gap-1 text-[13px]">
               {plays.length > 0 && (
-                <span>{plays.map((s, i) => <span key={s}>{i > 0 && " · "}<T k={`play_${s}`} /></span>)}</span>
+                <div className="flex gap-2"><dt className="text-[#8A8A99]"><T k="format" />:</dt>
+                  <dd className="m-0 text-[#E4E4EA]">{plays.map((s, i) => <span key={s}>{i > 0 && " · "}<T k={`play_${s}`} /></span>)}</dd></div>
               )}
-              {p.label && <span>{p.label}</span>}
-            </div>
+              {p.label && <div className="flex gap-2"><dt className="text-[#8A8A99]"><T k="labelName" />:</dt><dd className="m-0 text-[#E4E4EA]">{p.label}</dd></div>}
+            </dl>
           )}
         </div>
       )}
@@ -242,7 +245,7 @@ export default async function PublicArtistPage({ params }: Params) {
 
       <main className="mx-auto max-w-[1180px] pb-40 md:flex md:items-start md:gap-14 md:px-8 md:pt-3">
         {/* Identity column (desktop) / hero + identity (phone) */}
-        <aside className="md:sticky md:top-6 md:w-[380px] md:shrink-0">
+        <aside className="md:w-[380px] md:shrink-0">
           {p.photo ? (
             <div className="relative h-[400px] md:h-auto">
               <Img src={p.photo} alt={p.name} style={{ objectPosition: focus }}
