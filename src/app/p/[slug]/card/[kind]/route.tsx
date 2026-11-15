@@ -50,7 +50,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   const kind = rawKind.replace(/\.png$/, "") as Kind;
   const slug = cleanSlug(raw);
   if (!slug || !(kind in SIZES)) return new Response("Not found", { status: 404 });
-  const found = await fetchPublicProfile(slug);
+  const found = await fetchPublicProfile(slug, { fresh: true });
   if (!found || !("profile" in found)) return new Response("Not found", { status: 404 });
   const p = found.profile;
 

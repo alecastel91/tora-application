@@ -58,12 +58,12 @@ export function cleanSlug(raw: string): string {
 
 export type Lookup = { profile: PublicProfile } | { redirectTo: string } | null;
 
-export async function fetchPublicProfile(slug: string): Promise<Lookup> {
+/** `fresh` skips the data cache (the share images must show the latest save). */
+export async function fetchPublicProfile(slug: string, { fresh = false } = {}): Promise<Lookup> {
   const base = backend();
   if (!base || !slug) return null;
-  const res = await fetch(`${base}/api/public/profiles/${encodeURIComponent(slug)}`, {
-    next: { revalidate: PAGE_REVALIDATE },
-  });
+  const res = await fetch(`${base}/api/public/profiles/${encodeURIComponent(slug)}`,
+    fresh ? { cache: "no-store" } : { next: { revalidate: PAGE_REVALIDATE } });
   if (res.status === 404) return null;
   // Anything else unexpected throws, so a backend hiccup shows the error page
   // (and keeps the last good cached page) instead of caching a false 404.
@@ -112,6 +112,10 @@ export function safeHttpUrl(value?: string | null): string | null {
     return null;
   }
 }
+
+/** A share image's address; `version` (the profile's last save) changes the URL on every save, so no cache serves an old card. */
+export const cardPath = (slug: string, kind: string, version?: string, me = false) =>
+  `/p/${slug}/card/${kind}?${new URLSearchParams({ ...(me ? { v: "me" } : {}), ...(version ? { t: String(Date.parse(version) || version) } : {}) })}`;
 
 /** The "Book" button: the apply page, tagged so the application records which page sent it. */
 export const applyHref = (slug: string) =>

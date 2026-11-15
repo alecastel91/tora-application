@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { cardPath } from "@/lib/publicProfile";
 import { useLabels } from "./i18n";
 
 /* Share on the public page: the page as an Instagram story or feed image
@@ -26,7 +27,7 @@ const LINK = "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a
 const MORE = "M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13";
 export const SHARE_GLYPH = MORE;
 
-export function ShareButton({ name, slug, url }: { name: string; slug: string; url: string }) {
+export function ShareButton({ name, slug, url, version }: { name: string; slug: string; url: string; version: string }) {
   const { t } = useLabels();
   const [open, setOpen] = useState(false);
   return (
@@ -35,17 +36,17 @@ export function ShareButton({ name, slug, url }: { name: string; slug: string; u
         className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-xl border border-[#33333D] text-white transition-colors hover:border-white/50">
         <Glyph d={SHARE_GLYPH} stroke />
       </button>
-      {open && <ShareSheet name={name} slug={slug} url={url} onClose={() => setOpen(false)} />}
+      {open && <ShareSheet name={name} slug={slug} url={url} version={version} onClose={() => setOpen(false)} />}
     </>
   );
 }
 
-function ShareSheet({ name, slug, url, onClose }: { name: string; slug: string; url: string; onClose: () => void }) {
+function ShareSheet({ name, slug, url, version, onClose }: { name: string; slug: string; url: string; version: string; onClose: () => void }) {
   const { t } = useLabels();
   const [busy, setBusy] = useState<Kind | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const card = (kind: Kind) => `/p/${slug}/card/${kind}`;
+  const card = (kind: Kind) => cardPath(slug, kind, version);
   const text = t.shareText(name);
   const canNativeShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
 

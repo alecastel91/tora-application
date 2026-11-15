@@ -5,7 +5,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import type { ReactNode } from "react";
 import {
   APP_URL, SITE, STORE_LABEL,
-  applyHref, cleanSlug, fetchPublicProfile, pressKitHref, raProfileUrl, safeHttpUrl,
+  applyHref, cardPath, cleanSlug, fetchPublicProfile, pressKitHref, raProfileUrl, safeHttpUrl,
   type PublicProfile,
 } from "@/lib/publicProfile";
 import { CopyLinkButton, FullBio, GenreList, SetsGrid, VideosGrid } from "./_components/players";
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     p.bio || p.bioLong ? (p.bio || p.bioLong)!.replace(/\s+/g, " ").slice(0, 150) : "Verified on TORA.",
   ].join(" ");
   // The share card (photo, name, genres, link) is what WhatsApp, X, LinkedIn… show.
-  const card = `${SITE}/p/${p.slug}/card/og`;
+  const card = `${SITE}${cardPath(p.slug, "og", p.updatedAt)}`;
   const images = [{ url: card, width: 1200, height: 630, alt: `${p.name} on TORA` }];
   return {
     title: p.name,
@@ -185,7 +185,7 @@ export default async function PublicArtistPage({ params }: Params) {
           <T k="book" />
         </ApplyLink>
         <CopyLinkButton url={url} />
-        <ShareButton name={p.name} slug={p.slug} url={url} />
+        <ShareButton name={p.name} slug={p.slug} url={url} version={p.updatedAt} />
       </div>
       {(p.bio || p.bioLong || plays.length > 0 || p.label) && (
         <div className="mt-[18px] flex flex-col gap-2.5">
