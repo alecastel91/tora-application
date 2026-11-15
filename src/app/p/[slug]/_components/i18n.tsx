@@ -29,6 +29,7 @@ type Labels = {
   igStory: string;
   igPost: string;
   imageSaved: string;
+  linkReady: string;
   imageFailed: string;
   email: string;
   more: string;
@@ -65,7 +66,7 @@ const L: Record<Lang, Labels> = {
   EN: {
     memberSignIn: "Member sign in", applyToJoin: "Apply to join", book: "Book",
     copyLink: "Copy link", copied: "Copied", copyPrompt: "Copy this link",
-    share: "Share", shareTitle: "Share this page", shareSub: (name) => `Send ${name}'s page to a promoter, a friend or your story`, shareText: (name) => `${name} on TORA`, igStory: "Instagram story", igPost: "Instagram post", imageSaved: "Image saved. Post it, then add a link sticker with the page link", imageFailed: "The image couldn't be made. Try again in a moment", email: "Email", more: "More", format: "Format", labelName: "Label",
+    share: "Share", shareTitle: "Share this page", shareSub: (name) => `Send ${name}'s page to a promoter, a friend or your story`, shareText: (name) => `${name} on TORA`, igStory: "Instagram story", igPost: "Instagram post", imageSaved: "Image saved and link copied. Post it, then add a Link sticker and paste the link", linkReady: "Link copied. In Instagram, add a Link sticker and paste it", imageFailed: "The image couldn't be made. Try again in a moment", email: "Email", more: "More", format: "Format", labelName: "Label",
     artist: "Artist", verified: "Verified on TORA", bio: "Bio", fullBio: "Full bio", readFullBio: "Read full bio", close: "Close", representedBy: "Represented by",
     sets: "Sets", mixes: (n) => `${n} ${n === 1 ? "mix" : "mixes"}`, releases: "Releases", highlights: "Highlights",
     videos: "Videos", play: "Play", closePlayer: "Close player", pressPhotos: "Press photos",
@@ -77,7 +78,7 @@ const L: Record<Lang, Labels> = {
   JP: {
     memberSignIn: "メンバーログイン", applyToJoin: "参加を申し込む", book: "ブッキングする",
     copyLink: "リンクをコピー", copied: "コピーしました", copyPrompt: "このリンクをコピーしてください",
-    share: "シェア", shareTitle: "このページをシェア", shareSub: (name) => `${name}のページをプロモーターや友達、ストーリーズでシェア`, shareText: (name) => `TORAの${name}`, igStory: "Instagramストーリーズ", igPost: "Instagram投稿", imageSaved: "画像を保存しました。投稿してページのリンクスタンプを追加してください", imageFailed: "画像を作成できませんでした。しばらくしてからもう一度お試しください", email: "メール", more: "その他", format: "プレイスタイル", labelName: "レーベル",
+    share: "シェア", shareTitle: "このページをシェア", shareSub: (name) => `${name}のページをプロモーターや友達、ストーリーズでシェア`, shareText: (name) => `TORAの${name}`, igStory: "Instagramストーリーズ", igPost: "Instagram投稿", imageSaved: "画像を保存し、リンクをコピーしました。投稿してリンクスタンプを追加し、リンクを貼り付けてください", linkReady: "リンクをコピーしました。Instagramでリンクスタンプを追加して貼り付けてください", imageFailed: "画像を作成できませんでした。しばらくしてからもう一度お試しください", email: "メール", more: "その他", format: "プレイスタイル", labelName: "レーベル",
     artist: "アーティスト", verified: "TORA認証済み", bio: "プロフィール文", fullBio: "プロフィール全文", readFullBio: "全文を読む", close: "閉じる", representedBy: "所属",
     sets: "セット", mixes: (n) => `${n}本のミックス`, releases: "リリース", highlights: "ハイライト",
     videos: "動画", play: "再生", closePlayer: "プレーヤーを閉じる", pressPhotos: "プレス写真",
@@ -89,7 +90,7 @@ const L: Record<Lang, Labels> = {
   CN: {
     memberSignIn: "会员登录", applyToJoin: "申请加入", book: "预订",
     copyLink: "复制链接", copied: "已复制", copyPrompt: "复制此链接",
-    share: "分享", shareTitle: "分享此页面", shareSub: (name) => `把${name}的页面分享给主办方、朋友或发到快拍`, shareText: (name) => `${name} · TORA`, igStory: "Instagram 快拍", igPost: "Instagram 帖子", imageSaved: "图片已保存。发布后添加页面链接贴纸", imageFailed: "无法生成图片，请稍后重试", email: "邮件", more: "更多", format: "演出形式", labelName: "厂牌",
+    share: "分享", shareTitle: "分享此页面", shareSub: (name) => `把${name}的页面分享给主办方、朋友或发到快拍`, shareText: (name) => `${name} · TORA`, igStory: "Instagram 快拍", igPost: "Instagram 帖子", imageSaved: "图片已保存，链接已复制。发布后添加链接贴纸并粘贴链接", linkReady: "链接已复制。在 Instagram 中添加链接贴纸并粘贴", imageFailed: "无法生成图片，请稍后重试", email: "邮件", more: "更多", format: "演出形式", labelName: "厂牌",
     artist: "艺人", verified: "已通过 TORA 认证", bio: "简介", fullBio: "完整简介", readFullBio: "阅读完整简介", close: "关闭", representedBy: "经纪方",
     sets: "Set", mixes: (n) => `${n} 个混音`, releases: "发行作品", highlights: "亮点",
     videos: "视频", play: "播放", closePlayer: "关闭播放器", pressPhotos: "媒体照片",
@@ -101,7 +102,7 @@ const L: Record<Lang, Labels> = {
   KR: {
     memberSignIn: "회원 로그인", applyToJoin: "가입 신청", book: "부킹하기",
     copyLink: "링크 복사", copied: "복사됨", copyPrompt: "이 링크를 복사하세요",
-    share: "공유", shareTitle: "이 페이지 공유", shareSub: (name) => `${name}의 페이지를 프로모터, 친구 또는 스토리에 공유하세요`, shareText: (name) => `TORA의 ${name}`, igStory: "인스타그램 스토리", igPost: "인스타그램 게시물", imageSaved: "이미지를 저장했습니다. 게시한 뒤 페이지 링크 스티커를 추가하세요", imageFailed: "이미지를 만들지 못했습니다. 잠시 후 다시 시도하세요", email: "이메일", more: "더보기", format: "플레이 방식", labelName: "레이블",
+    share: "공유", shareTitle: "이 페이지 공유", shareSub: (name) => `${name}의 페이지를 프로모터, 친구 또는 스토리에 공유하세요`, shareText: (name) => `TORA의 ${name}`, igStory: "인스타그램 스토리", igPost: "인스타그램 게시물", imageSaved: "이미지를 저장하고 링크를 복사했습니다. 게시한 뒤 링크 스티커를 추가해 붙여넣으세요", linkReady: "링크를 복사했습니다. 인스타그램에서 링크 스티커를 추가해 붙여넣으세요", imageFailed: "이미지를 만들지 못했습니다. 잠시 후 다시 시도하세요", email: "이메일", more: "더보기", format: "플레이 방식", labelName: "레이블",
     artist: "아티스트", verified: "TORA 인증 완료", bio: "소개", fullBio: "전체 소개", readFullBio: "전체 소개 보기", close: "닫기", representedBy: "소속 에이전트",
     sets: "세트", mixes: (n) => `믹스 ${n}개`, releases: "발매작", highlights: "하이라이트",
     videos: "영상", play: "재생", closePlayer: "플레이어 닫기", pressPhotos: "프레스 사진",
@@ -113,7 +114,7 @@ const L: Record<Lang, Labels> = {
   ES: {
     memberSignIn: "Acceso miembros", applyToJoin: "Solicita tu acceso", book: "Contratar",
     copyLink: "Copiar enlace", copied: "Copiado", copyPrompt: "Copia este enlace",
-    share: "Compartir", shareTitle: "Comparte esta página", shareSub: (name) => `Envía la página de ${name} a un promotor, a un amigo o a tu story`, shareText: (name) => `${name} en TORA`, igStory: "Story de Instagram", igPost: "Post de Instagram", imageSaved: "Imagen guardada. Publícala y añade un sticker con el enlace de la página", imageFailed: "No se pudo crear la imagen. Inténtalo de nuevo en un momento", email: "Email", more: "Más", format: "Formato", labelName: "Sello",
+    share: "Compartir", shareTitle: "Comparte esta página", shareSub: (name) => `Envía la página de ${name} a un promotor, a un amigo o a tu story`, shareText: (name) => `${name} en TORA`, igStory: "Story de Instagram", igPost: "Post de Instagram", imageSaved: "Imagen guardada y enlace copiado. Publícala, añade un sticker de enlace y pega el enlace", linkReady: "Enlace copiado. En Instagram, añade un sticker de enlace y pégalo", imageFailed: "No se pudo crear la imagen. Inténtalo de nuevo en un momento", email: "Email", more: "Más", format: "Formato", labelName: "Sello",
     artist: "Artista", verified: "Verificado en TORA", bio: "Bio", fullBio: "Bio completa", readFullBio: "Leer bio completa", close: "Cerrar", representedBy: "Representado por",
     sets: "Sets", mixes: (n) => `${n} ${n === 1 ? "mix" : "mixes"}`, releases: "Lanzamientos", highlights: "Destacados",
     videos: "Vídeos", play: "Reproducir", closePlayer: "Cerrar reproductor", pressPhotos: "Fotos de prensa",
@@ -125,7 +126,7 @@ const L: Record<Lang, Labels> = {
   FR: {
     memberSignIn: "Connexion membre", applyToJoin: "Devenir membre", book: "Booker",
     copyLink: "Copier le lien", copied: "Copié", copyPrompt: "Copiez ce lien",
-    share: "Partager", shareTitle: "Partager cette page", shareSub: (name) => `Envoie la page de ${name} à un promoteur, un ami ou en story`, shareText: (name) => `${name} sur TORA`, igStory: "Story Instagram", igPost: "Post Instagram", imageSaved: "Image enregistrée. Publie-la puis ajoute un sticker lien vers la page", imageFailed: "Impossible de créer l'image. Réessaie dans un instant", email: "E-mail", more: "Plus", format: "Format", labelName: "Label",
+    share: "Partager", shareTitle: "Partager cette page", shareSub: (name) => `Envoie la page de ${name} à un promoteur, un ami ou en story`, shareText: (name) => `${name} sur TORA`, igStory: "Story Instagram", igPost: "Post Instagram", imageSaved: "Image enregistrée et lien copié. Publie-la, ajoute un sticker lien et colle le lien", linkReady: "Lien copié. Dans Instagram, ajoute un sticker lien et colle-le", imageFailed: "Impossible de créer l'image. Réessaie dans un instant", email: "E-mail", more: "Plus", format: "Format", labelName: "Label",
     artist: "Artiste", verified: "Vérifié sur TORA", bio: "Bio", fullBio: "Bio complète", readFullBio: "Lire la bio complète", close: "Fermer", representedBy: "Représenté par",
     sets: "Sets", mixes: (n) => `${n} mix`, releases: "Sorties", highlights: "Temps forts",
     videos: "Vidéos", play: "Lire", closePlayer: "Fermer le lecteur", pressPhotos: "Photos presse",
@@ -137,7 +138,7 @@ const L: Record<Lang, Labels> = {
   IT: {
     memberSignIn: "Accesso membri", applyToJoin: "Candidati per entrare", book: "Ingaggia",
     copyLink: "Copia link", copied: "Copiato", copyPrompt: "Copia questo link",
-    share: "Condividi", shareTitle: "Condividi questa pagina", shareSub: (name) => `Manda la pagina di ${name} a un promoter, a un amico o nelle storie`, shareText: (name) => `${name} su TORA`, igStory: "Storia Instagram", igPost: "Post Instagram", imageSaved: "Immagine salvata. Pubblicala e aggiungi lo sticker link con la pagina", imageFailed: "Impossibile creare l'immagine. Riprova tra poco", email: "Email", more: "Altro", format: "Formato", labelName: "Etichetta",
+    share: "Condividi", shareTitle: "Condividi questa pagina", shareSub: (name) => `Manda la pagina di ${name} a un promoter, a un amico o nelle storie`, shareText: (name) => `${name} su TORA`, igStory: "Storia Instagram", igPost: "Post Instagram", imageSaved: "Immagine salvata e link copiato. Pubblicala, aggiungi lo sticker link e incolla il link", linkReady: "Link copiato. Su Instagram aggiungi lo sticker link e incollalo", imageFailed: "Impossibile creare l'immagine. Riprova tra poco", email: "Email", more: "Altro", format: "Formato", labelName: "Etichetta",
     artist: "Artista", verified: "Verificato su TORA", bio: "Bio", fullBio: "Bio completa", readFullBio: "Leggi la bio completa", close: "Chiudi", representedBy: "Rappresentato da",
     sets: "Set", mixes: (n) => `${n} mix`, releases: "Uscite", highlights: "Momenti salienti",
     videos: "Video", play: "Riproduci", closePlayer: "Chiudi il player", pressPhotos: "Foto stampa",
@@ -149,7 +150,7 @@ const L: Record<Lang, Labels> = {
   PT: {
     memberSignIn: "Login de membro", applyToJoin: "Candidate-se a Membro", book: "Contratar",
     copyLink: "Copiar link", copied: "Copiado", copyPrompt: "Copie este link",
-    share: "Compartilhar", shareTitle: "Compartilhe esta página", shareSub: (name) => `Envie a página de ${name} para um promoter, um amigo ou nos seus stories`, shareText: (name) => `${name} na TORA`, igStory: "Story do Instagram", igPost: "Post do Instagram", imageSaved: "Imagem salva. Publique e adicione um sticker de link com a página", imageFailed: "Não foi possível criar a imagem. Tente de novo em instantes", email: "E-mail", more: "Mais", format: "Formato", labelName: "Selo",
+    share: "Compartilhar", shareTitle: "Compartilhe esta página", shareSub: (name) => `Envie a página de ${name} para um promoter, um amigo ou nos seus stories`, shareText: (name) => `${name} na TORA`, igStory: "Story do Instagram", igPost: "Post do Instagram", imageSaved: "Imagem salva e link copiado. Publique, adicione um sticker de link e cole o link", linkReady: "Link copiado. No Instagram, adicione um sticker de link e cole", imageFailed: "Não foi possível criar a imagem. Tente de novo em instantes", email: "E-mail", more: "Mais", format: "Formato", labelName: "Selo",
     artist: "Artista", verified: "Verificado na TORA", bio: "Bio", fullBio: "Bio completa", readFullBio: "Ler bio completa", close: "Fechar", representedBy: "Representado por",
     sets: "Sets", mixes: (n) => `${n} ${n === 1 ? "mix" : "mixes"}`, releases: "Lançamentos", highlights: "Destaques",
     videos: "Vídeos", play: "Reproduzir", closePlayer: "Fechar player", pressPhotos: "Fotos de imprensa",

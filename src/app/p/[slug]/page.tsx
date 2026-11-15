@@ -53,13 +53,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     `${lead}${p.genres.length ? ` · ${p.genres.slice(0, 3).join(", ")}` : ""}.`,
     p.bio || p.bioLong ? (p.bio || p.bioLong)!.replace(/\s+/g, " ").slice(0, 150) : "Verified on TORA.",
   ].join(" ");
-  const images = p.photo ? [{ url: p.photo, alt: p.name }] : undefined;
+  // The share card (photo, name, genres, link) is what WhatsApp, X, LinkedIn… show.
+  const card = `${SITE}/p/${p.slug}/card/og`;
+  const images = [{ url: card, width: 1200, height: 630, alt: `${p.name} on TORA` }];
   return {
     title: p.name,
     description,
     alternates: { canonical: url },
     openGraph: { title: `${p.name} on TORA`, description, url, siteName: "TORA", type: "profile", images },
-    twitter: { card: p.photo ? "summary_large_image" : "summary", title: `${p.name} on TORA`, description, images: p.photo ? [p.photo] : undefined },
+    twitter: { card: "summary_large_image", title: `${p.name} on TORA`, description, images: [card] },
   };
 }
 
