@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { ReactNode } from "react";
@@ -7,7 +8,7 @@ import {
   applyHref, cleanSlug, fetchPublicProfile, pressKitHref, raProfileUrl, safeHttpUrl,
   type PublicProfile,
 } from "@/lib/publicProfile";
-import { CopyLinkButton, SetsGrid, VideosGrid } from "./_components/players";
+import { CopyLinkButton, FullBio, SetsGrid, VideosGrid } from "./_components/players";
 import { ApplyLink, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
 
 /* torahub.io/@slug (rewritten here by next.config). A verified artist's
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const lead = [roleLabel(p.role), where && `from ${where}`].filter(Boolean).join(" ");
   const description = [
     `${lead}${p.genres.length ? ` · ${p.genres.slice(0, 3).join(", ")}` : ""}.`,
-    p.bio ? p.bio.replace(/\s+/g, " ").slice(0, 150) : "Verified on TORA.",
+    p.bio || p.bioLong ? (p.bio || p.bioLong)!.replace(/\s+/g, " ").slice(0, 150) : "Verified on TORA.",
   ].join(" ");
   const images = p.photo ? [{ url: p.photo, alt: p.name }] : undefined;
   return {
@@ -85,6 +86,13 @@ const VerifiedTick = () => (
   </svg>
 );
 
+// The Resident Advisor monogram, the same vector the app's highlights use.
+const RAMark = ({ width }: { width: number }) => (
+  <svg width={width} height={Math.round((width * 57) / 120)} viewBox="0 0 120 57" aria-hidden="true" className="block">
+    <path d="M0 0L0 35L34 36L52 55L56 57L109 56L120 45L120 41L89 11L86 6L75 17L100 41L100 43L62 43L58 41L39 22L14 21L14 14L39 14L47 18L51 24L58 31L60 31L69 22L69 20L52 4L42 0Z" fill="currentColor" fillRule="evenodd" />
+  </svg>
+);
+
 // Brand marks from Simple Icons (CC0), as in the app's LinkIcons.
 const ICONS: Record<string, ReactNode> = {
   instagram: (
@@ -99,7 +107,7 @@ const ICONS: Record<string, ReactNode> = {
   spotify: (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></svg>
   ),
-  residentAdvisor: <span className="font-[family-name:var(--font-space-grotesk)] text-[13px] font-bold">RA</span>,
+  residentAdvisor: <RAMark width={22} />,
   website: (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -109,13 +117,14 @@ const ICONS: Record<string, ReactNode> = {
 
 function profileLinks(p: PublicProfile) {
   const l = p.links || {};
+  // Same order as the app's profile (desktop/primitives.js profileLinks).
   return [
-    l.instagram && { key: "instagram", label: "Instagram", href: `https://instagram.com/${l.instagram.replace(/^@/, "")}` },
-    l.soundcloud && { key: "soundcloud", label: "SoundCloud", href: safeHttpUrl(l.soundcloud) },
-    l.spotify && { key: "spotify", label: "Spotify", href: safeHttpUrl(l.spotify) },
-    l.bandcamp && { key: "bandcamp", label: "Bandcamp", href: safeHttpUrl(l.bandcamp) },
-    l.residentAdvisor && { key: "residentAdvisor", label: "Resident Advisor", href: raProfileUrl(l.residentAdvisor) },
     l.website && { key: "website", label: "Website", href: safeHttpUrl(l.website) },
+    l.instagram && { key: "instagram", label: "Instagram", href: `https://instagram.com/${l.instagram.replace(/^@/, "")}` },
+    l.residentAdvisor && { key: "residentAdvisor", label: "Resident Advisor", href: raProfileUrl(l.residentAdvisor) },
+    l.soundcloud && { key: "soundcloud", label: "SoundCloud", href: safeHttpUrl(l.soundcloud) },
+    l.bandcamp && { key: "bandcamp", label: "Bandcamp", href: safeHttpUrl(l.bandcamp) },
+    l.spotify && { key: "spotify", label: "Spotify", href: safeHttpUrl(l.spotify) },
   ].filter((x): x is { key: string; label: string; href: string } => Boolean(x && x.href));
 }
 
@@ -140,7 +149,7 @@ export default async function PublicArtistPage({ params }: Params) {
     name: p.name,
     url,
     image: p.photo || undefined,
-    description: p.bio || undefined,
+    description: p.bio || p.bioLong || undefined,
     homeLocation: where ? { "@type": "Place", name: where } : undefined,
     genre: p.genres.length ? p.genres : undefined,
     sameAs: links.map((l) => l.href),
@@ -180,10 +189,11 @@ export default async function PublicArtistPage({ params }: Params) {
         </ApplyLink>
         <CopyLinkButton url={url} />
       </div>
-      {(p.bio || plays.length > 0 || p.label) && (
+      {(p.bio || p.bioLong || plays.length > 0 || p.label) && (
         <div className="mt-[18px] flex flex-col gap-2.5">
           <H2><T k="bio" /></H2>
           {p.bio && <p className="m-0 whitespace-pre-line text-[15px] leading-relaxed text-[#E4E4EA]">{p.bio}</p>}
+          {p.bioLong && <FullBio name={p.name} text={p.bioLong} />}
           {(plays.length > 0 || p.label) && (
             <div className="flex flex-wrap gap-x-3.5 gap-y-1.5 text-[13px] text-[#B9B9C6]">
               {plays.length > 0 && (
@@ -220,7 +230,9 @@ export default async function PublicArtistPage({ params }: Params) {
 
       <header className="absolute inset-x-0 top-0 z-10 md:static">
         <div className="mx-auto flex max-w-[1180px] items-center justify-between px-4 py-3.5 md:px-8 md:py-[22px]">
-          <Link href="/" className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold tracking-[0.02em] text-white md:text-[22px]">TORA</Link>
+          <Link href="/" aria-label="TORA" className="block">
+            <Image src="/tora_logo_transparent.png" alt="TORA" width={1015} height={285} priority className="h-auto w-[96px] md:w-[112px]" />
+          </Link>
           <nav className="flex items-center gap-[22px] text-sm">
             <a href={APP_URL} className="rounded-full bg-black/45 px-3.5 py-[9px] text-[13px] text-white md:bg-transparent md:p-0 md:text-sm md:text-[#B9B9C6] md:hover:text-white"><T k="memberSignIn" /></a>
             <ApplyLink href="/apply?start=role" className="hidden h-[38px] items-center rounded-[10px] bg-white px-4 font-semibold text-black md:flex"><T k="applyToJoin" /></ApplyLink>
@@ -292,11 +304,17 @@ export default async function PublicArtistPage({ params }: Params) {
                 {p.highlights.map((h, i) => {
                   const ra = safeHttpUrl(h.raUrl);
                   return (
-                    <li key={`${h.venue}-${h.year}-${i}`} className="flex items-baseline gap-3 border-b border-[#1C1C24] py-3">
+                    <li key={`${h.venue}-${h.year}-${i}`} className="flex items-center gap-3 border-b border-[#1C1C24] py-3">
                       <span className="min-w-0 flex-1 text-[15px] font-medium">
                         {ra ? <a href={ra} target="_blank" rel="noopener noreferrer" className="text-[#F4F4F6] hover:text-[#FF3366]">{h.venue}</a> : h.venue}
                       </span>
                       {h.city && <span className="text-xs text-[#8A8A99]">{h.city}</span>}
+                      {ra && (
+                        <a href={ra} target="_blank" rel="noopener noreferrer" aria-label={`Resident Advisor: ${h.venue}`} title="Resident Advisor"
+                          className="flex h-7 items-center px-1 text-white/60 transition-colors hover:text-white">
+                          <RAMark width={20} />
+                        </a>
+                      )}
                       {h.year && <span className="text-xs tabular-nums text-[#8A8A99]">{h.year}</span>}
                     </li>
                   );

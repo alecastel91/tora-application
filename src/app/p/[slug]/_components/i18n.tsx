@@ -25,6 +25,9 @@ type Labels = {
   artist: string;
   verified: string;
   bio: string;
+  fullBio: string;
+  readFullBio: string;
+  close: string;
   representedBy: string;
   sets: string;
   mixes: (n: number) => string;
@@ -50,7 +53,7 @@ const L: Record<Lang, Labels> = {
   EN: {
     memberSignIn: "Member sign in", applyToJoin: "Apply to join", book: "Book",
     copyLink: "Copy link", copied: "Copied", copyPrompt: "Copy this link",
-    artist: "Artist", verified: "Verified on TORA", bio: "Bio", representedBy: "Represented by",
+    artist: "Artist", verified: "Verified on TORA", bio: "Bio", fullBio: "Full bio", readFullBio: "Read full bio", close: "Close", representedBy: "Represented by",
     sets: "Sets", mixes: (n) => `${n} ${n === 1 ? "mix" : "mixes"}`, releases: "Releases", highlights: "Highlights",
     videos: "Videos", play: "Play", closePlayer: "Close player", pressPhotos: "Press photos",
     photoBy: (name) => `Photo: ${name}`, pressKit: "Press kit", download: "Download",
@@ -61,7 +64,7 @@ const L: Record<Lang, Labels> = {
   JP: {
     memberSignIn: "メンバーログイン", applyToJoin: "参加を申し込む", book: "ブッキングする",
     copyLink: "リンクをコピー", copied: "コピーしました", copyPrompt: "このリンクをコピーしてください",
-    artist: "アーティスト", verified: "TORA認証済み", bio: "プロフィール文", representedBy: "所属",
+    artist: "アーティスト", verified: "TORA認証済み", bio: "プロフィール文", fullBio: "プロフィール全文", readFullBio: "全文を読む", close: "閉じる", representedBy: "所属",
     sets: "セット", mixes: (n) => `${n}本のミックス`, releases: "リリース", highlights: "ハイライト",
     videos: "動画", play: "再生", closePlayer: "プレーヤーを閉じる", pressPhotos: "プレス写真",
     photoBy: (name) => `撮影：${name}`, pressKit: "プレスキット", download: "ダウンロード",
@@ -72,7 +75,7 @@ const L: Record<Lang, Labels> = {
   CN: {
     memberSignIn: "会员登录", applyToJoin: "申请加入", book: "预订",
     copyLink: "复制链接", copied: "已复制", copyPrompt: "复制此链接",
-    artist: "艺人", verified: "已通过 TORA 认证", bio: "简介", representedBy: "经纪方",
+    artist: "艺人", verified: "已通过 TORA 认证", bio: "简介", fullBio: "完整简介", readFullBio: "阅读完整简介", close: "关闭", representedBy: "经纪方",
     sets: "Set", mixes: (n) => `${n} 个混音`, releases: "发行作品", highlights: "亮点",
     videos: "视频", play: "播放", closePlayer: "关闭播放器", pressPhotos: "媒体照片",
     photoBy: (name) => `摄影：${name}`, pressKit: "媒体资料包", download: "下载",
@@ -83,7 +86,7 @@ const L: Record<Lang, Labels> = {
   KR: {
     memberSignIn: "회원 로그인", applyToJoin: "가입 신청", book: "부킹하기",
     copyLink: "링크 복사", copied: "복사됨", copyPrompt: "이 링크를 복사하세요",
-    artist: "아티스트", verified: "TORA 인증 완료", bio: "소개", representedBy: "소속 에이전트",
+    artist: "아티스트", verified: "TORA 인증 완료", bio: "소개", fullBio: "전체 소개", readFullBio: "전체 소개 보기", close: "닫기", representedBy: "소속 에이전트",
     sets: "세트", mixes: (n) => `믹스 ${n}개`, releases: "발매작", highlights: "하이라이트",
     videos: "영상", play: "재생", closePlayer: "플레이어 닫기", pressPhotos: "프레스 사진",
     photoBy: (name) => `사진: ${name}`, pressKit: "프레스 키트", download: "다운로드",
@@ -94,7 +97,7 @@ const L: Record<Lang, Labels> = {
   ES: {
     memberSignIn: "Acceso miembros", applyToJoin: "Solicita tu acceso", book: "Contratar",
     copyLink: "Copiar enlace", copied: "Copiado", copyPrompt: "Copia este enlace",
-    artist: "Artista", verified: "Verificado en TORA", bio: "Bio", representedBy: "Representado por",
+    artist: "Artista", verified: "Verificado en TORA", bio: "Bio", fullBio: "Bio completa", readFullBio: "Leer bio completa", close: "Cerrar", representedBy: "Representado por",
     sets: "Sets", mixes: (n) => `${n} ${n === 1 ? "mix" : "mixes"}`, releases: "Lanzamientos", highlights: "Destacados",
     videos: "Vídeos", play: "Reproducir", closePlayer: "Cerrar reproductor", pressPhotos: "Fotos de prensa",
     photoBy: (name) => `Foto: ${name}`, pressKit: "Press kit", download: "Descargar",
@@ -105,7 +108,7 @@ const L: Record<Lang, Labels> = {
   FR: {
     memberSignIn: "Connexion membre", applyToJoin: "Devenir membre", book: "Booker",
     copyLink: "Copier le lien", copied: "Copié", copyPrompt: "Copiez ce lien",
-    artist: "Artiste", verified: "Vérifié sur TORA", bio: "Bio", representedBy: "Représenté par",
+    artist: "Artiste", verified: "Vérifié sur TORA", bio: "Bio", fullBio: "Bio complète", readFullBio: "Lire la bio complète", close: "Fermer", representedBy: "Représenté par",
     sets: "Sets", mixes: (n) => `${n} mix`, releases: "Sorties", highlights: "Temps forts",
     videos: "Vidéos", play: "Lire", closePlayer: "Fermer le lecteur", pressPhotos: "Photos presse",
     photoBy: (name) => `Photo : ${name}`, pressKit: "Press kit", download: "Télécharger",
@@ -116,7 +119,7 @@ const L: Record<Lang, Labels> = {
   IT: {
     memberSignIn: "Accesso membri", applyToJoin: "Candidati per entrare", book: "Ingaggia",
     copyLink: "Copia link", copied: "Copiato", copyPrompt: "Copia questo link",
-    artist: "Artista", verified: "Verificato su TORA", bio: "Bio", representedBy: "Rappresentato da",
+    artist: "Artista", verified: "Verificato su TORA", bio: "Bio", fullBio: "Bio completa", readFullBio: "Leggi la bio completa", close: "Chiudi", representedBy: "Rappresentato da",
     sets: "Set", mixes: (n) => `${n} mix`, releases: "Uscite", highlights: "Momenti salienti",
     videos: "Video", play: "Riproduci", closePlayer: "Chiudi il player", pressPhotos: "Foto stampa",
     photoBy: (name) => `Foto: ${name}`, pressKit: "Press kit", download: "Scarica",
@@ -127,7 +130,7 @@ const L: Record<Lang, Labels> = {
   PT: {
     memberSignIn: "Login de membro", applyToJoin: "Candidate-se a Membro", book: "Contratar",
     copyLink: "Copiar link", copied: "Copiado", copyPrompt: "Copie este link",
-    artist: "Artista", verified: "Verificado na TORA", bio: "Bio", representedBy: "Representado por",
+    artist: "Artista", verified: "Verificado na TORA", bio: "Bio", fullBio: "Bio completa", readFullBio: "Ler bio completa", close: "Fechar", representedBy: "Representado por",
     sets: "Sets", mixes: (n) => `${n} ${n === 1 ? "mix" : "mixes"}`, releases: "Lançamentos", highlights: "Destaques",
     videos: "Vídeos", play: "Reproduzir", closePlayer: "Fechar player", pressPhotos: "Fotos de imprensa",
     photoBy: (name) => `Foto: ${name}`, pressKit: "Press kit", download: "Baixar",

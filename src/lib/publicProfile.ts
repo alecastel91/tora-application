@@ -29,6 +29,7 @@ export type PublicProfile = {
   playStyles: string[];
   label: string | null;
   bio: string | null;
+  bioLong: string | null;
   links: Partial<Record<"instagram" | "residentAdvisor" | "soundcloud" | "bandcamp" | "spotify" | "website", string>>;
   representedBy: { name: string; agency: string | null; avatar: string | null; city: string | null; country: string | null }[];
   sets: MediaItem[];

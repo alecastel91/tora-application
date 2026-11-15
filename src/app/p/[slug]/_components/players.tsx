@@ -167,3 +167,46 @@ export function CopyLinkButton({ url }: { url: string }) {
     </button>
   );
 }
+
+/** The long bio, opened from "Read full bio" under the short one: a sheet
+    from the bottom on the phone, a panel from the right on desktop. */
+export function FullBio({ name, text }: { name: string; text: string }) {
+  const { t } = useLabels();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = overflow; };
+  }, [open]);
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className="self-start text-[13px] font-semibold text-[#FF3366] hover:underline">
+        {t.readFullBio}
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-end bg-black/70 md:items-stretch md:justify-end" onClick={() => setOpen(false)}>
+          <div role="dialog" aria-modal="true" aria-label={t.fullBio} onClick={(e) => e.stopPropagation()}
+            className="flex max-h-[85vh] w-full flex-col rounded-t-2xl border border-[#2A2A33] bg-[#0c0c11] md:max-h-none md:w-[520px] md:rounded-none md:border-y-0 md:border-r-0">
+            <div className="flex items-start justify-between gap-4 px-5 pb-3 pt-5 md:px-8 md:pt-8">
+              <div>
+                <h2 className="pp-label m-0 font-[family-name:var(--font-space-grotesk)] text-[13px] font-medium uppercase tracking-[0.16em] text-[#B9B9C6]">{t.fullBio}</h2>
+                <p className="m-0 mt-1.5 font-[family-name:var(--font-space-grotesk)] text-2xl font-bold text-[#F4F4F6]">{name}</p>
+              </div>
+              <button type="button" onClick={() => setOpen(false)} aria-label={t.close} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#2A2A33] text-[#B9B9C6] hover:text-white">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="overflow-y-auto px-5 pb-8 md:px-8">
+              <p className="m-0 max-w-[62ch] whitespace-pre-line text-[15px] leading-relaxed text-[#E4E4EA]">{text}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
