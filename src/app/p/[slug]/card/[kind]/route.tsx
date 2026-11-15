@@ -81,7 +81,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
     cjk && { name: "CJK", data: cjk, weight: 700 as const },
   ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500 | 700 }[];
 
-  const genres = p.genres.slice(0, 3);
+  // The artist's first five (their order), the rest as "+N".
+  const genres = p.genres.slice(0, 5);
+  const moreGenres = p.genres.length - genres.length;
   const s = og ? 0.62 : 1; // type scale for the small link-preview card
 
   const tick = p.verified && (
@@ -103,8 +105,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
       </div>
       {genres.length > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: 30 * s }}>
-          {genres.map((g) => (
-            <div key={g} style={{ display: "flex", border: "2px solid #3A3A45", borderRadius: 40, padding: `${10 * s}px ${26 * s}px`, fontSize: 28 * s, color: "#E4E4EA", marginRight: 14 * s, marginBottom: 12 * s }}>{g}</div>
+          {[...genres, ...(moreGenres > 0 ? [`+${moreGenres}`] : [])].map((g, i) => (
+            <div key={g} style={{ display: "flex", border: "2px solid #3A3A45", borderRadius: 40, padding: `${10 * s}px ${26 * s}px`, fontSize: 28 * s, color: i < genres.length ? "#E4E4EA" : "#8A8A99", marginRight: 14 * s, marginBottom: 12 * s }}>{g}</div>
           ))}
         </div>
       )}

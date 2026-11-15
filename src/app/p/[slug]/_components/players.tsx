@@ -215,3 +215,24 @@ export function FullBio({ name, text }: { name: string; text: string }) {
     </>
   );
 }
+
+/** The artist's genres in their own order: the first five, the rest behind "+N" (as in the app). */
+export function GenreList({ genres }: { genres: string[] }) {
+  const { t } = useLabels();
+  const [open, setOpen] = useState(false);
+  if (!genres.length) return null;
+  const extra = genres.length - 5;
+  const pill = "rounded-full border border-[#2A2A33] px-[11px] py-[5px] text-xs";
+  return (
+    <ul className="mt-0.5 flex list-none flex-wrap gap-1.5 p-0">
+      {(open ? genres : genres.slice(0, 5)).map((g) => <li key={g} className={`${pill} text-[#E4E4EA]`}>{g}</li>)}
+      {extra > 0 && (
+        <li>
+          <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className={`${pill} text-[#B9B9C6] hover:border-white/40 hover:text-white`}>
+            {open ? t.showLess : `+${extra}`}
+          </button>
+        </li>
+      )}
+    </ul>
+  );
+}

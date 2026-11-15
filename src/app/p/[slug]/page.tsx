@@ -8,7 +8,7 @@ import {
   applyHref, cleanSlug, fetchPublicProfile, pressKitHref, raProfileUrl, safeHttpUrl,
   type PublicProfile,
 } from "@/lib/publicProfile";
-import { CopyLinkButton, FullBio, SetsGrid, VideosGrid } from "./_components/players";
+import { CopyLinkButton, FullBio, GenreList, SetsGrid, VideosGrid } from "./_components/players";
 import { ApplyLink, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
 import { ShareButton } from "./_components/share";
 
@@ -169,13 +169,7 @@ export default async function PublicArtistPage({ params }: Params) {
         {p.verified && <VerifiedTick />}
       </div>
       {p.pronouns && <div className="text-sm text-[#B9B9C6]">{p.pronouns}</div>}
-      {p.genres.length > 0 && (
-        <ul className="mt-0.5 flex list-none flex-wrap gap-1.5 p-0">
-          {p.genres.map((g) => (
-            <li key={g} className="rounded-full border border-[#2A2A33] px-[11px] py-[5px] text-xs text-[#E4E4EA]">{g}</li>
-          ))}
-        </ul>
-      )}
+      <GenreList genres={p.genres} />
       {links.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2.5">
           {links.map((l) => (
