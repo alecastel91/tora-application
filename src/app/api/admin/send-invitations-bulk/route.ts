@@ -132,7 +132,7 @@ export async function POST(request: Request) {
 
     const code = makeCode();
     const couponPackage = (item.couponPackage || 'STANDARD').toUpperCase();
-    const accessLevel = item.accessLevel === 'FULL' ? 'FULL' : 'PROFILE_ONLY';
+    const accessLevel = row.application_type === 'ADD_PROFILE' ? undefined : item.accessLevel === 'FULL' ? 'FULL' : 'PROFILE_ONLY';
 
     try {
       // 1. Invitation record on the backend
@@ -169,6 +169,10 @@ export async function POST(request: Request) {
         const err = await createRes.json().catch(() => ({}));
         throw new Error(`Backend rejected invitation: ${err?.error || createRes.statusText}`);
       }
+      // The backend says which access the member really got (FULL after the
+      // launch switch, or an existing account's own level): the email follows it.
+      const created = await createRes.json().catch(() => ({}));
+      const grantedAccess: string | undefined = created?.invitation?.accessLevel || accessLevel;
 
       // 2. Waitlist row → INVITED
       const patchRes = await fetch(`${backendUrl}/admin/waitlist/${encodeURIComponent(row.id)}?env=${env}`, {
@@ -195,7 +199,7 @@ export async function POST(request: Request) {
             role: row.role,
             couponCode: code,
             couponPackage,
-            accessLevel,
+            accessLevel: grantedAccess,
           });
 
       results.push(emailResult.ok

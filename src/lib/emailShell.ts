@@ -22,13 +22,18 @@ export const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 const p = (html: string, css: string) => `<p style="margin:0;${css}">${html}</p>`;
 export const label = (s: string) => p(esc(s), `font:600 11px/14px ${FONT};letter-spacing:0.14em;text-transform:uppercase;color:${C.dim};`);
 
-export const pill = (text: string, color = C.mute) =>
-  `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;"><tr>
+type Align = 'left' | 'center';
+// Tables only centre in Outlook through the align attribute, so centred pieces ask for it.
+const alignAttr = (align: Align) => (align === 'center' ? ' align="center"' : '');
+
+export const pill = (text: string, color = C.mute, align: Align = 'left') =>
+  `<table role="presentation"${alignAttr(align)} cellpadding="0" cellspacing="0" style="border-collapse:separate;"><tr>
     <td style="padding:4px 10px;border-radius:999px;border:1px solid ${color};font:600 11px/14px ${FONT};letter-spacing:0.1em;text-transform:uppercase;color:${color};">&#9679;&nbsp;${esc(text)}</td></tr></table>`;
 
-export const button = (text: string, href: string) =>
-  `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:separate;"><tr><td bgcolor="${CRIMSON}" style="border-radius:10px;">
-    <a href="${esc(href)}" style="display:inline-block;padding:14px 26px;font:600 15px/20px ${FONT};color:#FFFFFF;border-radius:10px;text-decoration:none;">${esc(text)}&nbsp;&rarr;</a></td></tr></table>`;
+// Padding sits on the cell too: Outlook ignores it on the link and would shrink the button to a strip.
+export const button = (text: string, href: string, align: Align = 'left') =>
+  `<table role="presentation"${alignAttr(align)} cellpadding="0" cellspacing="0" style="border-collapse:separate;"><tr><td bgcolor="${CRIMSON}" style="border-radius:10px;padding:14px 26px;">
+    <a href="${esc(href)}" style="display:inline-block;font:600 15px/20px ${FONT};color:#FFFFFF;text-decoration:none;">${esc(text)}&nbsp;&rarr;</a></td></tr></table>`;
 
 /** A numbered list of steps: [title, body][]. */
 export const steps = (items: [string, string][]) =>
@@ -37,13 +42,13 @@ export const steps = (items: [string, string][]) =>
       <td valign="top" style="padding:2px 0 16px;">${p(esc(title), `margin-bottom:2px;font:600 14px/20px ${FONT};color:${C.text};`)}${p(body, `font:400 13px/19px ${FONT};color:${C.mute};`)}</td></tr>`).join('')}
   </table>`;
 
-/** An inset box: a small label over one big value and an optional line. */
-export const valueBox = (title: string, value: string, sub?: string) =>
+/** An inset box: a small label over one big value and an optional line (`subHtml` is not escaped). */
+export const valueBox = (title: string, value: string, subHtml?: string, align: Align = 'left') =>
   `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${C.inset}" style="background:${C.inset};border:1px solid ${C.line};border-radius:12px;border-collapse:separate;">
-    <tr><td style="padding:18px 20px;">
+    <tr><td align="${align}" style="padding:18px 20px;text-align:${align};">
       <div style="margin-bottom:6px;">${label(title)}</div>
       ${p(esc(value), `font:700 22px/28px ${FONT};letter-spacing:0.06em;color:${C.text};`)}
-      ${sub ? p(sub, `margin-top:4px;font:400 13px/18px ${FONT};color:${C.mute};`) : ''}
+      ${subHtml ? p(subHtml, `margin-top:4px;font:400 13px/18px ${FONT};color:${C.mute};`) : ''}
     </td></tr></table>`;
 
 export const note = (html: string) =>
@@ -51,14 +56,14 @@ export const note = (html: string) =>
 
 export const link = (text: string, href: string) => `<a href="${esc(href)}" style="color:${C.text};text-decoration:underline;">${esc(text)}</a>`;
 
-// Centres email-safe tables too: td align plus margin auto covers Gmail, Apple Mail and Outlook.
 const centred = (html: string) =>
-  `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="text-align:center;">${html.replace(/<table role="presentation" cellpadding/g, '<table role="presentation" align="center" cellpadding')}</td></tr></table>`;
+  `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="text-align:center;">${html}</td></tr></table>`;
 
 /**
  * The page around the content. `body` is already-built HTML (use the helpers
  * above); `heading` and `lead` are plain text. `hero` is the centred block
- * under the lead (a code, a button); passing it switches to the hero layout.
+ * under the lead (a code, a button); passing it switches to the hero layout,
+ * and its pieces should be built with align 'center' (eyebrow included).
  */
 export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason }: {
   title: string;

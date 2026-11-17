@@ -26,7 +26,7 @@ import { createClient } from "@supabase/supabase-js";
  *   M3. Column whitelist. Only the fields the form sends are written; anything
  *       else in the body is dropped rather than passed through to the table.
  *   M4. Attribution must never cost an application: if the insert fails and
- *       the payload carried `attribution`, retry once without it. Losing a
+ *       the payload carried `attribution` or `referral_code`, retry once without them. Losing a
  *       campaign label is acceptable; losing the applicant is not.
  *   M5. Honest status codes. 200 only when a row was really written, so the
  *       form can trust the answer and show the error state when it must.
@@ -75,11 +75,11 @@ export async function POST(request: Request) {
   if (!error) return NextResponse.json({ ok: true });
 
   // M4 — one more go without the campaign label.
-  if (row.attribution !== undefined) {
+  if (row.attribution !== undefined || row.referral_code !== undefined) {
     console.error("[public/apply] insert failed, retrying without attribution:", error.message);
-    const { attribution: _dropped, ...withoutAttribution } = row;
-    void _dropped;
-    const retry = await supabase.from(table).insert([withoutAttribution]);
+    const { attribution: _a, referral_code: _r, ...withoutExtras } = row;
+    void _a; void _r;
+    const retry = await supabase.from(table).insert([withoutExtras]);
     if (!retry.error) return NextResponse.json({ ok: true, attributionDropped: true });
     console.error("[public/apply] retry failed:", retry.error.message);
   } else {

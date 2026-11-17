@@ -124,4 +124,4 @@ export const cardPath = (slug: string, kind: string, version?: string, me = fals
 
 /** The "Book" button: the apply page, tagged so the application records which page sent it. */
 export const applyHref = (slug: string) =>
-  `/apply?start=role&ref=${encodeURIComponent(slug)}&utm_source=tora-profile&utm_medium=public-page&utm_content=${encodeURIComponent(slug)}`;
+  `/apply?start=role&utm_source=tora-profile&utm_medium=public-page&utm_content=${encodeURIComponent(slug)}`;

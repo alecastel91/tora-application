@@ -146,7 +146,8 @@ async function sendProfileOnlyInvitation(input: {
   couponCode: string;
   couponPackage?: string | null;
 }): Promise<SendResult> {
-  const { firstName, email, role, couponCode } = input;
+  const { email, role, couponCode } = input;
+  const firstName = input.firstName?.trim() || '';
   const pkgKey = (input.couponPackage || 'STANDARD').toUpperCase();
   const pkg = packageInfo[pkgKey] || packageInfo.STANDARD;
   const roleKey = String(role || '').toUpperCase();
@@ -158,13 +159,13 @@ async function sendProfileOnlyInvitation(input: {
   const html = emailShell({
     title: "You're in",
     preheader: 'Set up your profile, verify it and share your public page. Full access opens at launch.',
-    eyebrow: pill(pkg.label, ROLE_COLOR[roleKey]),
-    heading: `You're in, ${firstName}`,
+    eyebrow: pill(pkg.label, ROLE_COLOR[roleKey], 'center'),
+    heading: firstName ? `You're in, ${firstName}` : "You're in",
     lead: 'Your application was accepted. Set up your profile, verify it and start sharing your public page now. The full app opens for everyone at launch.',
     hero: [
-      valueBox('Your invitation code', couponCode, `Sign up at ${appHost} with this email address`),
+      valueBox('Your invitation code', couponCode, `Sign up at ${appHost} with this email address`, 'center'),
       '<div style="height:24px;line-height:24px;">&nbsp;</div>',
-      button('Set up your profile', signupUrl),
+      button('Set up your profile', signupUrl, 'center'),
     ].join('\n'),
     body: [
       steps([
@@ -178,7 +179,7 @@ async function sendProfileOnlyInvitation(input: {
   });
 
   const text = [
-    `Hi ${firstName},`,
+    `Hi ${firstName || 'there'},`,
     ``,
     `Your application to TORA has been accepted. Welcome.`,
     ``,
@@ -202,7 +203,7 @@ async function sendProfileOnlyInvitation(input: {
       from: 'TORA <invitation@mail.torahub.io>',
       replyTo: 'support@torahub.io',
       to: [email],
-      subject: `${firstName}, you're in: set up your TORA page`,
+      subject: firstName ? `${firstName}, you're in: set up your TORA page` : "You're in: set up your TORA page",
       html,
       text,
       headers: {

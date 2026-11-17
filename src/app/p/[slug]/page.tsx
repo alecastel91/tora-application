@@ -298,7 +298,7 @@ export default async function PublicProfilePage({ params }: Params) {
                   );
                   const cls = "flex flex-col items-center gap-2 text-center";
                   return a.slug
-                    ? <Link key={a.name} href={`/@${a.slug}`} className={`${cls} hover:opacity-85`}>{body}</Link>
+                    ? <Link key={a.slug || a.name} href={`/@${a.slug}`} className={`${cls} hover:opacity-85`}>{body}</Link>
                     : <div key={a.name} className={cls}>{body}</div>;
                 })}
               </div>
@@ -309,7 +309,7 @@ export default async function PublicProfilePage({ params }: Params) {
             <Section title={<T k="photos" />}>
               <div className="pp-scroller -mx-5 flex gap-3 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0">
                 {photos.map((u) => (
-                  <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="block w-[240px] shrink-0 md:w-auto">
+                  <a key={u} href={safeHttpUrl(u) || undefined} target="_blank" rel="noopener noreferrer" className="block w-[240px] shrink-0 md:w-auto">
                     <Img src={u} alt={`${p.name}`} loading="lazy" className="block aspect-[4/3] w-full rounded-[10px] border border-[#23232C] object-cover" />
                   </a>
                 ))}
@@ -387,7 +387,7 @@ export default async function PublicProfilePage({ params }: Params) {
             <Section title={<T k="pastEvents" />}>
               <div className="pp-scroller -mx-5 flex gap-3 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
                 {photos.map((u) => (
-                  <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="block w-[170px] shrink-0 md:w-auto">
+                  <a key={u} href={safeHttpUrl(u) || undefined} target="_blank" rel="noopener noreferrer" className="block w-[170px] shrink-0 md:w-auto">
                     <Img src={u} alt={`${p.name}, past event`} loading="lazy" className="block aspect-[4/5] w-full rounded-[10px] border border-[#23232C] object-cover" />
                   </a>
                 ))}

@@ -186,14 +186,14 @@ export const ATTRIBUTION_STORAGE_KEY = KEY;
    B5). The backend only credits a code that matches a member's own pending
    referral invitation, so a made-up value earns nothing. */
 const REF_KEY = "tora_ref";
-const REF_RE = /^[A-Za-z0-9._-]{3,64}$/;
+const REF_RE = /^TORA-[A-Z0-9]{4,8}(-[A-Z0-9]{4})?$/; // makeReferralCode + admin codes
 
 /** Call on every page load (AttributionCapture does): stores ?ref= when present. */
 export function captureReferral(): void {
   if (typeof window === "undefined") return;
   try {
-    const ref = new URLSearchParams(window.location.search).get("ref")?.trim() || "";
-    if (!REF_RE.test(ref)) return;
+    const ref = new URLSearchParams(window.location.search).get("ref")?.trim().toUpperCase() || "";
+    if (!REF_RE.test(ref) || referralForSubmit()) return; // the first live referral keeps the credit
     window.localStorage.setItem(REF_KEY, JSON.stringify({ ref, expires_at: Date.now() + TTL_MS }));
   } catch {
     /* storage blocked: the referral is optional */

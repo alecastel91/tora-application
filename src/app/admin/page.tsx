@@ -351,6 +351,7 @@ export default function AdminDashboard() {
             // Check if this email already has an account in the backend.
             // The full waitlist is already loaded; filter client-side so we
             // don't hit the server for what we already have.
+            let hasAccount = !!application.existing_user_id;
             if (!application.existing_user_id) {
                 const existing = applications.find(
                     (a) => a.email === application.email
@@ -364,8 +365,11 @@ export default function AdminDashboard() {
                         `Continue?`
                     );
                     if (!proceed) return;
+                    hasAccount = true;
                 }
             }
+            // Profile-only is for brand-new accounts; an existing account keeps its access level.
+            const accessLevel = hasAccount || application.application_type === 'ADD_PROFILE' ? undefined : accessFor(application.id);
 
             // Generate unique coupon code (format: TORA-XXXX-XXXX)
             const couponCode = `TORA-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -380,7 +384,7 @@ export default function AdminDashboard() {
                     code: couponCode,
                     email: application.email,
                     couponPackage: invitationPackages[application.id] || 'STANDARD',
-                    accessLevel: accessFor(application.id),
+                    accessLevel,
                     referralCode: application.referral_code || undefined,
                     existingUserId: application.existing_user_id,
                     applicationType: application.application_type,
@@ -409,6 +413,8 @@ export default function AdminDashboard() {
                     `Backend rejected invitation: ${errBody.error || backendRes.statusText}`
                 );
             }
+            // The access the member really got (FULL after the launch switch): the email follows it.
+            const grantedAccess: string | undefined = (await backendRes.json().catch(() => ({})))?.invitation?.accessLevel || accessLevel;
 
             console.log('Invitation created in backend successfully');
 
@@ -462,7 +468,7 @@ export default function AdminDashboard() {
                             role: application.role,
                             couponCode: couponCode,
                             couponPackage: invitationPackages[application.id] || 'STANDARD',
-                            accessLevel: accessFor(application.id),
+                            accessLevel: grantedAccess,
                         }),
                     });
                     emailOk = emailRes.ok;
@@ -510,12 +516,13 @@ export default function AdminDashboard() {
         if (!confirm(
             `Send invitations to ALL ${approved.length} approved applicants?\n\n` +
             `Packages: ${breakdown}\n` +
+            `Access: ${approved.filter(a => a.application_type !== 'ADD_PROFILE' && fullAccess[a.id]).length} full now (friends), the rest profile-only until launch\n` +
             `(set each row's package dropdown first if it should not be STANDARD)\n\n` +
             `Emails go out at roughly one per second. You can leave this page open and watch progress.`
         )) return;
 
         setBulk({ running: true, total: approved.length, results: [] });
-        const queue = approved.map(a => ({ id: a.id, couponPackage: invitationPackages[a.id] || 'STANDARD', accessLevel: accessFor(a.id) }));
+        const queue = approved.map(a => ({ id: a.id, couponPackage: invitationPackages[a.id] || 'STANDARD', accessLevel: a.application_type === 'ADD_PROFILE' ? undefined : accessFor(a.id) }));
 
         for (let i = 0; i < queue.length; i += BULK_BATCH) {
             const items = queue.slice(i, i + BULK_BATCH);

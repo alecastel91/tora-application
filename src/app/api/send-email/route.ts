@@ -10,7 +10,10 @@ const ROLE_NOUN: Record<string, string> = { ARTIST: 'an artist', AGENT: 'an agen
 export async function POST(request: Request) {
   try {
     const { firstName: rawName, email, role } = await request.json();
-    const firstName = String(rawName || '').trim() || 'there';
+    if (typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
+    }
+    const firstName = String(rawName || '').trim().slice(0, 60) || 'there';
     const roleKey = String(role || '').toUpperCase();
     const submittedDate = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
     const asRole = ROLE_NOUN[roleKey] ? ` as ${ROLE_NOUN[roleKey]}` : '';
@@ -18,17 +21,17 @@ export async function POST(request: Request) {
     const html = emailShell({
       title: 'Application received',
       preheader: 'We read every application by hand. Here is what happens next.',
-      eyebrow: pill('Application received', ROLE_COLOR[roleKey] || '#9A9AA8'),
+      eyebrow: pill('Application received', ROLE_COLOR[roleKey] || '#9A9AA8', 'center'),
       heading: `Thanks, ${firstName}. We've got it`,
       lead: `Your application to join TORA${asRole} is in review. We read every one by hand and reply by email.`,
-      hero: button('See how TORA works', 'https://torahub.io/features'),
+      hero: button('See how TORA works', 'https://torahub.io/features', 'center'),
       body: [
         steps([
           ['Review', 'We check every application so the network stays professional and trusted.'],
           ['Your invitation', 'If you are approved, your invitation code arrives by email. You can set up your profile and public page straight away.'],
           ['Launch', 'Search, offers, contracts and payments open for every member at launch.'],
         ]),
-        note(`Applied with ${esc(String(email || ''))} on ${submittedDate}. Follow <a href="https://instagram.com/tora.hub" style="color:#9A9AA8;">@tora.hub</a> for launch news.`),
+        note(`Applied with ${esc(email)} on ${submittedDate}. Follow <a href="https://instagram.com/tora.hub" style="color:#9A9AA8;">@tora.hub</a> for launch news.`),
       ].join('\n'),
       footReason: 'You are receiving this because you applied to join TORA.',
     });
