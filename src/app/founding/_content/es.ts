@@ -98,7 +98,7 @@ export const es: FoundingContent = {
     steps: [
       { title: "Descubre", body: "Explora la red, cuadra calendarios, encuentra al artista ideal — en cualquier lugar." },
       { title: "Conecta", body: "Escribe directamente y abre la conversación." },
-      { title: "Oferta y negocia", body: "Propón fechas y caché, y negocia hasta el sí." },
+      { title: "Ofrece y negocia", body: "Propón fechas y caché, y negocia hasta el sí." },
       { title: "Firma el contrato", body: "Genera y firma digitalmente — sin PDFs por correo." },
       { title: "Confirmado", body: "Contrato firmado, pago confirmado. Trato hecho." },
     ],
@@ -148,7 +148,7 @@ export const es: FoundingContent = {
         body: "Envía una solicitud de conexión y habla directamente. Negocia fechas y cachés, comparte documentos y mantén toda la conversación en un mismo hilo.",
       },
       offer: {
-        label: "Oferta y negocia",
+        label: "Ofrece y negocia",
         title: "Haz una oferta. Cierra las condiciones.",
         body: "Envía una oferta de contratación con fechas, caché y condiciones, contraoferta y ajusta hasta que ambas partes estén de acuerdo — cada paso queda registrado, hasta el acuerdo firmado.",
       },
