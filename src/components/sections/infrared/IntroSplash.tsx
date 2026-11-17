@@ -68,7 +68,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                         showLogo
                             ? {
                                   opacity: 1,
-                                  scale: slideUp ? 0.7 : 1, // 320px -> 224px (0.7x)
+                                  scale: slideUp ? 0.7 : 1, // 320px -> 224px (0.7x); desktop 340px -> 238px
                                   filter: "blur(0px)",
                                   y: slideUp ? -40 : 0 // Slide up 40px
                               }
@@ -82,7 +82,7 @@ export function IntroSplash({ onComplete, onApply, onShowContent, skipSplash = f
                         alt="TORA Logo"
                         width={500}
                         height={166}
-                        className="w-[320px] md:w-[480px] h-auto object-contain"
+                        className="w-[320px] md:w-[340px] h-auto object-contain"
                         priority
                     />
                 </motion.div>
