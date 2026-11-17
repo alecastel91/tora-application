@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagram y detalles de la sala",
   "instagram_additional_info_promoter": "Instagram e información adicional",
   "instagram_username": "Nombre de usuario de Instagram",
+  "instagram_validation_error": "Introduce tu nombre de usuario de Instagram, no un enlace",
   "instagram_verification_notice": "Tu nombre de usuario de Instagram se utilizará para verificar tu identidad. Indica la cuenta que mejor represente tu perfil profesional.",
   "instagram_notice_venue": "Introduce el Instagram de tu sala, no una cuenta personal. Se usa para reconocer y verificar tu sala durante la revisión.",
   "instagram_notice_promoter": "Introduce el Instagram de tu evento o marca, no una cuenta personal. Se usa para reconocerte y verificarte durante la revisión.",

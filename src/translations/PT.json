@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagram e Detalhes da Casa",
   "instagram_additional_info_promoter": "Instagram e Informações Adicionais",
   "instagram_username": "Nome de usuário do Instagram",
+  "instagram_validation_error": "Digite seu nome de usuário do Instagram, não um link",
   "instagram_verification_notice": "Seu nome de usuário do Instagram será usado para verificação de identidade e autenticação. Informe a conta que melhor representa seu perfil profissional.",
   "instagram_notice_venue": "Informe o Instagram da sua casa, não uma conta pessoal. Ele é usado para reconhecer e verificar sua casa durante a análise.",
   "instagram_notice_promoter": "Informe o Instagram do seu evento ou da sua marca, não uma conta pessoal. Ele é usado para reconhecer e verificar você durante a análise.",

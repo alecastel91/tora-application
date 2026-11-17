@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagram & Venue Details",
   "instagram_additional_info_promoter": "Instagram & Additional Info",
   "instagram_username": "Instagram username",
+  "instagram_validation_error": "Enter your Instagram username, not a link",
   "instagram_verification_notice": "Your Instagram handle will be used for identity verification and authentication purposes. Please provide an account that best represents your professional profile.",
   "instagram_notice_venue": "Enter your venue's Instagram page — not a personal account. It's used to recognise and verify your venue during review.",
   "instagram_notice_promoter": "Enter your event or brand's Instagram page — not a personal account. It's used to recognise and verify you during review.",

@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagramとベニュー情報",
   "instagram_additional_info_promoter": "Instagramと追加情報",
   "instagram_username": "Instagramユーザー名",
+  "instagram_validation_error": "リンクではなく、Instagramのユーザーネームを入力してください",
   "instagram_verification_notice": "Instagramのユーザー名は、本人確認と認証のために使用します。あなたの活動を最もよく表すアカウントをご入力ください。",
   "instagram_notice_venue": "個人アカウントではなく、ベニューのInstagramを入力してください。審査時にベニューの確認・認証に使用します。",
   "instagram_notice_promoter": "個人アカウントではなく、イベントまたはブランドのInstagramを入力してください。審査時の確認・認証に使用します。",

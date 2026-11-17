@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagram et détails du lieu",
   "instagram_additional_info_promoter": "Instagram et informations complémentaires",
   "instagram_username": "Nom d'utilisateur Instagram",
+  "instagram_validation_error": "Saisissez votre nom d'utilisateur Instagram, pas un lien",
   "instagram_verification_notice": "Votre identifiant Instagram sera utilisé à des fins de vérification d'identité et d'authentification. Veuillez indiquer le compte qui représente le mieux votre profil professionnel.",
   "instagram_notice_venue": "Indiquez l'Instagram de votre établissement, pas un compte personnel. Il nous permet d'identifier et de vérifier votre lieu lors de l'examen de votre candidature.",
   "instagram_notice_promoter": "Indiquez l'Instagram de votre événement ou de votre marque, pas un compte personnel. Il nous permet de vous identifier et de vous vérifier lors de l'examen de votre candidature.",

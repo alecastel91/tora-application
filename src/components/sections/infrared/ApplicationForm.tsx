@@ -361,6 +361,23 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         return all;
     };
 
+    // Applicants paste whatever Instagram had in the address bar — a profile
+    // URL, a post, or (seen in the wild) a DM thread. Verification matches on a
+    // handle, so keep the handle and refuse the links that have none in them.
+    const NON_PROFILE_PATHS = ['direct', 'p', 'reel', 'reels', 'stories', 'explore', 'tv', 'accounts'];
+    const normalizeInstagram = (raw: string): string | null => {
+        let v = raw.trim().replace(/^@+/, '');
+        v = v.replace(/^https?:\/\//i, '').replace(/^www\./i, '');
+        const onInstagram = /^(?:instagram\.com|instagr\.am)\//i.test(v);
+        v = v.replace(/^(?:instagram\.com|instagr\.am)\//i, '');
+        v = v.split(/[?#]/)[0].replace(/\/+$/, '');
+        // A path on any other host (linktr.ee/x, facebook.com/x) is not a handle.
+        if (!onInstagram && v.includes('/')) return null;
+        const [first] = v.split('/');
+        if (!first || NON_PROFILE_PATHS.includes(first.toLowerCase())) return null;
+        return /^[A-Za-z0-9._]{1,30}$/.test(first) ? first : null;
+    };
+
     const validateEmail = (email: string): boolean => {
         // Regex that requires: username@domain.extension
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -378,6 +395,14 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
         // path. HTML `required` alone can be bypassed.
         if (role === 'Agent' && !website.trim()) {
             setError(t('agency_website_required'));
+            setLoading(false);
+            return;
+        }
+
+        // Instagram is required for every role and anchors verification.
+        const instagramHandle = normalizeInstagram(instagram);
+        if (!instagramHandle) {
+            setError(t('instagram_validation_error'));
             setLoading(false);
             return;
         }
@@ -423,7 +448,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             country,
                             city,
                             genres: collectGenres().join(', '),
-                            instagram: instagram || null,
+                            instagram: instagramHandle,
                             resident_advisor: residentAdvisor || null,
                             soundcloud: soundcloud || null,
                             agency_name: agencyName || null,
@@ -516,7 +541,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                         country,
                         city,
                         genres: collectGenres().join(', '),
-                        instagram,
+                        instagram: instagramHandle,
                         resident_advisor: residentAdvisor || null,
                         soundcloud: soundcloud || null,
                         agency_name: agencyName || null,

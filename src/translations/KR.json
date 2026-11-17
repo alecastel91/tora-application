@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagram 및 베뉴 정보",
   "instagram_additional_info_promoter": "Instagram 및 추가 정보",
   "instagram_username": "Instagram 사용자 이름",
+  "instagram_validation_error": "링크가 아닌 Instagram 사용자 이름을 입력해 주세요",
   "instagram_verification_notice": "Instagram 사용자 이름은 신원 확인 및 인증에 사용됩니다. 전문 활동을 가장 잘 보여주는 계정을 입력해 주세요.",
   "instagram_notice_venue": "개인 계정이 아닌 베뉴의 Instagram을 입력하세요. 심사 단계에서 베뉴 확인 및 인증에 사용됩니다.",
   "instagram_notice_promoter": "개인 계정이 아닌 이벤트 또는 브랜드의 Instagram을 입력하세요. 심사 단계에서 확인 및 인증에 사용됩니다.",

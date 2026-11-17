@@ -46,6 +46,7 @@
   "instagram_venue_details_venue": "Instagram和场地详情",
   "instagram_additional_info_promoter": "Instagram和附加信息",
   "instagram_username": "Instagram用户名",
+  "instagram_validation_error": "请输入您的 Instagram 用户名，而不是链接",
   "instagram_verification_notice": "您的 Instagram 账号将用于身份核验与专业认证。请提供最能代表您专业形象的账号。",
   "instagram_notice_venue": "请填写场地的 Instagram 主页，而非个人账号。我们将在审核阶段用它识别和验证您的场地。",
   "instagram_notice_promoter": "请填写活动或品牌的 Instagram 主页，而非个人账号。我们将在审核阶段用它识别和验证您的身份。",
