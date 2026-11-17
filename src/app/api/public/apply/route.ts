@@ -43,7 +43,7 @@ const ALLOWED = [
   "phone_number", "role", "first_name", "last_name", "profile_name", "email",
   "zone", "country", "city", "genres", "instagram", "resident_advisor",
   "soundcloud", "agency_name", "website", "linkedin", "venue_capacity",
-  "attribution",
+  "attribution", "referral_code",
 ] as const;
 
 export async function POST(request: Request) {

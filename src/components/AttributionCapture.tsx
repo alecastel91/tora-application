@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { captureAttribution } from "@/lib/attribution";
+import { captureAttribution, captureReferral } from "@/lib/attribution";
 
 /**
  * Runs the campaign capture once per page load. Mounted in the root layout so
@@ -22,6 +22,7 @@ export function AttributionCapture() {
   useEffect(() => {
     try {
       captureAttribution();
+      captureReferral();
     } catch {
       /* C3: attribution must never break a page render */
     }

@@ -179,3 +179,39 @@ export function attributionForSubmit(): Attribution | null {
 }
 
 export const ATTRIBUTION_STORAGE_KEY = KEY;
+
+/* Member referrals (?ref=<invitation code> on a member's invite link). Kept
+   apart from the utm entry: a referral is a person, not a campaign, so a later
+   campaign visit must not erase it. Same 30-day window and storage rules (B4,
+   B5). The backend only credits a code that matches a member's own pending
+   referral invitation, so a made-up value earns nothing. */
+const REF_KEY = "tora_ref";
+const REF_RE = /^[A-Za-z0-9._-]{3,64}$/;
+
+/** Call on every page load (AttributionCapture does): stores ?ref= when present. */
+export function captureReferral(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const ref = new URLSearchParams(window.location.search).get("ref")?.trim() || "";
+    if (!REF_RE.test(ref)) return;
+    window.localStorage.setItem(REF_KEY, JSON.stringify({ ref, expires_at: Date.now() + TTL_MS }));
+  } catch {
+    /* storage blocked: the referral is optional */
+  }
+}
+
+/** The stored referral code for the application insert, or null. */
+export function referralForSubmit(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const entry = JSON.parse(window.localStorage.getItem(REF_KEY) || "null");
+    if (!entry || typeof entry.ref !== "string" || !REF_RE.test(entry.ref)) return null;
+    if (!(entry.expires_at > Date.now())) {
+      window.localStorage.removeItem(REF_KEY);
+      return null;
+    }
+    return entry.ref;
+  } catch {
+    return null;
+  }
+}

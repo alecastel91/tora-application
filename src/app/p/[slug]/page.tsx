@@ -9,15 +9,18 @@ import {
   type PublicProfile,
 } from "@/lib/publicProfile";
 import { CopyLinkButton, FullBio, GenreList, SetsGrid, VideosGrid } from "./_components/players";
-import { ApplyLink, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
+import { ApplyLink, Count, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
 import { ShareButton } from "./_components/share";
 
-/* torahub.io/@slug (rewritten here by next.config). A verified artist's
-   public page, laid out to the approved mock (round 2–9 decisions, see the
-   app's public-profile notes): one photo, identity, link icons, Book + Copy
-   link, Bio under the buttons, then Sets / Releases / Highlights / Videos /
-   Press photos / Press kit. Phone = one column, desktop = identity column +
-   content column. Built on demand and cached; the app's saves rebuild it. */
+/* torahub.io/@slug (rewritten here by next.config). A verified member's
+   public page, laid out to the approved mocks (artist: round 2–9 decisions;
+   venue / promoter / agent: the round 4–5 boards, every role public since
+   2026-11-17): one photo, identity, link icons, the role's button + Copy
+   link, Bio under the buttons, then the role's sections — artist: Sets /
+   Releases / Highlights / Videos / Press photos / Press kit; agent: Roster /
+   Highlights; venue: Photos / Highlights; promoter: Highlights / Past events.
+   Phone = one column, desktop = identity column + content column. Built on
+   demand and cached; the app's saves rebuild it. */
 
 // Must be a literal (Next reads it statically); same as PAGE_REVALIDATE.
 export const revalidate = 300;
@@ -40,6 +43,13 @@ async function load(raw: string): Promise<PublicProfile> {
 
 const place = (p: { city: string | null; country: string | null }) => [p.city, p.country].filter(Boolean).join(", ");
 const roleLabel = (role: string) => role.charAt(0) + role.slice(1).toLowerCase();
+// Role dot colours = the app's (tora-app utils/roles.js); the button each role's page offers.
+const ROLE = {
+  ARTIST: { label: "artist", color: "#6B5FFF", cta: "book" },
+  AGENT: { label: "agent", color: "#00C875", cta: "book" },
+  PROMOTER: { label: "promoter", color: "#FFB800", cta: "connect" },
+  VENUE: { label: "venue", color: "#FF5757", cta: null },
+} as const;
 const PLAY_STYLES = ["DJ_SET", "VINYL", "HYBRID", "LIVE"] as const;
 type PlayStyle = (typeof PLAY_STYLES)[number];
 const FOCUS_RE = /^\d{1,3}(\.\d+)?% \d{1,3}(\.\d+)?%$/;
@@ -136,8 +146,11 @@ const Img = (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt="" {.
 
 /* ---------- page ---------- */
 
-export default async function PublicArtistPage({ params }: Params) {
+export default async function PublicProfilePage({ params }: Params) {
   const p = await load((await params).slug);
+  const role = ROLE[p.role as keyof typeof ROLE] || ROLE.ARTIST;
+  const photos = p.photos || [];
+  const roster = p.roster || [];
   const url = `${SITE}/@${p.slug}`;
   const links = profileLinks(p);
   const focus = p.photoFocus && FOCUS_RE.test(p.photoFocus) ? p.photoFocus : "50% 22%";
@@ -148,7 +161,7 @@ export default async function PublicArtistPage({ params }: Params) {
   // Search engines get the same facts the page shows, nothing more.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
+    "@type": p.role === "VENUE" ? "MusicVenue" : p.role === "PROMOTER" ? "Organization" : "Person",
     name: p.name,
     url,
     image: p.photo || undefined,
@@ -161,14 +174,26 @@ export default async function PublicArtistPage({ params }: Params) {
   const identity = (
     <div className="flex flex-col gap-2.5">
       <div className="pp-label flex items-center gap-2 font-[family-name:var(--font-space-grotesk)] text-[11px] uppercase tracking-[0.16em] text-[#B9B9C6]">
-        <span className="h-2 w-2 shrink-0 rounded-full bg-[#6B5FFF]" aria-hidden="true" />
-        <T k="artist" />{where && ` · ${where}`}
+        <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: role.color }} aria-hidden="true" />
+        <T k={role.label} />{where && ` · ${where}`}
       </div>
       <div className="flex items-center gap-2.5">
         <h1 className="m-0 font-[family-name:var(--font-space-grotesk)] text-[38px] font-bold leading-none tracking-[-0.01em] text-[#F4F4F6] md:text-[44px]">{p.name}</h1>
         {p.verified && <VerifiedTick />}
       </div>
       {p.pronouns && <div className="text-sm text-[#B9B9C6]">{p.pronouns}</div>}
+      {p.venue && (p.venue.capacity || p.venue.rooms) && (
+        <div className="text-sm text-[#B9B9C6]">
+          {p.venue.capacity ? <Count k="capacity" n={p.venue.capacity} /> : null}
+          {p.venue.capacity && p.venue.rooms ? " · " : null}
+          {p.venue.rooms ? <Count k="rooms" n={p.venue.rooms} /> : null}
+        </div>
+      )}
+      {p.role === "AGENT" && (p.agency || roster.length > 0) && (
+        <div className="text-sm text-[#B9B9C6]">
+          {p.agency}{p.agency && roster.length > 0 ? " · " : null}{roster.length > 0 && <Count k="agencyArtists" n={roster.length} />}
+        </div>
+      )}
       <GenreList genres={p.genres} />
       {links.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2.5">
@@ -181,9 +206,11 @@ export default async function PublicArtistPage({ params }: Params) {
         </div>
       )}
       <div className="mt-3 flex gap-2.5">
-        <ApplyLink href={applyHref(p.slug)} className="flex h-[50px] flex-1 items-center justify-center rounded-xl bg-[#FF3366] text-[15px] font-semibold text-white transition-colors hover:bg-[#ff4d7a]">
-          <T k="book" />
-        </ApplyLink>
+        {role.cta && (
+          <ApplyLink href={applyHref(p.slug)} className="flex h-[50px] flex-1 items-center justify-center rounded-xl bg-[#FF3366] text-[15px] font-semibold text-white transition-colors hover:bg-[#ff4d7a]">
+            <T k={role.cta} />
+          </ApplyLink>
+        )}
         <CopyLinkButton url={url} />
         <ShareButton name={p.name} slug={p.slug} url={url} version={p.updatedAt} />
       </div>
@@ -256,6 +283,40 @@ export default async function PublicArtistPage({ params }: Params) {
 
         {/* Content column */}
         <div className="mt-9 flex min-w-0 flex-1 flex-col gap-9 px-5 md:mt-0 md:px-0">
+          {roster.length > 0 && (
+            <Section title={<T k="roster" />}>
+              <div className="grid grid-cols-3 gap-x-3 gap-y-[18px] md:grid-cols-4">
+                {roster.map((a) => {
+                  const body = (
+                    <>
+                      {a.photo
+                        ? <Img src={a.photo} alt={a.name} loading="lazy" className="block h-[92px] w-[92px] rounded-full border border-[#2A2A33] object-cover" />
+                        : <span className="block h-[92px] w-[92px] rounded-full border border-[#2A2A33] bg-[#15151B]" aria-hidden="true" />}
+                      <span className="text-sm font-semibold text-[#F4F4F6]">{a.name}</span>
+                      <span className="text-[11px] leading-snug text-[#8A8A99]">{[a.genre, a.city].filter(Boolean).join(" · ")}</span>
+                    </>
+                  );
+                  const cls = "flex flex-col items-center gap-2 text-center";
+                  return a.slug
+                    ? <Link key={a.name} href={`/@${a.slug}`} className={`${cls} hover:opacity-85`}>{body}</Link>
+                    : <div key={a.name} className={cls}>{body}</div>;
+                })}
+              </div>
+            </Section>
+          )}
+
+          {p.role === "VENUE" && photos.length > 0 && (
+            <Section title={<T k="photos" />}>
+              <div className="pp-scroller -mx-5 flex gap-3 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0">
+                {photos.map((u) => (
+                  <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="block w-[240px] shrink-0 md:w-auto">
+                    <Img src={u} alt={`${p.name}`} loading="lazy" className="block aspect-[4/3] w-full rounded-[10px] border border-[#23232C] object-cover" />
+                  </a>
+                ))}
+              </div>
+            </Section>
+          )}
+
           {p.sets.length > 0 && (
             <Section title={<T k="sets" />} aside={<span className="text-xs text-[#8A8A99]"><Mixes n={p.sets.length} /></span>}>
               <SetsGrid sets={p.sets} />
@@ -307,7 +368,7 @@ export default async function PublicArtistPage({ params }: Params) {
                       <span className="min-w-0 flex-1 text-[15px] font-medium">
                         {ra ? <a href={ra} target="_blank" rel="noopener noreferrer" className="text-[#F4F4F6] hover:text-[#FF3366]">{h.venue}</a> : h.venue}
                       </span>
-                      {h.city && <span className="text-xs text-[#8A8A99]">{h.city}</span>}
+                      {(h.city || h.artist) && <span className="text-xs text-[#8A8A99]">{h.city || h.artist}</span>}
                       {ra && (
                         <a href={ra} target="_blank" rel="noopener noreferrer" aria-label={`Resident Advisor: ${h.venue}`} title="Resident Advisor"
                           className="flex h-7 items-center px-1 text-white/60 transition-colors hover:text-white">
@@ -320,6 +381,18 @@ export default async function PublicArtistPage({ params }: Params) {
                 })}
               </ul>
             </section>
+          )}
+
+          {p.role === "PROMOTER" && photos.length > 0 && (
+            <Section title={<T k="pastEvents" />}>
+              <div className="pp-scroller -mx-5 flex gap-3 overflow-x-auto px-5 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+                {photos.map((u) => (
+                  <a key={u} href={u} target="_blank" rel="noopener noreferrer" className="block w-[170px] shrink-0 md:w-auto">
+                    <Img src={u} alt={`${p.name}, past event`} loading="lazy" className="block aspect-[4/5] w-full rounded-[10px] border border-[#23232C] object-cover" />
+                  </a>
+                ))}
+              </div>
+            </Section>
           )}
 
           {p.videos.length > 0 && (

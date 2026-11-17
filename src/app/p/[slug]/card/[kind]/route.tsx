@@ -4,6 +4,9 @@ import sharp from "sharp";
 import { cleanSlug, fetchPublicProfile } from "@/lib/publicProfile";
 import { TORA_LOGO } from "./logo";
 
+// The app's role colours (tora-app utils/roles.js), as on the page itself.
+const ROLE_DOT: Record<string, string> = { ARTIST: "#6B5FFF", AGENT: "#00C875", PROMOTER: "#FFB800", VENUE: "#FF5757" };
+
 /* GET /p/<slug>/card/story | post | og — the artist's page as an image to
    share: a 1080×1920 Instagram story, a 1080×1350 feed post, or the
    1200×630 card link previews show (WhatsApp, X, LinkedIn…).
@@ -96,8 +99,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   const identity = (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", alignItems: "center", fontSize: 28 * s, letterSpacing: 5 * s, color: "#B9B9C6", textTransform: "uppercase" }}>
-        <div style={{ width: 16 * s, height: 16 * s, borderRadius: 8, background: "#6B5FFF", marginRight: 16 * s }} />
-        {`Artist${where ? ` · ${where}` : ""}`}
+        <div style={{ width: 16 * s, height: 16 * s, borderRadius: 8, background: ROLE_DOT[p.role] || ROLE_DOT.ARTIST, marginRight: 16 * s }} />
+        {`${p.role.charAt(0)}${p.role.slice(1).toLowerCase()}${where ? ` · ${where}` : ""}`}
       </div>
       <div style={{ display: "flex", alignItems: "center", marginTop: 22 * s }}>
         <div style={{ display: "flex", fontFamily: "Display, CJK", fontSize: nameSize, fontWeight: 700, lineHeight: 1, letterSpacing: -2 * s }}>{p.name}</div>

@@ -1,5 +1,5 @@
 /**
- * Public artist pages (torahub.io/@slug) — data from the backend's one
+ * Public profile pages (torahub.io/@slug), every role — data from the backend's one
  * visitor whitelist (tora-backend src/utils/publicProfile.js). Everything a
  * visitor may see is in this shape; fees, deals, tours, contacts and the
  * members-only network never reach the website at all.
@@ -35,9 +35,14 @@ export type PublicProfile = {
   sets: MediaItem[];
   releases: Release[];
   videos: MediaItem[];
-  highlights: { venue: string; city: string | null; year: string | number | null; raUrl: string | null }[];
+  highlights: { venue: string; city: string | null; artist?: string | null; year: string | number | null; raUrl: string | null }[];
   pressPhotos: { url: string; credit: string | null }[];
   pressKit: { files: { id: string; title: string; url: string }[]; photos: { url: string; credit: string | null }[] } | null;
+  // Role details (null / empty where they don't apply).
+  venue: { capacity: number | null; rooms: number | null } | null;
+  agency: string | null;
+  roster: { name: string; photo: string | null; city: string | null; country: string | null; genre: string | null; slug: string | null }[];
+  photos: string[];
   updatedAt: string;
 };
 

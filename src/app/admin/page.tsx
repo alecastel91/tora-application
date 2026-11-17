@@ -65,6 +65,7 @@ export interface Application {
     linkedin: string | null;
     venue_capacity: string | null;
     existing_user_id: string | null;
+    referral_code?: string | null;
     application_type: string;
     status: string;
     coupon_code: string | null;
@@ -93,6 +94,9 @@ export default function AdminDashboard() {
     const [sourceFilter, setSourceFilter] = useState("all");
     const [campaignFilter, setCampaignFilter] = useState("all");
     const [invitationPackages, setInvitationPackages] = useState<Record<string, string>>({});
+    // Pre-launch: invitations are PROFILE_ONLY unless ticked as a founder exception (friends).
+    const [fullAccess, setFullAccess] = useState<Record<string, boolean>>({});
+    const accessFor = (id: string) => (fullAccess[id] ? 'FULL' : 'PROFILE_ONLY');
     const [view, setView] = useState<'applications' | 'recap' | 'moderation' | 'organisations'>('applications');
     const [verifyPendingCount, setVerifyPendingCount] = useState<number | null>(null);
     // One moderation queue (profiles, messages, posts) feeds the tab and its dot.
@@ -376,6 +380,8 @@ export default function AdminDashboard() {
                     code: couponCode,
                     email: application.email,
                     couponPackage: invitationPackages[application.id] || 'STANDARD',
+                    accessLevel: accessFor(application.id),
+                    referralCode: application.referral_code || undefined,
                     existingUserId: application.existing_user_id,
                     applicationType: application.application_type,
                     firstName: application.first_name,
@@ -456,6 +462,7 @@ export default function AdminDashboard() {
                             role: application.role,
                             couponCode: couponCode,
                             couponPackage: invitationPackages[application.id] || 'STANDARD',
+                            accessLevel: accessFor(application.id),
                         }),
                     });
                     emailOk = emailRes.ok;
@@ -508,7 +515,7 @@ export default function AdminDashboard() {
         )) return;
 
         setBulk({ running: true, total: approved.length, results: [] });
-        const queue = approved.map(a => ({ id: a.id, couponPackage: invitationPackages[a.id] || 'STANDARD' }));
+        const queue = approved.map(a => ({ id: a.id, couponPackage: invitationPackages[a.id] || 'STANDARD', accessLevel: accessFor(a.id) }));
 
         for (let i = 0; i < queue.length; i += BULK_BATCH) {
             const items = queue.slice(i, i + BULK_BATCH);
@@ -1059,6 +1066,16 @@ export default function AdminDashboard() {
                                                         <option value="INFLUENCER" className="bg-black text-white">INFLUENCER</option>
                                                         <option value="ADMIN" className="bg-black text-white">ADMIN</option>
                                                     </select>
+                                                )}
+                                                {app.application_type !== 'ADD_PROFILE' && (
+                                                    <label className="flex cursor-pointer items-center gap-2 text-xs text-white/60" title="Unticked: profile, verification and public page now; the app opens at launch">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={!!fullAccess[app.id]}
+                                                            onChange={(e) => setFullAccess(prev => ({ ...prev, [app.id]: e.target.checked }))}
+                                                        />
+                                                        Full access now (friend)
+                                                    </label>
                                                 )}
                                                 <button
                                                     onClick={() => handleSendInvitation(app)}

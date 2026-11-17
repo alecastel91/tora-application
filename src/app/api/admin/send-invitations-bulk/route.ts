@@ -24,7 +24,8 @@ import { sendInvitationEmail, sendAddProfileApprovedEmail } from '@/lib/invitati
  *
  * Session-gated by src/proxy.ts (/api/admin/:path*).
  *
- * Body:  { env: 'production' | 'test', items: [{ id, couponPackage? }] }
+ * Body:  { env: 'production' | 'test', items: [{ id, couponPackage?, accessLevel? }] }
+ *        accessLevel: 'FULL' for a founder exception; anything else = PROFILE_ONLY (pre-launch).
  * Reply: { results: [{ id, name, email, status: 'invited'|'invited_email_failed'|'skipped'|'failed', code?, error? }] }
  */
 
@@ -53,6 +54,7 @@ type Row = {
   linkedin: string | null;
   agency_name: string | null;
   venue_capacity: string | null;
+  referral_code?: string | null;
   existing_user_id: string | null;
   application_type: string | null;
 };
@@ -84,7 +86,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Server misconfigured: BACKEND_API_URL or INVITATION_API_KEY missing' }, { status: 500 });
   }
 
-  let body: { env?: string; items?: { id: string; couponPackage?: string }[] };
+  let body: { env?: string; items?: { id: string; couponPackage?: string; accessLevel?: string }[] };
   try {
     body = await request.json();
   } catch {
@@ -130,6 +132,7 @@ export async function POST(request: Request) {
 
     const code = makeCode();
     const couponPackage = (item.couponPackage || 'STANDARD').toUpperCase();
+    const accessLevel = item.accessLevel === 'FULL' ? 'FULL' : 'PROFILE_ONLY';
 
     try {
       // 1. Invitation record on the backend
@@ -140,6 +143,8 @@ export async function POST(request: Request) {
           email: row.email,
           code,
           couponPackage,
+          accessLevel,
+          referralCode: row.referral_code || undefined,
           existingUserId: row.existing_user_id,
           applicationType: row.application_type,
           firstName: row.first_name,
@@ -190,6 +195,7 @@ export async function POST(request: Request) {
             role: row.role,
             couponCode: code,
             couponPackage,
+            accessLevel,
           });
 
       results.push(emailResult.ok

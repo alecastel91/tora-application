@@ -8,7 +8,7 @@ import { CitySearch } from "@/components/ui/CitySearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { attributionForSubmit } from "@/lib/attribution";
+import { attributionForSubmit, referralForSubmit } from "@/lib/attribution";
 import { trackEvent } from "@/lib/plausible";
 import { reportLostApplication } from "@/lib/reportFailure";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -466,6 +466,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             //       throws, and the DB trigger nulls anything it
                             //       dislikes rather than rejecting the row.
                             attribution: attributionForSubmit(),
+                            // A member's invite link (?ref=<code>); the backend credits it on approval.
+                            referral_code: referralForSubmit(),
                     };
 
                     // N2, first way: straight from the browser.
