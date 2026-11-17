@@ -3,6 +3,8 @@
  * opaque card with a crimson top rule, a small wordmark on its own dark tile
  * (so Gmail's colour inversion can never erase the white logo), the globe
  * mark beside it, one crimson button, and the Instagram icon in the footer.
+ * A member's first emails pass `hero`: the wordmark centred, a big glowing
+ * globe, and everything down to the call to action centred (design A1).
  *
  * Email-safe on purpose: tables, inline styles, bgcolor attributes and PNG
  * images only (Gmail drops SVG). Server-only — returns an HTML string for
@@ -16,7 +18,7 @@ const CRIMSON = '#DE2A57';
 const C = { bg: '#0A0A0C', card: '#101015', inset: '#0C0C11', line: '#1E1E26', text: '#F2F2F5', mute: '#9A9AA8', dim: '#62626E' };
 export const ROLE_COLOR: Record<string, string> = { ARTIST: '#6B5FFF', AGENT: '#00C875', PROMOTER: '#FFB800', VENUE: '#FF5757' };
 
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+export const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const p = (html: string, css: string) => `<p style="margin:0;${css}">${html}</p>`;
 export const label = (s: string) => p(esc(s), `font:600 11px/14px ${FONT};letter-spacing:0.14em;text-transform:uppercase;color:${C.dim};`);
 
@@ -49,24 +51,43 @@ export const note = (html: string) =>
 
 export const link = (text: string, href: string) => `<a href="${esc(href)}" style="color:${C.text};text-decoration:underline;">${esc(text)}</a>`;
 
+// Centres email-safe tables too: td align plus margin auto covers Gmail, Apple Mail and Outlook.
+const centred = (html: string) =>
+  `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="text-align:center;">${html.replace(/<table role="presentation" cellpadding/g, '<table role="presentation" align="center" cellpadding')}</td></tr></table>`;
+
 /**
  * The page around the content. `body` is already-built HTML (use the helpers
- * above); `heading` and `lead` are plain text.
+ * above); `heading` and `lead` are plain text. `hero` is the centred block
+ * under the lead (a code, a button); passing it switches to the hero layout.
  */
-export function emailShell({ title, preheader, eyebrow, heading, lead, body, footReason }: {
+export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason }: {
   title: string;
   preheader: string;
   eyebrow?: string; // pill HTML
   heading: string;
   lead: string;
+  hero?: string;
   body: string;
   footReason: string;
 }): string {
-  const header = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+  const header = hero !== undefined
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+        <img src="${ASSETS}/tora-logo-tile.png" width="140" height="43" alt="TORA" style="display:block;margin:0 auto;width:140px;height:43px;"></td></tr></table>`
+    : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       <td><table role="presentation" cellpadding="0" cellspacing="0"><tr>
         <td valign="middle"><img src="${ASSETS}/tora-logo-tile.png" width="116" height="36" alt="TORA" style="display:block;width:116px;height:36px;margin-left:-10px;"></td>
         <td valign="middle" style="padding-left:6px;"><img src="${ASSETS}/tora-globe-60.png" width="30" height="30" alt="" style="display:block;width:30px;height:30px;"></td></tr></table></td>
       <td align="right" class="hide-sm" style="font:600 10px/14px ${FONT};letter-spacing:0.22em;color:${C.dim};">WHERE MUSIC MEETS</td></tr></table>`;
+
+  const h1 = (align: string) =>
+    `<h1 class="h1" style="margin:18px 0 12px;font:700 28px/34px ${FONT};letter-spacing:-0.01em;color:${C.text};text-align:${align};">${esc(heading)}</h1>`;
+  const intro = hero !== undefined
+    ? centred(`<img src="${ASSETS}/tora-globe-hero.png" width="180" height="180" alt="" style="display:block;margin:-8px auto 4px;width:180px;height:180px;">
+        ${eyebrow || ''}${h1('center')}
+        ${p(esc(lead), `margin:0 auto 24px;max-width:440px;font:400 15px/24px ${FONT};color:${C.mute};text-align:center;`)}
+        ${hero}`) + (body ? '<div style="height:8px;line-height:8px;">&nbsp;</div>' : '')
+    : `${eyebrow || ''}${h1('left')}
+        ${p(esc(lead), `margin-bottom:24px;font:400 15px/24px ${FONT};color:${C.mute};`)}`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -96,9 +117,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, body, foo
     <tr><td class="px" style="padding:0 32px 20px;">${header}</td></tr>
     <tr><td bgcolor="${C.card}" style="background:${C.card};border:1px solid ${C.line};border-top:3px solid ${CRIMSON};border-radius:16px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td class="px" style="padding:32px;">
-        ${eyebrow || ''}
-        <h1 class="h1" style="margin:18px 0 12px;font:700 28px/34px ${FONT};letter-spacing:-0.01em;color:${C.text};">${esc(heading)}</h1>
-        ${p(esc(lead), `margin-bottom:24px;font:400 15px/24px ${FONT};color:${C.mute};`)}
+        ${intro}
         ${body}
       </td></tr></table>
     </td></tr>

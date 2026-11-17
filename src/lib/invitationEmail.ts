@@ -161,10 +161,12 @@ async function sendProfileOnlyInvitation(input: {
     eyebrow: pill(pkg.label, ROLE_COLOR[roleKey]),
     heading: `You're in, ${firstName}`,
     lead: 'Your application was accepted. Set up your profile, verify it and start sharing your public page now. The full app opens for everyone at launch.',
-    body: [
+    hero: [
       valueBox('Your invitation code', couponCode, `Sign up at ${appHost} with this email address`),
       '<div style="height:24px;line-height:24px;">&nbsp;</div>',
       button('Set up your profile', signupUrl),
+    ].join('\n'),
+    body: [
       steps([
         ['Set up your profile', 'Photos, bio, genres and links. About 5 minutes.'],
         ['Verify it', 'Send your code to @tora.verify on Instagram. Verified profiles can publish a page.'],
