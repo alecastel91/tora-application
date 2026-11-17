@@ -92,7 +92,7 @@ const L: Record<Lang, Labels> = {
     copyLink: "リンクをコピー", copied: "コピーしました", copyPrompt: "このリンクをコピーしてください",
     share: "シェア", shareTitle: "このページをシェア", shareSub: (name) => `${name}のページをプロモーターや友達、ストーリーズでシェア`, shareText: (name) => `TORAの${name}`, igStory: "Instagramストーリーズ", igPost: "Instagram投稿", imageSaved: "画像を保存し、リンクをコピーしました。投稿してリンクスタンプを追加し、リンクを貼り付けてください", linkReady: "リンクをコピーしました。Instagramでリンクスタンプを追加して貼り付けてください", imageFailed: "画像を作成できませんでした。しばらくしてからもう一度お試しください", email: "メール", more: "その他", format: "プレイスタイル", labelName: "レーベル",
     artist: "アーティスト", verified: "TORA認証済み", bio: "プロフィール文", fullBio: "プロフィール全文", readFullBio: "全文を読む", close: "閉じる", showLess: "閉じる", representedBy: "所属",
-    agent: "エージェント", promoter: "プロモーター", venue: "ベニュー", connect: "つながる", roster: "所属アーティスト", photos: "写真", pastEvents: "過去のイベント", capacity: (n) => `キャパシティ${n.toLocaleString("ja")}人`, rooms: (n) => `${n}フロア`, agencyArtists: (n) => `アーティスト${n}組`,
+    agent: "エージェント", promoter: "プロモーター", venue: "ヴェニュー", connect: "つながる", roster: "所属アーティスト", photos: "写真", pastEvents: "過去のイベント", capacity: (n) => `キャパシティ${n.toLocaleString("ja")}人`, rooms: (n) => `${n}フロア`, agencyArtists: (n) => `アーティスト${n}組`,
     sets: "セット", mixes: (n) => `${n}本のミックス`, releases: "リリース", highlights: "ハイライト",
     videos: "動画", play: "再生", closePlayer: "プレーヤーを閉じる", pressPhotos: "プレス写真",
     photoBy: (name) => `撮影：${name}`, pressKit: "プレスキット", download: "ダウンロード",

@@ -35,7 +35,7 @@ export const es: FoundingContent = {
     eyebrow: "La Solución",
     headingLead: "Una plataforma,",
     headingAccent: "todas las contrataciones",
-    body: "TORA conecta los cuatro pilares de la industria de la música de club — Artist, Agent, Promoter y Venue — en una única red profesional. Desde el primer contacto hasta la confirmación del pago, todo sucede en una sola plataforma, sin fricciones.",
+    body: "TORA conecta los cuatro pilares de la industria de la música de club — Artista, Agente, Promotor y Sala — en una única red profesional. Desde el primer contacto hasta la confirmación del pago, todo sucede en una sola plataforma, sin fricciones.",
     chooseRole: "Elige tu rol",
     tapToExplore: "Toca para explorar",
     allRoles: "Todos los roles",

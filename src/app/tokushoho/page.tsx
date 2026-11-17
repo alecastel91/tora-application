@@ -71,7 +71,7 @@ const ROWS: { term: string; body: React.ReactNode }[] = [
         body: (
             <div className="space-y-5">
                 <div>
-                    <div className="mb-2 text-white">TORA Premium（アーティスト／プロモーター／ベニュー）</div>
+                    <div className="mb-2 text-white">TORA Premium（アーティスト／プロモーター／ヴェニュー）</div>
                     <PriceTable rows={[["月額", "¥3,480", "€19.90", "$22.90"], ["年額", "¥34,800", "€199.90", "$229.90"]]} />
                 </div>
 
