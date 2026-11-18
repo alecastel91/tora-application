@@ -12,6 +12,7 @@ import { attributionForSubmit, referralForSubmit } from "@/lib/attribution";
 import { trackEvent } from "@/lib/plausible";
 import { reportLostApplication } from "@/lib/reportFailure";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { normLang } from "@/lib/emailCopy";
 
 // Create a dummy Supabase client with placeholder values for build time
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
@@ -220,7 +221,7 @@ interface ApplicationFormProps {
 }
 
 export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps) {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [step, setStep] = useState(0);
     const [direction, setDirection] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -468,6 +469,8 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                             attribution: attributionForSubmit(),
                             // A member's invite link (?ref=<code>); the backend credits it on approval.
                             referral_code: referralForSubmit(),
+                            // The site language the applicant used: their TORA emails follow it.
+                            language: normLang(language),
                     };
 
                     // N2, first way: straight from the browser.
@@ -517,6 +520,7 @@ export function ApplicationForm({ onSubmit, onStepChange }: ApplicationFormProps
                                 firstName,
                                 email,
                                 role,
+                                language: normLang(language),
                             }),
                         })
                             .then(res => {

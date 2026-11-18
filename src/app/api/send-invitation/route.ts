@@ -8,12 +8,12 @@ import { sendInvitationEmail } from '@/lib/invitationEmail';
  */
 export async function POST(request: Request) {
   try {
-    const { firstName, email, role, couponCode, couponPackage, accessLevel } = await request.json();
+    const { firstName, email, role, couponCode, couponPackage, accessLevel, language } = await request.json();
     if (!email || !couponCode) {
       return NextResponse.json({ error: 'email and couponCode are required' }, { status: 400 });
     }
 
-    const result = await sendInvitationEmail({ firstName, email, role, couponCode, couponPackage, accessLevel });
+    const result = await sendInvitationEmail({ firstName, email, role, couponCode, couponPackage, accessLevel, lang: language });
     if (!result.ok) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }

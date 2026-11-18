@@ -1,19 +1,20 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { buildDeclinedHtml } from '@/lib/memberEmails';
+import { buildDeclined } from '@/lib/memberEmails';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { firstName, email } = await request.json();
+    const { email, language } = await request.json();
+    const built = buildDeclined({ lang: language });
 
     const { data, error } = await resend.emails.send({
       from: 'TORA <noreply@mail.torahub.io>',
       to: [email],
-      subject: 'Update on your TORA application',
-      html: buildDeclinedHtml(),
-      text: `Hi ${firstName || 'there'},\n\nThank you for your interest in TORA. After careful review, we're unable to approve your application at this time. As TORA grows we will open up to more members, and you are welcome to apply again later.\n\nQuestions: support@torahub.io\n\n— The TORA Team`,
+      subject: built.subject,
+      html: built.html,
+      text: built.text,
     });
 
     if (error) {

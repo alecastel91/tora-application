@@ -55,6 +55,7 @@ type Row = {
   agency_name: string | null;
   venue_capacity: string | null;
   referral_code?: string | null;
+  language?: string | null;
   existing_user_id: string | null;
   application_type: string | null;
 };
@@ -145,6 +146,7 @@ export async function POST(request: Request) {
           couponPackage,
           accessLevel,
           referralCode: row.referral_code || undefined,
+          language: row.language || undefined,
           existingUserId: row.existing_user_id,
           applicationType: row.application_type,
           firstName: row.first_name,
@@ -192,6 +194,7 @@ export async function POST(request: Request) {
             email: row.email,
             role: row.role,
             profileName: row.profile_name || '',
+            lang: row.language,
           })
         : await sendInvitationEmail({
             firstName: row.profile_name || row.first_name || '',
@@ -200,6 +203,7 @@ export async function POST(request: Request) {
             couponCode: code,
             couponPackage,
             accessLevel: grantedAccess,
+            lang: row.language,
           });
 
       results.push(emailResult.ok

@@ -1,21 +1,22 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { buildAddProfileReceivedHtml } from '@/lib/memberEmails';
+import { buildAddProfileReceived } from '@/lib/memberEmails';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { firstName, email, role, profileName } = await request.json();
+    const { email, role, profileName, language } = await request.json();
+    const built = buildAddProfileReceived({ role, profileName, lang: language });
 
     console.log('📧 Sending add-profile-received email to:', email);
 
     const { data, error } = await resend.emails.send({
       from: 'TORA <noreply@mail.torahub.io>',
       to: [email],
-      subject: 'We received your new profile application',
-      html: buildAddProfileReceivedHtml({ role, profileName }),
-      text: `Hi ${firstName || 'there'},\n\nWe received your application for a new ${role} profile (${profileName}) on TORA. If approved, it appears automatically in your account and we email you when it is ready.\n\n— The TORA Team`,
+      subject: built.subject,
+      html: built.html,
+      text: built.text,
     });
 
     if (error) {

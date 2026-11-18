@@ -43,7 +43,7 @@ const ALLOWED = [
   "phone_number", "role", "first_name", "last_name", "profile_name", "email",
   "zone", "country", "city", "genres", "instagram", "resident_advisor",
   "soundcloud", "agency_name", "website", "linkedin", "venue_capacity",
-  "attribution", "referral_code",
+  "attribution", "referral_code", "language",
 ] as const;
 
 export async function POST(request: Request) {
@@ -75,10 +75,10 @@ export async function POST(request: Request) {
   if (!error) return NextResponse.json({ ok: true });
 
   // M4 — one more go without the campaign label.
-  if (row.attribution !== undefined || row.referral_code !== undefined) {
+  if (row.attribution !== undefined || row.referral_code !== undefined || row.language !== undefined) {
     console.error("[public/apply] insert failed, retrying without attribution:", error.message);
-    const { attribution: _a, referral_code: _r, ...withoutExtras } = row;
-    void _a; void _r;
+    const { attribution: _a, referral_code: _r, language: _l, ...withoutExtras } = row;
+    void _a; void _r; void _l;
     const retry = await supabase.from(table).insert([withoutExtras]);
     if (!retry.error) return NextResponse.json({ ok: true, attributionDropped: true });
     console.error("[public/apply] retry failed:", retry.error.message);

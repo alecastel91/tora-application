@@ -75,7 +75,7 @@ const iconSrc = (icon: EmailIcon, size: 'hero' | '60') => (icon === 'globe'
   ? `${ASSETS}/${size === 'hero' ? 'tora-globe-hero' : 'tora-globe-60'}.png`
   : `${ASSETS}/tora-icon-${icon}-${size}.png`);
 
-export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason, icon = 'globe' }: {
+export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason, icon = 'globe', lang = 'en' }: {
   title: string;
   preheader: string;
   eyebrow?: string; // pill HTML
@@ -85,6 +85,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
   body: string;
   footReason: string;
   icon?: EmailIcon;
+  lang?: string;
 }): string {
   const header = hero !== undefined
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
@@ -107,7 +108,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
         ${lead ? p(esc(lead), `margin-bottom:24px;font:400 15px/24px ${FONT};color:${C.mute};`) : ''}`;
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${esc(lang)}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -149,4 +150,24 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
 </table>
 </body>
 </html>`;
+}
+
+/** Plain-text twin of an email built with this shell: the visible words and every link, in reading order. */
+export function htmlToText(html: string): string {
+  return html
+    .replace(/<head>[\s\S]*?<\/head>/i, '')
+    .replace(/<div style="display:none[^>]*>[\s\S]*?<\/div>/i, '')
+    .replace(/<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, (_, href: string, label: string) => {
+      const l = label.replace(/<[^>]+>/g, '').replace(/&nbsp;&rarr;|&rarr;/g, '').trim();
+      // A label that is the link itself ("torahub.io") prints once, as the full URL.
+      if (!l || href.replace(/^https?:\/\//, '').startsWith(l)) return href;
+      return href.startsWith('mailto:') ? l : `${l}: ${href}`;
+    })
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|h1|tr|table|div)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ').replace(/&middot;/g, '·').replace(/&#9679;/g, '').replace(/&rarr;/g, '→')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+    .split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter((l, i, a) => l || (a[i - 1] && a[i - 1].trim()))
+    .join('\n').replace(/^(\d)\n+/gm, '$1. ').replace(/\n{3,}/g, '\n\n').trim();
 }

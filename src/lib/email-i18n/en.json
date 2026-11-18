@@ -1,0 +1,483 @@
+{
+  "_shared": {
+    "_meta": [
+      "Shared pieces",
+      "Used in many emails",
+      "all"
+    ],
+    "footer.tagline": "WHERE MUSIC MEETS",
+    "box.loginWith": "Log in with",
+    "box.loginHint": "Use the password you chose at signup. Forgot it? Tap “Forgot password” on the login screen.",
+    "box.invitationCode": "Your invitation code",
+    "box.signupWithEmail": "Sign up with this email address",
+    "box.signupAtWithEmail": "Sign up at {{appHost}} with this email address",
+    "gift.founding.title": "Founding member gift",
+    "gift.launch.title": "Launch member gift",
+    "gift.influencer.title": "Your gift",
+    "gift.founding.value": "3 months Premium",
+    "gift.launch.value": "1 month Premium",
+    "gift.influencer.value": "12 months Premium",
+    "gift.noCard": "Nothing to pay, no card needed.",
+    "button.openTora": "Open TORA",
+    "button.signUpNow": "Sign up now",
+    "pill.toraIsLive": "TORA is live",
+    "pill.tomorrow": "Tomorrow",
+    "pill.verified": "Verified",
+    "pill.beforeLaunch": "Before launch",
+    "pill.welcome": "Welcome",
+    "pill.premium": "Premium",
+    "pill.invitation": "Invitation",
+    "pill.bookingCompleted": "Booking completed",
+    "pill.foundingMember": "Founding Member",
+    "pill.launchMember": "Launch Member",
+    "pill.influencerMember": "Influencer Member",
+    "pill.toraMember": "TORA Member",
+    "footReason.hasAccount": "You are receiving this because you have a TORA account.",
+    "footReason.applied": "You are receiving this because you applied to join TORA.",
+    "footReason.accepted": "You are receiving this because your application to TORA was accepted.",
+    "footReason.justCreated": "You are receiving this because you just created your TORA account."
+  },
+  "applicationReceived": {
+    "_meta": [
+      "Application received",
+      "Right after someone applies on torahub.io",
+      "website · main"
+    ],
+    "subject": "Application received - TORA",
+    "preheader": "We read every application by hand. Here is what happens next.",
+    "pill": "Application received",
+    "heading": "Thanks, {{firstName}}. We've got it",
+    "lead": "Your application to join TORA as {{roleNoun}} is in review. We read every one by hand and reply by email.",
+    "roleNoun.ARTIST": "an artist",
+    "roleNoun.AGENT": "an agent",
+    "roleNoun.PROMOTER": "a promoter",
+    "roleNoun.VENUE": "a venue",
+    "button": "See how TORA works",
+    "step1.title": "Review",
+    "step1.body": "We check every application so the network stays professional and trusted.",
+    "step2.title": "Your invitation",
+    "step2.body": "If you are approved, your invitation code arrives by email. You can set up your profile and public page straight away.",
+    "step3.title": "Launch",
+    "step3.body": "Search, offers, contracts and payment tracking open for every member at launch.",
+    "note": "Applied with {{email}} on {{date}}. Follow @tora.hub for launch news."
+  },
+  "invitationProfileOnly": {
+    "_meta": [
+      "You're in (before launch)",
+      "Application approved before launch; profile-only access, with the code",
+      "website · main"
+    ],
+    "subject": "{{firstName}}, you're in: set up your TORA page",
+    "preheader": "Set up your profile, verify it and share your public page. Full access opens at launch.",
+    "heading": "You're in, {{firstName}}",
+    "lead": "Your application was accepted. Set up your profile, verify it and start sharing your public page now. The full app opens for everyone at launch.",
+    "button": "Set up your profile",
+    "step1.title": "Set up your profile",
+    "step1.body": "Photos, bio, genres and links. About 5 minutes.",
+    "step2.title": "Verify it",
+    "step2.body": "Send your code to @tora.verify on Instagram. Verified profiles can publish a page.",
+    "step3.title": "Share your page",
+    "step3.body": "Your page lives at torahub.io/@yourname. Put it in your Instagram bio.",
+    "note": "Search, offers, contracts and payment tracking switch on for everyone at launch. We'll email you that day.",
+    "note.giftFounding": "Your 3 months of Premium start that day, not before.",
+    "note.giftLaunch": "Your month of Premium starts that day, not before.",
+    "note.giftInfluencer": "Your 12 months of Premium start that day, not before."
+  },
+  "invitationFull": {
+    "_meta": [
+      "You're in (after launch)",
+      "Application approved once TORA is open; the code goes straight into the full app",
+      "website · main"
+    ],
+    "subject": "{{firstName}}, your TORA invitation is ready",
+    "preheader": "Your invitation code is inside. Sign up and go straight into TORA.",
+    "heading": "You're in, {{firstName}}",
+    "lead": "Your application was accepted. Sign up with your code and you go straight into the full app: search, connections, offers, contracts and payment tracking, with the whole club music industry.",
+    "box.membership": "Your membership",
+    "box.membershipHint": "Starts the day you sign up. Nothing to pay, no card needed.",
+    "button": "Create your account",
+    "step1.title": "Sign up",
+    "step1.body": "Use the code above and this email address. About a minute.",
+    "step2.title": "Set up your profile",
+    "step2.body": "Photos, bio, genres and links: what people see when they find you.",
+    "step3.title": "Verify it",
+    "step3.body": "Send a quick Instagram message to @tora.verify to verify your profile and unlock offers and requests.",
+    "note": "Questions? Reply to this email or write to support@torahub.io."
+  },
+  "welcomeBeforeLaunch": {
+    "_meta": [
+      "Welcome to TORA (before launch)",
+      "Right after a profile-only signup",
+      "backend · main"
+    ],
+    "subject": "Welcome to TORA, {{firstName}}",
+    "preheader": "Your account is ready. Get your profile ready before launch.",
+    "heading": "Welcome to TORA, {{firstName}}",
+    "lead": "You are one of the first members of TORA. Until launch, the app is open for one thing: getting your profile ready, so on day one you start with a verified page that people can already find.",
+    "step1.title": "Complete your profile",
+    "step1.body": "Photos, bio, genres, links and your music. It is what promoters, agents and venues see first, so take five minutes over it.",
+    "step2.title": "Verify it",
+    "step2.body": "Send your code to @tora.verify on Instagram. The verified seal shows that your profile has been verified.",
+    "step3.title": "Publish your public page",
+    "step3.body": "Once verified, publish torahub.io/@yourname and put it in your Instagram bio. It works now, before launch.",
+    "note": "On launch day search, connections, offers, contracts and payment tracking switch on for everyone, and we will email you that morning. Members who arrive with a complete, verified profile are the ones people find first."
+  },
+  "welcomeAfterLaunch": {
+    "_meta": [
+      "Welcome to TORA (after launch)",
+      "Right after a signup once TORA is open",
+      "backend · main"
+    ],
+    "subject": "Welcome to TORA",
+    "preheader": "Your account is ready. Three things to do first.",
+    "heading": "Welcome to TORA, {{firstName}}",
+    "lead": "You are now part of the network where the club music industry does business: artists, agents, promoters and venues in one place.",
+    "button": "Get started",
+    "step1.title": "Complete your profile",
+    "step1.body": "Photo, bio, genres and links make you discoverable.",
+    "step2.title": "Verify your identity",
+    "step2.body": "A quick Instagram message to @tora.verify unlocks sending offers and requests.",
+    "step3.title": "Explore Search",
+    "step3.body": "Find artists, promoters and venues on the globe and start connecting."
+  },
+  "verifiedBeforeLaunch": {
+    "_meta": [
+      "You're verified (before launch)",
+      "Verification approved for a profile-only member",
+      "backend · main"
+    ],
+    "subject": "You are verified: publish your TORA page",
+    "preheader": "Publish your public page and share it before launch.",
+    "heading": "{{name}}, you're verified",
+    "lead": "Your profile now carries the verified seal. That unlocks the one thing you can do before launch: publishing your public page.",
+    "button": "Publish your page",
+    "step1.title": "Publish your page",
+    "step1.body": "In your profile, open Public page, choose your name and publish: torahub.io/@yourname.",
+    "step2.title": "Share it",
+    "step2.body": "Put the link in your Instagram bio and send it to promoters, agents and venues. It works for anyone, even without a TORA account.",
+    "step3.title": "Keep it fresh",
+    "step3.body": "New photos, releases and dates show up on the page as soon as you add them to your profile.",
+    "note": "On launch day offers, connections and bookings switch on too, and your verified seal is already in place.",
+    "footReason": "You are receiving this because your TORA profile was verified."
+  },
+  "verifiedAfterLaunch": {
+    "_meta": [
+      "You're verified (after launch)",
+      "Verification approved for a full member",
+      "backend · main"
+    ],
+    "subject": "You are verified on TORA",
+    "heading": "You're verified",
+    "body1": "Congratulations {{name}}, your TORA profile is now verified.",
+    "body2": "You can now send offers, connection and representation requests, and sign contracts. Your profile now shows the verified seal."
+  },
+  "launchEve": {
+    "_meta": [
+      "TORA opens tomorrow",
+      "The day before launch (admin action, run once)",
+      "backend · main"
+    ],
+    "subject": "{{firstName}}, TORA opens tomorrow",
+    "preheader.member": "Last day to get your profile ready.",
+    "preheader.code": "Sign up today and be ready when TORA opens.",
+    "heading": "{{firstName}}, TORA opens tomorrow",
+    "lead.member": "Tomorrow search, connections, offers, contracts and payment tracking switch on for everyone. Today is the day to arrive ready: members with a complete, verified profile are the ones people find first.",
+    "lead.code": "Tomorrow search, connections, offers, contracts and payment tracking switch on for everyone. Sign up today with your code and set up your profile, so you are ready the moment it opens.",
+    "button.member": "Finish your profile",
+    "step1.title": "Photos, bio and links",
+    "step1.body": "A real photo, a few lines about you and where to hear your music or see your events.",
+    "step2.title": "The verified seal",
+    "step2.body": "Send your code to @tora.verify on Instagram if you have not yet. It is what makes people trust an offer.",
+    "step3.title": "Your dates",
+    "step3.body": "Artists: your travel schedule in Tour → Calendar. Promoters and venues: your open dates. Tomorrow they are what matches you.",
+    "note.giftTomorrow": "{{giftTitle}}: {{giftValue}}, starting tomorrow.",
+    "note.giftAtSignup": "{{giftTitle}}: {{giftValue}}, starting the day you sign up."
+  },
+  "toraIsOpen": {
+    "_meta": [
+      "TORA is open (launch day)",
+      "The moment a profile-only account opens to the full app",
+      "backend · main"
+    ],
+    "subject.gift": "TORA is open: your {{giftValue}} starts today",
+    "subject.noGift": "TORA is open: the full app is yours",
+    "preheader.gift": "The full app is yours, and your {{giftValue}} starts today.",
+    "preheader.noGift": "The full app is yours. Search, connect and book with the whole industry.",
+    "heading": "{{firstName}}, the full app is yours",
+    "lead": "TORA is live. Search, connections, offers, contracts and payment tracking are switched on, and everything you prepared on your profile is now part of the network.",
+    "gift.runsUntil": "Starts today and runs until {{endDate}}. Nothing to pay, no card needed.",
+    "artist.step1.title": "Get found",
+    "artist.step1.body": "Promoters and venues now search by city, genre and open dates. A complete profile with your verified seal is what they book from.",
+    "artist.step2.title": "Add your tour dates",
+    "artist.step2.body": "Put your travel schedule in Tour → Calendar. Promoters near your route see you are coming and can make an offer for the gaps.",
+    "artist.step3.title": "Book",
+    "artist.step3.body": "Offers, counter-offers, contracts, documents and payment records for every show, in one thread.",
+    "agent.step1.title": "Bring your roster",
+    "agent.step1.body": "Add the artists you represent, so offers for them reach you first.",
+    "agent.step2.title": "Route the tour",
+    "agent.step2.body": "See which promoters and venues sit on your artists’ routes, and fill the dead dates between shows.",
+    "agent.step3.title": "Book",
+    "agent.step3.body": "Offers, contracts, documents and payment records for every show, with the whole history in one place.",
+    "host.step1.title": "See who is coming",
+    "host.step1.body": "Find artists travelling near your city and the dates they are still open, on the globe or in the list.",
+    "promoter.step2.title": "Connect",
+    "promoter.step2.body": "Send connection requests and talk directly with artists and their agents.",
+    "venue.step2.title": "Fill your calendar",
+    "venue.step2.body": "Publish your open dates so artists and agents can come to you.",
+    "host.step3.title": "Book",
+    "host.step3.body": "Offers, contracts, documents and payment records for every show, in one thread.",
+    "note.foundingBadge": "Your Founding Member badge is now on your profile, for everyone to see: you were here before everyone else.",
+    "note.publicPage": "Your public page stays live at torahub.io/@{{slug}}. Keep it in your Instagram bio: it is now a way into the app.",
+    "note.noPublicPage": "Your profile is verified? Publish your public page from your profile, and share torahub.io/@yourname in your Instagram bio.",
+    "footReason": "You are receiving this because your TORA account just opened to the full app."
+  },
+  "invitationWaiting": {
+    "_meta": [
+      "TORA is open: your invitation is waiting",
+      "Launch day, to people invited who never signed up",
+      "backend · main"
+    ],
+    "subject": "{{firstName}}, TORA is open: your invitation is waiting",
+    "preheader": "Your invitation is still waiting. Sign up and go straight into the full app.",
+    "heading": "{{firstName}}, TORA is open",
+    "lead": "TORA is live, and your invitation is still waiting. Sign up today and you go straight into the full app: search, connections, offers, contracts and payment tracking.",
+    "gift.atSignup": "Starts the day you sign up. Nothing to pay, no card needed.",
+    "step1.title": "Sign up",
+    "step1.body": "Use the code above and this email address. About a minute.",
+    "step2.title": "Set up your profile",
+    "step2.body": "Photos, bio, genres and links: what people see when they find you.",
+    "step3.title": "Verify it",
+    "step3.body": "Send a quick Instagram message to @tora.verify to verify your profile and unlock offers and your public page."
+  },
+  "referral": {
+    "_meta": [
+      "A friend invited you",
+      "A member invites someone by email",
+      "backend · main"
+    ],
+    "subject": "{{inviterName}} invited you to TORA",
+    "preheader": "{{inviterName}} invited you to join TORA.",
+    "heading": "{{inviterName}} invited you to TORA",
+    "lead": "TORA is the invite-only network where artists, agents, promoters and venues of the club music industry connect, negotiate bookings and plan international tours. {{inviterName}} invited you.",
+    "button": "Apply now",
+    "note": "The invitation is tied to this email address and expires in 90 days.",
+    "footReason": "You are receiving this because {{inviterName}} invited you to TORA."
+  },
+  "premiumConfirmed": {
+    "_meta": [
+      "Premium confirmed",
+      "A paid subscription becomes active",
+      "backend · main"
+    ],
+    "subject": "Your TORA subscription is active",
+    "heading": "Subscription confirmed",
+    "body": "Hi {{firstName}}, your {{planName}} subscription is now active.",
+    "price": "Price: {{amount}}",
+    "renewal": "Next renewal: {{date}}",
+    "note": "You can manage or cancel your subscription anytime from Settings in the app."
+  },
+  "bookingCompleted": {
+    "_meta": [
+      "Booking completed",
+      "Both sides confirmed the full payment",
+      "backend · main"
+    ],
+    "subject": "Booking completed: {{eventName}}",
+    "preheader": "Everything is settled and the deal is complete.",
+    "heading": "{{eventName}} on {{date}}",
+    "lead": "The full booking payment has been confirmed by both parties. Everything is settled and the deal is now complete.",
+    "box.totalPaid": "Total paid",
+    "box.parties": "Parties: {{partyNames}}",
+    "footReason": "You are receiving this because you are a party to this booking."
+  },
+  "contractSigned": {
+    "_meta": [
+      "Contract fully signed",
+      "All parties signed; PDFs attached",
+      "backend · operational"
+    ],
+    "subject": "Contract fully signed: {{documentTitle}}",
+    "preheader": "The signed contract and its certificate are attached.",
+    "heading": "Contract fully signed",
+    "lead": "{{eventName}} on {{date}}. All parties have signed the contract. Two PDFs are attached to this email for your records.",
+    "box.attached": "Attached",
+    "box.contractHint": "The signed contract",
+    "box.certificateHint": "Audit trail: signers, timestamps, IPs, and the SHA-256 hash binding it to this exact document version",
+    "footReason": "You are receiving this because you are a party to this contract."
+  },
+  "invoice": {
+    "_meta": [
+      "Invoice from a member",
+      "The artist side issues an invoice; PDF attached",
+      "backend · operational"
+    ],
+    "subject": "Invoice {{number}} — {{eventName}}",
+    "heading": "{{issuerName}} sent you an invoice",
+    "body1": "Invoice {{number}} for {{eventName}} is attached. It was issued through TORA; payment details are on the invoice itself.",
+    "body2": "When you have paid, mark the payment on the booking in TORA so both sides see it.",
+    "note": "Questions about the amount go to the issuer, not to TORA."
+  },
+  "passwordReset": {
+    "_meta": [
+      "Reset your password",
+      "Forgot-password request",
+      "backend · operational"
+    ],
+    "subject": "Reset your TORA password",
+    "preheader": "The link expires in {{minutes}} minutes.",
+    "heading": "Reset your password",
+    "lead": "Someone requested a password reset for your TORA account. Click the button below to choose a new password. The link expires in {{minutes}} minutes.",
+    "button": "Reset password",
+    "copyLink": "Or copy and paste this link into your browser:",
+    "note": "If you didn't request this, you can safely ignore this email. Your password won't change unless you click the link.",
+    "footReason": "You are receiving this because a password reset was requested for this address."
+  },
+  "workEmailCode": {
+    "_meta": [
+      "Work-email verification code",
+      "Agency domain proof",
+      "backend · operational"
+    ],
+    "subject": "{{code}} is your TORA verification code",
+    "heading": "Verify your work email",
+    "body1": "Hi {{name}}, enter this code in TORA to confirm this address belongs to your agency.",
+    "body2": "It expires in {{minutes}} minutes. If you didn't ask for this, ignore this email."
+  },
+  "premiumEnding": {
+    "_meta": [
+      "Premium ending soon",
+      "7 days and 1 day before a free Premium period ends",
+      "backend · operational"
+    ],
+    "subject.days": "Your TORA Premium ends in {{days}} days",
+    "subject.tomorrow": "Your TORA Premium ends tomorrow",
+    "heading.days": "Your complimentary Premium ends in {{days}} days",
+    "heading.tomorrow": "Your complimentary Premium ends tomorrow",
+    "lead": "Hi {{firstName}}, after that your account moves to the free plan: country-only search, limited likes and connection requests. Keep global reach, calendar matching and unlimited networking by upgrading before it ends.",
+    "button": "Upgrade to Premium",
+    "note": "Nothing is charged automatically. Your card is only used if you choose to subscribe.",
+    "footReason": "You are receiving this because your complimentary Premium is ending."
+  },
+  "subscriptionCanceled": {
+    "_meta": [
+      "Subscription cancelled",
+      "The member cancels; access runs to the end of the period",
+      "backend · operational"
+    ],
+    "subject": "Your TORA subscription has been canceled",
+    "heading": "Subscription canceled",
+    "body1": "Hi {{firstName}}, your TORA subscription has been canceled. You keep full access until {{date}}; nothing more will be charged.",
+    "body2": "Changed your mind? You can resubscribe in a minute from Settings. Your profile and connections stay exactly as they are.",
+    "button": "Resubscribe"
+  },
+  "paymentFailed": {
+    "_meta": [
+      "Payment failed",
+      "A renewal charge failed",
+      "backend · operational"
+    ],
+    "subject": "Payment issue with your TORA subscription",
+    "heading": "We couldn't process your payment",
+    "body1": "Hi {{firstName}}, we couldn't charge your card for your TORA subscription.",
+    "body2": "No panic: your access continues while we retry over the next 48 hours. To avoid an interruption, please update your payment method in the app.",
+    "button": "Update payment method",
+    "note": "If the retries keep failing, your account moves to the free plan. Resubscribing later restores everything."
+  },
+  "accountDeactivated": {
+    "_meta": [
+      "Account deactivated",
+      "The member deactivates; 30-day grace before deletion",
+      "backend · operational"
+    ],
+    "subject": "Your TORA account has been deactivated",
+    "heading": "Account deactivated",
+    "body1": "Hi {{name}}, your TORA account has been deactivated as you asked.",
+    "body2": "Your profiles are hidden and your subscription will not renew. On {{date}} the account and its data are permanently deleted.",
+    "body3": "Changed your mind? Simply log in before that date and everything is restored.",
+    "button": "Log in to restore"
+  },
+  "reportReceived": {
+    "_meta": [
+      "Report received",
+      "A member reports someone or a post",
+      "backend · operational"
+    ],
+    "subject": "We received your report",
+    "heading": "Thanks, we have your report",
+    "body1": "Hi {{firstName}}, we received your report about {{target}}. Our team reviews every report and takes action where our rules have been broken. We will come back to you if we need anything further.",
+    "body2": "If you want to stop hearing from this member in the meantime, you can block them from their profile or from the chat.",
+    "note": "Reply to this email if you need to add anything.",
+    "target.PROFILE": "a member profile",
+    "target.MESSAGE": "a message",
+    "target.POST": "a post",
+    "target.COMMENT": "a comment"
+  },
+  "agencyInvite": {
+    "_meta": [
+      "Agency invitation",
+      "An agent invites a colleague into their agency",
+      "backend · operational"
+    ],
+    "subject": "{{inviterName}} invited you to join {{agency}} on TORA",
+    "heading": "{{inviterName}} invited you to join {{agency}} on TORA",
+    "rule": "An agency on TORA shows its agents as one team, on every member's profile. Each agent keeps their own login, artists and plan.",
+    "existingUser": "Open TORA → Settings → Agency to accept the invitation.",
+    "newUser": "You do not have a TORA account yet. Apply here with this email address and the invitation will be waiting in Settings → Agency once you are in.",
+    "note": "Reply to this email if you have any question."
+  },
+  "agencyRequest": {
+    "_meta": [
+      "Agency join request",
+      "An agent asks to join an agency",
+      "backend · operational"
+    ],
+    "subject": "{{requesterName}} asked to join {{agency}} on TORA",
+    "heading": "{{requesterName}} asked to join {{agency}} on TORA",
+    "body": "Hi {{firstName}}, an agent asked to join {{agency}}. Approve or decline in TORA → Settings → Agency.",
+    "note": "Only agents you approve become members."
+  },
+  "addProfileReceived": {
+    "_meta": [
+      "New profile application received",
+      "A member applies for an extra role profile",
+      "website · operational"
+    ],
+    "subject": "We received your new profile application",
+    "preheader": "We will review it and email you when it is ready.",
+    "heading": "We received your {{role}} profile application",
+    "lead": "Your application for a new {{role}} profile ({{profileName}}) is in review. No further action is needed from you.",
+    "step1.title": "Review",
+    "step1.body": "Our team reviews your new profile application.",
+    "step2.title": "Added to your account",
+    "step2.body": "If approved, the new profile appears automatically in your account.",
+    "step3.title": "Confirmation",
+    "step3.body": "You receive an email when it is ready.",
+    "note": "Questions? Write to support@torahub.io.",
+    "footReason": "You are receiving this because you applied for a new profile on TORA."
+  },
+  "addProfileApproved": {
+    "_meta": [
+      "New profile approved",
+      "The extra role profile is approved",
+      "website · operational"
+    ],
+    "subject": "Your new profile is active — TORA",
+    "preheader": "Your new {{role}} profile is ready to use.",
+    "heading": "Your new {{role}} profile is active",
+    "lead": "{{profileName}} has been approved and is now active on TORA. Switch to it right away from the profile switcher in the app. No additional sign-up or code is needed.",
+    "note": "Open TORA and tap your profile icon to switch. Questions? Write to support@torahub.io.",
+    "footReason": "You are receiving this because your new profile application was approved."
+  },
+  "applicationDeclined": {
+    "_meta": [
+      "Application declined",
+      "The application is not approved",
+      "website · operational"
+    ],
+    "subject": "Update on your TORA application",
+    "preheader": "An update on your application to TORA.",
+    "heading": "Update on your application",
+    "lead": "Thank you for your interest in TORA. After careful review, we're unable to approve your application at this time. Our community is curated to keep it professional and trusted, and we weren't able to find the right fit at this stage. This may change as the community grows.",
+    "note": "As TORA grows we will open up to more members, and you are welcome to apply again later. Follow @tora.hub for new openings. If you believe this decision was made in error, write to support@torahub.io."
+  }
+}

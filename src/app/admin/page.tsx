@@ -66,6 +66,7 @@ export interface Application {
     venue_capacity: string | null;
     existing_user_id: string | null;
     referral_code?: string | null;
+    language?: string | null;
     application_type: string;
     status: string;
     coupon_code: string | null;
@@ -324,6 +325,7 @@ export default function AdminDashboard() {
                 body: JSON.stringify({
                     firstName: application.first_name,
                     email: application.email,
+                    language: application.language,
                 }),
             })
                 .then(res => {
@@ -386,6 +388,7 @@ export default function AdminDashboard() {
                     couponPackage: invitationPackages[application.id] || 'STANDARD',
                     accessLevel,
                     referralCode: application.referral_code || undefined,
+                    language: application.language || undefined,
                     existingUserId: application.existing_user_id,
                     applicationType: application.application_type,
                     firstName: application.first_name,
@@ -438,6 +441,7 @@ export default function AdminDashboard() {
                         email: application.email,
                         role: application.role,
                         profileName: application.profile_name,
+                        language: application.language,
                     }),
                 })
                     .then(res => {
@@ -469,6 +473,7 @@ export default function AdminDashboard() {
                             couponCode: couponCode,
                             couponPackage: invitationPackages[application.id] || 'STANDARD',
                             accessLevel: grantedAccess,
+                            language: application.language,
                         }),
                     });
                     emailOk = emailRes.ok;
