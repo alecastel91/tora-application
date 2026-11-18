@@ -5,6 +5,10 @@
  * mark beside it, one crimson button, and the Instagram icon in the footer.
  * A member's first emails pass `hero`: the wordmark centred, a big glowing
  * globe, and everything down to the call to action centred (design A1).
+ * Main communication uses `hero` with its own big icon; operational emails stay
+ * left-aligned with a small icon right of the headline. `icon` names a
+ * tora-icon-<name> asset (globe = the brand globe). Twin of
+ * tora-backend/src/services/emailShell.js — keep the two in step.
  *
  * Email-safe on purpose: tables, inline styles, bgcolor attributes and PNG
  * images only (Gmail drops SVG). Server-only — returns an HTML string for
@@ -12,7 +16,8 @@
  * react-email templates move onto it one by one.
  */
 
-const ASSETS = 'https://www.torahub.io/email-assets';
+// EMAIL_ASSETS_URL only for local previews; real emails always load the hosted PNGs.
+const ASSETS = process.env.EMAIL_ASSETS_URL || 'https://www.torahub.io/email-assets';
 const FONT = "Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const CRIMSON = '#DE2A57';
 const C = { bg: '#0A0A0C', card: '#101015', inset: '#0C0C11', line: '#1E1E26', text: '#F2F2F5', mute: '#9A9AA8', dim: '#62626E' };
@@ -65,7 +70,12 @@ const centred = (html: string) =>
  * under the lead (a code, a button); passing it switches to the hero layout,
  * and its pieces should be built with align 'center' (eyebrow included).
  */
-export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason }: {
+export type EmailIcon = 'globe' | 'ticket' | 'check' | 'clock' | 'spark' | 'crown' | 'people' | 'contract' | 'receipt' | 'lock' | 'hourglass' | 'pause' | 'card' | 'shield' | 'plus' | 'mail';
+const iconSrc = (icon: EmailIcon, size: 'hero' | '60') => (icon === 'globe'
+  ? `${ASSETS}/${size === 'hero' ? 'tora-globe-hero' : 'tora-globe-60'}.png`
+  : `${ASSETS}/tora-icon-${icon}-${size}.png`);
+
+export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason, icon = 'globe' }: {
   title: string;
   preheader: string;
   eyebrow?: string; // pill HTML
@@ -74,6 +84,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
   hero?: string;
   body: string;
   footReason: string;
+  icon?: EmailIcon;
 }): string {
   const header = hero !== undefined
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
@@ -81,17 +92,18 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
     : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       <td><table role="presentation" cellpadding="0" cellspacing="0"><tr>
         <td valign="middle"><img src="${ASSETS}/tora-logo-tile.png" width="116" height="36" alt="TORA" style="display:block;width:116px;height:36px;margin-left:-10px;"></td>
-        <td valign="middle" style="padding-left:6px;"><img src="${ASSETS}/tora-globe-60.png" width="30" height="30" alt="" style="display:block;width:30px;height:30px;"></td></tr></table></td>
-      <td align="right" class="hide-sm" style="font:600 10px/14px ${FONT};letter-spacing:0.22em;color:${C.dim};">WHERE MUSIC MEETS</td></tr></table>`;
+        <td valign="middle" style="padding-left:6px;"><img src="${ASSETS}/tora-globe-60.png" width="30" height="30" alt="" style="display:block;width:30px;height:30px;"></td></tr></table></td></tr></table>`;
 
   const h1 = (align: string) =>
     `<h1 class="h1" style="margin:18px 0 12px;font:700 28px/34px ${FONT};letter-spacing:-0.01em;color:${C.text};text-align:${align};">${esc(heading)}</h1>`;
   const intro = hero !== undefined
-    ? centred(`<img src="${ASSETS}/tora-globe-hero.png" width="180" height="180" alt="" style="display:block;margin:-8px auto 4px;width:180px;height:180px;">
+    ? centred(`<img src="${iconSrc(icon, 'hero')}" width="180" height="180" alt="" style="display:block;margin:-8px auto 4px;width:180px;height:180px;">
         ${eyebrow || ''}${h1('center')}
         ${p(esc(lead), `margin:0 auto 24px;max-width:440px;font:400 15px/24px ${FONT};color:${C.mute};text-align:center;`)}
         ${hero}`) + (body ? '<div style="height:8px;line-height:8px;">&nbsp;</div>' : '')
-    : `${eyebrow || ''}${h1('left')}
+    : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td valign="top">${eyebrow || ''}${h1('left')}</td>
+        <td valign="top" align="right" width="56" style="padding-top:4px;"><img src="${iconSrc(icon, '60')}" width="44" height="44" alt="" style="display:block;width:44px;height:44px;"></td></tr></table>
         ${p(esc(lead), `margin-bottom:24px;font:400 15px/24px ${FONT};color:${C.mute};`)}`;
 
   return `<!DOCTYPE html>
@@ -126,14 +138,11 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
         ${body}
       </td></tr></table>
     </td></tr>
-    <tr><td class="px" style="padding:24px 32px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td valign="top">
-          ${p(esc(footReason), `font:400 12px/18px ${FONT};color:${C.dim};`)}
-          ${p(`<a href="mailto:support@torahub.io" style="color:${C.mute};text-decoration:none;">support@torahub.io</a> &middot; <a href="https://torahub.io" style="color:${C.mute};text-decoration:none;">torahub.io</a>`, `margin-top:6px;font:400 12px/18px ${FONT};color:${C.mute};`)}
-        </td>
-        <td valign="top" align="right" width="44"><a href="https://instagram.com/tora.hub"><img src="${ASSETS}/instagram-tile.png" width="32" height="32" alt="Instagram" style="display:block;width:32px;height:32px;"></a></td>
-      </tr></table>
+    <tr><td class="px" align="center" style="padding:28px 32px 0;text-align:center;">
+      ${p(esc(footReason), `font:400 12px/18px ${FONT};color:${C.dim};text-align:center;`)}
+      ${p(`<a href="mailto:support@torahub.io" style="color:${C.mute};text-decoration:none;">support@torahub.io</a> &middot; <a href="https://torahub.io" style="color:${C.mute};text-decoration:none;">torahub.io</a>`, `margin-top:6px;font:400 12px/18px ${FONT};color:${C.mute};text-align:center;`)}
+      <a href="https://instagram.com/tora.hub"><img src="${ASSETS}/instagram-tile.png" width="32" height="32" alt="Instagram" style="display:block;margin:16px auto 12px;width:32px;height:32px;"></a>
+      ${p('WHERE MUSIC MEETS', `font:600 10px/14px ${FONT};letter-spacing:0.22em;color:${C.dim};text-align:center;`)}
     </td></tr>
   </table>
 </td></tr>

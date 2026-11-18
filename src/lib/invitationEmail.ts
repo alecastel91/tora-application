@@ -159,6 +159,7 @@ async function sendProfileOnlyInvitation(input: {
   const html = emailShell({
     title: "You're in",
     preheader: 'Set up your profile, verify it and share your public page. Full access opens at launch.',
+    icon: 'ticket',
     eyebrow: pill(pkg.label, ROLE_COLOR[roleKey], 'center'),
     heading: firstName ? `You're in, ${firstName}` : "You're in",
     lead: 'Your application was accepted. Set up your profile, verify it and start sharing your public page now. The full app opens for everyone at launch.',
