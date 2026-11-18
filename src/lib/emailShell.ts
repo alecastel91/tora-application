@@ -80,7 +80,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
   preheader: string;
   eyebrow?: string; // pill HTML
   heading: string;
-  lead: string;
+  lead?: string;
   hero?: string;
   body: string;
   footReason: string;
@@ -99,12 +99,12 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
   const intro = hero !== undefined
     ? centred(`<img src="${iconSrc(icon, 'hero')}" width="180" height="180" alt="" style="display:block;margin:-8px auto 4px;width:180px;height:180px;">
         ${eyebrow || ''}${h1('center')}
-        ${p(esc(lead), `margin:0 auto 24px;max-width:440px;font:400 15px/24px ${FONT};color:${C.mute};text-align:center;`)}
+        ${lead ? p(esc(lead), `margin:0 auto 24px;max-width:440px;font:400 15px/24px ${FONT};color:${C.mute};text-align:center;`) : ''}
         ${hero}`) + (body ? '<div style="height:8px;line-height:8px;">&nbsp;</div>' : '')
     : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
         <td valign="top">${eyebrow || ''}${h1('left')}</td>
         <td valign="top" align="right" width="56" style="padding-top:4px;"><img src="${iconSrc(icon, '60')}" width="44" height="44" alt="" style="display:block;width:44px;height:44px;"></td></tr></table>
-        ${p(esc(lead), `margin-bottom:24px;font:400 15px/24px ${FONT};color:${C.mute};`)}`;
+        ${lead ? p(esc(lead), `margin-bottom:24px;font:400 15px/24px ${FONT};color:${C.mute};`) : ''}`;
 
   return `<!DOCTYPE html>
 <html lang="en">

@@ -1,6 +1,5 @@
 import { Resend } from 'resend';
-import { InvitationAcceptedEmail } from '../../emails/invitation-accepted';
-import { AddProfileApprovedEmail } from '../../emails/add-profile-approved';
+import { buildAddProfileApprovedHtml, buildFullInvitationHtml } from './memberEmails';
 import { ROLE_COLOR, button, emailShell, note, pill, steps, valueBox } from './emailShell';
 
 /**
@@ -102,13 +101,12 @@ export async function sendInvitationEmail(input: {
       replyTo: 'support@torahub.io',
       to: [email],
       subject: `${firstName}, your TORA invitation is ready`,
-      react: InvitationAcceptedEmail({
+      html: buildFullInvitationHtml({
         firstName,
-        invitationCode: couponCode,
-        tierTitle: tier.title,
-        tierBenefit: tier.benefit,
-        tierDescription: tier.description,
-        appUrl,
+        role,
+        couponCode,
+        pkgLabel: pkg.label,
+        pkgDuration: pkg.duration,
         isPremium,
       }),
       text: plainText,
@@ -235,7 +233,8 @@ export async function sendAddProfileApprovedEmail(input: {
       from: 'TORA <invitation@mail.torahub.io>',
       to: [email],
       subject: 'Your New Profile is Active - TORA',
-      react: AddProfileApprovedEmail({ firstName, role, profileName }),
+      html: buildAddProfileApprovedHtml({ role, profileName }),
+      text: `Your new ${role} profile (${profileName}) is now active on TORA. Switch to it from the profile switcher in the app: ${process.env.NEXT_PUBLIC_APP_URL || 'https://app.torahub.io'}`,
     });
     if (error) {
       console.error('Resend error:', error);
