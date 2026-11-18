@@ -172,7 +172,7 @@ async function sendProfileOnlyInvitation(input: {
         ['Verify it', 'Send your code to @tora.verify on Instagram. Verified profiles can publish a page.'],
         ['Share your page', 'Your page lives at torahub.io/@yourname. Put it in your Instagram bio.'],
       ]),
-      note(`Search, offers, contracts and payments switch on for everyone at launch. We'll email you that day.${gift ? ` ${gift}` : ''}`),
+      note(`Search, offers, contracts and payment tracking switch on for everyone at launch. We'll email you that day.${gift ? ` ${gift}` : ''}`),
     ].join('\n'),
     footReason: 'You are receiving this because your application to TORA was accepted.',
   });
@@ -190,7 +190,7 @@ async function sendProfileOnlyInvitation(input: {
     `2. Verify it: send your code to @tora.verify on Instagram.`,
     `3. Share your page: torahub.io/@yourname, in your Instagram bio.`,
     ``,
-    `Search, offers, contracts and payments switch on for everyone at launch. We'll email you that day.${gift ? ` ${gift}` : ''}`,
+    `Search, offers, contracts and payment tracking switch on for everyone at launch. We'll email you that day.${gift ? ` ${gift}` : ''}`,
     ``,
     `Questions? Reply to this email or contact support@torahub.io`,
     ``,
@@ -232,7 +232,7 @@ export async function sendAddProfileApprovedEmail(input: {
     const { data, error } = await resend.emails.send({
       from: 'TORA <invitation@mail.torahub.io>',
       to: [email],
-      subject: 'Your New Profile is Active - TORA',
+      subject: 'Your new profile is active — TORA',
       html: buildAddProfileApprovedHtml({ role, profileName }),
       text: `Your new ${role} profile (${profileName}) is now active on TORA. Switch to it from the profile switcher in the app: ${process.env.NEXT_PUBLIC_APP_URL || 'https://app.torahub.io'}`,
     });

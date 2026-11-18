@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         steps([
           ['Review', 'We check every application so the network stays professional and trusted.'],
           ['Your invitation', 'If you are approved, your invitation code arrives by email. You can set up your profile and public page straight away.'],
-          ['Launch', 'Search, offers, contracts and payments open for every member at launch.'],
+          ['Launch', 'Search, offers, contracts and payment tracking open for every member at launch.'],
         ]),
         note(`Applied with ${esc(email)} on ${submittedDate}. Follow <a href="https://instagram.com/tora.hub" style="color:#9A9AA8;">@tora.hub</a> for launch news.`),
       ].join('\n'),
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       `What happens next:`,
       `1. Review: we check every application so the network stays professional and trusted.`,
       `2. Your invitation: if you are approved, your invitation code arrives by email. You can set up your profile and public page straight away.`,
-      `3. Launch: search, offers, contracts and payments open for every member at launch.`,
+      `3. Launch: search, offers, contracts and payment tracking open for every member at launch.`,
       ``,
       `Applied with ${email} on ${submittedDate}.`,
       `Follow @tora.hub on Instagram for launch news. Questions? support@torahub.io`,

@@ -26,7 +26,7 @@ export function buildFullInvitationHtml(input: {
     icon: 'ticket',
     eyebrow: pill(pkgLabel, ROLE_COLOR[String(role || '').toUpperCase()], 'center'),
     heading: firstName ? `You're in, ${firstName}` : "You're in",
-    lead: 'Your application was accepted. Sign up with your code and you go straight into the full app: search, connections, offers, contracts and payments, with the whole club music industry.',
+    lead: 'Your application was accepted. Sign up with your code and you go straight into the full app: search, connections, offers, contracts and payment tracking, with the whole club music industry.',
     hero: [
       valueBox('Your invitation code', couponCode, `Sign up at ${appUrl().replace(/^https?:\/\//, '')} with this email address`, 'center'),
       gap(12),
@@ -36,7 +36,7 @@ export function buildFullInvitationHtml(input: {
     body: steps([
       ['Sign up', 'Use the code above and this email address. About a minute.'],
       ['Set up your profile', 'Photos, bio, genres and links: what people see when they find you.'],
-      ['Verify it', 'A quick Instagram message to @tora.verify confirms it is really you and unlocks offers and requests.'],
+      ['Verify it', 'Send a quick Instagram message to @tora.verify to verify your profile and unlock offers and requests.'],
     ]) + note(`Questions? Reply to this email or write to ${SUPPORT}.`),
     footReason: 'You are receiving this because your application to TORA was accepted.',
   });
