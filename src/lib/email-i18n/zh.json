@@ -30,7 +30,11 @@
     "footReason.hasAccount": "你收到这封邮件，是因为你拥有 TORA 账户。",
     "footReason.applied": "你收到这封邮件，是因为你申请加入 TORA。",
     "footReason.accepted": "你收到这封邮件，是因为你加入 TORA 的申请已通过。",
-    "footReason.justCreated": "你收到这封邮件，是因为你刚刚创建了 TORA 账户。"
+    "footReason.justCreated": "你收到这封邮件，是因为你刚刚创建了 TORA 账户。",
+    "role.ARTIST": "艺人",
+    "role.AGENT": "经纪人",
+    "role.PROMOTER": "主办方",
+    "role.VENUE": "场地"
   },
   "applicationReceived": {
     "subject": "申请已收到 - TORA",

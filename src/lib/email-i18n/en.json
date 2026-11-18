@@ -35,7 +35,11 @@
     "footReason.hasAccount": "You are receiving this because you have a TORA account.",
     "footReason.applied": "You are receiving this because you applied to join TORA.",
     "footReason.accepted": "You are receiving this because your application to TORA was accepted.",
-    "footReason.justCreated": "You are receiving this because you just created your TORA account."
+    "footReason.justCreated": "You are receiving this because you just created your TORA account.",
+    "role.ARTIST": "Artist",
+    "role.AGENT": "Agent",
+    "role.PROMOTER": "Promoter",
+    "role.VENUE": "Venue"
   },
   "applicationReceived": {
     "_meta": [

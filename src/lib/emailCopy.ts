@@ -52,4 +52,5 @@ export function copyFor(lang?: string | null): T {
 }
 
 export const formatDay = (date: Date, lang?: string | null) =>
-  date.toLocaleDateString(LOCALE[normLang(lang)], { day: 'numeric', month: 'long', year: 'numeric' });
+  // Pinned to UTC like the backend twin: the same date never prints a day apart.
+  date.toLocaleDateString(LOCALE[normLang(lang)], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });

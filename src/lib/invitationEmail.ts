@@ -16,11 +16,6 @@ export type SendResult = { ok: true; id?: string } | { ok: false; error: string 
 
 // STANDARD intentionally avoids saying "Standard" — every TORA member is exclusive.
 // STANDARD is the Free tier: no Premium trial.
-// Packages with complimentary Premium; ADMIN's lifetime has no catalog line, so it
-// shows this duration as written. STANDARD is the Free tier: no Premium.
-const PREMIUM_DURATION: Record<string, string> = {
-  FOUNDING: '3 months Premium', LAUNCH: '1 month Premium', INFLUENCER: '12 months Premium', ADMIN: 'Lifetime Premium',
-};
 
 const HEADERS = {
   'List-Unsubscribe': '<mailto:support@torahub.io?subject=Unsubscribe>',
@@ -62,12 +57,9 @@ export async function sendInvitationEmail(input: {
 }): Promise<SendResult> {
   const firstName = input.firstName?.trim() || '';
   const pkgKey = (input.couponPackage || 'STANDARD').toUpperCase();
-  const built = input.accessLevel === 'PROFILE_ONLY'
-    ? buildProfileOnlyInvitation({ firstName, role: input.role, couponCode: input.couponCode, couponPackage: pkgKey, lang: input.lang })
-    : buildFullInvitation({
-      firstName, role: input.role, couponCode: input.couponCode, couponPackage: pkgKey,
-      isPremium: pkgKey in PREMIUM_DURATION, pkgDuration: PREMIUM_DURATION[pkgKey] || '', lang: input.lang,
-    });
+  const built = (input.accessLevel === 'PROFILE_ONLY' ? buildProfileOnlyInvitation : buildFullInvitation)(
+    { firstName, role: input.role, couponCode: input.couponCode, couponPackage: pkgKey, lang: input.lang },
+  );
   return send(input.email, built, 'Invitation');
 }
 

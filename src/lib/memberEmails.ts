@@ -15,21 +15,19 @@ const IG = '<a href="https://instagram.com/tora.hub" style="color:#9A9AA8;">@tor
 const linkify = (s: string) => esc(s).replace('support@torahub.io', SUPPORT).replace('@tora.hub', IG);
 const stepsOf = (t: T, group: string) => steps([1, 2, 3].map((i) => [t(`${group}.step${i}.title`), esc(t(`${group}.step${i}.body`))] as [string, string]));
 const roleKey = (role: string) => String(role || '').toUpperCase();
-// Role word for "your new {{role}} profile": the glossary's role name.
-const ROLE_WORD: Record<string, Record<string, string>> = {
-  ARTIST: { en: 'Artist', ja: 'アーティスト', ko: '아티스트', zh: '艺人', es: 'artista', fr: 'artiste', it: 'artista', pt: 'artista' },
-  AGENT: { en: 'Agent', ja: 'エージェント', ko: '에이전트', zh: '经纪人', es: 'agente', fr: 'agent', it: 'agente', pt: 'agente' },
-  PROMOTER: { en: 'Promoter', ja: 'プロモーター', ko: '프로모터', zh: '主办方', es: 'promotor', fr: 'promoteur', it: 'promoter', pt: 'promotor' },
-  VENUE: { en: 'Venue', ja: 'ヴェニュー', ko: '베뉴', zh: '场地', es: 'sala', fr: 'lieu', it: 'venue', pt: 'casa' },
-};
-const roleWord = (role: string, lang: string) => ROLE_WORD[roleKey(role)]?.[lang] || String(role || '');
+// Role word for "your new {{role}} profile": the glossary's role name, from the catalog.
+const roleWord = (t: T, role: string) => (['ARTIST', 'AGENT', 'PROMOTER', 'VENUE'].includes(roleKey(role)) ? t(`_shared.role.${roleKey(role)}`) : String(role || ''));
 
 export type BuiltEmail = { subject: string; html: string; text: string };
 const done = (subject: string, html: string): BuiltEmail => ({ subject, html, text: htmlToText(html) });
 
-// Member badge (pill) per invitation package; the labels stay in English everywhere.
-const PILL: Record<string, string> = { FOUNDING: 'foundingMember', LAUNCH: 'launchMember', INFLUENCER: 'influencerMember' };
-const pillFor = (t: T, pkg?: string | null) => t(`_shared.pill.${PILL[String(pkg || '').toUpperCase()] || 'toraMember'}`);
+// One table per invitation package: its catalog slug drives the badge
+// (_shared.pill.<slug>Member), the gift (_shared.gift.<slug>.*) and the
+// pre-launch gift note (invitationProfileOnly.note.gift<Slug>). STANDARD has none.
+const PKG: Record<string, string> = { FOUNDING: 'founding', LAUNCH: 'launch', INFLUENCER: 'influencer' };
+const slugOf = (pkg?: string | null) => PKG[String(pkg || '').toUpperCase()];
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const pillFor = (t: T, pkg?: string | null) => t(`_shared.pill.${slugOf(pkg) ? `${slugOf(pkg)}Member` : 'toraMember'}`);
 
 /** Application received: the first email anyone gets from TORA. */
 export function buildApplicationReceived(input: { firstName: string; email: string; role: string; lang?: string | null }): BuiltEmail {
@@ -51,7 +49,7 @@ export function buildApplicationReceived(input: { firstName: string; email: stri
 export function buildProfileOnlyInvitation(input: { firstName: string; role: string; couponCode: string; couponPackage?: string | null; lang?: string | null }): BuiltEmail {
   const L = normLang(input.lang); const t = copyFor(L);
   const pkg = String(input.couponPackage || '').toUpperCase();
-  const giftNote = { FOUNDING: 'note.giftFounding', LAUNCH: 'note.giftLaunch', INFLUENCER: 'note.giftInfluencer' }[pkg];
+  const giftNote = slugOf(pkg) && `note.gift${cap(slugOf(pkg))}`;
   const host = appUrl().replace(/^https?:\/\//, '');
   return done(t('invitationProfileOnly.subject', { firstName: input.firstName }), emailShell({
     lang: L, icon: 'ticket', title: t('invitationProfileOnly.heading', { firstName: input.firstName }), preheader: t('invitationProfileOnly.preheader'),
@@ -67,10 +65,11 @@ export function buildProfileOnlyInvitation(input: { firstName: string; role: str
 }
 
 /** Full invitation, once TORA is open: the code goes straight into the full app. */
-export function buildFullInvitation(input: { firstName: string; role: string; couponCode: string; couponPackage?: string | null; isPremium: boolean; pkgDuration: string; lang?: string | null }): BuiltEmail {
+export function buildFullInvitation(input: { firstName: string; role: string; couponCode: string; couponPackage?: string | null; lang?: string | null }): BuiltEmail {
   const L = normLang(input.lang); const t = copyFor(L);
   const pkg = String(input.couponPackage || '').toUpperCase();
-  const giftValue = { FOUNDING: 'founding', LAUNCH: 'launch', INFLUENCER: 'influencer' }[pkg];
+  // Complimentary Premium: a gift package, or ADMIN's lifetime (no catalog line, plan name stays English).
+  const membership = slugOf(pkg) ? t(`_shared.gift.${slugOf(pkg)}.value`) : pkg === 'ADMIN' ? 'Lifetime Premium' : null;
   const host = appUrl().replace(/^https?:\/\//, '');
   return done(t('invitationFull.subject', { firstName: input.firstName }), emailShell({
     lang: L, icon: 'ticket', title: t('invitationFull.heading', { firstName: input.firstName }), preheader: t('invitationFull.preheader'),
@@ -80,8 +79,8 @@ export function buildFullInvitation(input: { firstName: string; role: string; co
     hero: [
       valueBox(t('_shared.box.invitationCode'), input.couponCode, esc(t('_shared.box.signupAtWithEmail', { appHost: host })), 'center'),
       gap(12),
-      input.isPremium
-        ? valueBox(t('invitationFull.box.membership'), giftValue ? t(`_shared.gift.${giftValue}.value`) : input.pkgDuration, esc(t('invitationFull.box.membershipHint')), 'center') + gap(24)
+      membership
+        ? valueBox(t('invitationFull.box.membership'), membership, esc(t('invitationFull.box.membershipHint')), 'center') + gap(24)
         : gap(12),
       button(t('invitationFull.button'), `${appUrl()}/?code=${encodeURIComponent(input.couponCode)}`, 'center'),
     ].join(''),
@@ -91,7 +90,7 @@ export function buildFullInvitation(input: { firstName: string; role: string; co
 }
 
 export function buildAddProfileReceived({ role, profileName, lang }: { role: string; profileName: string; lang?: string | null }): BuiltEmail {
-  const L = normLang(lang); const t = copyFor(L); const r = roleWord(role, L);
+  const L = normLang(lang); const t = copyFor(L); const r = roleWord(t, role);
   return done(t('addProfileReceived.subject'), emailShell({
     lang: L, icon: 'plus', title: t('addProfileReceived.subject'), preheader: t('addProfileReceived.preheader'),
     heading: t('addProfileReceived.heading', { role: r }),
@@ -102,7 +101,7 @@ export function buildAddProfileReceived({ role, profileName, lang }: { role: str
 }
 
 export function buildAddProfileApproved({ role, profileName, lang }: { role: string; profileName: string; lang?: string | null }): BuiltEmail {
-  const L = normLang(lang); const t = copyFor(L); const r = roleWord(role, L);
+  const L = normLang(lang); const t = copyFor(L); const r = roleWord(t, role);
   return done(t('addProfileApproved.subject'), emailShell({
     lang: L, icon: 'plus', title: t('addProfileApproved.subject'), preheader: t('addProfileApproved.preheader', { role: r }),
     heading: t('addProfileApproved.heading', { role: r }),

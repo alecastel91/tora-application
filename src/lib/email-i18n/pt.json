@@ -30,7 +30,11 @@
     "footReason.hasAccount": "Você está recebendo este email porque tem uma conta na TORA.",
     "footReason.applied": "Você está recebendo este email porque se candidatou para entrar na TORA.",
     "footReason.accepted": "Você está recebendo este email porque sua candidatura à TORA foi aceita.",
-    "footReason.justCreated": "Você está recebendo este email porque acabou de criar sua conta na TORA."
+    "footReason.justCreated": "Você está recebendo este email porque acabou de criar sua conta na TORA.",
+    "role.ARTIST": "artista",
+    "role.AGENT": "agente",
+    "role.PROMOTER": "promotor",
+    "role.VENUE": "casa"
   },
   "applicationReceived": {
     "subject": "Candidatura recebida - TORA",

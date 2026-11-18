@@ -12,8 +12,7 @@
  *
  * Email-safe on purpose: tables, inline styles, bgcolor attributes and PNG
  * images only (Gmail drops SVG). Server-only — returns an HTML string for
- * Resend's `html` field. Every new email should use this shell; the older
- * react-email templates move onto it one by one.
+ * Resend's `html` field. Every email the website sends uses this shell.
  */
 
 // EMAIL_ASSETS_URL only for local previews; real emails always load the hosted PNGs.

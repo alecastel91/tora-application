@@ -30,7 +30,11 @@
     "footReason.hasAccount": "Ricevi questa email perché hai un account TORA.",
     "footReason.applied": "Ricevi questa email perché ti sei candidato per entrare in TORA.",
     "footReason.accepted": "Ricevi questa email perché la tua candidatura a TORA è stata accettata.",
-    "footReason.justCreated": "Ricevi questa email perché hai appena creato il tuo account TORA."
+    "footReason.justCreated": "Ricevi questa email perché hai appena creato il tuo account TORA.",
+    "role.ARTIST": "artista",
+    "role.AGENT": "agente",
+    "role.PROMOTER": "promoter",
+    "role.VENUE": "venue"
   },
   "applicationReceived": {
     "subject": "Candidatura ricevuta - TORA",

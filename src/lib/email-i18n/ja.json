@@ -30,7 +30,11 @@
     "footReason.hasAccount": "このメールは、TORAのアカウントをお持ちの方にお送りしています。",
     "footReason.applied": "このメールは、TORAへの参加をお申し込みいただいた方にお送りしています。",
     "footReason.accepted": "このメールは、TORAへのお申し込みが承認された方にお送りしています。",
-    "footReason.justCreated": "このメールは、TORAのアカウントを作成された方にお送りしています。"
+    "footReason.justCreated": "このメールは、TORAのアカウントを作成された方にお送りしています。",
+    "role.ARTIST": "アーティスト",
+    "role.AGENT": "エージェント",
+    "role.PROMOTER": "プロモーター",
+    "role.VENUE": "ヴェニュー"
   },
   "applicationReceived": {
     "subject": "お申し込みを受け付けました - TORA",

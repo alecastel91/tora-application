@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useSyncExternalStore, type ReactNode } from "react";
+import { normLang } from "@/lib/langCode";
 
 /* Labels of the public artist page in the site's 8 languages. Typed like the
    /founding content: a missing label in any language fails the build. Section
@@ -203,7 +204,6 @@ function detect(): Lang {
 }
 
 const Cx = createContext<Lang>("EN");
-const HTML_LANG: Record<Lang, string> = { EN: "en", JP: "ja", CN: "zh", KR: "ko", ES: "es", FR: "fr", IT: "it", PT: "pt" };
 // The language doesn't change while the page is open.
 const noSubscribe = () => () => {};
 
@@ -211,7 +211,7 @@ export function PageLang({ children }: { children: ReactNode }) {
   // English on the server and during hydration, the visitor's language right after.
   const lang = useSyncExternalStore(noSubscribe, detect, () => "EN" as Lang);
   useEffect(() => {
-    document.documentElement.lang = HTML_LANG[lang];
+    document.documentElement.lang = normLang(lang);
   }, [lang]);
   return <Cx.Provider value={lang}>{children}</Cx.Provider>;
 }
