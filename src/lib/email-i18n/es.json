@@ -228,7 +228,8 @@
     "box.attached": "Adjuntos",
     "box.contractHint": "El contrato firmado",
     "box.certificateHint": "Registro de auditoría: firmantes, marcas de tiempo, direcciones IP y el hash SHA-256 que lo vincula a esta versión exacta del documento",
-    "footReason": "Recibes este correo porque eres una de las partes de este contrato."
+    "footReason": "Recibes este correo porque eres una de las partes de este contrato.",
+    "leadNoEvent": "Todas las partes han firmado el contrato. Este correo incluye dos PDF adjuntos para tus archivos."
   },
   "invoice": {
     "subject": "Factura {{number}} — {{eventName}}",

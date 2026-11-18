@@ -228,7 +228,8 @@
     "box.attached": "Anexos",
     "box.contractHint": "O contrato assinado",
     "box.certificateHint": "Trilha de auditoria: signatários, data e hora, IPs e o hash SHA-256 que o vincula a esta versão exata do documento",
-    "footReason": "Você está recebendo este email porque é parte deste contrato."
+    "footReason": "Você está recebendo este email porque é parte deste contrato.",
+    "leadNoEvent": "Todas as partes assinaram o contrato. Dois PDFs estão anexados a este email para os seus registros."
   },
   "invoice": {
     "subject": "Fatura {{number}} — {{eventName}}",

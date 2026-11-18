@@ -228,7 +228,8 @@
     "box.attached": "In allegato",
     "box.contractHint": "Il contratto firmato",
     "box.certificateHint": "Audit trail: firmatari, data e ora, indirizzi IP e l'hash SHA-256 che lo lega a questa esatta versione del documento",
-    "footReason": "Ricevi questa email perché sei una delle parti di questo contratto."
+    "footReason": "Ricevi questa email perché sei una delle parti di questo contratto.",
+    "leadNoEvent": "Tutte le parti hanno firmato il contratto. A questa email sono allegati due PDF da conservare."
   },
   "invoice": {
     "subject": "Fattura {{number}} — {{eventName}}",

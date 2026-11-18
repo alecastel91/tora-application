@@ -228,7 +228,8 @@
     "box.attached": "Pièces jointes",
     "box.contractHint": "Le contrat signé",
     "box.certificateHint": "Piste d'audit : signataires, horodatages, adresses IP et empreinte SHA-256 qui le lie à cette version exacte du document",
-    "footReason": "Vous recevez cet e-mail car vous êtes partie à ce contrat."
+    "footReason": "Vous recevez cet e-mail car vous êtes partie à ce contrat.",
+    "leadNoEvent": "Toutes les parties ont signé le contrat. Deux PDF sont joints à cet e-mail pour vos archives."
   },
   "invoice": {
     "subject": "Facture {{number}} — {{eventName}}",

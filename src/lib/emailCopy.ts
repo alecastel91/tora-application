@@ -12,20 +12,14 @@ import es from './email-i18n/es.json';
 import fr from './email-i18n/fr.json';
 import it from './email-i18n/it.json';
 import pt from './email-i18n/pt.json';
+import { normLang, type EmailLang } from './langCode';
 
-export type EmailLang = 'en' | 'ja' | 'zh' | 'ko' | 'es' | 'fr' | 'it' | 'pt';
+export { normLang, type EmailLang };
+
 type Catalog = Record<string, Record<string, string | string[]>>;
 const CATALOG: Record<EmailLang, Catalog> = { en, ja, zh, ko, es, fr, it, pt } as Record<EmailLang, Catalog>;
 const LOCALE: Record<EmailLang, string> = { en: 'en-GB', ja: 'ja-JP', zh: 'zh-CN', ko: 'ko-KR', es: 'es-ES', fr: 'fr-FR', it: 'it-IT', pt: 'pt-BR' };
-// The site's picker codes (JP/CN/KR…) map onto the app's.
-const ALIAS: Record<string, EmailLang> = { jp: 'ja', cn: 'zh', kr: 'ko' };
 const NAME_VARS = ['firstName', 'name'];
-
-export function normLang(lang?: string | null): EmailLang {
-  const l = String(lang || '').toLowerCase().slice(0, 2);
-  const code = ALIAS[l] || l;
-  return (code in CATALOG ? code : 'en') as EmailLang;
-}
 
 function fill(str: string, vars: Record<string, string | number | undefined | null>) {
   let s = str;
@@ -33,9 +27,10 @@ function fill(str: string, vars: Record<string, string | number | undefined | nu
   for (const v of NAME_VARS) {
     if (s.includes(`{{${v}}}`) && !String(vars[v] ?? '').trim()) {
       // "Thanks, {{name}}." → "Thanks." · "Hi {{name}}, after…" → "Hi, after…" · "{{name}}さん、…" → "…"
+      // Only the spot where the name was is tidied: French keeps its space before ; : ! ?
       const left = new RegExp(`[,，、]\\s*\\{\\{${v}\\}\\}\\s*(さん|님)?`);
-      s = (left.test(s) ? s.replace(left, '') : s.replace(new RegExp(`\\s*\\{\\{${v}\\}\\}\\s*(さん|님)?`), ''))
-        .replace(/^[\s,，、]+/, '').replace(/\s{2,}/g, ' ').replace(/\s+([.,!?:;。、！？])/g, '$1').trim();
+      s = (left.test(s) ? s.replace(left, '\u0000') : s.replace(new RegExp(`\\s*\\{\\{${v}\\}\\}\\s*(さん|님)?`), '\u0000'))
+        .replace(/^[\s,，、]*\u0000[\s,，、]*/, '').replace(/\s*\u0000\s*([.,!?:;。、！？])/, '$1').replace(/\s*\u0000\s*/, ' ').trim();
       s = s.charAt(0).toUpperCase() + s.slice(1);
     }
   }

@@ -303,7 +303,8 @@
     "box.attached": "Attached",
     "box.contractHint": "The signed contract",
     "box.certificateHint": "Audit trail: signers, timestamps, IPs, and the SHA-256 hash binding it to this exact document version",
-    "footReason": "You are receiving this because you are a party to this contract."
+    "footReason": "You are receiving this because you are a party to this contract.",
+    "leadNoEvent": "All parties have signed the contract. Two PDFs are attached to this email for your records."
   },
   "invoice": {
     "_meta": [

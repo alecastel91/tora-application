@@ -228,7 +228,8 @@
     "box.attached": "添付ファイル",
     "box.contractHint": "署名済みの契約書",
     "box.certificateHint": "監査証跡：署名者、タイムスタンプ、IPアドレス、そしてこの文書のバージョンと紐づけるSHA-256ハッシュ",
-    "footReason": "このメールは、この契約の当事者の方にお送りしています。"
+    "footReason": "このメールは、この契約の当事者の方にお送りしています。",
+    "leadNoEvent": "すべての当事者が契約書に署名しました。保管用として、このメールに2つのPDFを添付しています。"
   },
   "invoice": {
     "subject": "請求書 {{number}} — {{eventName}}",

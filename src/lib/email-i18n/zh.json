@@ -228,7 +228,8 @@
     "box.attached": "附件",
     "box.contractHint": "已签署的合同",
     "box.certificateHint": "审计记录：签署人、时间戳、IP 地址，以及将其绑定到此确切文件版本的 SHA-256 哈希值",
-    "footReason": "你收到这封邮件，是因为你是此合同的参与方。"
+    "footReason": "你收到这封邮件，是因为你是此合同的参与方。",
+    "leadNoEvent": "所有参与方均已签署合同。本邮件附有两份 PDF，供你存档。"
   },
   "invoice": {
     "subject": "发票 {{number}} — {{eventName}}",

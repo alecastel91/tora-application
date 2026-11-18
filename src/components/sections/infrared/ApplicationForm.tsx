@@ -12,7 +12,7 @@ import { attributionForSubmit, referralForSubmit } from "@/lib/attribution";
 import { trackEvent } from "@/lib/plausible";
 import { reportLostApplication } from "@/lib/reportFailure";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { normLang } from "@/lib/emailCopy";
+import { normLang } from "@/lib/langCode";
 
 // Create a dummy Supabase client with placeholder values for build time
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
