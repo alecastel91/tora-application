@@ -34,7 +34,9 @@
     "role.ARTIST": "艺人",
     "role.AGENT": "经纪人",
     "role.PROMOTER": "主办方",
-    "role.VENUE": "场地"
+    "role.VENUE": "场地",
+    "signoff.greeting": "此致",
+    "signoff.team": "TORA 团队"
   },
   "applicationReceived": {
     "subject": "申请已收到 - TORA",
@@ -53,7 +55,11 @@
     "step2.body": "申请通过后，你的邀请码会通过邮件发送给你。你可以立即设置档案和公开页面。",
     "step3.title": "正式上线",
     "step3.body": "上线时，搜索、报价、合同与付款跟踪将向所有会员开放。",
-    "note": "你于 {{date}} 使用 {{email}} 提交了申请。关注 @tora.hub 获取上线动态。"
+    "details.title": "你的申请信息",
+    "details.email": "邮箱",
+    "details.role": "申请身份",
+    "details.submitted": "提交日期",
+    "closing": "感谢你在审核期间的耐心等待。关注 Instagram 上的 @tora.hub 获取上线动态，如有任何问题，请发送邮件至 support@torahub.io。"
   },
   "invitationProfileOnly": {
     "subject": "{{firstName}}，你已通过：设置你的 TORA 页面",

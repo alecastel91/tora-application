@@ -34,7 +34,9 @@
     "role.ARTIST": "artiste",
     "role.AGENT": "agent",
     "role.PROMOTER": "promoteur",
-    "role.VENUE": "lieu"
+    "role.VENUE": "lieu",
+    "signoff.greeting": "Bien cordialement,",
+    "signoff.team": "L'équipe TORA"
   },
   "applicationReceived": {
     "subject": "Candidature reçue - TORA",
@@ -53,7 +55,11 @@
     "step2.body": "Si votre candidature est approuvée, votre code d'invitation arrive par e-mail. Vous pouvez configurer votre profil et votre page publique tout de suite.",
     "step3.title": "Lancement",
     "step3.body": "Recherche, propositions, contrats et suivi des paiements s'ouvrent à tous les membres au lancement.",
-    "note": "Candidature envoyée avec {{email}} le {{date}}. Suivez @tora.hub pour les actualités du lancement."
+    "details.title": "Votre candidature",
+    "details.email": "Email",
+    "details.role": "Vous postulez en tant que",
+    "details.submitted": "Envoyée le",
+    "closing": "Merci de votre patience pendant notre examen. Suivez @tora.hub sur Instagram pour les actualités du lancement et, pour toute question, écrivez-nous à support@torahub.io."
   },
   "invitationProfileOnly": {
     "subject": "{{firstName}}, votre candidature est acceptée : configurez votre page TORA",

@@ -34,7 +34,9 @@
     "role.ARTIST": "artista",
     "role.AGENT": "agente",
     "role.PROMOTER": "promotor",
-    "role.VENUE": "sala"
+    "role.VENUE": "sala",
+    "signoff.greeting": "Un saludo,",
+    "signoff.team": "El equipo de TORA"
   },
   "applicationReceived": {
     "subject": "Solicitud recibida - TORA",
@@ -53,7 +55,11 @@
     "step2.body": "Si te aprobamos, recibirás tu código de invitación por correo. Podrás configurar tu perfil y tu página pública desde ese mismo momento.",
     "step3.title": "Lanzamiento",
     "step3.body": "La búsqueda, las ofertas, los contratos y el seguimiento de pagos se abren para todos los miembros en el lanzamiento.",
-    "note": "Solicitud enviada con {{email}} el {{date}}. Sigue a @tora.hub para enterarte de las novedades del lanzamiento."
+    "details.title": "Datos de tu solicitud",
+    "details.email": "Email",
+    "details.role": "Solicitas como",
+    "details.submitted": "Enviada",
+    "closing": "Gracias por tu paciencia mientras revisamos tu solicitud. Sigue a @tora.hub en Instagram para enterarte del lanzamiento y, si tienes cualquier pregunta, escríbenos a support@torahub.io."
   },
   "invitationProfileOnly": {
     "subject": "{{firstName}}, estás dentro: configura tu página de TORA",

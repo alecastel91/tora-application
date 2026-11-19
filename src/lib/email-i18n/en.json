@@ -39,7 +39,9 @@
     "role.ARTIST": "Artist",
     "role.AGENT": "Agent",
     "role.PROMOTER": "Promoter",
-    "role.VENUE": "Venue"
+    "role.VENUE": "Venue",
+    "signoff.greeting": "Best regards,",
+    "signoff.team": "The TORA Team"
   },
   "applicationReceived": {
     "_meta": [
@@ -63,7 +65,11 @@
     "step2.body": "If you are approved, your invitation code arrives by email. You can set up your profile and public page straight away.",
     "step3.title": "Launch",
     "step3.body": "Search, offers, contracts and payment tracking open for every member at launch.",
-    "note": "Applied with {{email}} on {{date}}. Follow @tora.hub for launch news."
+    "details.title": "Your application details",
+    "details.email": "Email",
+    "details.role": "Applying as",
+    "details.submitted": "Submitted",
+    "closing": "Thank you for your patience while we review. Follow @tora.hub on Instagram for launch news, and if you have any questions, write to us at support@torahub.io."
   },
   "invitationProfileOnly": {
     "_meta": [

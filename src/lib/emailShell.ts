@@ -55,6 +55,22 @@ export const valueBox = (title: string, value: string, subHtml?: string, align: 
       ${subHtml ? p(subHtml, `margin-top:4px;font:400 13px/18px ${FONT};color:${C.mute};`) : ''}
     </td></tr></table>`;
 
+/** A labelled box of facts, one row each: [label, valueHtml][] (values are not escaped). */
+export const detailsBox = (title: string, rows: [string, string][]) =>
+  `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${C.inset}" style="margin-top:8px;background:${C.inset};border:1px solid ${C.line};border-left:3px solid ${CRIMSON};border-radius:12px;border-collapse:separate;">
+    <tr><td style="padding:18px 20px;">
+      ${p(esc(title), `margin-bottom:10px;font:600 11px/14px ${FONT};letter-spacing:0.14em;text-transform:uppercase;color:${CRIMSON};`)}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        ${rows.map(([k, v]) => `<tr><td class="dk" valign="top" width="38%" style="padding:4px 12px 4px 0;font:400 13px/19px ${FONT};color:${C.mute};">${esc(k)}</td><td valign="top" style="padding:4px 0;font:600 13px/19px ${FONT};color:${C.text};word-break:break-word;">${v}</td></tr>`).join('')}
+      </table>
+    </td></tr></table>`;
+
+/** The closing paragraph and the sign-off ("Best regards," / "The TORA Team"); `closingHtml` is not escaped. */
+export const signoff = (closingHtml: string, greeting: string, team: string) =>
+  p(closingHtml, `margin-top:24px;font:400 14px/22px ${FONT};color:${C.mute};`)
+  + p(esc(greeting), `margin-top:18px;font:400 14px/22px ${FONT};color:${C.mute};`)
+  + p(esc(team), `font:600 14px/22px ${FONT};color:${C.text};`);
+
 export const note = (html: string) =>
   p(html, `border-top:1px solid ${C.line};padding-top:14px;font:400 13px/19px ${FONT};color:${C.dim};`);
 
@@ -97,7 +113,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
   const h1 = (align: string) =>
     `<h1 class="h1" style="margin:18px 0 12px;font:700 28px/34px ${FONT};letter-spacing:-0.01em;color:${C.text};text-align:${align};">${esc(heading)}</h1>`;
   const intro = hero !== undefined
-    ? centred(`<img src="${iconSrc(icon, 'hero')}" width="180" height="180" alt="" style="display:block;margin:-8px auto 4px;width:180px;height:180px;">
+    ? centred(`<table role="presentation" align="center" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding-bottom:4px;"><img src="${iconSrc(icon, 'hero')}" width="180" height="180" alt="" style="display:block;width:180px;height:180px;"></td></tr></table>
         ${eyebrow || ''}${h1('center')}
         ${lead ? p(esc(lead), `margin:0 auto 24px;max-width:440px;font:400 15px/24px ${FONT};color:${C.mute};text-align:center;`) : ''}
         ${hero}`) + (body ? '<div style="height:8px;line-height:8px;">&nbsp;</div>' : '')
@@ -162,6 +178,7 @@ export function htmlToText(html: string): string {
       if (!l || href.replace(/^https?:\/\//, '').startsWith(l)) return href;
       return href.startsWith('mailto:') ? l : `${l}: ${href}`;
     })
+    .replace(/(<td class="dk"[^>]*>[^<]*)<\/td>/g, '$1: </td>') // detailsBox label: value
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/(p|h1|tr|table|div)>/gi, '\n')
     .replace(/<[^>]+>/g, '')

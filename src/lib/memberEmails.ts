@@ -1,4 +1,4 @@
-import { ROLE_COLOR, button, emailShell, esc, htmlToText, note, pill, steps, valueBox } from './emailShell';
+import { ROLE_COLOR, button, detailsBox, emailShell, esc, htmlToText, note, pill, signoff, steps, valueBox } from './emailShell';
 import { copyFor, formatDay, normLang, type T } from './emailCopy';
 
 /**
@@ -40,7 +40,13 @@ export function buildApplicationReceived(input: { firstName: string; email: stri
     heading: t('applicationReceived.heading', { firstName: input.firstName }),
     lead: t('applicationReceived.lead', { roleNoun }),
     hero: button(t('applicationReceived.button'), 'https://torahub.io/features', 'center'),
-    body: stepsOf(t, 'applicationReceived') + note(linkify(t('applicationReceived.note', { email: input.email, date: formatDay(new Date(), L) }))),
+    body: stepsOf(t, 'applicationReceived')
+      + detailsBox(t('applicationReceived.details.title'), [
+        [t('applicationReceived.details.email'), esc(input.email)],
+        ...(roleNoun ? [[t('applicationReceived.details.role'), esc(cap(roleWord(t, rk)))] as [string, string]] : []),
+        [t('applicationReceived.details.submitted'), esc(formatDay(new Date(), L))],
+      ])
+      + signoff(linkify(t('applicationReceived.closing')), t('_shared.signoff.greeting'), t('_shared.signoff.team')),
     footReason: t('_shared.footReason.applied'),
   }));
 }

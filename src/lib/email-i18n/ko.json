@@ -34,7 +34,9 @@
     "role.ARTIST": "아티스트",
     "role.AGENT": "에이전트",
     "role.PROMOTER": "프로모터",
-    "role.VENUE": "베뉴"
+    "role.VENUE": "베뉴",
+    "signoff.greeting": "감사합니다.",
+    "signoff.team": "TORA 팀 드림"
   },
   "applicationReceived": {
     "subject": "신청이 접수되었습니다 - TORA",
@@ -53,7 +55,11 @@
     "step2.body": "승인되면 초대 코드가 이메일로 도착합니다. 바로 프로필과 공개 페이지를 설정할 수 있습니다.",
     "step3.title": "출시",
     "step3.body": "검색, 오퍼, 계약, 결제 관리는 출시와 함께 모든 멤버에게 열립니다.",
-    "note": "{{date}}에 {{email}}(으)로 신청하셨습니다. 출시 소식은 @tora.hub를 팔로우하세요."
+    "details.title": "신청 정보",
+    "details.email": "이메일",
+    "details.role": "신청 유형",
+    "details.submitted": "제출일",
+    "closing": "검토하는 동안 기다려 주셔서 감사합니다. 출시 소식은 Instagram @tora.hub에서 확인하실 수 있으며, 궁금한 점은 support@torahub.io로 문의해 주세요."
   },
   "invitationProfileOnly": {
     "subject": "{{firstName}} 님, 승인되었습니다: TORA 페이지를 설정하세요",

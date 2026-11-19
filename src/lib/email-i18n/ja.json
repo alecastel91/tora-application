@@ -34,7 +34,9 @@
     "role.ARTIST": "アーティスト",
     "role.AGENT": "エージェント",
     "role.PROMOTER": "プロモーター",
-    "role.VENUE": "ヴェニュー"
+    "role.VENUE": "ヴェニュー",
+    "signoff.greeting": "今後ともよろしくお願いいたします。",
+    "signoff.team": "TORA チーム"
   },
   "applicationReceived": {
     "subject": "お申し込みを受け付けました - TORA",
@@ -53,7 +55,11 @@
     "step2.body": "承認されると、招待コードがメールで届きます。すぐにプロフィールと公開ページの作成を始められます。",
     "step3.title": "ローンチ",
     "step3.body": "検索、オファー、契約、支払い管理の機能は、ローンチ時にすべてのメンバーに開放されます。",
-    "note": "{{date}}に{{email}}でお申し込みいただきました。ローンチの最新情報は @tora.hub をフォローしてご確認ください。"
+    "details.title": "お申し込み内容",
+    "details.email": "メールアドレス",
+    "details.role": "お申し込みの区分",
+    "details.submitted": "送信日",
+    "closing": "審査が終わるまで、今しばらくお待ちください。ローンチの最新情報は Instagram の @tora.hub でお知らせします。ご不明な点は support@torahub.io までお気軽にお問い合わせください。"
   },
   "invitationProfileOnly": {
     "subject": "{{firstName}}さん、ご参加が決まりました：TORAのページを作成しましょう",
