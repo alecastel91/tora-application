@@ -1,4 +1,4 @@
-import { ROLE_COLOR, button, detailsBox, emailShell, esc, htmlToText, note, pill, signoff, steps, valueBox } from './emailShell';
+import { ROLE_COLOR, button, closing, detailsBox, emailShell, esc, htmlToText, note, pill, steps, valueBox } from './emailShell';
 import { copyFor, formatDay, normLang, type T } from './emailCopy';
 
 /**
@@ -46,7 +46,7 @@ export function buildApplicationReceived(input: { firstName: string; email: stri
         ...(roleNoun ? [[t('applicationReceived.details.role'), esc(cap(roleWord(t, rk)))] as [string, string]] : []),
         [t('applicationReceived.details.submitted'), esc(formatDay(new Date(), L))],
       ])
-      + signoff(linkify(t('applicationReceived.closing')), t('_shared.signoff.team')),
+      + closing(linkify(t('applicationReceived.closing'))),
     footReason: t('_shared.footReason.applied'),
   }));
 }

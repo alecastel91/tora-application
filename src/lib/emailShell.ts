@@ -16,6 +16,8 @@
  */
 
 // EMAIL_ASSETS_URL only for local previews; real emails always load the hosted PNGs.
+import { copyFor } from './emailCopy';
+
 const ASSETS = process.env.EMAIL_ASSETS_URL || 'https://www.torahub.io/email-assets';
 const FONT = "Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const CRIMSON = '#DE2A57';
@@ -65,15 +67,17 @@ export const detailsBox = (title: string, rows: [string, string][]) =>
       </table>
     </td></tr></table>`;
 
-/** The closing paragraph and the sign-off ("The TORA Team"); `closingHtml` is not escaped. */
-export const signoff = (closingHtml: string, team: string) =>
-  p(closingHtml, `margin-top:24px;font:400 14px/22px ${FONT};color:${C.mute};`)
-  + p(esc(team), `margin-top:18px;font:600 14px/22px ${FONT};color:${C.text};`);
+/** A closing paragraph at the end of the body (`html` is not escaped); the shell signs off below it. */
+export const closing = (html: string) =>
+  p(html, `margin-top:24px;font:400 14px/22px ${FONT};color:${C.mute};`);
 
 export const note = (html: string) =>
-  p(html, `border-top:1px solid ${C.line};padding-top:14px;font:400 13px/19px ${FONT};color:${C.dim};`);
+  NOTE_MARK + p(html, `border-top:1px solid ${C.line};padding-top:14px;font:400 13px/19px ${FONT};color:${C.dim};`);
 
 export const link = (text: string, href: string) => `<a href="${esc(href)}" style="color:${C.text};text-decoration:underline;">${esc(text)}</a>`;
+
+// The sign-off goes above the first note (the small print), or at the end of the body.
+const NOTE_MARK = '<!--note-->';
 
 const centred = (html: string) =>
   `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="text-align:center;">${html}</td></tr></table>`;
@@ -89,7 +93,7 @@ const iconSrc = (icon: EmailIcon, size: 'hero' | '60') => (icon === 'globe'
   ? `${ASSETS}/${size === 'hero' ? 'tora-globe-hero' : 'tora-globe-60'}.png`
   : `${ASSETS}/tora-icon-${icon}-${size}.png`);
 
-export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason, icon = 'globe', lang = 'en' }: {
+export function emailShell({ title, preheader, eyebrow, heading, lead, hero, body, footReason, icon = 'globe', lang = 'en', signoff = true }: {
   title: string;
   preheader: string;
   eyebrow?: string; // pill HTML
@@ -100,7 +104,12 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
   footReason: string;
   icon?: EmailIcon;
   lang?: string;
+  signoff?: boolean; // false for emails that should not end with "The TORA Team"
 }): string {
+  // Centred under a hero with nothing else in the body, otherwise left with the body text.
+  const teamAlign = hero !== undefined && !body.split(NOTE_MARK)[0].trim() ? 'center' : 'left';
+  const team = signoff ? p(esc(copyFor(lang)('_shared.signoff.team')), `margin:24px 0 20px;font:600 14px/22px ${FONT};color:${C.text};text-align:${teamAlign};`) : '';
+  const signedBody = body.includes(NOTE_MARK) ? body.replace(NOTE_MARK, team) : body + team;
   const header = hero !== undefined
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
         <img src="${ASSETS}/tora-logo-tile.png" width="140" height="43" alt="TORA" style="display:block;margin:0 auto;width:140px;height:43px;"></td></tr></table>`
@@ -150,7 +159,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
     <tr><td bgcolor="${C.bg}" style="background:${C.bg};border-top:3px solid ${CRIMSON};">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td class="px" style="padding:32px;">
         ${intro}
-        ${body}
+        ${signedBody}
       </td></tr></table>
     </td></tr>
     <tr><td class="px" align="center" style="padding:28px 32px 0;text-align:center;">
