@@ -58,7 +58,7 @@ export function buildProfileOnlyInvitation(input: { firstName: string; role: str
   const giftNote = slugOf(pkg) && `note.gift${cap(slugOf(pkg))}`;
   const host = appUrl().replace(/^https?:\/\//, '');
   return done(t('invitationProfileOnly.subject', { firstName: input.firstName }), emailShell({
-    lang: L, icon: 'ticket', title: t('invitationProfileOnly.heading', { firstName: input.firstName }), preheader: t('invitationProfileOnly.preheader'),
+    lang: L, icon: 'star', title: t('invitationProfileOnly.heading', { firstName: input.firstName }), preheader: t('invitationProfileOnly.preheader'),
     eyebrow: pill(pillFor(t, pkg), ROLE_COLOR[roleKey(input.role)], 'center'),
     heading: t('invitationProfileOnly.heading', { firstName: input.firstName }),
     lead: t('invitationProfileOnly.lead'),
@@ -78,7 +78,7 @@ export function buildFullInvitation(input: { firstName: string; role: string; co
   const membership = slugOf(pkg) ? t(`_shared.gift.${slugOf(pkg)}.value`) : pkg === 'ADMIN' ? 'Lifetime Premium' : null;
   const host = appUrl().replace(/^https?:\/\//, '');
   return done(t('invitationFull.subject', { firstName: input.firstName }), emailShell({
-    lang: L, icon: 'ticket', title: t('invitationFull.heading', { firstName: input.firstName }), preheader: t('invitationFull.preheader'),
+    lang: L, icon: 'star', title: t('invitationFull.heading', { firstName: input.firstName }), preheader: t('invitationFull.preheader'),
     eyebrow: pill(pillFor(t, pkg), ROLE_COLOR[roleKey(input.role)], 'center'),
     heading: t('invitationFull.heading', { firstName: input.firstName }),
     lead: t('invitationFull.lead'),

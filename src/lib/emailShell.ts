@@ -88,7 +88,7 @@ const centred = (html: string) =>
  * under the lead (a code, a button); passing it switches to the hero layout,
  * and its pieces should be built with align 'center' (eyebrow included).
  */
-export type EmailIcon = 'globe' | 'ticket' | 'check' | 'clock' | 'spark' | 'crown' | 'people' | 'contract' | 'receipt' | 'lock' | 'hourglass' | 'pause' | 'card' | 'shield' | 'plus' | 'mail';
+export type EmailIcon = 'globe' | 'star' | 'ticket' | 'check' | 'clock' | 'spark' | 'crown' | 'people' | 'contract' | 'receipt' | 'lock' | 'hourglass' | 'pause' | 'card' | 'shield' | 'plus' | 'mail';
 const iconSrc = (icon: EmailIcon, size: 'hero' | '60') => (icon === 'globe'
   ? `${ASSETS}/${size === 'hero' ? 'tora-globe-hero' : 'tora-globe-60'}.png`
   : `${ASSETS}/tora-icon-${icon}-${size}.png`);
