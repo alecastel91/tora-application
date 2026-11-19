@@ -19,7 +19,7 @@
 const ASSETS = process.env.EMAIL_ASSETS_URL || 'https://www.torahub.io/email-assets';
 const FONT = "Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const CRIMSON = '#DE2A57';
-const C = { bg: '#0A0A0C', card: '#101015', inset: '#0C0C11', line: '#1E1E26', text: '#F2F2F5', mute: '#9A9AA8', dim: '#62626E' };
+const C = { bg: '#0A0A0C', inset: '#0C0C11', line: '#1E1E26', text: '#F2F2F5', mute: '#9A9AA8', dim: '#62626E' };
 export const ROLE_COLOR: Record<string, string> = { ARTIST: '#6B5FFF', AGENT: '#00C875', PROMOTER: '#FFB800', VENUE: '#FF5757' };
 
 export const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -147,7 +147,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
 <tr><td align="center" style="padding:32px 12px;">
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
     <tr><td class="px" style="padding:0 32px 20px;">${header}</td></tr>
-    <tr><td bgcolor="${C.card}" style="background:${C.card};border:1px solid ${C.line};border-top:3px solid ${CRIMSON};border-radius:16px;">
+    <tr><td bgcolor="${C.bg}" style="background:${C.bg};border-top:3px solid ${CRIMSON};">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td class="px" style="padding:32px;">
         ${intro}
         ${body}
