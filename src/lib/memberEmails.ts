@@ -46,7 +46,7 @@ export function buildApplicationReceived(input: { firstName: string; email: stri
         ...(roleNoun ? [[t('applicationReceived.details.role'), esc(cap(roleWord(t, rk)))] as [string, string]] : []),
         [t('applicationReceived.details.submitted'), esc(formatDay(new Date(), L))],
       ])
-      + signoff(linkify(t('applicationReceived.closing')), t('_shared.signoff.greeting'), t('_shared.signoff.team')),
+      + signoff(linkify(t('applicationReceived.closing')), t('_shared.signoff.team')),
     footReason: t('_shared.footReason.applied'),
   }));
 }

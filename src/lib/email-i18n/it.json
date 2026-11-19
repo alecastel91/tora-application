@@ -35,14 +35,13 @@
     "role.AGENT": "agente",
     "role.PROMOTER": "promoter",
     "role.VENUE": "venue",
-    "signoff.greeting": "Un caro saluto,",
     "signoff.team": "Il team di TORA"
   },
   "applicationReceived": {
     "subject": "Candidatura ricevuta - TORA",
     "preheader": "Leggiamo ogni candidatura una per una. Ecco cosa succede ora.",
     "pill": "Candidatura ricevuta",
-    "heading": "Grazie, {{firstName}}. L'abbiamo ricevuta",
+    "heading": "Grazie, {{firstName}}.\nL'abbiamo ricevuta",
     "lead": "La tua candidatura per entrare in TORA come {{roleNoun}} è in fase di valutazione. Le leggiamo tutte una per una e rispondiamo via email.",
     "roleNoun.ARTIST": "artista",
     "roleNoun.AGENT": "agente",

@@ -35,14 +35,13 @@
     "role.AGENT": "经纪人",
     "role.PROMOTER": "主办方",
     "role.VENUE": "场地",
-    "signoff.greeting": "此致",
     "signoff.team": "TORA 团队"
   },
   "applicationReceived": {
     "subject": "申请已收到 - TORA",
     "preheader": "每一份申请我们都会人工审阅。以下是接下来的流程。",
     "pill": "申请已收到",
-    "heading": "谢谢你，{{firstName}}。我们已收到申请",
+    "heading": "谢谢你，{{firstName}}。\n我们已收到申请",
     "lead": "你以{{roleNoun}}身份加入 TORA 的申请正在审核中。每一份申请我们都会人工审阅，并通过邮件回复。",
     "roleNoun.ARTIST": "艺人",
     "roleNoun.AGENT": "经纪人",

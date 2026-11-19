@@ -40,7 +40,6 @@
     "role.AGENT": "Agent",
     "role.PROMOTER": "Promoter",
     "role.VENUE": "Venue",
-    "signoff.greeting": "Best regards,",
     "signoff.team": "The TORA Team"
   },
   "applicationReceived": {
@@ -52,7 +51,7 @@
     "subject": "Application received - TORA",
     "preheader": "We read every application by hand. Here is what happens next.",
     "pill": "Application received",
-    "heading": "Thanks, {{firstName}}. We've got it",
+    "heading": "Thanks, {{firstName}}.\nWe've got it",
     "lead": "Your application to join TORA as {{roleNoun}} is in review. We read every one by hand and reply by email.",
     "roleNoun.ARTIST": "an artist",
     "roleNoun.AGENT": "an agent",

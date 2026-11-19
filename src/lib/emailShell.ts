@@ -65,11 +65,10 @@ export const detailsBox = (title: string, rows: [string, string][]) =>
       </table>
     </td></tr></table>`;
 
-/** The closing paragraph and the sign-off ("Best regards," / "The TORA Team"); `closingHtml` is not escaped. */
-export const signoff = (closingHtml: string, greeting: string, team: string) =>
+/** The closing paragraph and the sign-off ("The TORA Team"); `closingHtml` is not escaped. */
+export const signoff = (closingHtml: string, team: string) =>
   p(closingHtml, `margin-top:24px;font:400 14px/22px ${FONT};color:${C.mute};`)
-  + p(esc(greeting), `margin-top:18px;font:400 14px/22px ${FONT};color:${C.mute};`)
-  + p(esc(team), `font:600 14px/22px ${FONT};color:${C.text};`);
+  + p(esc(team), `margin-top:18px;font:600 14px/22px ${FONT};color:${C.text};`);
 
 export const note = (html: string) =>
   p(html, `border-top:1px solid ${C.line};padding-top:14px;font:400 13px/19px ${FONT};color:${C.dim};`);
@@ -111,7 +110,7 @@ export function emailShell({ title, preheader, eyebrow, heading, lead, hero, bod
         <td valign="middle" style="padding-left:6px;"><img src="${ASSETS}/tora-globe-60.png" width="30" height="30" alt="" style="display:block;width:30px;height:30px;"></td></tr></table></td></tr></table>`;
 
   const h1 = (align: string) =>
-    `<h1 class="h1" style="margin:18px 0 12px;font:700 28px/34px ${FONT};letter-spacing:-0.01em;color:${C.text};text-align:${align};">${esc(heading)}</h1>`;
+    `<h1 class="h1" style="margin:18px 0 12px;font:700 28px/34px ${FONT};letter-spacing:-0.01em;color:${C.text};text-align:${align};">${esc(heading).replace(/\n/g, '<br>')}</h1>`;
   const intro = hero !== undefined
     ? centred(`<table role="presentation" align="center" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding-bottom:4px;"><img src="${iconSrc(icon, 'hero')}" width="180" height="180" alt="" style="display:block;width:180px;height:180px;"></td></tr></table>
         ${eyebrow || ''}${h1('center')}

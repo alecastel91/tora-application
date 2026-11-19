@@ -35,14 +35,13 @@
     "role.AGENT": "エージェント",
     "role.PROMOTER": "プロモーター",
     "role.VENUE": "ヴェニュー",
-    "signoff.greeting": "今後ともよろしくお願いいたします。",
     "signoff.team": "TORA チーム"
   },
   "applicationReceived": {
     "subject": "お申し込みを受け付けました - TORA",
     "preheader": "すべてのお申し込みを一件ずつ確認しています。今後の流れをご案内します。",
     "pill": "お申し込み受付",
-    "heading": "{{firstName}}さん、お申し込みありがとうございます",
+    "heading": "{{firstName}}さん、\nお申し込みありがとうございます",
     "lead": "{{roleNoun}}としてのTORAへのお申し込みは、現在審査中です。すべてのお申し込みを一件ずつ確認し、メールでご連絡いたします。",
     "roleNoun.ARTIST": "アーティスト",
     "roleNoun.AGENT": "エージェント",

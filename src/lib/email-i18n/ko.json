@@ -35,14 +35,13 @@
     "role.AGENT": "에이전트",
     "role.PROMOTER": "프로모터",
     "role.VENUE": "베뉴",
-    "signoff.greeting": "감사합니다.",
     "signoff.team": "TORA 팀 드림"
   },
   "applicationReceived": {
     "subject": "신청이 접수되었습니다 - TORA",
     "preheader": "모든 신청서는 저희가 직접 읽습니다. 다음 단계를 안내해 드립니다.",
     "pill": "신청 접수 완료",
-    "heading": "감사합니다, {{firstName}} 님. 잘 받았습니다",
+    "heading": "감사합니다, {{firstName}} 님.\n잘 받았습니다",
     "lead": "{{roleNoun}}로 TORA에 합류하겠다는 신청서를 검토하고 있습니다. 모든 신청서를 직접 읽고 이메일로 답변드립니다.",
     "roleNoun.ARTIST": "아티스트",
     "roleNoun.AGENT": "에이전트",
