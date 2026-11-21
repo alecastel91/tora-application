@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { MediaItem } from "@/lib/publicProfile";
 import { PROVIDER_LABEL } from "@/lib/publicProfile";
 import { useLabels } from "./i18n";
@@ -234,5 +234,23 @@ export function GenreList({ genres }: { genres: string[] }) {
         </li>
       )}
     </ul>
+  );
+}
+
+/** A list's first rows, the rest behind "Show more" (the app's highlights drawer). */
+export function ShowFirst({ items, n = 3 }: { items: ReactNode[]; n?: number }) {
+  const { t } = useLabels();
+  const [open, setOpen] = useState(false);
+  const extra = items.length - n;
+  return (
+    <>
+      <ul className="m-0 list-none p-0">{open || extra <= 0 ? items : items.slice(0, n)}</ul>
+      {extra > 0 && (
+        <button type="button" aria-expanded={open} onClick={() => setOpen(!open)}
+          className="mt-2 cursor-pointer border-0 bg-transparent p-0 text-xs text-[#FF3366] hover:underline">
+          {open ? t.showLess : `${t.showMore} (${extra})`}
+        </button>
+      )}
+    </>
   );
 }

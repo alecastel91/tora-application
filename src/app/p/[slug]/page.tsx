@@ -8,7 +8,7 @@ import {
   applyHref, cardPath, cleanSlug, fetchPublicProfile, pressKitHref, raProfileUrl, safeHttpUrl,
   type PublicProfile,
 } from "@/lib/publicProfile";
-import { CopyLinkButton, FullBio, GenreList, SetsGrid, VideosGrid } from "./_components/players";
+import { CopyLinkButton, FullBio, GenreList, SetsGrid, ShowFirst, VideosGrid } from "./_components/players";
 import { ApplyLink, Count, Mixes, PageLang, PhotoBy, T } from "./_components/i18n";
 import { ShareButton } from "./_components/share";
 
@@ -360,8 +360,7 @@ export default async function PublicProfilePage({ params }: Params) {
           {p.highlights.length > 0 && (
             <section>
               <div className="mb-1.5"><H2><T k="highlights" /></H2></div>
-              <ul className="m-0 list-none p-0">
-                {p.highlights.map((h, i) => {
+              <ShowFirst items={p.highlights.map((h, i) => {
                   const ra = safeHttpUrl(h.raUrl);
                   return (
                     <li key={`${h.venue}-${h.year}-${i}`} className="flex items-center gap-3 border-b border-[#1C1C24] py-3">
@@ -378,8 +377,7 @@ export default async function PublicProfilePage({ params }: Params) {
                       {h.year && <span className="text-xs tabular-nums text-[#8A8A99]">{h.year}</span>}
                     </li>
                   );
-                })}
-              </ul>
+                })} />
             </section>
           )}
 
